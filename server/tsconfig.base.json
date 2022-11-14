@@ -10,7 +10,8 @@
     "baseUrl": "./",
     "paths": {
       "@modules": ["./src/modules/index"],
-      "@modules/*": ["./src/modoules/*"]
-    },
+      "@modules/*": ["./src/modoules/*"],
+      "@decorator": ["./src/decorator/index"]
+    }
   }
 }

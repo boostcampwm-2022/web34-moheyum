@@ -8,9 +8,8 @@ import { ConfigModule } from '@nestjs/config';
   imports: [
     AuthModule,
     ConfigModule.forRoot({
-      envFilePath:[`${__dirname}/config/env/.${process.env.NODE_ENV}.env`],
+      envFilePath: [`../../.env.${process.env.NODE_ENV}`],
       isGlobal: true, //전역 사용
-      
     }),
   ],
   controllers: [AppController],
