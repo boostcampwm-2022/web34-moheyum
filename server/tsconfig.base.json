@@ -11,6 +11,6 @@
     "paths": {
       "@modules": ["./src/modules/index"],
       "@modules/*": ["./src/modoules/*"]
-    }
+    },
   }
 }
