@@ -9,3 +9,12 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id  String  @id @default(auto()) @map("_id") @db.ObjectId
+  nickName String @unique
+  userId String?
+  email String?
+  password String?
+  salt String?
+}
