@@ -1,0 +1,31 @@
+name: 백엔드 PR 테스트
+
+on:
+  pull_request:
+    branches: #target
+      - dev
+      - main
+    paths:
+      - 'server/**'
+  workflow_dispatch:
+
+env:
+  NODE_ENV: development
+
+jobs:
+  test-be:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'yarn'
+      - run: |
+          cd server
+          # npm i -g yarn
+          corepack enable
+          yarn set version berry
+          yarn install
+          yarn build
+          yarn test
