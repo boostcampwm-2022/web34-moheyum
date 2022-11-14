@@ -1,5 +1,5 @@
 {
-  "extends": ["next/core-web-vitals", "airbnb"],
+  "extends": ["next/core-web-vitals", "airbnb", "prettier"],
   "rules": {
     "react/jsx-props-no-spreading": "off",
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }]
