@@ -21,6 +21,9 @@ jobs:
         with:
           node-version: '16'
           cache: 'yarn'
+          cache-dependency-path: |
+            client/yarn.lock
+            server/yarn.lock
       - run: |
           cd server
           # npm i -g yarn
