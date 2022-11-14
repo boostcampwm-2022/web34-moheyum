@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "removeComments": true,
+    "allowJs": false,
+    "baseUrl": "./",
+    "paths": {
+      "@modules": ["./src/modules/index"],
+      "@modules/*": ["./src/modoules/*"]
+    }
+  }
+}
