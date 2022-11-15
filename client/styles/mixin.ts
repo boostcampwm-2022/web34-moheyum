@@ -9,16 +9,23 @@ export const displayCenter = css`
 
 export const inputStyle = css`
   border-radius: 5px;
-  border-color: ${COLORS.GRAY3};
+  border: 1.5px solid ${COLORS.PRIMARY_LIGHT};
   color: ${COLORS.GRAY1};
   padding-left: 10px;
+  &:focus {
+    outline-color: ${COLORS.PRIMARY};
+  }
 `;
 
 export const buttonStyle = css`
   border-radius: 5px;
+  border: 0px solid;
   background-color: ${COLORS.PRIMARY};
   color: ${COLORS.WHITE};
   text-align: center;
+  &:focus {
+    outline: none;
+  }
 `;
 
 export const boxStyle = css`
@@ -30,7 +37,7 @@ export const boxStyle = css`
   input {
     ${inputStyle}
   }
-  color: ${COLORS.LIGHT_BLACK};
+  color: ${COLORS.BLACK};
   button {
     ${buttonStyle}
   }

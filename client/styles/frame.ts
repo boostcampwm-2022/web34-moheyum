@@ -4,7 +4,7 @@ import { displayCenter } from './mixin';
 
 const Frame = styled.div`
   background-color: ${COLORS.WHITE};
-  width: 1024px;
+  width: 1280px;
   height: 100%;
   ${displayCenter}
 `;

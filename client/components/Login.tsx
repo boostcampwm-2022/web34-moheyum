@@ -1,16 +1,59 @@
-import React from 'react';
+import React, { useState, ChangeEvent } from 'react';
+import Router from 'next/router';
 import styled from '@emotion/styled';
-import { displayCenter, inputStyle, boxStyle } from '../styles/mixin';
+import { displayCenter, boxStyle } from '../styles/mixin';
 import COLORS from '../styles/color';
 
+type Response = {
+  message: string;
+  data: {};
+};
+
+async function signInAPI(inputId: string, inputPw: string): Promise<Response> {
+  const response = await fetch(process.env.NEXT_PUBLIC_DEV_FRONT_TEST_HOST + '/auth/signin', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify({ userId: inputId, password: inputPw }),
+  });
+  return await response.json();
+}
+
 export default function Login() {
+  const [account, setAccount] = useState({
+    id: '',
+    pw: '',
+  });
+  const onChangeAccount = (e: ChangeEvent<HTMLInputElement>): void => {
+    setAccount({
+      ...account,
+      [e.target.name]: e.target.value,
+    });
+  };
+  const commonLogin = (): void => {
+    (async () => {
+      const loginResponse = await signInAPI(account.id, account.pw);
+      if (loginResponse.message !== 'success') {
+        alert('아이디와 비밀번호 정보가 정확하지 않습니다.');
+      } else {
+        // user 데이터 상태로 저장하기 loginResponse.data
+        console.log(loginResponse.data);
+        Router.push({ pathname: '/main' });
+      }
+    })().catch((err) => {
+      alert(`로그인 실패 ERROR message: ${err as string}`);
+      Router.push({ pathname: '/login' });
+    });
+  };
   return (
     <Wrapper>
       <Box>
         <Title>로그인</Title>
-        <input type="text" placeholder="아이디를 입력하세요" />
-        <input type="password" placeholder="비밀번호를 입력하세요" />
-        <button>로그인</button>
+        <input type="text" placeholder="아이디를 입력하세요" name="id" onChange={onChangeAccount} />
+        <input type="password" placeholder="비밀번호를 입력하세요" name="pw" onChange={onChangeAccount} />
+        <button onClick={commonLogin}>로그인</button>
         <button style={{ backgroundColor: COLORS.BLACK }}>LOGIN WITH GITHUB</button>
         <FindAccount>
           <div tabIndex={0}>아이디 찾기</div>
@@ -18,10 +61,10 @@ export default function Login() {
           <div tabIndex={0}>비밀번호 찾기</div>
         </FindAccount>
       </Box>
-      <Signin>
+      <SignUp>
         <div>계정이 없으신가요?</div>
         <div tabIndex={0}>회원가입</div>
-      </Signin>
+      </SignUp>
     </Wrapper>
   );
 }
@@ -40,15 +83,15 @@ const Box = styled.div`
   height: 337px;
   ${boxStyle}
   input {
-    margin-bottom: 15px;
-    width: 70%;
-    height: 10%;
+    margin-bottom: 12px;
+    width: 70.5%;
+    height: 13%;
     font-size: 15px;
   }
   button {
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     width: 73%;
-    height: 12%;
+    height: 15%;
     font-size: 16px;
   }
 `;
@@ -63,13 +106,21 @@ const FindAccount = styled.div`
   ${displayCenter}
   div {
     margin: 5px;
+    &:focus-within {
+      font-weight: bold;
+    }
   }
   margin-bottom: 5%;
 `;
 
-const Signin = styled.div`
+const SignUp = styled.div`
   width: 80%;
   margin: 5%;
   display: flex;
   justify-content: space-evenly;
+  div {
+    &:focus-within {
+      font-weight: bold;
+    }
+  }
 `;
