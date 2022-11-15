@@ -6,7 +6,7 @@ import {
   IsEmail,
 } from 'class-validator';
 
-export class SignUpDTO {
+export class OauthSignUpDTO {
   @IsNotEmpty()
   @IsString()
   @Matches(/^[a-zA-Z\d_]{4,16}$/)
@@ -15,17 +15,7 @@ export class SignUpDTO {
 
   @IsNotEmpty()
   @IsString()
-  @Matches(/^[a-zA-Z\d!@#$%^&*()-_=+]{6,16}$/)
-  password: string;
-
-  @IsNotEmpty()
-  @IsString()
   @Matches(/^[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]{1,16}$/)
   @IsByteLength(1, 16)
   nickname: string;
-
-  @IsEmail()
-  @IsNotEmpty()
-  @IsString()
-  email: string;
 }

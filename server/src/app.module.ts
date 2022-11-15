@@ -1,9 +1,10 @@
 import { Module, MiddlewareConsumer } from '@nestjs/common';
 import { AuthModule } from '@modules';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { join } from 'path';
 import { LoggerMiddleware } from './middleware/logger';
-
+import { MongooseModule } from '@nestjs/mongoose';
+import { mongooseConfig } from './config/mongooseConfig';
 @Module({
   imports: [
     AuthModule,
@@ -13,6 +14,7 @@ import { LoggerMiddleware } from './middleware/logger';
       ],
       isGlobal: true, //전역 사용
     }),
+    MongooseModule.forRootAsync(mongooseConfig),
   ],
   controllers: [],
   providers: [],

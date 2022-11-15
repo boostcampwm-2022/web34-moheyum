@@ -1,38 +1,57 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { PrismaService } from '../prisma/prisma.service';
 import { SignUpDTO } from './dto/signUp.dto';
-
+import * as bcrypt from 'bcrypt';
+import { Prisma } from '@prisma/client';
+import { AuthRepository } from './auth.repository';
 @Injectable()
 export class NormalAuthService {
   constructor(
     private readonly configService: ConfigService,
-    private readonly prismaService: PrismaService,
+    private readonly authRepository: AuthRepository,
   ) {}
 
-  public async signUp(signUpDTO: SignUpDTO) {
-    if (await this.checkDuplicateID(signUpDTO.userId)) {
-      /* 중복 아이디 없는 case */
-      return { success: false, msg: '중복된 아이디 입력' };
-    } else {
-      /* 중복인 아이디가 있는 case */
-      return { success: false, msg: '중복된 아이디 입력' };
-    }
-    return { success: true };
-  }
-
   /**
-   * 아이디 중복검사
+   * @description 아이디 중복검사
    * @param userId
-   * @returns Promise<boolean>
+   * @returns Promise<{ success: boolean; message: string }>
    */
-  private async checkDuplicateID(userId: string): Promise<boolean> {
+  public async checkDuplicateID(
+    userId: string,
+  ): Promise<{ success: boolean; message: string }> {
     console.log(this.configService.get('DATABASE_URL'));
-    const isUser = await this.prismaService.user.findFirst({
-      where: { userId },
+    const isUser = await this.authRepository.findOne({
+      userId: userId,
     });
     console.log(isUser);
-    if (isUser) return false;
-    return true;
+    if (isUser)
+      throw new HttpException(
+        {
+          message: '중복된 아이디 입력',
+        },
+        HttpStatus.FORBIDDEN,
+      );
+    return { success: true, message: 'success' };
+  }
+
+  private async hashPw(password: string): Promise<string> {
+    const saltOrRounds = Number(this.configService.get('saltOrRounds'));
+    return await bcrypt.hash(password, saltOrRounds);
+  }
+
+  public async insertUser(signUpDTO: SignUpDTO): Promise<boolean> {
+    signUpDTO.password = await this.hashPw(signUpDTO.password);
+    try {
+      await this.authRepository.createSignUp(signUpDTO);
+      return true;
+    } catch (e) {
+      console.log(e);
+      throw new HttpException(
+        {
+          message: e as string,
+        },
+        HttpStatus.FORBIDDEN,
+      );
+    }
   }
 }
