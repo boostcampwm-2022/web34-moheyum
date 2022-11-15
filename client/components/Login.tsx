@@ -1,5 +1,6 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, useRef, ChangeEvent, RefObject } from 'react';
 import Router from 'next/router';
+import Link from 'next/link';
 import styled from '@emotion/styled';
 import { displayCenter, boxStyle } from '../styles/mixin';
 import COLORS from '../styles/color';
@@ -21,18 +22,36 @@ async function signInAPI(inputId: string, inputPw: string): Promise<Response> {
   return await response.json();
 }
 
+function changeBorderColor(inputRef: RefObject<HTMLInputElement>, color: string) {
+  const { current } = inputRef;
+  if (current !== null) {
+    current.style.borderColor = color;
+  }
+}
 export default function Login() {
   const [account, setAccount] = useState({
     id: '',
     pw: '',
   });
+  const inputIdRef: RefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
+  const inputPwRef: RefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
   const onChangeAccount = (e: ChangeEvent<HTMLInputElement>): void => {
+    changeBorderColor(inputIdRef, COLORS.PRIMARY_LIGHT);
+    changeBorderColor(inputPwRef, COLORS.PRIMARY_LIGHT);
     setAccount({
       ...account,
       [e.target.name]: e.target.value,
     });
   };
   const commonLogin = (): void => {
+    if (!account.id) {
+      changeBorderColor(inputIdRef, COLORS.RED);
+      return;
+    }
+    if (!account.pw) {
+      changeBorderColor(inputPwRef, COLORS.RED);
+      return;
+    }
     (async () => {
       const loginResponse = await signInAPI(account.id, account.pw);
       if (loginResponse.message !== 'success') {
@@ -51,19 +70,28 @@ export default function Login() {
     <Wrapper>
       <Box>
         <Title>로그인</Title>
-        <input type="text" placeholder="아이디를 입력하세요" name="id" onChange={onChangeAccount} />
-        <input type="password" placeholder="비밀번호를 입력하세요" name="pw" onChange={onChangeAccount} />
+        <input type="text" placeholder="아이디를 입력하세요" name="id" ref={inputIdRef} onChange={onChangeAccount} />
+        <input
+          type="password"
+          placeholder="비밀번호를 입력하세요"
+          name="pw"
+          ref={inputPwRef}
+          onChange={onChangeAccount}
+        />
         <button onClick={commonLogin}>로그인</button>
         <button style={{ backgroundColor: COLORS.BLACK }}>LOGIN WITH GITHUB</button>
         <FindAccount>
           <div tabIndex={0}>아이디 찾기</div>
           <div>|</div>
+
           <div tabIndex={0}>비밀번호 찾기</div>
         </FindAccount>
       </Box>
       <SignUp>
         <div>계정이 없으신가요?</div>
-        <div tabIndex={0}>회원가입</div>
+        <Link href="/signup">
+          <div tabIndex={0}>회원가입</div>
+        </Link>
       </SignUp>
     </Wrapper>
   );
@@ -86,13 +114,13 @@ const Box = styled.div`
     margin-bottom: 12px;
     width: 70.5%;
     height: 13%;
-    font-size: 15px;
+    font-size: 18px;
   }
   button {
     margin-bottom: 12px;
     width: 73%;
     height: 15%;
-    font-size: 16px;
+    font-size: 18px;
   }
 `;
 
@@ -122,5 +150,9 @@ const SignUp = styled.div`
     &:focus-within {
       font-weight: bold;
     }
+  }
+  a {
+    text-decoration: none;
+    color: ${COLORS.BLACK};
   }
 `;

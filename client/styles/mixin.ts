@@ -10,7 +10,7 @@ export const displayCenter = css`
 export const inputStyle = css`
   border-radius: 5px;
   border: 1.5px solid ${COLORS.PRIMARY_LIGHT};
-  color: ${COLORS.GRAY1};
+  color: ${COLORS.BLACK};
   padding-left: 10px;
   &:focus {
     outline-color: ${COLORS.PRIMARY};
