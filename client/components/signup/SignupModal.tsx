@@ -20,6 +20,10 @@ export default function SignupModal() {
     verify: '',
   });
 
+  const [startVerify, setStartVerify] = useState<boolean>(false);
+  const [verified, setVerified] = useState<boolean>(false);
+  const [timer, setTimer] = useState<number>(-1);
+
   const onChangeFields = (e: ChangeEvent) => {
     const target = e.target as HTMLInputElement;
     setFormValues({
@@ -34,24 +38,128 @@ export default function SignupModal() {
     else setErrorMessages({ ...errorMessages, password_confirm: '비밀번호가 일치하지 않습니다.' });
   }, [formValues]);
 
+  const sendEmailCode = () => {
+    if (!formValues.email.match(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]+$/i)) {
+      setErrorMessages({ ...errorMessages, email: '유효하지 않은 이메일입니다.' });
+      return;
+    }
+    // 인증 메일을 보내는 로직
+    setStartVerify(true);
+    setTimer(180);
+  };
+
+  // 타이머 구현을 위한 코드들
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (timer < 0) {
+        clearInterval(interval);
+        return;
+      }
+      setTimer(timer - 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [timer]);
+
+  const secToTime = (time: number): string => {
+    const minute = Math.floor(time / 60)
+      .toString()
+      .padStart(2, '0');
+    return `${minute}:${(time % 60).toString().padStart(2, '0')}`;
+  };
+
+  // ===========================================================
+
+  const verifyEmail = () => {
+    // 이메일 인증 로직
+    if (timer < 0) {
+      setErrorMessages({
+        ...errorMessages,
+        verify: '인증 시간이 초과되었습니다.',
+      });
+      return;
+    }
+    setTimer(-1);
+    setStartVerify(false);
+    setErrorMessages({
+      ...errorMessages,
+      verify: '',
+    });
+    setVerified(true);
+  };
+
+  const submitSignup = () => {
+    if (!validateForm()) return;
+    // do Signup
+    console.log('회원가입해~!~!');
+  };
+
+  const validateForm = (): boolean => {
+    const newErrorMessage = { id: '', password: '', password_confirm: '', name: '', email: '' };
+    let flag = true;
+    if (formValues.id === '') {
+      newErrorMessage.id = '아이디를 입력해주세요.';
+      flag = false;
+    } else if (formValues.id.match(/[^a-z_0-9]/i) || formValues.id.length < 4) {
+      newErrorMessage.id = '4~16글자의 영어, 숫자와 _만 가능합니다.';
+      flag = false;
+    }
+    if (formValues.password === '') {
+      newErrorMessage.password = '비밀번호를 입력해주세요.';
+      flag = false;
+    } else if (formValues.password !== formValues.passwordConfirm) {
+      newErrorMessage.password_confirm = '비밀번호가 일치하지 않습니다.';
+      flag = false;
+    }
+    if (formValues.name === '') {
+      newErrorMessage.name = '닉네임을 입력해주세요.';
+      flag = false;
+    }
+    if (formValues.name.match(/[^a-z_0-9가-힣ㄱ-ㅎㅏ-ㅣ]/i) || getByteLength(formValues.name) > 16) {
+      newErrorMessage.name = '16바이트 이내의 영어, 숫자, 한글만 가능합니다.';
+    }
+    if (formValues.email === '') {
+      newErrorMessage.email = '이메일을 입력해주세요.';
+      flag = false;
+    } else if (!verified) {
+      newErrorMessage.email = '이메일 인증을 진행해주세요.';
+      flag = false;
+    }
+    if (!flag) setErrorMessages({ ...errorMessages, ...newErrorMessage });
+    return flag;
+  };
+
+  const getByteLength = (s: string): number => {
+    // 문제 : UTF-8 기준 한글 한 자가 사실은 3바이트였음
+    const stringByteLength = s.replace(/[\0-\x7f]|([0-\u07ff]|(.))/g, '$&$1$2').length;
+    return stringByteLength;
+  };
+
   return (
     <ModalWrapper>
+      <div>뒤로가는버튼을넣을자리</div>
       <ModalHeader>회원가입</ModalHeader>
       <SignupForm>
         <SignupRow>
           <FieldName>아이디: </FieldName>
           <FieldContent>
-            <MoheyumInputText type="text" name="id" placeholder="아이디" onChange={onChangeFields} />
+            <MoheyumInputText type="text" name="id" placeholder="아이디" onChange={onChangeFields} maxLength={16} />
           </FieldContent>
         </SignupRow>
-        {errorMessages.id && <SighupRowMessage>{errorMessages.id}</SighupRowMessage>}
+        {errorMessages.id && <SignupRowMessage>{errorMessages.id}</SignupRowMessage>}
         <SignupRow>
           <FieldName>비밀번호: </FieldName>
           <FieldContent>
-            <MoheyumInputText type="password" name="password" placeholder="비밀번호" onChange={onChangeFields} />
+            <MoheyumInputText
+              type="password"
+              name="password"
+              placeholder="비밀번호"
+              onChange={onChangeFields}
+              maxLength={16}
+            />
           </FieldContent>
         </SignupRow>
-        {errorMessages.password && <SighupRowMessage>{errorMessages.password}</SighupRowMessage>}
+        {errorMessages.password && <SignupRowMessage>{errorMessages.password}</SignupRowMessage>}
         <SignupRow>
           <FieldName>비밀번호 확인: </FieldName>
           <FieldContent>
@@ -60,40 +168,50 @@ export default function SignupModal() {
               name="passwordConfirm"
               placeholder="비밀번호 다시 입력"
               onChange={onChangeFields}
+              maxLength={16}
             />
           </FieldContent>
         </SignupRow>
-        {errorMessages.password_confirm && <SighupRowMessage>{errorMessages.password_confirm}</SighupRowMessage>}
+        {errorMessages.password_confirm && <SignupRowMessage>{errorMessages.password_confirm}</SignupRowMessage>}
         <SignupRow>
           <FieldName>닉네임: </FieldName>
           <FieldContent>
-            <MoheyumInputText type="text" name="name" placeholder="닉네임" onChange={onChangeFields} />
+            <MoheyumInputText type="text" name="name" placeholder="닉네임" onChange={onChangeFields} maxLength={16} />
           </FieldContent>
         </SignupRow>
-        {errorMessages.name && <SighupRowMessage>{errorMessages.name}</SighupRowMessage>}
+        {errorMessages.name && <SignupRowMessage>{errorMessages.name}</SignupRowMessage>}
         <SignupRow>
           <FieldName>이메일: </FieldName>
           <FieldContent>
-            <MoheyumInputText type="text" name="email" placeholder="이메일" onChange={onChangeFields} />
-            <MoheyumButton type="button" width={60}>
+            <MoheyumInputText
+              type="text"
+              name="email"
+              placeholder="이메일"
+              onChange={onChangeFields}
+              disabled={verified}
+            />
+            <MoheyumButton type="button" width={60} onClick={sendEmailCode}>
               인증
             </MoheyumButton>
           </FieldContent>
         </SignupRow>
-        {errorMessages.email && <SighupRowMessage>{errorMessages.email}</SighupRowMessage>}
-        <SignupRow>
+        {errorMessages.email && <SignupRowMessage>{errorMessages.email}</SignupRowMessage>}
+        <SignupRow hidden={!startVerify}>
           <FieldName>&nbsp;</FieldName>
           <FieldContent>
             <MoheyumInputText type="text" name="verify" placeholder="인증코드" onChange={onChangeFields} />
-            <MoheyumButton type="button" width={60}>
+            <MoheyumButton type="button" width={60} onClick={verifyEmail}>
               확인
             </MoheyumButton>
           </FieldContent>
         </SignupRow>
-        {errorMessages.verify && <SighupRowMessage>{errorMessages.verify}</SighupRowMessage>}
+        {timer > -1 && startVerify && <SignupRowMessage>{secToTime(timer)}</SignupRowMessage>}
+        {errorMessages.verify && startVerify && <SignupRowMessage>{errorMessages.verify}</SignupRowMessage>}
       </SignupForm>
       <SignupSubmitContainer>
-        <MoheyumButton type="button">회원가입</MoheyumButton>
+        <MoheyumButton type="button" onClick={submitSignup}>
+          회원가입
+        </MoheyumButton>
       </SignupSubmitContainer>
     </ModalWrapper>
   );
@@ -107,13 +225,13 @@ const ModalHeader = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 50px;
+  margin-top: 30px;
   margin-bottom: 30px;
+  transition: all 0.3s ease;
 `;
 
 const ModalWrapper = styled.div`
   width: 488px;
-  /* height: 606px; */
   background-color: ${COLORS.OFF_WHITE};
   border: 3px solid ${COLORS.PRIMARY_DARK};
   border-radius: 15px;
@@ -132,21 +250,28 @@ const SignupForm = styled.ul`
   width: 100%;
 `;
 
-const SignupRow = styled.li`
+interface hideable {
+  hidden?: boolean;
+}
+
+const SignupRow = styled.li<hideable>`
   list-style: none;
   display: flex;
+  visibility: ${(props) => (props.hidden ? 'hidden' : 'visible')};
   flex-direction: row;
   justify-content: center;
   align-items: center;
   width: 100%;
-  margin: 15px 0;
+  margin: 20px 0;
 `;
 
-const SighupRowMessage = styled.li`
-  margin-top: -2px;
-  margin-bottom: 10px;
+const SignupRowMessage = styled.li`
   list-style: none;
-  text-align: center;
+  width: 60%;
+  height: 0;
+  display: flex;
+  align-items: flex-end;
+  margin-left: calc(25% + 30px);
   font-size: 12px;
   color: ${COLORS.RED};
   font-weight: 600;
@@ -155,7 +280,6 @@ const SighupRowMessage = styled.li`
 const FieldName = styled.div`
   width: 25%;
   text-align: right;
-  /* margin-right: 7px; */
 `;
 
 const FieldContent = styled.div`
@@ -184,6 +308,9 @@ const MoheyumInputText = styled.input<sizeProps>`
   }
   &:placeholder-shown {
     color: ${COLORS.GRAY2};
+  }
+  &:disabled {
+    background-color: ${COLORS.GRAY3};
   }
 `;
 
