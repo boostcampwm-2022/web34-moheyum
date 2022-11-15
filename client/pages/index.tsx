@@ -1,7 +1,5 @@
 import React from 'react';
-import Introduction from '../components/Introduction';
 import router from 'next/router';
-import Login from '../components/Login';
 import styled from '@emotion/styled';
 
 const Frame = styled.div`
@@ -24,6 +22,6 @@ export default function Home() {
     // 닉네임: 1글자 이상 영어 16글자 특수문자 x
     // 아이디: 4글자 16글자 특수문자 x
     // 비밀번호: 8글자 16글자 특수문자 o
-    <Frame></Frame>
+    <Frame />
   );
 }
