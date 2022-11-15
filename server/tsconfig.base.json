@@ -11,7 +11,8 @@
     "paths": {
       "@modules": ["./src/modules/index"],
       "@modules/*": ["./src/modoules/*"],
-      "@decorator": ["./src/decorator/index"]
+      "@decorator": ["./src/decorator/index"],
+      "@root": ["./"]
     }
   }
 }
