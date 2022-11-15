@@ -9,6 +9,7 @@
     "allowJs": false,
     "baseUrl": "./",
     "paths": {
+      "@filter": ["./filter"],
       "@modules": ["./src/modules/index"],
       "@modules/*": ["./src/modoules/*"],
       "@decorator": ["./src/decorator/index"],

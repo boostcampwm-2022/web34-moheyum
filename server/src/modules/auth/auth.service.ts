@@ -11,6 +11,6 @@ export class AuthService {
   ) {}
 
   async signUp(signUpDTO: SignUpDTO) {
-    this.normalAuthService.signUp(signUpDTO);
+    return await this.normalAuthService.signUp(signUpDTO);
   }
 }

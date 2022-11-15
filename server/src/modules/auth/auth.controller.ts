@@ -4,7 +4,11 @@ import {
   Post,
   UsePipes,
   ValidationPipe,
+  UseFilters,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
+import { HttpExceptionFilter } from 'src/filter/execption.filter';
 import { AuthService } from './auth.service';
 import { SignUpDTO } from './dto/signUp.dto';
 
@@ -14,6 +18,13 @@ export class AuthController {
   @Post('signUp')
   @UsePipes(ValidationPipe)
   async signUpUser(@Body() signUpDTO: SignUpDTO) {
-    this.authService.signUp(signUpDTO);
+    const { success, msg } = await this.authService.signUp(signUpDTO);
+    if (!success)
+      throw new HttpException(
+        {
+          message: msg,
+        },
+        HttpStatus.FORBIDDEN,
+      );
   }
 }

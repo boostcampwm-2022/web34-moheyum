@@ -12,9 +12,13 @@ export class NormalAuthService {
 
   public async signUp(signUpDTO: SignUpDTO) {
     if (await this.checkDuplicateID(signUpDTO.userId)) {
+      /* 중복 아이디 없는 case */
+      return { success: false, msg: '중복된 아이디 입력' };
     } else {
+      /* 중복인 아이디가 있는 case */
+      return { success: false, msg: '중복된 아이디 입력' };
     }
-    return true;
+    return { success: true };
   }
 
   /**
