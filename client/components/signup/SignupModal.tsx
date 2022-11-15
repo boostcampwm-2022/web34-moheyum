@@ -45,6 +45,7 @@ export default function SignupModal() {
     }
     // 인증 메일을 보내는 로직
     setStartVerify(true);
+    setErrorMessages({ ...errorMessages, email: '', verify: '' });
     setTimer(180);
   };
 
@@ -217,6 +218,18 @@ export default function SignupModal() {
   );
 }
 
+const ModalWrapper = styled.div`
+  width: 488px;
+  background-color: ${COLORS.OFF_WHITE};
+  border: 3px solid ${COLORS.PRIMARY_DARK};
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+`;
+
 const ModalHeader = styled.div`
   width: 100%;
   font-size: 24px;
@@ -228,17 +241,6 @@ const ModalHeader = styled.div`
   margin-top: 30px;
   margin-bottom: 30px;
   transition: all 0.3s ease;
-`;
-
-const ModalWrapper = styled.div`
-  width: 488px;
-  background-color: ${COLORS.OFF_WHITE};
-  border: 3px solid ${COLORS.PRIMARY_DARK};
-  border-radius: 15px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
 `;
 
 const SignupForm = styled.ul`
@@ -311,6 +313,13 @@ const MoheyumInputText = styled.input<sizeProps>`
   }
   &:disabled {
     background-color: ${COLORS.GRAY3};
+    -webkit-box-shadow: 0 0 0 30px ${COLORS.GRAY3} inset !important;
+  }
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px ${COLORS.WHITE} inset;
   }
 `;
 
