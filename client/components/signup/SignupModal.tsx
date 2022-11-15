@@ -24,6 +24,10 @@ export default function SignupModal() {
   const [verified, setVerified] = useState<boolean>(false);
   const [timer, setTimer] = useState<number>(-1);
 
+  const goBack = () => {
+    console.log('뒤로가잇');
+  };
+
   const onChangeFields = (e: ChangeEvent) => {
     const target = e.target as HTMLInputElement;
     setFormValues({
@@ -138,7 +142,7 @@ export default function SignupModal() {
 
   return (
     <ModalWrapper>
-      <div>뒤로가는버튼을넣을자리</div>
+      <ButtonBack onClick={goBack} />
       <ModalHeader>회원가입</ModalHeader>
       <SignupForm>
         <SignupRow>
@@ -238,7 +242,7 @@ const ModalHeader = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 30px;
+  margin-top: 10px;
   margin-bottom: 30px;
   transition: all 0.3s ease;
 `;
@@ -302,11 +306,12 @@ const MoheyumInputText = styled.input<sizeProps>`
   ${(props) => props.height && `height: ${props.height}px;`}
   padding: 12px;
   background-color: ${COLORS.WHITE};
-  border: 2px solid ${COLORS.PRIMARY_DARK};
+  border: 2px solid ${COLORS.PRIMARY};
   border-radius: 7px;
   transition: all 0.2s ease;
   &:focus {
     outline: 1px solid ${COLORS.PRIMARY_DARK};
+    border: 2px solid ${COLORS.PRIMARY_DARK};
   }
   &:placeholder-shown {
     color: ${COLORS.GRAY2};
@@ -314,12 +319,14 @@ const MoheyumInputText = styled.input<sizeProps>`
   &:disabled {
     background-color: ${COLORS.GRAY3};
     -webkit-box-shadow: 0 0 0 30px ${COLORS.GRAY3} inset !important;
+    box-shadow: 0 0 0 30px ${COLORS.GRAY3} inset !important;
   }
   &:-webkit-autofill,
   &:-webkit-autofill:hover,
   &:-webkit-autofill:focus,
   &:-webkit-autofill:active {
     -webkit-box-shadow: 0 0 0 30px ${COLORS.WHITE} inset;
+    box-shadow: 0 0 0 30px ${COLORS.GRAY3} inset !important;
   }
 `;
 
@@ -345,4 +352,16 @@ const SignupSubmitContainer = styled.div`
   justify-content: center;
   align-items: center;
   margin: 40px 0;
+`;
+
+const ButtonBack = styled.button`
+  border: none;
+  background-color: transparent;
+  align-self: flex-start;
+  width: 15px;
+  height: 15px;
+  margin: 15px 15px;
+  background-image: url('/ico_chveron_left.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
 `;
