@@ -6,8 +6,8 @@ import Frame from '../styles/frame';
 export default function login() {
   return (
     <Frame>
-      <Introduction></Introduction>
-      <Login></Login>
+      <Introduction />
+      <Login />
     </Frame>
   );
 }
