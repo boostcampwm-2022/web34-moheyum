@@ -2,7 +2,8 @@ import '@emotion/react'; // it's important to use ThemeProvider
 
 type sidebarType = {
   backgroundColor: string;
-  width: string;
+  minWidth: string;
+  maxWidth: string;
 };
 
 type mainSectionType = {
@@ -14,5 +15,7 @@ declare module '@emotion/react' {
   export interface Theme {
     sidebar: sidebarType;
     mainSection: mainSectionType;
+    smallWindow: string;
+    wideWindow: string;
   }
 }

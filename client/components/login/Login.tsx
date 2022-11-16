@@ -2,7 +2,7 @@ import React, { useState, useRef, ChangeEvent, RefObject } from 'react';
 import Router from 'next/router';
 import Link from 'next/link';
 import styled from '@emotion/styled';
-import { displayCenter, boxStyle } from '../../styles/mixin';
+import { displayCenter, boxStyle, displayColumn } from '../../styles/mixin';
 import COLORS from '../../styles/color';
 
 type Response = {
@@ -113,9 +113,7 @@ export default function Login() {
 const Wrapper = styled.div`
   width: 50%;
   height: 100%;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
+  ${displayColumn}
   align-items: left;
 `;
 

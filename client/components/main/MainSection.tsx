@@ -10,4 +10,10 @@ const Wrapper = styled.section`
   height: 100%;
   ${displayCenter}
   background-color: ${({ theme }) => theme.mainSection.backgroundColor};
+  @media only screen and (max-width: ${({ theme }) => theme.wideWindow}) {
+    width: calc(100% - ${({ theme }) => theme.sidebar.maxWidth});
+  }
+  @media only screen and (max-width: ${({ theme }) => theme.smallWindow}) {
+    width: calc(100% - ${({ theme }) => theme.sidebar.minWidth});
+  }
 `;
