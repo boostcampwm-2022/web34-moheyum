@@ -7,11 +7,6 @@
     "allowSyntheticDefaultImports": true,
     "removeComments": true,
     "allowJs": false,
-    "baseUrl": "./",
-    "paths": {
-      "@modules": ["./src/modules/index"],
-      "@modules/*": ["./src/modoules/*"],
-      "@decorator": ["./src/decorator/index"]
-    }
+    "baseUrl": "./"
   }
 }
