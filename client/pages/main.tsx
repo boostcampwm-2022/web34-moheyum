@@ -1,6 +1,13 @@
 import React from 'react';
 import Frame from '../styles/frame';
+import MainSection from '../components/main/MainSection';
+import SideBar from '../components/main/SideBar';
 
 export default function main() {
-  return <Frame>main</Frame>;
+  return (
+    <Frame>
+      <SideBar />
+      <MainSection />
+    </Frame>
+  );
 }
