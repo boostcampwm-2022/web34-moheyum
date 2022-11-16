@@ -1,15 +1,18 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { UserRepository } from './user.repository';
-import { User } from './user.schema';
+import { UserRepository } from '../common/database/user.repository';
+import { User } from '../common/database/user.schema';
 
 @Injectable()
 export class JwtStartegy extends PassportStrategy(Strategy) {
-  constructor(private readonly userRepository: UserRepository) {
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly configService: ConfigService,
+  ) {
     super({
-      secretOrKey:
-        'secret- 절대 소스코드 노출시키지 마세요~~ 배포 전에 환경 변수나 secrets로 따로 뺄것',
+      secretOrKey: configService.get('secretOrKey'),
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     });
   }

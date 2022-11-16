@@ -3,8 +3,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { AuthCredentialsDto } from './dto/auth-credential-dto';
 import { UserCreateDto } from './dto/user-create-dto';
-import { GetUser } from './get-user.decorator';
-import { User } from './user.schema';
+import { GetUser } from '../common/decorator/get-user.decorator';
+import { User } from '../common/database/user.schema';
 
 @Controller('auth')
 export class AuthController {

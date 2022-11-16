@@ -9,9 +9,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { GetUser } from 'src/auth/get-user.decorator';
-import { User } from 'src/auth/user.schema';
-import { Post as Post_ } from './post.schema';
+import { GetUser } from 'src/common/decorator/get-user.decorator';
+import { User } from 'src/common/database/user.schema';
+import { Post as Post_ } from '../common/database/post.schema';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PostIdValidationPipe } from './pipes/post-id-validation.pipe';

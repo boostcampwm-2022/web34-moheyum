@@ -3,10 +3,10 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Post } from './post.schema';
+import { Post } from '../common/database/post.schema';
 import { CreatePostDto } from './dto/create-post.dto';
-import { PostRepository } from './post.repository';
-import { User } from 'src/auth/user.schema';
+import { PostRepository } from '../common/database/post.repository';
+import { User } from 'src/common/database/user.schema';
 
 @Injectable()
 export class PostService {

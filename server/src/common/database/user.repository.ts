@@ -4,9 +4,9 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { User, UserDocument } from './user.schema';
+import { User, UserDocument } from '../database/user.schema';
 import { Model, FilterQuery } from 'mongoose';
-import { UserCreateDto } from './dto/user-create-dto';
+import { UserCreateDto } from '../../auth/dto/user-create-dto';
 
 @Injectable()
 export class UserRepository {

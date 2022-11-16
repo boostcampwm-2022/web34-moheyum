@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Post, PostDocument } from './post.schema';
+import { Post, PostDocument } from '../database/post.schema';
 import { Model, FilterQuery } from 'mongoose';
-import { CreatePostDto } from './dto/create-post.dto';
-import { User } from 'src/auth/user.schema';
+import { CreatePostDto } from '../../post/dto/create-post.dto';
+import { User } from 'src/common/database/user.schema';
 
 @Injectable()
 export class PostRepository {
