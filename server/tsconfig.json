@@ -1,5 +1,4 @@
 {
-  "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "module": "commonjs",
     "declaration": true,
@@ -17,14 +16,6 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false,
-    "paths": {
-      "@filter": ["./src/filter/index"],
-      "@config": ["./src/config/*"],
-      "@modules": ["./src/modules/index"],
-      "@modules/*": ["./src/modoules/*"],
-      "@decorator": ["./src/decorator/index"],
-      "@root": ["./"]
-    }
+    "noFallthroughCasesInSwitch": false
   }
 }

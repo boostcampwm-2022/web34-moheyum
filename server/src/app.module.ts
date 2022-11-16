@@ -1,26 +1,13 @@
-import { Module, MiddlewareConsumer } from '@nestjs/common';
-import { AuthModule } from '@modules';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { join } from 'path';
-import { LoggerMiddleware } from './middleware/logger';
+import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { mongooseConfig } from './config/mongooseConfig';
+import { PostModule } from './post/post.module';
+import { AuthModule } from './auth/auth.module';
+
 @Module({
   imports: [
+    MongooseModule.forRoot('mongodb://localhost:27017'),
+    PostModule,
     AuthModule,
-    ConfigModule.forRoot({
-      envFilePath: [
-        join(__dirname, '..', '..', `.env.${process.env.NODE_ENV}`),
-      ],
-      isGlobal: true, //전역 사용
-    }),
-    MongooseModule.forRootAsync(mongooseConfig),
   ],
-  controllers: [],
-  providers: [],
 })
-export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes('*');
-  }
-}
+export class AppModule {}
