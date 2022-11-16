@@ -1,8 +1,6 @@
 import React from 'react';
-import Introduction from '../components/Introduction';
-import router from 'next/router';
-import Login from '../components/Login';
 import styled from '@emotion/styled';
+import Router from 'next/router';
 
 const Frame = styled.div`
   background-color: grey;
@@ -13,7 +11,7 @@ const Frame = styled.div`
 export default function Home() {
   const isLogin = true;
   if (!isLogin) {
-    router.push('/login');
+    Router.push('/login');
   }
   return (
     // 로그인 여부 체크
@@ -24,6 +22,6 @@ export default function Home() {
     // 닉네임: 1글자 이상 영어 16글자 특수문자 x
     // 아이디: 4글자 16글자 특수문자 x
     // 비밀번호: 8글자 16글자 특수문자 o
-    <Frame></Frame>
+    <Frame />
   );
 }
