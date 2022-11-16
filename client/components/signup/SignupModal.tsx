@@ -95,6 +95,7 @@ export default function SignupModal() {
 
   const submitSignup = () => {
     if (!validateForm()) return;
+    setErrorMessages({ id: '', password: '', password_confirm: '', name: '', email: '', verify: '' });
     // do Signup
     console.log('회원가입해~!~!');
   };
