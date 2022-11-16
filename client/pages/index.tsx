@@ -1,5 +1,8 @@
-import Router from 'next/router';
 import React, { useEffect } from 'react';
+import Router from 'next/router';
+import styled from '@emotion/styled';
+import COLORS from '../styles/color';
+import { displayCenter } from '../styles/mixin';
 
 export default function Home() {
   useEffect(() => {
@@ -10,5 +13,12 @@ export default function Home() {
       Router.push({ pathname: '/login' });
     }
   }, []);
-  return <></>;
+  return <Frame />;
 }
+
+const Frame = styled.div`
+  background-color: ${COLORS.WHITE};
+  width: 1280px;
+  height: 100%;
+  ${displayCenter}
+`;

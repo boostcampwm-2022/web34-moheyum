@@ -2,8 +2,8 @@ import React, { useState, useRef, ChangeEvent, RefObject } from 'react';
 import Router from 'next/router';
 import Link from 'next/link';
 import styled from '@emotion/styled';
-import { displayCenter, boxStyle } from '../styles/mixin';
-import COLORS from '../styles/color';
+import { displayCenter, boxStyle } from '../../styles/mixin';
+import COLORS from '../../styles/color';
 
 type Response = {
   message: string;
@@ -11,7 +11,7 @@ type Response = {
 };
 
 async function signInAPI(inputId: string, inputPw: string): Promise<Response> {
-  const response = await fetch(process.env.NEXT_PUBLIC_DEV_FRONT_TEST_HOST + '/auth/signin', {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_DEV_FRONT_TEST_HOST}/auth/signin`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -19,7 +19,7 @@ async function signInAPI(inputId: string, inputPw: string): Promise<Response> {
     credentials: 'include',
     body: JSON.stringify({ userId: inputId, password: inputPw }),
   });
-  return await response.json();
+  return response.json();
 }
 
 function changeBorderColor(inputRef: RefObject<HTMLInputElement>, color: string) {
@@ -58,7 +58,6 @@ export default function Login() {
         alert('아이디와 비밀번호 정보가 정확하지 않습니다.');
       } else {
         // user 데이터 상태로 저장하기 loginResponse.data
-        console.log(loginResponse.data);
         Router.push({ pathname: '/main' });
       }
     })().catch((err) => {
@@ -78,20 +77,22 @@ export default function Login() {
           ref={inputPwRef}
           onChange={onChangeAccount}
         />
-        <button onClick={commonLogin}>로그인</button>
-        <button style={{ backgroundColor: COLORS.BLACK }}>LOGIN WITH GITHUB</button>
+        <button type="submit" onClick={commonLogin}>
+          로그인
+        </button>
+        <button type="button" style={{ backgroundColor: COLORS.BLACK }}>
+          LOGIN WITH GITHUB
+        </button>
         <FindAccount>
-          <div tabIndex={0}>아이디 찾기</div>
+          <Link href="/idinquiry">아이디 찾기</Link>
           <div>|</div>
 
-          <div tabIndex={0}>비밀번호 찾기</div>
+          <Link href="/pwinquiry">비밀번호 찾기</Link>
         </FindAccount>
       </Box>
       <SignUp>
         <div>계정이 없으신가요?</div>
-        <Link href="/signup">
-          <div tabIndex={0}>회원가입</div>
-        </Link>
+        <Link href="/signup">회원가입</Link>
       </SignUp>
     </Wrapper>
   );
@@ -132,13 +133,15 @@ const Title = styled.div`
 
 const FindAccount = styled.div`
   ${displayCenter}
-  div {
+  margin-bottom: 5%;
+  a {
     margin: 5px;
+    text-decoration: none;
+    color: ${COLORS.BLACK};
     &:focus-within {
       font-weight: bold;
     }
   }
-  margin-bottom: 5%;
 `;
 
 const SignUp = styled.div`
@@ -146,13 +149,11 @@ const SignUp = styled.div`
   margin: 5%;
   display: flex;
   justify-content: space-evenly;
-  div {
-    &:focus-within {
-      font-weight: bold;
-    }
-  }
   a {
     text-decoration: none;
     color: ${COLORS.BLACK};
+    &:focus-within {
+      font-weight: bold;
+    }
   }
 `;

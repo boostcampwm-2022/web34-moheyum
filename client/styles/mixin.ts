@@ -9,7 +9,7 @@ export const displayCenter = css`
 
 export const inputStyle = css`
   border-radius: 5px;
-  border: 1.5px solid ${COLORS.PRIMARY_LIGHT};
+  border: 1px solid ${COLORS.PRIMARY_LIGHT};
   color: ${COLORS.BLACK};
   padding-left: 10px;
   &:focus {

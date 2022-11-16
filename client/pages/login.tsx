@@ -1,13 +1,12 @@
 import React from 'react';
-import Introduction from '../components/Introduction';
-import Login from '../components/Login';
-import Frame from '../styles/frame';
+import Introduction from '../components/login/Introduction';
+import Login from '../components/login/Login';
 
 export default function login() {
   return (
-    <Frame>
+    <>
       <Introduction />
       <Login />
-    </Frame>
+    </>
   );
 }
