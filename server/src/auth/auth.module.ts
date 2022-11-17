@@ -9,6 +9,7 @@ import { UserRepository } from '../common/database/user.repository';
 import { User, UserSchema } from '../common/database/user.schema';
 import { jwtOptions } from 'src/common/config/jwtConfig';
 import { DatabaseModule } from 'src/common/database/database.module';
+import { RefreshTokenStrategy } from './strategies/refreshToken.strategy';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { DatabaseModule } from 'src/common/database/database.module';
     DatabaseModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, UserRepository, JwtStartegy],
+  providers: [AuthService, UserRepository, JwtStartegy, RefreshTokenStrategy],
   exports: [JwtStartegy, PassportModule],
 })
 export class AuthModule {}

@@ -4,6 +4,8 @@ import { Strategy, ExtractJwt } from 'passport-jwt';
 import { UserRepository } from 'src/common/database/user.repository';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
+import { User } from 'src/common/database/user.schema';
+import { UnauthorizedException } from '@nestjs/common';
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(
   Strategy,
@@ -22,5 +24,14 @@ export class RefreshTokenStrategy extends PassportStrategy(
       ]),
     });
   }
-  //   async validate(payload) {}
+  async validate(payload) {
+    const { userid } = payload;
+    const user: User = await this.userRepository.findOne({ userid });
+
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    return user;
+  }
 }

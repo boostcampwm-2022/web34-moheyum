@@ -7,6 +7,9 @@ import { GetUser } from '../common/decorator/get-user.decorator';
 import { User } from '../common/database/user.schema';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
+import { Get } from '@nestjs/common';
+import { Req } from '@nestjs/common';
+import { JwtRefreshGuard } from 'src/common/guard/jwt-refresh.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -25,13 +28,26 @@ export class AuthController {
     @Body() authCredentialsDto: AuthCredentialsDto,
     @Res() res: Response,
   ) {
-    const token = await this.authService.signIn(authCredentialsDto);
-    res.cookie('a_t', token, {
-      httpOnly: true,
-      path: '/',
-      sameSite: 'strict',
-      maxAge: 3000,
+    const { accessToken, refreshToken } = await this.authService.signIn(
+      authCredentialsDto,
+    );
+    res.cookie('a_t', accessToken, this.authService.getAccessOptions());
+    res.cookie('r_t', refreshToken, this.authService.getRefreshOptions());
+    res.json({
+      message: 'success',
+      data: {},
     });
+  }
+
+  @Get('refresh')
+  @UseGuards(JwtRefreshGuard)
+  refresh(@GetUser() user: User, @Res() res: Response) {
+    // TODO db상에서 가져와야함
+    res.cookie(
+      'a_t',
+      this.authService.createAccessToken(user.userid),
+      this.authService.getAccessOptions(),
+    );
     res.json({
       message: 'success',
       data: {},
