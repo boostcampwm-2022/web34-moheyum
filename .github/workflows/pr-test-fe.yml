@@ -28,6 +28,5 @@ jobs:
           cd client
           # npm i -g yarn
           corepack enable
-          yarn set version berry
           yarn install
           yarn build
