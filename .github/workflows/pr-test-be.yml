@@ -20,10 +20,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
-          cache: 'yarn'
-          cache-dependency-path: |
-            client/yarn.lock
-            server/yarn.lock
+          cache: 'npm'
+          cache-dependency-path: server/package-lock.json
       - run: |
           cd server
           # npm i -g yarn
