@@ -17,9 +17,12 @@ export const inputStyle = css`
   border-radius: 5px;
   border: 1px solid ${COLORS.PRIMARY_LIGHT};
   color: ${COLORS.BLACK};
-  padding-left: 10px;
+  padding: 5px 10px;
   &:focus {
     outline-color: ${COLORS.PRIMARY};
+  }
+  &:placeholder-shown {
+    user-select: none;
   }
 `;
 
@@ -28,9 +31,17 @@ export const buttonStyle = css`
   border: 0px solid;
   background-color: ${COLORS.PRIMARY};
   color: ${COLORS.WHITE};
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  padding: 5px 10px;
+  cursor: pointer;
   &:focus {
     outline: none;
+  }
+  &:hover {
+    background-color: ${COLORS.PRIMARY_DARK};
   }
 `;
 

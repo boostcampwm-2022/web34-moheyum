@@ -1,12 +1,13 @@
 import styled from '@emotion/styled';
 import React from 'react';
+import SideBar from '../components/main/SideBar';
 import Editor from '../components/write/Editor';
 import COLORS from '../styles/color';
 
 export default function write() {
   return (
     <Frame>
-      <Sidebar />
+      <SideBar />
       <ContentWrapper>
         <Editor />
       </ContentWrapper>
@@ -21,12 +22,6 @@ const Frame = styled.div`
   height: 100%;
   display: flex;
   flex-direction: row;
-`;
-
-const Sidebar = styled.div`
-  height: inherit;
-  width: 320px;
-  background-color: yellow;
 `;
 
 const ContentWrapper = styled.div`

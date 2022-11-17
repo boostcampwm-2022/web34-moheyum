@@ -25,7 +25,7 @@ const Wrapper = styled.div`
 const Icon = styled.div`
   position: relative;
   width: 100%;
-  height: 60px;
+  height: 55px;
   @media only screen and (max-width: ${({ theme }) => theme.smallWindow}) {
     display: none;
   }
@@ -34,9 +34,9 @@ const Icon = styled.div`
 const SmallIcon = styled.div`
   position: relative;
   width: 100%;
-  height: 45px;
-  margin-top: 8px;
-  margin-bottom: 7px;
+  height: 41px;
+  margin-top: 7px;
+  margin-bottom: 8px;
   display: none;
   @media only screen and (max-width: ${({ theme }) => theme.smallWindow}) {
     display: block;
