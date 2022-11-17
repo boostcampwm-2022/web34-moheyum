@@ -68,6 +68,9 @@ jobs:
               const detail = [`| Category | Score | Display Value |`,
               `| --- | --- | --- |`,
               `${performanceDetail("First Contentful Paint", audits['first-contentful-paint'].score * 100, audits['first-contentful-paint'].displayValue)}`,
+              `${performanceDetail("Speed Index", audits['speed-index'].score * 100, audits['speed-index'].displayValue)}`,
+              `${performanceDetail("Total blocking time", audits['total-blocking-time'].score * 100, audits['total-blocking-time'].displayValue)}`,
+              `${performanceDetail("Cumulative Layout Shift", audits['cumulative-layout-shift'].score * 100, audits['cumulative-layout-shift'].displayValue)}`,
               `${performanceDetail("Largest Contentful Paint", audits['largest-contentful-paint'].score * 100, audits['largest-contentful-paint'].displayValue)}`].join('\n');
               comments += report + "\n\n" + detail + "\n\n";
             });
