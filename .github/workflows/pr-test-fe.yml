@@ -53,22 +53,22 @@ jobs:
               Object.keys(summary).forEach(
                 (key) => (summary[key] = formatScore(summary[key]))
               );
-              const scoreEmoji = (res) => (res >= 90 ? "🟢" : res >= 50 ? "🟠" : "🔴");
-              const reportRow = (label, score) => `| ${scoreEmoji(score)} ${label} | ${score} |`;
-              const detailRow = (label, score, displayValue) => `${reportRow(label, score)} ${displayValue} |`;
+              const emoji = (res) => (res >= 90 ? "🟢" : res >= 50 ? "🟠" : "🔴");
+              const reportScore = (label, score) => `| ${emoji(score)} ${label} | ${score} |`;
+              const performanceDetail = (label, score, displayValue) => `${reportScore(label, score)} ${displayValue} |`;
               const report = [`⚡️ Lighthouse Report!`,
               `| Category | Score |`,
               `| --- | --- |`,
-              `${reportRow('Performance', summary.performance)}`,
-              `${reportRow('Accessibility', summary.accessibility)}`,
-              `${reportRow('Best practices', summary['best-practices'])}`,
-              `${reportRow('SEO', summary.seo)}`,
-              `${reportRow('PWA', summary.pwa)}`].join('\n');
+              `${reportScore('Performance', summary.performance)}`,
+              `${reportScore('Accessibility', summary.accessibility)}`,
+              `${reportScore('Best practices', summary['best-practices'])}`,
+              `${reportScore('SEO', summary.seo)}`,
+              `${reportScore('PWA', summary.pwa)}`].join('\n');
 
               const detail = [`| Category | Score | Display Value |`,
               `| --- | --- | --- |`,
-              `${detailRow("First Contentful Paint", audits['first-contentful-paint'].score * 100, audits['first-contentful-paint'].displayValue)}`,
-              `${detailRow("Largest Contentful Paint", audits['largest-contentful-paint'].score * 100, audits['largest-contentful-paint'].displayValue)}`].join('\n');
+              `${performanceDetail("First Contentful Paint", audits['first-contentful-paint'].score * 100, audits['first-contentful-paint'].displayValue)}`,
+              `${performanceDetail("Largest Contentful Paint", audits['largest-contentful-paint'].score * 100, audits['largest-contentful-paint'].displayValue)}`].join('\n');
               comments += report + "\n\n" + detail + "\n\n";
             });
             core.setOutput('comments', comments)
