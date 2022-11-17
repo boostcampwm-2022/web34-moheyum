@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import Router from 'next/router';
 import COLORS from '../../styles/color';
 import { buttonStyle, inputStyle } from '../../styles/mixin';
+import { httpPost } from '../../utils/http';
 
 export default function SignupModal() {
   const [errorMessages, setErrorMessages] = useState({
@@ -95,11 +96,18 @@ export default function SignupModal() {
     setVerified(true);
   };
 
-  const submitSignup = () => {
+  const submitSignup = async () => {
     if (!validateForm()) return;
     setErrorMessages({ id: '', password: '', password_confirm: '', name: '', email: '', verify: '' });
     // do Signup
-    console.log('회원가입해~!~!');
+    const response = await httpPost('/api/auth/signup', {
+      userid: formValues.id,
+      nickname: formValues.name,
+      email: formValues.email,
+      password: formValues.password,
+    });
+    console.log(await response.json());
+    Router.push('/main');
   };
 
   const validateForm = (): boolean => {

@@ -1,11 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import Link from 'next/link';
 import COLORS from '../../styles/color';
 import { buttonStyle } from '../../styles/mixin';
 import ArticleCard from './ArticleCard';
+import { httpGet } from '../../utils/http';
 
 export default function MainSection() {
+  const [articles, setArticles] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetchArticles();
+  }, []);
+
+  const fetchArticles = async () => {
+    const response: any = await httpGet('/api/post');
+    setArticles(response);
+  };
+
   return (
     <Wrapper>
       <Link href="/write">
@@ -17,6 +29,10 @@ export default function MainSection() {
       </Link>
       <ArticlesSection>
         <ArticleCard />
+        {articles.map((item) => (
+          // eslint-disable-next-line no-underscore-dangle
+          <ArticleCard author={item.author} key={item._id} description={item.description} title={item.title} />
+        ))}
       </ArticlesSection>
     </Wrapper>
   );
@@ -66,4 +82,5 @@ const FakeButton = styled.button`
 const ArticlesSection = styled.div`
   background-color: ${COLORS.OFF_WHITE};
   flex: 1;
+  overflow-y: scroll;
 `;
