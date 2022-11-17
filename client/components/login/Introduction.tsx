@@ -40,6 +40,7 @@ const IntroBox = styled.div`
   ${displayColumn}
   align-items: left;
   margin-bottom: 60px;
+  user-select: none;
 `;
 
 const Text = styled.div`

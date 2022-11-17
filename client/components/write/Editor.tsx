@@ -180,7 +180,10 @@ const EditorTabItem = styled.li<CanBeSelected>`
   align-items: center;
   justify-content: center;
   border: 1px solid ${COLORS.PRIMARY};
-  ${(props) => props.selected && 'border-bottom: 1px solid white;'}
+  ${(props) =>
+    props.selected &&
+    `border-bottom: 1px solid white;
+  margin-bottom: -1px;`}
   border-radius: 5px 5px 0 0;
   background-color: ${(props) => (props.selected ? `${COLORS.WHITE}` : `${COLORS.GRAY3}`)};
   cursor: pointer;

@@ -22,10 +22,11 @@ async function signInAPI(inputId: string, inputPw: string): Promise<Response> {
   return response.json();
 }
 
-function changeBorderColor(inputRef: RefObject<HTMLInputElement>, color: string) {
+function changeBorder(inputRef: RefObject<HTMLInputElement>, color: string) {
   const { current } = inputRef;
   if (current !== null) {
     current.style.borderColor = color;
+    current.style.borderWidth = '2px';
   }
 }
 
@@ -36,11 +37,11 @@ function isInputExist(
   pw: string
 ): boolean {
   if (!id) {
-    changeBorderColor(inputIdRef, COLORS.RED);
+    changeBorder(inputIdRef, COLORS.RED);
     return false;
   }
   if (!pw) {
-    changeBorderColor(inputPwRef, COLORS.RED);
+    changeBorder(inputPwRef, COLORS.RED);
     return false;
   }
   return true;
@@ -54,8 +55,8 @@ export default function Login() {
   const inputIdRef: RefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
   const inputPwRef: RefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
   const onChangeAccount = (e: ChangeEvent<HTMLInputElement>): void => {
-    changeBorderColor(inputIdRef, COLORS.PRIMARY_LIGHT);
-    changeBorderColor(inputPwRef, COLORS.PRIMARY_LIGHT);
+    changeBorder(inputIdRef, COLORS.PRIMARY_LIGHT);
+    changeBorder(inputPwRef, COLORS.PRIMARY_LIGHT);
     setAccount({
       ...account,
       [e.target.name]: e.target.value,
@@ -93,9 +94,10 @@ export default function Login() {
         <button type="submit" onClick={commonLogin}>
           로그인
         </button>
-        <button type="button" style={{ backgroundColor: COLORS.BLACK }}>
+        {/* <GithubSignup type="button">
+          <GithubIcon />
           LOGIN WITH GITHUB
-        </button>
+        </GithubSignup> */}
         <FindAccount>
           <Link href="/idinquiry">아이디 찾기</Link>
           <div>|</div>
@@ -123,14 +125,12 @@ const Box = styled.div`
   ${boxStyle}
   input {
     margin-bottom: 12px;
-    width: 70.5%;
-    height: 13%;
+    width: 73%;
     font-size: 18px;
   }
   button {
     margin-bottom: 12px;
     width: 73%;
-    height: 15%;
     font-size: 18px;
   }
 `;
@@ -138,7 +138,7 @@ const Box = styled.div`
 const Title = styled.div`
   font-size: 36px;
   margin-top: 8%;
-  margin-bottom: 1%;
+  margin-bottom: 20px;
 `;
 
 const FindAccount = styled.div`
@@ -166,4 +166,17 @@ const SignUp = styled.div`
       font-weight: bold;
     }
   }
+`;
+
+const GithubSignup = styled.button`
+  background-color: ${COLORS.BLACK} !important;
+  &:hover {
+    background-color: #111 !important;
+  }
+`;
+
+const GithubIcon = styled.span`
+  content: url('/ico_github.svg');
+  margin-right: 15px;
+  filter: invert(93%) sepia(100%) saturate(0%) hue-rotate(248deg) brightness(106%) contrast(106%);
 `;

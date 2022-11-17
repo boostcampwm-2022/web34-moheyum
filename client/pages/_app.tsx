@@ -21,7 +21,6 @@ export default function App({ Component, pageProps }: AppProps) {
 }
 const AppStyle = styled.div`
   background-color: ${COLORS.GRAY3};
-  width: 100vw;
-  height: 100vh;
+  height: 100%;
   ${displayCenter}
 `;
