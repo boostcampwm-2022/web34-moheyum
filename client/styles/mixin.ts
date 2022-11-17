@@ -7,6 +7,12 @@ export const displayCenter = css`
   align-items: center;
 `;
 
+export const displayColumn = css`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+`;
+
 export const inputStyle = css`
   border-radius: 5px;
   border: 1px solid ${COLORS.PRIMARY_LIGHT};

@@ -2,7 +2,7 @@ import React, { useState, useRef, ChangeEvent, RefObject } from 'react';
 import Router from 'next/router';
 import Link from 'next/link';
 import styled from '@emotion/styled';
-import { displayCenter, boxStyle } from '../../styles/mixin';
+import { displayCenter, boxStyle, displayColumn } from '../../styles/mixin';
 import COLORS from '../../styles/color';
 
 type Response = {
@@ -28,6 +28,24 @@ function changeBorderColor(inputRef: RefObject<HTMLInputElement>, color: string)
     current.style.borderColor = color;
   }
 }
+
+function isInputExist(
+  inputIdRef: RefObject<HTMLInputElement>,
+  inputPwRef: RefObject<HTMLInputElement>,
+  id: string,
+  pw: string
+): boolean {
+  if (!id) {
+    changeBorderColor(inputIdRef, COLORS.RED);
+    return false;
+  }
+  if (!pw) {
+    changeBorderColor(inputPwRef, COLORS.RED);
+    return false;
+  }
+  return true;
+}
+
 export default function Login() {
   const [account, setAccount] = useState({
     id: '',
@@ -44,12 +62,7 @@ export default function Login() {
     });
   };
   const commonLogin = (): void => {
-    if (!account.id) {
-      changeBorderColor(inputIdRef, COLORS.RED);
-      return;
-    }
-    if (!account.pw) {
-      changeBorderColor(inputPwRef, COLORS.RED);
+    if (!isInputExist(inputIdRef, inputPwRef, account.id, account.pw)) {
       return;
     }
     (async () => {
@@ -86,7 +99,6 @@ export default function Login() {
         <FindAccount>
           <Link href="/idinquiry">아이디 찾기</Link>
           <div>|</div>
-
           <Link href="/pwinquiry">비밀번호 찾기</Link>
         </FindAccount>
       </Box>
@@ -101,9 +113,7 @@ export default function Login() {
 const Wrapper = styled.div`
   width: 50%;
   height: 100%;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
+  ${displayColumn}
   align-items: left;
 `;
 

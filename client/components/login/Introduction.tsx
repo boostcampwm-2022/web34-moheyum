@@ -2,13 +2,13 @@ import React from 'react';
 import Image from 'next/image';
 import styled from '@emotion/styled';
 import COLORS from '../../styles/color';
-import { displayCenter } from '../../styles/mixin';
+import { displayCenter, displayColumn } from '../../styles/mixin';
 
 export default function Introduction() {
   return (
     <Wrapper>
       <IntroBox>
-        <Image src="/LogoWhite.svg" alt="Logo" width={450} height={150} />
+        <Image src="/logo_white.svg" alt="Logo" width={450} height={150} />
         <Text>
           헤윰은 <Highlight>생각</Highlight>을 의미하는
           <br />순 우리말입니다.
@@ -37,9 +37,7 @@ const Wrapper = styled.div`
 const IntroBox = styled.div`
   width: 90%;
   height: 400px;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
+  ${displayColumn}
   align-items: left;
   margin-bottom: 60px;
 `;
