@@ -13,69 +13,60 @@ const menuList = [
 ];
 
 export default function SideBar() {
-  const menuTagList = menuList.map((item) => (
-    <Link key={item.routeSrc} href={item.routeSrc} style={{ textDecorationLine: 'none' }}>
-      <Menu imgSrc={item.imgSrc} text={item.text} />
-    </Link>
-  ));
-  const modalRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
-  const [modalState, setModalState] = useState({ modalDisplay: 'none', sideBoxHeight: 'calc(100vh - 145px)' });
-  const showSettingModal = () => {
-    if (modalState.modalDisplay === 'none') {
-      setModalState((prev) => ({
-        ...prev,
-        modalDisplay: 'flex',
-        sideBoxHeight: `calc(100vh - 285px)`,
-      }));
-    } else {
-      setModalState((prev) => ({
-        ...prev,
-        modalDisplay: 'none',
-        sideBoxHeight: `calc(100vh - 145px)`,
-      }));
-    }
+  const dropdownRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
+  const [dropdownState, setdropdownState] = useState<boolean>(false);
+  const showSettingdropdown = () => {
+    setdropdownState(!dropdownState);
   };
   return (
     <Wrapper>
       <Title />
-      <SideMenuBox style={{ height: modalState.sideBoxHeight }}>{menuTagList}</SideMenuBox>
-      <Modal style={{ display: modalState.modalDisplay }} ref={modalRef}>
-        <div>
-          <li>
-            <Link href="/myAccount">내 계정 정보 확인</Link>
-          </li>
-          <li>비밀번호 변경</li>
-          <li>알림 일시중지</li>
-          <li>로그아웃</li>
-        </div>
-      </Modal>
-      <Setting onClick={showSettingModal}>
+      <SideMenuBox>
+        {menuList.map((item) => (
+          <Link key={item.routeSrc} href={item.routeSrc}>
+            <Menu imgSrc={item.imgSrc} text={item.text} />
+          </Link>
+        ))}
+      </SideMenuBox>
+      {dropdownState && (
+        <Dropdown ref={dropdownRef}>
+          <div>
+            <li>
+              <Link href="/myAccount">내 계정 정보 확인</Link>
+            </li>
+            <li>비밀번호 변경</li>
+            <li>알림 일시중지</li>
+            <li>로그아웃</li>
+          </div>
+        </Dropdown>
+      )}
+      <Setting onClick={showSettingdropdown}>
         <Menu imgSrc="/setting.svg" text="설정" />
       </Setting>
     </Wrapper>
   );
 }
 
-const Modal = styled.div`
-  width: 100%;
-  height: 130px;
+const Dropdown = styled.div`
+  width: fit-content;
+  /* position: fixed; */
+  margin-left: 30px;
   justify-content: center;
   align-items: right;
   margin-bottom: 10px;
   div {
     position: relative;
-    width: 65%;
+    width: 100%;
     height: 100%;
+    white-space: nowrap;
     background-color: ${COLORS.WHITE};
     border-radius: 10px;
     ${displayColumn}
-    padding-top: 15px;
     border: 1px solid ${COLORS.PRIMARY_DARK};
     li {
       list-style: none;
-      margin-left: 10px;
       font-size: 14px;
-      margin-bottom: 15px;
+      margin: 10px 10px;
     }
   }
 `;
@@ -83,7 +74,9 @@ const Modal = styled.div`
 const Wrapper = styled.aside`
   width: ${({ theme }) => theme.sidebar.maxWidth};
   height: 100%;
-  ${displayColumn}
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   background-color: ${({ theme }) => theme.sidebar.backgroundColor};
   @media only screen and (max-width: ${({ theme }) => theme.smallWindow}) {
     width: ${({ theme }) => theme.sidebar.minWidth};
@@ -92,6 +85,7 @@ const Wrapper = styled.aside`
 
 const SideMenuBox = styled.div`
   width: 100%;
+  flex: 1;
 `;
 
 const Setting = styled.div`

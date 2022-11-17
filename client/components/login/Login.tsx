@@ -126,12 +126,10 @@ const Box = styled.div`
   input {
     margin-bottom: 12px;
     width: 73%;
-    font-size: 18px;
   }
   button {
     margin-bottom: 12px;
     width: 73%;
-    font-size: 18px;
   }
 `;
 
@@ -168,15 +166,15 @@ const SignUp = styled.div`
   }
 `;
 
-const GithubSignup = styled.button`
-  background-color: ${COLORS.BLACK} !important;
-  &:hover {
-    background-color: #111 !important;
-  }
-`;
+// const GithubSignup = styled.button`
+//   background-color: ${COLORS.BLACK} !important;
+//   &:hover {
+//     background-color: #111 !important;
+//   }
+// `;
 
-const GithubIcon = styled.span`
-  content: url('/ico_github.svg');
-  margin-right: 15px;
-  filter: invert(93%) sepia(100%) saturate(0%) hue-rotate(248deg) brightness(106%) contrast(106%);
-`;
+// const GithubIcon = styled.span`
+//   content: url('/ico_github.svg');
+//   margin-right: 15px;
+//   filter: invert(93%) sepia(100%) saturate(0%) hue-rotate(248deg) brightness(106%) contrast(106%);
+// `;

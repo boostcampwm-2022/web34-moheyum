@@ -1,31 +1,35 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import Image from 'next/legacy/image';
+import Link from 'next/link';
 import COLORS from '../../../styles/color';
 
 export default function Title() {
   return (
     <Wrapper>
-      <Icon>
-        <Image src="/logo_purple.svg" alt="Logo" layout="fill" priority />
-      </Icon>
-      <SmallIcon>
-        <Image src="/small_logo.svg" alt="Logo" layout="fill" priority />
-      </SmallIcon>
+      <Link href="/main">
+        <Icon>
+          <Image src="/logo_purple.svg" alt="Logo" layout="fill" priority />
+        </Icon>
+        <SmallIcon>
+          <Image src="/small_logo.svg" alt="Logo" layout="fill" priority />
+        </SmallIcon>
+      </Link>
     </Wrapper>
   );
 }
 
 const Wrapper = styled.div`
   width: 100%;
-  height: 60px;
+  height: 80px;
   border-bottom: 2px ridge ${COLORS.PRIMARY};
+  user-select: none;
 `;
 
 const Icon = styled.div`
   position: relative;
   width: 100%;
-  height: 55px;
+  height: 100%;
   @media only screen and (max-width: ${({ theme }) => theme.smallWindow}) {
     display: none;
   }

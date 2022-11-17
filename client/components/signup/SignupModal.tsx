@@ -1,6 +1,8 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
+import Router from 'next/router';
 import COLORS from '../../styles/color';
+import { buttonStyle, inputStyle } from '../../styles/mixin';
 
 export default function SignupModal() {
   const [errorMessages, setErrorMessages] = useState({
@@ -25,7 +27,7 @@ export default function SignupModal() {
   const [timer, setTimer] = useState<number>(-1);
 
   const goBack = () => {
-    console.log('뒤로가잇');
+    Router.back();
   };
 
   const onChangeFields = (e: ChangeEvent) => {
@@ -302,49 +304,29 @@ interface sizeProps {
 }
 
 const MoheyumInputText = styled.input<sizeProps>`
-  box-sizing: border-box;
   width: ${(props) => (props.width ? `${props.width}px` : '100%')};
   ${(props) => props.height && `height: ${props.height}px;`}
-  padding: 12px;
-  background-color: ${COLORS.WHITE};
-  border: 2px solid ${COLORS.PRIMARY};
-  border-radius: 7px;
-  transition: all 0.2s ease;
-  &:focus {
-    outline: 1px solid ${COLORS.PRIMARY_DARK};
-    border: 2px solid ${COLORS.PRIMARY_DARK};
-  }
-  &:placeholder-shown {
-    color: ${COLORS.GRAY2};
-  }
-  &:disabled {
-    background-color: ${COLORS.GRAY3};
-    -webkit-box-shadow: 0 0 0 30px ${COLORS.GRAY3} inset !important;
-    box-shadow: 0 0 0 30px ${COLORS.GRAY3} inset !important;
-  }
+  ${inputStyle}
+
   &:-webkit-autofill,
   &:-webkit-autofill:hover,
   &:-webkit-autofill:focus,
   &:-webkit-autofill:active {
     -webkit-box-shadow: 0 0 0 30px ${COLORS.WHITE} inset;
-    box-shadow: 0 0 0 30px ${COLORS.GRAY3} inset !important;
+    box-shadow: 0 0 0 30px ${COLORS.WHITE} inset !important;
+    &:disabled {
+      -webkit-box-shadow: 0 0 0 30px ${COLORS.GRAY3} inset;
+      box-shadow: 0 0 0 30px ${COLORS.GRAY3} inset !important;
+    }
   }
 `;
 
 const MoheyumButton = styled.button<sizeProps>`
-  box-sizing: border-box;
-  background-color: ${COLORS.PRIMARY};
-  border-radius: 5px;
-  border: none;
-  color: ${COLORS.WHITE};
   margin: 0 10px;
   padding: 10px 0;
   width: ${(props) => (props.width ? `${props.width}px` : '100%')};
   ${(props) => props.height && `height: ${props.height}px;`}
-
-  &:hover {
-    background-color: ${COLORS.PRIMARY_DARK};
-  }
+  ${buttonStyle}
 `;
 
 const SignupSubmitContainer = styled.div`
@@ -365,4 +347,5 @@ const ButtonBack = styled.button`
   background-image: url('/ico_chveron_left.svg');
   background-size: contain;
   background-repeat: no-repeat;
+  cursor: pointer;
 `;

@@ -15,3 +15,7 @@ body {
 #__next {
   height: 100%;
 }
+
+*:link {
+  text-decoration: none;
+}

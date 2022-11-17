@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import Router from 'next/router';
 import React, { KeyboardEvent, useRef, useState } from 'react';
 import COLORS from '../../styles/color';
+import { buttonStyle } from '../../styles/mixin';
 
 export default function Editor() {
   const contentRef = useRef<HTMLDivElement>(null);
@@ -18,7 +19,7 @@ export default function Editor() {
   };
 
   const goBack = () => {
-    Router.push('/');
+    Router.back();
   };
 
   const submitHandler = async () => {
@@ -78,16 +79,12 @@ export default function Editor() {
         onKeyUp={handleKeyUp}
       >
         <div>
-          fasfasgfs
           <br />
-        </div>
-        <div>
-          <span>dzzzz</span>dd
         </div>
       </EditorTextBox>
       <BottomButtonConatiner>
         <button type="button" onClick={submitHandler}>
-          submit
+          작성 완료
         </button>
       </BottomButtonConatiner>
     </Wrapper>
@@ -144,6 +141,7 @@ const ButtonBack = styled.button`
   background-image: url('/ico_chveron_left.svg');
   background-size: contain;
   background-repeat: no-repeat;
+  cursor: pointer;
 `;
 
 const ToolbarContainer = styled.div`
@@ -206,4 +204,9 @@ const BottomButtonConatiner = styled.div`
   width: 100%;
   display: flex;
   justify-content: flex-end;
+  border-top: 1px solid ${COLORS.PRIMARY};
+  & > button {
+    ${buttonStyle}
+    margin: 10px 20px;
+  }
 `;
