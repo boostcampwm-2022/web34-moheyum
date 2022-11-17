@@ -3,6 +3,7 @@ import Router from 'next/router';
 import React, { KeyboardEvent, useRef, useState } from 'react';
 import COLORS from '../../styles/color';
 import { buttonStyle } from '../../styles/mixin';
+import { httpPost } from '../../utils/http';
 
 export default function Editor() {
   const contentRef = useRef<HTMLDivElement>(null);
@@ -25,19 +26,17 @@ export default function Editor() {
   const submitHandler = async () => {
     const target = contentRef.current;
     if (!target) return;
-    const result = await fetch(`${process.env.NEXT_PUBLIC_TEST_API}/write`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        author: 1,
-        title: 'title',
-        article: contentRef.current.innerText,
-        date: new Date(),
-      }),
+    const result = await httpPost('/api/post', {
+      author: 1,
+      title: 'title',
+      description: contentRef.current.innerText,
     });
-    console.log(await result.json());
+    // if (!result.ok) {
+    //   console.log('error');
+    //   return;
+    // }
+    console.log(result);
+    Router.push('/main');
   };
 
   const selectTab = (index: number) => {

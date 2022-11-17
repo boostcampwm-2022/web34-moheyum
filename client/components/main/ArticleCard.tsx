@@ -3,14 +3,27 @@ import Image from 'next/legacy/image';
 import React from 'react';
 import COLORS from '../../styles/color';
 
-export default function ArticleCard() {
+interface Props {
+  title?: string;
+  description?: string;
+  author?: string;
+}
+
+ArticleCard.defaultProps = {
+  title: '',
+  description: '',
+  author: '',
+};
+
+export default function ArticleCard({ title, description, author }: Props) {
   return (
     <Wrapper>
       <ArticleHeader>
         <Author>
           <div />
-          작성자 이름
+          {author || '작성자 이름'}
         </Author>
+        <div>{title || '제목 없음'}</div>
         <HeaderInfo>
           <Comments>
             <Image src="/ico_comment.svg" width={20} height={20} />
@@ -21,7 +34,7 @@ export default function ArticleCard() {
       </ArticleHeader>
       <hr />
       <ArticleContent>
-        <Content>글 내용</Content>
+        <Content>{description || '글 내용이 없어용!'}</Content>
         <ArticleImage />
       </ArticleContent>
     </Wrapper>
@@ -67,7 +80,7 @@ const Author = styled.div`
   & > div {
     width: 40px;
     height: 40px;
-    border-radius: 100%;
+    border-radius: 20px;
     background-color: ${COLORS.GRAY4};
     border: 1px solid ${COLORS.GRAY3};
     margin-right: 10px;
