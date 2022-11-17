@@ -1,0 +1,67 @@
+[
+  {
+    "url": "http://localhost:3000/main",
+    "isRepresentativeRun": false,
+    "htmlPath": "/Users/sunmin/Programming/Boostcamp/Membership/teamProject/moheyum/client/lhci_reports/_main-2022_11_17_15_30_35-report.html",
+    "jsonPath": "/Users/sunmin/Programming/Boostcamp/Membership/teamProject/moheyum/client/lhci_reports/_main-2022_11_17_15_30_35-report.json",
+    "summary": {
+      "performance": 0.78,
+      "accessibility": 0.88,
+      "best-practices": 0.83,
+      "seo": 0.92,
+      "pwa": 0.3
+    }
+  },
+  {
+    "url": "http://localhost:3000/main",
+    "isRepresentativeRun": false,
+    "htmlPath": "/Users/sunmin/Programming/Boostcamp/Membership/teamProject/moheyum/client/lhci_reports/_main-2022_11_17_15_30_55-report.html",
+    "jsonPath": "/Users/sunmin/Programming/Boostcamp/Membership/teamProject/moheyum/client/lhci_reports/_main-2022_11_17_15_30_55-report.json",
+    "summary": {
+      "performance": 0.79,
+      "accessibility": 0.88,
+      "best-practices": 0.83,
+      "seo": 0.92,
+      "pwa": 0.3
+    }
+  },
+  {
+    "url": "http://localhost:3000/main",
+    "isRepresentativeRun": false,
+    "htmlPath": "/Users/sunmin/Programming/Boostcamp/Membership/teamProject/moheyum/client/lhci_reports/_main-2022_11_17_15_31_05-report.html",
+    "jsonPath": "/Users/sunmin/Programming/Boostcamp/Membership/teamProject/moheyum/client/lhci_reports/_main-2022_11_17_15_31_05-report.json",
+    "summary": {
+      "performance": 0.79,
+      "accessibility": 0.88,
+      "best-practices": 0.83,
+      "seo": 0.92,
+      "pwa": 0.3
+    }
+  },
+  {
+    "url": "http://localhost:3000/main",
+    "isRepresentativeRun": false,
+    "htmlPath": "/Users/sunmin/Programming/Boostcamp/Membership/teamProject/moheyum/client/lhci_reports/_main-2022_11_17_15_31_15-report.html",
+    "jsonPath": "/Users/sunmin/Programming/Boostcamp/Membership/teamProject/moheyum/client/lhci_reports/_main-2022_11_17_15_31_15-report.json",
+    "summary": {
+      "performance": 0.79,
+      "accessibility": 0.88,
+      "best-practices": 0.83,
+      "seo": 0.92,
+      "pwa": 0.3
+    }
+  },
+  {
+    "url": "http://localhost:3000/main",
+    "isRepresentativeRun": true,
+    "htmlPath": "/Users/sunmin/Programming/Boostcamp/Membership/teamProject/moheyum/client/lhci_reports/_main-2022_11_17_15_30_45-report.html",
+    "jsonPath": "/Users/sunmin/Programming/Boostcamp/Membership/teamProject/moheyum/client/lhci_reports/_main-2022_11_17_15_30_45-report.json",
+    "summary": {
+      "performance": 0.79,
+      "accessibility": 0.88,
+      "best-practices": 0.83,
+      "seo": 0.92,
+      "pwa": 0.3
+    }
+  }
+]
