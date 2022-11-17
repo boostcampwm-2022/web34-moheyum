@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 
-export type ArticleDocument = HydratedDocument<Article>;
+export type PostDocument = HydratedDocument<Post>;
 
 @Schema({ versionKey: false })
-export class Article {
+export class Post {
   @Prop()
   title: string;
 
@@ -18,4 +18,4 @@ export class Article {
   // TODO : Date 추가
 }
 
-export const ArticleSchema = SchemaFactory.createForClass(Article);
+export const PostSchema = SchemaFactory.createForClass(Post);
