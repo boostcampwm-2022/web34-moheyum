@@ -21,13 +21,10 @@ jobs:
         with:
           node-version: '16'
           cache: 'yarn'
-          cache-dependency-path: |
-            client/yarn.lock
-            server/yarn.lock
+          cache-dependency-path: client/yarn.lock
       - run: |
           cd client
           # npm i -g yarn
           corepack enable
-          yarn set version berry
           yarn install
           yarn build
