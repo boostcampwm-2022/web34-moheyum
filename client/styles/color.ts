@@ -1,3 +1,21 @@
+export interface styleColors {
+  PRIMARY: string;
+  PRIMARY_DARK: string;
+  PRIMARY_LIGHT: string;
+  OFF_WHITE: string;
+  WHITE: string;
+  BLACK: string;
+  GRAY1: string;
+  GRAY2: string;
+  GRAY3: string;
+  GRAY4: string;
+  GRAY5: string;
+  RED: string;
+  BLUE: string;
+  LIGHT_BLACK: string;
+  POINT_COLOR: string;
+}
+
 const COLORS = {
   PRIMARY: '#AC92ED',
   PRIMARY_DARK: '#7B52E1',
