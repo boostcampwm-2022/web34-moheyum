@@ -47,9 +47,9 @@ jobs:
           password: ${{ secrets.INSTANCE_PASSWORD_DEV }}
           script: |
             #!/bin/bash
+            sshpass -p "${{ secrets.SCP_PASSWORD }}" scp -P ${{ secrets.SCP_PORT }} -r ${{ secrets.SCP_USERNAME }}@${{ secrets.SCP_HOST }}:~/ftp/client/ ~/moheyum/
             if [ "$(pm2 list | grep -c frontend )" -eq 0 ]; then
               cd ~/moheyum/client
-              sshpass -p "${{ secrets.SCP_PASSWORD }}" scp -P ${{ secrets.SCP_PORT }} ${{ secrets.SCP_USERNAME }}@${{ secrets.SCP_HOST }}:~/ftp/client ~/moheyum/
               pm2 start yarn --name frontend -i 1 -- dev # not working
             else
               pm2 reload frontend
