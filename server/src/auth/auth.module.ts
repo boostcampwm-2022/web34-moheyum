@@ -10,6 +10,7 @@ import { User, UserSchema } from '../common/database/user.schema';
 import { jwtOptions } from 'src/common/config/jwtConfig';
 import { DatabaseModule } from 'src/common/database/database.module';
 import { RefreshTokenStrategy } from './strategies/refreshToken.strategy';
+import { CacheModule } from 'src/redis/redis.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { RefreshTokenStrategy } from './strategies/refreshToken.strategy';
     JwtModule.registerAsync(jwtOptions),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     DatabaseModule,
+    CacheModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, UserRepository, JwtStartegy, RefreshTokenStrategy],

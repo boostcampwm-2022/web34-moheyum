@@ -6,6 +6,7 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { CookieOptions } from 'express';
+import { User } from 'src/common/database/user.schema';
 
 @Injectable()
 export class AuthService {
@@ -15,8 +16,7 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  async signUp(userCreateDto: UserCreateDto): Promise<void> {
-    // TODO : hash iteration을 별도의 config로 분리
+  async signUp(userCreateDto: UserCreateDto): Promise<User> {
     userCreateDto.password = await bcrypt.hash(userCreateDto.password, 10);
     return this.userRepository.createUser(userCreateDto);
   }
@@ -70,5 +70,12 @@ export class AuthService {
       const refreshToken = await this.createRefreshToken(payload);
       return { accessToken, refreshToken };
     } else throw new UnauthorizedException('login failed');
+  }
+
+  public async findUser(userid: string) {
+    const user = await this.userRepository.findOne({ userid });
+    console.log(user._id);
+    console.log(user['createdAt']);
+    console.log(user['_id'].toString());
   }
 }

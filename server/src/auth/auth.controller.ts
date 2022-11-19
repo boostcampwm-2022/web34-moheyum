@@ -1,28 +1,37 @@
-import { Body, Controller, Post, UseGuards, Res } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import {
+  Body,
+  Controller,
+  Post,
+  UseGuards,
+  Res,
+  Get,
+  HttpCode,
+  Param,
+} from '@nestjs/common';
+// import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { AuthCredentialsDto } from './dto/auth-credential-dto';
 import { UserCreateDto } from './dto/user-create-dto';
 import { GetUser } from '../common/decorator/get-user.decorator';
 import { User } from '../common/database/user.schema';
 import { Response } from 'express';
-import { ConfigService } from '@nestjs/config';
-import { Get } from '@nestjs/common';
-import { Req } from '@nestjs/common';
 import { JwtRefreshGuard } from 'src/common/guard/jwt-refresh.guard';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private authService: AuthService,
-    private readonly configService: ConfigService,
-  ) {}
+  constructor(private authService: AuthService) {}
 
+  @HttpCode(200)
   @Post('/signup')
-  signUp(@Body() userCreateDto: UserCreateDto): Promise<void> {
-    return this.authService.signUp(userCreateDto);
+  async signUp(@Body() userCreateDto: UserCreateDto) {
+    console.log(await this.authService.signUp(userCreateDto));
+    return {
+      message: 'success',
+      data: {},
+    };
   }
 
+  @HttpCode(200)
   @Post('/signin')
   async signIn(
     @Body() authCredentialsDto: AuthCredentialsDto,
@@ -53,10 +62,8 @@ export class AuthController {
       data: {},
     });
   }
-
-  @Post('/test')
-  @UseGuards(AuthGuard())
-  test(@GetUser() user: User) {
-    console.log(user);
+  @Get('/:userid')
+  async getUserInfo(@Param('userid') userid: string) {
+    this.authService.findUser(userid);
   }
 }
