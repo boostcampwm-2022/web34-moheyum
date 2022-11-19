@@ -6,7 +6,7 @@ on:
       - dev
       - main
     paths:
-      - 'client/**'
+      - "client/**"
   workflow_dispatch:
 
 env:
@@ -19,15 +19,73 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: '16'
-          cache: 'yarn'
-          cache-dependency-path: |
-            client/yarn.lock
-            server/yarn.lock
-      - run: |
+          node-version: "16"
+          cache: "yarn"
+          cache-dependency-path: client/yarn.lock
+      - name: install and build
+        env:
+          SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
+        run: |
+          # sudo apt-get update
+          mkdir -p ~/.ssh/
+          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          sshpass -p "${{ secrets.SCP_PASSWORD }}" scp -P ${{ secrets.SCP_PORT }} -r ${{ secrets.SCP_USERNAME }}@${{ secrets.SCP_HOST }}:~/ftp/client/ ./
+          ls -la
           cd client
+          ls -la
           # npm i -g yarn
           corepack enable
-          yarn set version berry
           yarn install
           yarn build
+      - name: Run Lighthouse CI
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+        run: |
+          npm install -g @lhci/cli
+          cd client
+          npx lhci autorun || echo "Fail to Run Lighthouse CI!"
+      - name: Format lighthouse score
+        id: format_lighthouse_score
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const fs = require('fs');
+            const results = JSON.parse(fs.readFileSync("./client/lhci_reports/manifest.json"));
+            let comments = "";
+            results.forEach((result) => {
+              const { summary, jsonPath } = result;
+              const details = JSON.parse(fs.readFileSync(jsonPath));
+              const { audits } = details;
+              
+              const formatScore = (res) => Math.round(res * 100);
+              Object.keys(summary).forEach(
+                (key) => (summary[key] = formatScore(summary[key]))
+              );
+              const emoji = (res) => (res >= 90 ? "🟢" : res >= 50 ? "🟠" : "🔴");
+              const reportScore = (label, score) => `| ${emoji(score)} ${label} | ${score} |`;
+              const performanceDetail = (label, score, displayValue) => `${reportScore(label, score)} ${displayValue} |`;
+              const report = [`⚡️ Lighthouse Report!`,
+              `| Category | Score |`,
+              `| --- | --- |`,
+              `${reportScore('Performance', summary.performance)}`,
+              `${reportScore('Accessibility', summary.accessibility)}`,
+              `${reportScore('Best practices', summary['best-practices'])}`,
+              `${reportScore('SEO', summary.seo)}`,
+              `${reportScore('PWA', summary.pwa)}`].join('\n');
+              const detail = [`| Category | Score | Display Value |`,
+              `| --- | --- | --- |`,
+              `${performanceDetail("First Contentful Paint", audits['first-contentful-paint'].score * 100, audits['first-contentful-paint'].displayValue)}`,
+              `${performanceDetail("Speed Index", audits['speed-index'].score * 100, audits['speed-index'].displayValue)}`,
+              `${performanceDetail("Total blocking time", audits['total-blocking-time'].score * 100, audits['total-blocking-time'].displayValue)}`,
+              `${performanceDetail("Cumulative Layout Shift", audits['cumulative-layout-shift'].score * 100, audits['cumulative-layout-shift'].displayValue)}`,
+              `${performanceDetail("Largest Contentful Paint", audits['largest-contentful-paint'].score * 100, audits['largest-contentful-paint'].displayValue)}`].join('\n');
+              comments += report + "\n\n" + detail + "\n\n";
+            });
+            core.setOutput('comments', comments)
+      - name: comment PR
+        uses: unsplash/comment-on-pr@v1.3.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          msg: ${{ steps.format_lighthouse_score.outputs.comments}}
