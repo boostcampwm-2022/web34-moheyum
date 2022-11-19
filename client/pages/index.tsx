@@ -3,8 +3,8 @@ import { httpGet } from '../utils/http';
 import { GetServerSidePropsContext } from 'next';
 import { useSetRecoilState } from 'recoil';
 import Frame from '../styles/frame';
-import SideBar from '../components/Main/SideBar';
-import MainSection from '../components/Main/MainSection';
+import SideBar from '../components/main/SideBar';
+import MainSection from '../components/main/MainSection';
 import newsPeedState from '../atom/newsPeedState';
 
 interface newsPeedType {

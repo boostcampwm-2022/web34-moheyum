@@ -68,8 +68,10 @@ export default function Login() {
     if (!isInputExist(inputIdRef, inputPwRef, account.id, account.pw)) {
       return;
     }
-    const response = await httpPost('/api/auth/signin', { userid: account.id, password: account.pw });
-    if (response.accessToken) Router.push('/main');
+    const response = await httpPost('/auth/signin', { userid: account.id, password: account.pw });
+    if (response.accessToken) {
+      Router.push('/');
+    }
     // if (response.status === 201) Router.push('/main');
     // if (response.status === 200) Router.push('/main');
   };

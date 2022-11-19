@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from '@emotion/styled';
 import { useRecoilValue } from 'recoil';
 import Link from 'next/link';
-import COLORS from '../../../styles/color';
-import { buttonStyle } from '../../../styles/mixin';
+import COLORS from '../../styles/color';
+import { buttonStyle } from '../../styles/mixin';
 import ArticleCard from './ArticleCard';
-import newsPeedState from '../../../atom/newsPeedState';
+import newsPeedState from '../../atom/newsPeedState';
 
 export default function MainSection() {
   const newsPeedList = useRecoilValue(newsPeedState);

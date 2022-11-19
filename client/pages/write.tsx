@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import React from 'react';
-import SideBar from '../components/Main/SideBar';
+import SideBar from '../components/main/SideBar';
 import Editor from '../components/write/Editor';
 import COLORS from '../styles/color';
 
