@@ -1,10 +1,10 @@
 import React, { useState, useRef, RefObject } from 'react';
 import styled from '@emotion/styled';
 import Link from 'next/link';
-import { displayColumn } from '../../styles/mixin';
-import Menu from './SideBar/Menu';
-import Title from './SideBar/Title';
-import COLORS from '../../styles/color';
+import { displayColumn } from '../../../styles/mixin';
+import Menu from './Menu';
+import Title from './Title';
+import COLORS from '../../../styles/color';
 
 const menuList = [
   { routeSrc: '/main', imgSrc: '/home.svg', text: '홈' },

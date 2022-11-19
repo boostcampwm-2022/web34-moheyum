@@ -1,23 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import Link from 'next/link';
-import COLORS from '../../styles/color';
-import { buttonStyle } from '../../styles/mixin';
+import COLORS from '../../../styles/color';
+import { buttonStyle } from '../../../styles/mixin';
 import ArticleCard from './ArticleCard';
-import { httpGet } from '../../utils/http';
+import { useRecoilValue } from 'recoil';
+import newsPeedState from '../../../atom/newsPeedState';
 
 export default function MainSection() {
-  const [articles, setArticles] = useState<any[]>([]);
-
-  useEffect(() => {
-    fetchArticles();
-  }, []);
-
-  const fetchArticles = async () => {
-    const response: any = await httpGet('/api/post');
-    setArticles(response);
-  };
-
+  const newsPeedList = useRecoilValue(newsPeedState);
   return (
     <Wrapper>
       <Link href="/write">
@@ -29,7 +20,7 @@ export default function MainSection() {
       </Link>
       <ArticlesSection>
         <ArticleCard />
-        {articles.map((item) => (
+        {newsPeedList.map((item) => (
           // eslint-disable-next-line no-underscore-dangle
           <ArticleCard author={item.author} key={item._id} description={item.description} title={item.title} />
         ))}
@@ -37,6 +28,7 @@ export default function MainSection() {
     </Wrapper>
   );
 }
+
 const Wrapper = styled.section`
   width: ${({ theme }) => theme.mainSection.width};
   height: 100%;

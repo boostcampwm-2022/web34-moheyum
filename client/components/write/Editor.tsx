@@ -36,7 +36,7 @@ export default function Editor() {
     //   return;
     // }
     console.log(result);
-    Router.push('/main');
+    Router.push('/');
   };
 
   const selectTab = (index: number) => {

@@ -24,7 +24,7 @@ async function httpGet(url: string): Promise<Response> {
   const token = store.get();
   let tokenHeader = '';
   if (token.length > 0) tokenHeader = `bearer ${token}`;
-  const response = await fetch(url, {
+  const response = await fetch(process.env.NEXT_PUBLIC_TEST_API + url, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
