@@ -12,7 +12,7 @@ interface newsPeedType {
   author: string;
 }
 
-export default function main({ response }: { response: newsPeedType[] }) {
+export default function Main({ response }: { response: newsPeedType[] }) {
   const setNewsPeedList = useSetRecoilState(newsPeedState);
   useEffect(() => {
     setNewsPeedList(response);

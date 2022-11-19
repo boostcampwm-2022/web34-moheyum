@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
+import { useRecoilValue } from 'recoil';
 import Link from 'next/link';
 import COLORS from '../../../styles/color';
 import { buttonStyle } from '../../../styles/mixin';
 import ArticleCard from './ArticleCard';
-import { useRecoilValue } from 'recoil';
 import newsPeedState from '../../../atom/newsPeedState';
 
 export default function MainSection() {
   const newsPeedList = useRecoilValue(newsPeedState);
+
   return (
     <Wrapper>
       <Link href="/write">
@@ -28,7 +29,6 @@ export default function MainSection() {
     </Wrapper>
   );
 }
-
 const Wrapper = styled.section`
   width: ${({ theme }) => theme.mainSection.width};
   height: 100%;

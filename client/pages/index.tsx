@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { httpGet } from '../utils/http';
 import { GetServerSidePropsContext } from 'next';
-import Main from '../components/Main';
-import { RecoilRoot } from 'recoil';
+import { useSetRecoilState } from 'recoil';
+import Frame from '../styles/frame';
+import SideBar from '../components/Main/SideBar';
+import MainSection from '../components/Main/MainSection';
+import newsPeedState from '../atom/newsPeedState';
 
 interface newsPeedType {
   _id: string;
@@ -12,10 +15,15 @@ interface newsPeedType {
 }
 
 export default function Home({ response }: { response: newsPeedType[] }) {
+  const setNewsPeedList = useSetRecoilState(newsPeedState);
+  useEffect(() => {
+    setNewsPeedList(response);
+  });
   return (
-    <RecoilRoot>
-      <Main response={response} />
-    </RecoilRoot>
+    <Frame>
+      <SideBar />
+      <MainSection />
+    </Frame>
   );
 }
 // SSR
