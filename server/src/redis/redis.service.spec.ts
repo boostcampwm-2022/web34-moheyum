@@ -1,11 +1,11 @@
-import { CacheService } from './redis.service';
+import { RedisService } from './redis.service';
 import { Test } from '@nestjs/testing';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { redisOptions } from '../common/config/redisConfig';
 import { ConfigModule } from '@nestjs/config';
 import { join } from 'path';
 describe('CacheService', () => {
-  let cacheService: CacheService;
+  let cacheService: RedisService;
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [
@@ -15,9 +15,9 @@ describe('CacheService', () => {
         }),
         RedisModule.forRootAsync(redisOptions),
       ],
-      providers: [CacheService],
+      providers: [RedisService],
     }).compile();
-    cacheService = moduleRef.get<CacheService>(CacheService);
+    cacheService = moduleRef.get<RedisService>(RedisService);
   });
   describe('set', () => {
     it('should be defined', () => {

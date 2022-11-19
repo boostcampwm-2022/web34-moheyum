@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { CookieOptions } from 'express';
 import { User } from 'src/common/database/user.schema';
+import { RedisService } from 'src/redis/redis.service';
 
 @Injectable()
 export class AuthService {
@@ -14,10 +15,14 @@ export class AuthService {
     private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly redisService: RedisService,
   ) {}
 
   async signUp(userCreateDto: UserCreateDto): Promise<User> {
-    userCreateDto.password = await bcrypt.hash(userCreateDto.password, 10);
+    userCreateDto.password = await bcrypt.hash(
+      userCreateDto.password,
+      +this.configService.get('saltOrRounds'),
+    );
     return this.userRepository.createUser(userCreateDto);
   }
 
@@ -30,14 +35,29 @@ export class AuthService {
       expiresIn,
     });
   }
-  private async createRefreshToken(payload) {
+
+  private async setRefreshTokenInRedis(refreshToken: string, userid: string) {
+    const hashedToken = await bcrypt.hash(
+      refreshToken,
+      +this.configService.get('saltOrRounds'),
+    );
+    await this.redisService.set(
+      userid,
+      hashedToken,
+      +this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME') * 60,
+    );
+  }
+
+  private async createRefreshToken(payload: { userid: string }) {
     const expiresIn = `${this.configService.get(
       'JWT_REFRESH_TOKEN_EXPIRATION_TIME',
     )}s`;
-    return this.jwtService.sign(payload, {
+    const jwt = this.jwtService.sign(payload, {
       secret: this.configService.get('JWT_REFRESH_TOKEN_SECRET'),
       expiresIn,
     });
+    this.setRefreshTokenInRedis(jwt, payload.userid);
+    return jwt;
   }
 
   public getAccessOptions(): CookieOptions {

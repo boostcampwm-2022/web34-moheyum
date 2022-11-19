@@ -3,7 +3,7 @@ import Redis from 'ioredis';
 import { InjectRedis } from '@liaoliaots/nestjs-redis';
 
 @Injectable()
-export class CacheService {
+export class RedisService {
   constructor(@InjectRedis() private readonly redisClient: Redis) {}
   async get(key: string): Promise<string> {
     return this.redisClient.get(key);
