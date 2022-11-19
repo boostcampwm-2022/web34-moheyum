@@ -36,7 +36,6 @@ jobs:
           # npm i -g yarn
           corepack enable
           yarn install
-
           yarn build
       - name: Run Lighthouse CI
         env:
@@ -74,7 +73,6 @@ jobs:
               `${reportScore('Best practices', summary['best-practices'])}`,
               `${reportScore('SEO', summary.seo)}`,
               `${reportScore('PWA', summary.pwa)}`].join('\n');
-
               const detail = [`| Category | Score | Display Value |`,
               `| --- | --- | --- |`,
               `${performanceDetail("First Contentful Paint", audits['first-contentful-paint'].score * 100, audits['first-contentful-paint'].displayValue)}`,
