@@ -1,0 +1,4 @@
+.vscode
+.secrets
+client/.env*
+server/.env*

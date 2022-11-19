@@ -1,0 +1,56 @@
+name: 프론트엔드 dev 배포
+
+on:
+  push:
+    branches:
+      - "dev"
+    paths:
+      - "client/**"
+  workflow_dispatch:
+
+env:
+  NODE_ENV: development
+
+jobs:
+  fe-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: 'yarn'
+          cache-dependency-path: client/yarn.lock
+      - name: build frontend
+        run: |
+          cd client
+          npm i -g yarn
+          yarn install
+          CI=false yarn build
+      - name: copy file to ncloud instance
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.INSTANCE_HOST_DEV }}
+          port: ${{ secrets.INSTANCE_PORT_DEV }}
+          username: ${{ secrets.INSTANCE_USERNAME_DEV }}
+          password: ${{ secrets.INSTANCE_PASSWORD_DEV }}
+          source: "client"
+          target: "moheyum/client"
+          strip_components: 1
+          rm: true
+      - name: run node.js remotely
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.INSTANCE_HOST_DEV }}
+          port: ${{ secrets.INSTANCE_PORT_DEV }}
+          username: ${{ secrets.INSTANCE_USERNAME_DEV }}
+          password: ${{ secrets.INSTANCE_PASSWORD_DEV }}
+          script: |
+            #!/bin/bash
+            sshpass -p "${{ secrets.SCP_PASSWORD }}" scp -P ${{ secrets.SCP_PORT }} -r ${{ secrets.SCP_USERNAME }}@${{ secrets.SCP_HOST }}:~/ftp/client/ ~/moheyum/
+            if [ "$(pm2 list | grep -c frontend )" -eq 0 ]; then
+              cd ~/moheyum/client
+              pm2 start yarn --name frontend -i 1 -- dev # not working
+            else
+              pm2 reload frontend
+            fi
