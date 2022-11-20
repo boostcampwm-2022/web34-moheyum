@@ -7,7 +7,7 @@ import Title from './SideBar/Title';
 import COLORS from '../../styles/color';
 
 const menuList = [
-  { routeSrc: '/main', imgSrc: '/home.svg', text: '홈' },
+  { routeSrc: '/', imgSrc: '/home.svg', text: '홈' },
   { routeSrc: '/announce', imgSrc: '/announce.svg', text: '알림' },
   { routeSrc: '/search', imgSrc: '/search.svg', text: '검색' },
 ];

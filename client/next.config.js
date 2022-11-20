@@ -5,7 +5,7 @@ const nextConfig = {
   rewrites: () => [
     {
       source: '/api/:path*',
-      destination: `${process.env.TEST_BE_SERVER}/:path*`,
+      destination: `${process.env.TEST_BE_SERVER}/api/:path*`,
     },
   ],
 };
