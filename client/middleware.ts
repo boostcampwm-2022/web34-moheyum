@@ -17,8 +17,6 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
         return NextResponse.redirect('/login');
       case '/search':
         return NextResponse.redirect('/login');
-      case '/signup':
-        return NextResponse.redirect('/login');
       case '/write':
         return NextResponse.redirect('/login');
     }
