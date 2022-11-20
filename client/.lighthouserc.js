@@ -5,6 +5,9 @@ module.exports = {
       url: ['http://localhost:3000'],
       numberOfRuns: 5,
     },
+    settings: {
+      maxWaitForLoad: 10000
+    },
     upload: {
       target: 'filesystem',
       outputDir: './lhci_reports',
