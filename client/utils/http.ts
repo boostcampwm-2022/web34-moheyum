@@ -20,11 +20,19 @@ class TokenStore {
 
 const store = new TokenStore();
 
+function getAbsoluteURL(url: string): string {
+  if (url.match(/http[s]?:\/\/[\S]*/i)) return url;
+  return `${process.env.NEXT_PUBLIC_API_URL}${url}`;
+}
+
 async function httpGet(url: string): Promise<Response> {
   const token = store.get();
   let tokenHeader = '';
   if (token.length > 0) tokenHeader = `bearer ${token}`;
-  const response = await fetch(process.env.NEXT_PUBLIC_TEST_API + url, {
+
+  const absoluteURL = getAbsoluteURL(url);
+
+  const response = await fetch(absoluteURL, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -40,7 +48,10 @@ async function httpPost(url: string, body: object): Promise<any> {
   const token = store.get();
   let tokenHeader = '';
   if (token.length > 0) tokenHeader = `bearer ${token}`;
-  const response = await fetch(process.env.NEXT_PUBLIC_TEST_API + url, {
+
+  const absoluteURL = getAbsoluteURL(url);
+
+  const response = await fetch(absoluteURL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
