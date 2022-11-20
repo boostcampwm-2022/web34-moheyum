@@ -22,11 +22,21 @@ jobs:
           node-version: "16"
           cache: "yarn"
           cache-dependency-path: client/yarn.lock
-      - run: |
+      - name: install and build
+        env:
+          SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
+        run: |
+          # sudo apt-get update
+          mkdir -p ~/.ssh/
+          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          sshpass -p "${{ secrets.SCP_PASSWORD }}" scp -P ${{ secrets.SCP_PORT }} -r ${{ secrets.SCP_USERNAME }}@${{ secrets.SCP_HOST }}:~/ftp/client/ ./
+          ls -la
           cd client
+          ls -la
           # npm i -g yarn
           corepack enable
           yarn install
+
           yarn build
       - name: Run Lighthouse CI
         env:
