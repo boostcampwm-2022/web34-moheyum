@@ -1,7 +1,7 @@
 import React, { useState, useRef, RefObject } from 'react';
 import Link from 'next/link';
-import Menu from './menu';
-import Title from './title';
+import Menu from './Menu';
+import Title from './Title';
 import { Dropdown, Setting, SideMenuBox, Wrapper } from './index.style';
 
 const menuList = [

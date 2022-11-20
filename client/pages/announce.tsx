@@ -1,7 +1,7 @@
 import React from 'react';
 import Frame from '../styles/frame';
-import MainSection from '../components/main/mainsection';
-import SideBar from '../components/main/sidebar';
+import MainSection from '../components/Main/Mainsection';
+import SideBar from '../components/Main/SideBar';
 
 export default function announce() {
   return (

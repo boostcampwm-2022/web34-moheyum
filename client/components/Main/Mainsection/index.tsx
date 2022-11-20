@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRecoilValue } from 'recoil';
 import Link from 'next/link';
-import ArticleCard from '../articlecard';
+import ArticleCard from '../Articlecard';
 import newsfeedState from '../../../atom/newsfeedState';
 import { ArticlesSection, FakeButton, NewArticleSection, Placeholder, Wrapper } from './index.style';
 

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import React from 'react';
-import SideBar from '../components/main/sidebar';
-import Editor from '../components/write';
+import SideBar from '../components/Main/SideBar';
+import Editor from '../components/Write';
 import COLORS from '../styles/color';
 
 export default function write() {
