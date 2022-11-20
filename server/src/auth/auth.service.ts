@@ -48,7 +48,7 @@ export class AuthService {
     );
   }
 
-  private async createRefreshToken(payload: { userid: string }) {
+  public async createRefreshToken(payload: { userid: string }) {
     const expiresIn = `${this.configService.get(
       'JWT_REFRESH_TOKEN_EXPIRATION_TIME',
     )}s`;
@@ -58,6 +58,20 @@ export class AuthService {
     });
     this.setRefreshTokenInRedis(jwt, payload.userid);
     return jwt;
+  }
+
+  public async checkRefreshTokenValidation(
+    refreshToken: string,
+    userid: string,
+  ) {
+    const hashedRefreshToken = await this.redisService.get(userid);
+    const isValidate = await bcrypt.compare(refreshToken, hashedRefreshToken);
+    if (isValidate) return true;
+    return false;
+  }
+
+  public async removeRefeshTokenfromRedis(userid) {
+    await this.redisService.del(userid);
   }
 
   public getAccessOptions(): CookieOptions {
