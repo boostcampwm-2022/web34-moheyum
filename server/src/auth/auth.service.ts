@@ -88,8 +88,7 @@ export class AuthService {
       path: '/',
       sameSite: 'strict',
       maxAge:
-        Number(this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME')) *
-        1000,
+        +this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME') * 1000,
     };
   }
   public async signIn(
@@ -104,12 +103,5 @@ export class AuthService {
       const refreshToken = await this.createRefreshToken(payload);
       return { accessToken, refreshToken };
     } else throw new UnauthorizedException('login failed');
-  }
-
-  public async findUser(userid: string) {
-    const user = await this.userRepository.findOne({ userid });
-    console.log(user._id);
-    console.log(user['createdAt']);
-    console.log(user['_id'].toString());
   }
 }

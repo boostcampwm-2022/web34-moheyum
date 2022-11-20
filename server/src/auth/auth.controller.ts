@@ -6,16 +6,16 @@ import {
   Res,
   Get,
   HttpCode,
-  Param,
 } from '@nestjs/common';
 // import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { AuthCredentialsDto } from './dto/auth-credential-dto';
 import { UserCreateDto } from './dto/user-create-dto';
-import { GetUser } from '../common/decorator/get-user.decorator';
-import { User } from '../common/database/user.schema';
+// import { GetUser } from '../common/decorator/get-user.decorator';
+// import { User } from '../common/database/user.schema';
 import { Response } from 'express';
 import { JwtRefreshGuard } from 'src/common/guard/jwt-refresh.guard';
+import { GetPayload } from 'src/common/decorator/get-jwt-data.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -48,22 +48,24 @@ export class AuthController {
     });
   }
 
-  @Get('refresh')
   @UseGuards(JwtRefreshGuard)
-  refresh(@GetUser() user: User, @Res() res: Response) {
+  @Get('refresh')
+  async refresh(@GetPayload() userid: string, @Res() res: Response) {
     // TODO db상에서 가져와야함
-    res.cookie(
-      'a_t',
-      this.authService.createAccessToken(user.userid),
-      this.authService.getAccessOptions(),
-    );
+    const payload = { userid };
+    const accessToken = await this.authService.createAccessToken(payload);
+    const refreshToken = await this.authService.createRefreshToken(payload);
+    res.cookie('a_t', accessToken, this.authService.getAccessOptions());
+    res.cookie('r_t', refreshToken, this.authService.getRefreshOptions());
+    console.log(accessToken);
+    console.log(refreshToken);
     res.json({
       message: 'success',
       data: {},
     });
   }
-  @Get('/:userid')
-  async getUserInfo(@Param('userid') userid: string) {
-    this.authService.findUser(userid);
-  }
+  // @Get('/:userid')
+  // async getUserInfo(@Param('userid') userid: string) {
+  //   this.authService.findUser(userid);
+  // }
 }

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PostModule } from './post/post.module';
 import { AuthModule } from './auth/auth.module';
@@ -7,6 +7,7 @@ import { join } from 'path';
 import { mongooseConfig } from './common/config/mongooseConfig';
 import { redisOptions } from './common/config/redisConfig';
 import { RedisModule } from '@liaoliaots/nestjs-redis/dist/redis/redis.module';
+import { LoggerMiddleware } from './common/middleware/logger';
 
 // CacheModule.register({
 //   isGlobal: true,
@@ -32,4 +33,8 @@ import { RedisModule } from '@liaoliaots/nestjs-redis/dist/redis/redis.module';
     AuthModule,
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}

@@ -1,37 +1,41 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
-import { UserRepository } from 'src/common/database/user.repository';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
-import { User } from 'src/common/database/user.schema';
 import { UnauthorizedException } from '@nestjs/common';
+import { AuthService } from '../auth.service';
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(
   Strategy,
   'jwt-refresh',
 ) {
   constructor(
-    private readonly userRepository: UserRepository,
     private readonly configService: ConfigService,
+    private readonly authService: AuthService,
   ) {
     super({
-      secretOrKey: configService.get('JWT_REFRESH_TOKEN_SECRET'),
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request) => {
           return request?.cookies?.r_t;
         },
       ]),
+      secretOrKey: configService.get('JWT_REFRESH_TOKEN_SECRET'),
+      passReqToCallback: true,
     });
   }
-  async validate(payload) {
+  async validate(request: Request, payload) {
     const { userid } = payload;
-    const user: User = await this.userRepository.findOne({ userid });
-
-    if (!user) {
+    const refreshToken = request?.cookies?.r_t;
+    const isValidate = await this.authService.checkRefreshTokenValidation(
+      refreshToken,
+      userid,
+    );
+    // const user: User = await this.userRepository.findOne({ userid });
+    if (!isValidate) {
       throw new UnauthorizedException();
     }
 
-    return user;
+    return userid;
   }
 }

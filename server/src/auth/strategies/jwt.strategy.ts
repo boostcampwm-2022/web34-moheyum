@@ -13,19 +13,19 @@ export class JwtStartegy extends PassportStrategy(Strategy, 'jwt-strategy') {
     private readonly configService: ConfigService,
   ) {
     super({
-      secretOrKey: configService.get('JWT_ACCESS_TOKEN_SECRET'),
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request) => {
           return request?.cookies?.a_t;
         },
       ]),
+      secretOrKey: configService.get('JWT_ACCESS_TOKEN_SECRET'),
+      passReqToCallback: true,
     });
   }
 
   async validate(payload) {
     const { userid } = payload;
     const user: User = await this.userRepository.findOne({ userid });
-
     if (!user) {
       throw new UnauthorizedException();
     }
