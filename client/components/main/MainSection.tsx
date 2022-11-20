@@ -5,10 +5,10 @@ import Link from 'next/link';
 import COLORS from '../../styles/color';
 import { buttonStyle } from '../../styles/mixin';
 import ArticleCard from './ArticleCard';
-import newsPeedState from '../../atom/newsPeedState';
+import newsfeedState from '../../atom/newsfeedState';
 
 export default function MainSection() {
-  const newsPeedList = useRecoilValue(newsPeedState);
+  const newsfeedList = useRecoilValue(newsfeedState);
 
   return (
     <Wrapper>
@@ -21,7 +21,7 @@ export default function MainSection() {
       </Link>
       <ArticlesSection>
         <ArticleCard />
-        {newsPeedList.map((item) => (
+        {newsfeedList.map((item) => (
           // eslint-disable-next-line no-underscore-dangle
           <ArticleCard author={item.author} key={item._id} description={item.description} title={item.title} />
         ))}

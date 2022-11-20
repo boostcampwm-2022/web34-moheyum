@@ -4,7 +4,7 @@ import { httpGet } from '../utils/http';
 import Frame from '../styles/frame';
 import SideBar from '../components/main/SideBar';
 import MainSection from '../components/main/MainSection';
-import newsPeedState from '../atom/newsPeedState';
+import newsfeedState from '../atom/newsfeedState';
 
 interface newsPeedType {
   _id: string;
@@ -14,7 +14,7 @@ interface newsPeedType {
 }
 
 export default function Home({ response }: { response: newsPeedType[] }) {
-  const setNewsPeedList = useSetRecoilState(newsPeedState);
+  const setNewsPeedList = useSetRecoilState(newsfeedState);
   useEffect(() => {
     setNewsPeedList(response);
   });
