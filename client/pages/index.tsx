@@ -28,7 +28,7 @@ export default function Home({ response }: { response: newsPeedType[] }) {
 // SSR
 export async function getServerSideProps() {
   // 외부 API로 데이터 가져오기
-  const response = await httpGet('/post');
+  const response = await httpGet('/api/post');
   // Pass data to the page via props
   return {
     props: {

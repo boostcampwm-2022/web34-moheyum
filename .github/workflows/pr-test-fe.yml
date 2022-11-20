@@ -36,7 +36,6 @@ jobs:
           # npm i -g yarn
           corepack enable
           yarn install
-
           yarn build
       - name: Run Lighthouse CI
         env:
