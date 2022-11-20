@@ -9,7 +9,7 @@ const Frame = styled.div`
   height: 100%;
   ${displayCenter}
   @media only screen and (max-width:${({ theme }) => theme.wideWindow}) {
-    width: 100vw;
+    width: 100%;
   }
 `;
 

@@ -29,10 +29,10 @@ const Highlight = styled.span`
 `;
 
 const Wrapper = styled.div`
-  width: 50%;
+  width: 640px;
   height: 100%;
   ${displayCenter}
-  @media only screen and (max-width: ${({ theme }) => theme.wideWindow}) {
+  @media only screen and (max-width: ${({ theme }) => theme.smallWindow}) {
     display: none;
   }
 `;

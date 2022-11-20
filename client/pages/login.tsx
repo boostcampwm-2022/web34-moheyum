@@ -15,11 +15,11 @@ export default function login() {
   );
 }
 const Wrapper = styled.div`
-  width: 70%;
+  width: 896px;
   height: 100%;
   display: flex;
   justify-content: space-between;
-  @media only screen and (max-width: ${({ theme }) => theme.wideWindow}) {
+  @media only screen and (max-width: ${({ theme }) => theme.smallWindow}) {
     justify-content: center;
   }
 `;

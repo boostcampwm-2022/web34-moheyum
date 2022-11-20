@@ -100,11 +100,11 @@ export default function Login() {
 }
 
 const Wrapper = styled.div`
-  width: 50%;
+  width: 640px;
   height: 100%;
   ${displayColumn}
   align-items: left;
-  @media only screen and (max-width: ${({ theme }) => theme.wideWindow}) {
+  @media only screen and (max-width: ${({ theme }) => theme.smallWindow}) {
     width: 400px;
     align-items: center;
   }
