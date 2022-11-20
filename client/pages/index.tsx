@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { httpGet } from '../utils/http';
 import Frame from '../styles/frame';
-import SideBar from '../components/main/SideBar';
-import MainSection from '../components/main/MainSection';
+import SideBar from '../components/main/sidebar';
+import MainSection from '../components/main/mainsection';
 import newsfeedState from '../atom/newsfeedState';
 
 interface newsPeedType {

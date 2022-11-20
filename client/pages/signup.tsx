@@ -1,5 +1,5 @@
 import React from 'react';
-import SignupModal from '../components/signup/SignupModal';
+import SignupModal from '../components/signup';
 import Frame from '../styles/frame';
 
 export default function Signup() {

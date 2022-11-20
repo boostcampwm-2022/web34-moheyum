@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import Introduction from '../components/login/Introduction';
-import Login from '../components/login/Login';
+import Introduction from '../components/login/introduction';
+import Login from '../components/login/login';
 import Frame from '../styles/frame';
 
 export default function login() {

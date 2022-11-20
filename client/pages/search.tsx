@@ -1,7 +1,7 @@
 import React from 'react';
 import Frame from '../styles/frame';
-import MainSection from '../components/main/MainSection';
-import SideBar from '../components/main/SideBar';
+import MainSection from '../components/main/mainsection';
+import SideBar from '../components/main/sidebar';
 
 export default function search() {
   return (
