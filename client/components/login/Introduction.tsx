@@ -32,24 +32,25 @@ const Wrapper = styled.div`
   width: 50%;
   height: 100%;
   ${displayCenter}
-  /* @media only screen and (max-width: ${({ theme }) => theme.wideWindow}) {
-    display: none;
-  } */
-  @media only screen and (max-width: ${({ theme }) => theme.smallWindow}) {
+  @media only screen and (max-width: ${({ theme }) => theme.wideWindow}) {
     display: none;
   }
 `;
 
 const IntroBox = styled.div`
-  width: 90%;
+  width: 400px;
   height: 400px;
   ${displayColumn}
   align-items: left;
   margin-bottom: 60px;
   user-select: none;
+  img {
+    width: 350px;
+    height: auto;
+  }
 `;
 
 const Text = styled.div`
   margin: 5%;
-  font-size: 34px;
+  font-size: 25px;
 `;

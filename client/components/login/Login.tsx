@@ -104,35 +104,33 @@ const Wrapper = styled.div`
   height: 100%;
   ${displayColumn}
   align-items: left;
-  @media only screen and (max-width: ${({ theme }) => theme.smallWindow}) {
-    width: 80%;
+  @media only screen and (max-width: ${({ theme }) => theme.wideWindow}) {
+    width: 400px;
     align-items: center;
   }
 `;
 
 const Box = styled.div`
-  width: 90%;
+  width: 400px;
   height: 337px;
   ${boxStyle}
   input {
-    margin-bottom: 12px;
-    width: 73%;
+    margin-bottom: 15px;
+    width: 75%;
   }
   button {
-    margin-bottom: 12px;
-    width: 73%;
+    margin-bottom: 15px;
+    width: 75%;
   }
 `;
 
 const Title = styled.div`
-  font-size: 36px;
-  margin-top: 8%;
+  font-size: 28px;
   margin-bottom: 20px;
 `;
 
 const FindAccount = styled.div`
   ${displayCenter}
-  margin-bottom: 5%;
   a {
     margin: 5px;
     text-decoration: none;
