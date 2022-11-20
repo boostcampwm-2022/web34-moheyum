@@ -44,36 +44,30 @@ export default function Login() {
       [e.target.name]: e.target.value,
     });
   };
-  // const commonLogin = (): void => {
-  //   if (!isInputExist(inputIdRef, inputPwRef, account.id, account.pw)) {
-  //     return;
-  //   }
-  //   (async () => {
-  //     console.log(account.id);
-  //     const loginResponse = await signInAPI(account.id, account.pw);
-  //     console.log(loginResponse);
-  //     if (loginResponse.message !== 'success') {
-  //       alert('아이디와 비밀번호 정보가 정확하지 않습니다.');
-  //     } else {
-  //       // user 데이터 상태로 저장하기 loginResponse.data
-  //       Router.push({ pathname: '/main' });
-  //     }
-  //   })().catch((err) => {
-  //     alert(`로그인 실패 ERROR message: ${err as string}`);
-  //     Router.push({ pathname: '/login' });
-  //   });
-  // };
 
   const doLogin = async () => {
     if (!isInputExist(inputIdRef, inputPwRef, account.id, account.pw)) {
       return;
     }
-    const response = await httpPost('/auth/signin', { userid: account.id, password: account.pw });
-    if (response.accessToken) {
-      Router.push('/');
+    try {
+      const response = await httpPost('/auth/signin', { userid: account.id, password: account.pw });
+      if (response.accessToken) {
+        Router.push('/');
+      }
+      switch (response.statusCode) {
+        case 401:
+          alert('아이디 또는 비밀번호를 잘못 입력했습니다.\n입력하신 내용을 다시 확인해주세요.');
+          break;
+        case 422:
+          alert('입력하신 형식이 맞지 않습니다.\n아이디: 영어,숫자,_ 포함 4~16글자');
+          break;
+        default:
+          alert(`로그인 ERROR statusCode: ${response.statusCode}\nERROR message: ${response.message}`);
+      }
+    } catch (err) {
+      alert(`로그인 실패 ERROR message: ${err as string}`);
+      Router.push('/login');
     }
-    // if (response.status === 201) Router.push('/main');
-    // if (response.status === 200) Router.push('/main');
   };
 
   return (
@@ -91,10 +85,6 @@ export default function Login() {
         <button type="submit" onClick={doLogin}>
           로그인
         </button>
-        {/* <GithubSignup type="button">
-          <GithubIcon />
-          LOGIN WITH GITHUB
-        </GithubSignup> */}
         <FindAccount>
           <Link href="/idinquiry">아이디 찾기</Link>
           <div>|</div>
@@ -114,6 +104,10 @@ const Wrapper = styled.div`
   height: 100%;
   ${displayColumn}
   align-items: left;
+  @media only screen and (max-width: ${({ theme }) => theme.smallWindow}) {
+    width: 80%;
+    align-items: center;
+  }
 `;
 
 const Box = styled.div`
@@ -162,16 +156,3 @@ const SignUp = styled.div`
     }
   }
 `;
-
-// const GithubSignup = styled.button`
-//   background-color: ${COLORS.BLACK} !important;
-//   &:hover {
-//     background-color: #111 !important;
-//   }
-// `;
-
-// const GithubIcon = styled.span`
-//   content: url('/ico_github.svg');
-//   margin-right: 15px;
-//   filter: invert(93%) sepia(100%) saturate(0%) hue-rotate(248deg) brightness(106%) contrast(106%);
-// `;

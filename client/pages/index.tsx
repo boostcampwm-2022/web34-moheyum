@@ -17,7 +17,7 @@ export default function Home({ response }: { response: newsPeedType[] }) {
   const setNewsPeedList = useSetRecoilState(newsfeedState);
   useEffect(() => {
     setNewsPeedList(response);
-  });
+  }, []);
   return (
     <Frame>
       <SideBar />

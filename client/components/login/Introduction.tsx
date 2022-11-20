@@ -32,6 +32,12 @@ const Wrapper = styled.div`
   width: 50%;
   height: 100%;
   ${displayCenter}
+  /* @media only screen and (max-width: ${({ theme }) => theme.wideWindow}) {
+    display: none;
+  } */
+  @media only screen and (max-width: ${({ theme }) => theme.smallWindow}) {
+    display: none;
+  }
 `;
 
 const IntroBox = styled.div`
