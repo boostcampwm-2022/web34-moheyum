@@ -26,7 +26,7 @@ export default function Editor() {
   const submitHandler = async () => {
     const target = contentRef.current;
     if (!target) return;
-    const result = await httpPost('/api/post', {
+    const result = await httpPost('/post', {
       author: 1,
       title: 'title',
       description: contentRef.current.innerText,
@@ -36,7 +36,7 @@ export default function Editor() {
     //   return;
     // }
     console.log(result);
-    Router.push('/main');
+    Router.push('/');
   };
 
   const selectTab = (index: number) => {
