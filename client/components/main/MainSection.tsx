@@ -1,22 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from '@emotion/styled';
+import { useRecoilValue } from 'recoil';
 import Link from 'next/link';
 import COLORS from '../../styles/color';
 import { buttonStyle } from '../../styles/mixin';
 import ArticleCard from './ArticleCard';
-import { httpGet } from '../../utils/http';
+import newsfeedState from '../../atom/newsfeedState';
 
 export default function MainSection() {
-  const [articles, setArticles] = useState<any[]>([]);
-
-  useEffect(() => {
-    fetchArticles();
-  }, []);
-
-  const fetchArticles = async () => {
-    const response: any = await httpGet('/api/post');
-    setArticles(response);
-  };
+  const newsfeedList = useRecoilValue(newsfeedState);
 
   return (
     <Wrapper>
@@ -29,7 +21,7 @@ export default function MainSection() {
       </Link>
       <ArticlesSection>
         <ArticleCard />
-        {articles.map((item) => (
+        {newsfeedList.map((item) => (
           // eslint-disable-next-line no-underscore-dangle
           <ArticleCard author={item.author} key={item._id} description={item.description} title={item.title} />
         ))}
