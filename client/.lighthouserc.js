@@ -6,7 +6,8 @@ module.exports = {
       numberOfRuns: 5,
     },
     settings: {
-      maxWaitForLoad: 10000
+      maxWaitForLoad: 20000,
+      maxWaitForFcp: 10000
     },
     upload: {
       target: 'filesystem',
