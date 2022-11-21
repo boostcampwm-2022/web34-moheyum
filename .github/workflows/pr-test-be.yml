@@ -6,7 +6,7 @@ on:
       - dev
       - main
     paths:
-      - 'server/**'
+      - "server/**"
   workflow_dispatch:
 
 env:
@@ -19,12 +19,14 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: '16'
-          cache: 'npm'
-          cache-dependency-path: server/package-lock.json
+          node-version: "16"
+          cache: "yarn"
+          cache-dependency-path: server/yarn.lock
       - run: |
           cd server
           # npm i -g yarn
-          npm ci
-          npm run build
-          npm run test
+          yarn install
+          yarn build
+          # npm ci
+          # npm run build
+          # npm run test
