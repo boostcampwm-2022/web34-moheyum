@@ -14,6 +14,7 @@ async function httpGet(url: string): Promise<Response> {
     credentials: 'include',
   });
   const result = await response.json();
+  if (!result.statusCode) result.statusCode = response.status;
   return result;
 }
 
@@ -30,6 +31,7 @@ async function httpPost(url: string, body: object): Promise<any> {
   });
 
   const result = await response.json();
+  if (!result.statusCode) result.statusCode = response.status;
   return result;
 }
 

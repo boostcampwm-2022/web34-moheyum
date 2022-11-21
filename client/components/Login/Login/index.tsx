@@ -50,6 +50,7 @@ export default function Login() {
     }
     try {
       const response = await httpPost('/auth/signin', { userid: account.id, password: account.pw });
+      console.log(response);
       if (response.message === 'success') {
         Router.push('/');
         return;
