@@ -79,7 +79,8 @@ export class AuthService {
       httpOnly: true,
       path: '/',
       sameSite: 'strict',
-      maxAge: 300000,
+      maxAge:
+        +this.configService.get('JWT_ACCESS_TOKEN_EXPIRATION_TIME') * 1000,
     };
   }
   public getRefreshOptions(): CookieOptions {
