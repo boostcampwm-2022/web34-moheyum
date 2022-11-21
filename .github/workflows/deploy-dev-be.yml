@@ -1,0 +1,53 @@
+name: 백엔드 dev 배포
+
+on:
+  push:
+    branches:
+      - "dev"
+    paths:
+      - "server/**"
+  workflow_dispatch:
+
+env:
+  NODE_ENV: development
+
+jobs:
+  be-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: 'npm'
+          cache-dependency-path: server/package-lock.json
+      - name: build backend
+        run: |
+          cd server
+          npm ci
+          npm run build
+      - name: copy file to ncloud instance
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.INSTANCE_HOST_DEV }}
+          port: ${{ secrets.INSTANCE_PORT_DEV }}
+          username: ${{ secrets.INSTANCE_USERNAME_DEV }}
+          password: ${{ secrets.INSTANCE_PASSWORD_DEV }}
+          source: "server"
+          target: "moheyum/server"
+          strip_components: 1
+          rm: true
+      - name: run node.js remotely
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.INSTANCE_HOST_DEV }}
+          port: ${{ secrets.INSTANCE_PORT_DEV }}
+          username: ${{ secrets.INSTANCE_USERNAME_DEV }}
+          password: ${{ secrets.INSTANCE_PASSWORD_DEV }}
+          script: |
+            sshpass -p "${{ secrets.SCP_PASSWORD }}" scp -P ${{ secrets.SCP_PORT }} -r ${{ secrets.SCP_USERNAME }}@${{ secrets.SCP_HOST }}:~/ftp/server/ ~/moheyum
+            if [ "$(pm2 list | grep -c backend )" -eq 0 ]; then
+              cd ~/moheyum/server && pm2 start npm --name backend -i 1 -- start # not working
+            else
+              pm2 reload backend
+            fi

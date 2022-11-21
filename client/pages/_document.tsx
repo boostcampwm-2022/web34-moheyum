@@ -1,5 +1,5 @@
-import Document, { Html, Head, Main, NextScript } from 'next/document';
 import React from 'react';
+import Document, { Html, Head, Main, NextScript } from 'next/document';
 
 class MyDocument extends Document {
   render() {
@@ -7,9 +7,10 @@ class MyDocument extends Document {
       <Html lang="ko">
         <Head>
           <meta name="description" content="마크다운을 지원하는 SNS인 모헤윰으로 당신의 생각을 보기 좋게 전달하세요." />
-          <link rel="icon" href="/logo_icon.svg" />
+          <link rel="icon" href="/favicon.svg" />
+          <link rel="stylesheet" type="text/css" href="/global.css" />
         </Head>
-        <body style={{ padding: 0, margin: 0, width: '100vw', height: '100vh' }}>
+        <body>
           <Main />
           <NextScript />
         </body>

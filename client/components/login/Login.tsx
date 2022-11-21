@@ -4,28 +4,13 @@ import Link from 'next/link';
 import styled from '@emotion/styled';
 import { displayCenter, boxStyle, displayColumn } from '../../styles/mixin';
 import COLORS from '../../styles/color';
+import { httpPost } from '../../utils/http';
 
-type Response = {
-  message: string;
-  data: {};
-};
-
-async function signInAPI(inputId: string, inputPw: string): Promise<Response> {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_DEV_FRONT_TEST_HOST}/auth/signin`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-    body: JSON.stringify({ userId: inputId, password: inputPw }),
-  });
-  return response.json();
-}
-
-function changeBorderColor(inputRef: RefObject<HTMLInputElement>, color: string) {
+function changeBorder(inputRef: RefObject<HTMLInputElement>, color: string) {
   const { current } = inputRef;
   if (current !== null) {
     current.style.borderColor = color;
+    current.style.borderWidth = '2px';
   }
 }
 
@@ -36,11 +21,11 @@ function isInputExist(
   pw: string
 ): boolean {
   if (!id) {
-    changeBorderColor(inputIdRef, COLORS.RED);
+    changeBorder(inputIdRef, COLORS.RED);
     return false;
   }
   if (!pw) {
-    changeBorderColor(inputPwRef, COLORS.RED);
+    changeBorder(inputPwRef, COLORS.RED);
     return false;
   }
   return true;
@@ -54,30 +39,37 @@ export default function Login() {
   const inputIdRef: RefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
   const inputPwRef: RefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
   const onChangeAccount = (e: ChangeEvent<HTMLInputElement>): void => {
-    changeBorderColor(inputIdRef, COLORS.PRIMARY_LIGHT);
-    changeBorderColor(inputPwRef, COLORS.PRIMARY_LIGHT);
     setAccount({
       ...account,
       [e.target.name]: e.target.value,
     });
   };
-  const commonLogin = (): void => {
+
+  const doLogin = async () => {
     if (!isInputExist(inputIdRef, inputPwRef, account.id, account.pw)) {
       return;
     }
-    (async () => {
-      const loginResponse = await signInAPI(account.id, account.pw);
-      if (loginResponse.message !== 'success') {
-        alert('아이디와 비밀번호 정보가 정확하지 않습니다.');
-      } else {
-        // user 데이터 상태로 저장하기 loginResponse.data
-        Router.push({ pathname: '/main' });
+    try {
+      const response = await httpPost('/auth/signin', { userid: account.id, password: account.pw });
+      if (response.accessToken) {
+        Router.push('/');
       }
-    })().catch((err) => {
+      switch (response.statusCode) {
+        case 401:
+          alert('아이디 또는 비밀번호를 잘못 입력했습니다.\n입력하신 내용을 다시 확인해주세요.');
+          break;
+        case 422:
+          alert('입력하신 형식이 맞지 않습니다.\n아이디: 영어,숫자,_ 포함 4~16글자');
+          break;
+        default:
+          alert(`로그인 ERROR statusCode: ${response.statusCode}\nERROR message: ${response.message}`);
+      }
+    } catch (err) {
       alert(`로그인 실패 ERROR message: ${err as string}`);
-      Router.push({ pathname: '/login' });
-    });
+      Router.push('/login');
+    }
   };
+
   return (
     <Wrapper>
       <Box>
@@ -90,11 +82,8 @@ export default function Login() {
           ref={inputPwRef}
           onChange={onChangeAccount}
         />
-        <button type="submit" onClick={commonLogin}>
+        <button type="submit" onClick={doLogin}>
           로그인
-        </button>
-        <button type="button" style={{ backgroundColor: COLORS.BLACK }}>
-          LOGIN WITH GITHUB
         </button>
         <FindAccount>
           <Link href="/idinquiry">아이디 찾기</Link>
@@ -115,35 +104,33 @@ const Wrapper = styled.div`
   height: 100%;
   ${displayColumn}
   align-items: left;
+  @media only screen and (max-width: ${({ theme }) => theme.wideWindow}) {
+    width: 400px;
+    align-items: center;
+  }
 `;
 
 const Box = styled.div`
-  width: 90%;
+  width: 400px;
   height: 337px;
   ${boxStyle}
   input {
-    margin-bottom: 12px;
-    width: 70.5%;
-    height: 13%;
-    font-size: 18px;
+    margin-bottom: 15px;
+    width: 75%;
   }
   button {
-    margin-bottom: 12px;
-    width: 73%;
-    height: 15%;
-    font-size: 18px;
+    margin-bottom: 15px;
+    width: 75%;
   }
 `;
 
 const Title = styled.div`
-  font-size: 36px;
-  margin-top: 8%;
-  margin-bottom: 1%;
+  font-size: 28px;
+  margin-bottom: 20px;
 `;
 
 const FindAccount = styled.div`
   ${displayCenter}
-  margin-bottom: 5%;
   a {
     margin: 5px;
     text-decoration: none;

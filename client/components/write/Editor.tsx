@@ -2,6 +2,8 @@ import styled from '@emotion/styled';
 import Router from 'next/router';
 import React, { KeyboardEvent, useRef, useState } from 'react';
 import COLORS from '../../styles/color';
+import { buttonStyle } from '../../styles/mixin';
+import { httpPost } from '../../utils/http';
 
 export default function Editor() {
   const contentRef = useRef<HTMLDivElement>(null);
@@ -18,25 +20,23 @@ export default function Editor() {
   };
 
   const goBack = () => {
-    Router.push('/');
+    Router.back();
   };
 
   const submitHandler = async () => {
     const target = contentRef.current;
     if (!target) return;
-    const result = await fetch(`${process.env.NEXT_PUBLIC_TEST_API}/write`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        author: 1,
-        title: 'title',
-        article: contentRef.current.innerText,
-        date: new Date(),
-      }),
+    const result = await httpPost('/post', {
+      author: 1,
+      title: 'title',
+      description: contentRef.current.innerText,
     });
-    console.log(await result.json());
+    // if (!result.ok) {
+    //   console.log('error');
+    //   return;
+    // }
+    console.log(result);
+    Router.push('/');
   };
 
   const selectTab = (index: number) => {
@@ -78,16 +78,12 @@ export default function Editor() {
         onKeyUp={handleKeyUp}
       >
         <div>
-          fasfasgfs
           <br />
-        </div>
-        <div>
-          <span>dzzzz</span>dd
         </div>
       </EditorTextBox>
       <BottomButtonConatiner>
         <button type="button" onClick={submitHandler}>
-          submit
+          작성 완료
         </button>
       </BottomButtonConatiner>
     </Wrapper>
@@ -144,6 +140,7 @@ const ButtonBack = styled.button`
   background-image: url('/ico_chveron_left.svg');
   background-size: contain;
   background-repeat: no-repeat;
+  cursor: pointer;
 `;
 
 const ToolbarContainer = styled.div`
@@ -180,7 +177,10 @@ const EditorTabItem = styled.li<CanBeSelected>`
   align-items: center;
   justify-content: center;
   border: 1px solid ${COLORS.PRIMARY};
-  ${(props) => props.selected && 'border-bottom: 1px solid white;'}
+  ${(props) =>
+    props.selected &&
+    `border-bottom: 1px solid white;
+  margin-bottom: -1px;`}
   border-radius: 5px 5px 0 0;
   background-color: ${(props) => (props.selected ? `${COLORS.WHITE}` : `${COLORS.GRAY3}`)};
   cursor: pointer;
@@ -203,4 +203,9 @@ const BottomButtonConatiner = styled.div`
   width: 100%;
   display: flex;
   justify-content: flex-end;
+  border-top: 1px solid ${COLORS.PRIMARY};
+  & > button {
+    ${buttonStyle}
+    margin: 10px 20px;
+  }
 `;

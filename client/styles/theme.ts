@@ -1,7 +1,7 @@
 import { Theme } from '@emotion/react';
 import COLORS from './color';
 
-const sidebarSize = 207;
+const sidebarSize = 190;
 export const maxFrameSize: number = 1280;
 
 const theme: Theme = {
