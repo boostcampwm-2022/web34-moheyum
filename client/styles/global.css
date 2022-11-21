@@ -1,0 +1,17 @@
+html,
+body {
+  height: 100%;
+  padding: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+#__next {
+  height: 100%;
+}
+
+*:link {
+  text-decoration: none;
+}

@@ -11,7 +11,7 @@ import { UserCreateDto } from '../../auth/dto/user-create-dto';
 @Injectable()
 export class UserRepository {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
-  async createUser(userCreateDto: UserCreateDto): Promise<void> {
+  async createUser(userCreateDto: UserCreateDto): Promise<User> {
     const { userid, nickname, email, password } = userCreateDto;
 
     const newUser = new this.userModel({
@@ -21,7 +21,7 @@ export class UserRepository {
       password,
     });
     try {
-      await newUser.save();
+      return await newUser.save();
     } catch (error) {
       if (error.code === 11000) throw new ConflictException();
       else {
