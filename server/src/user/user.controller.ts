@@ -30,12 +30,7 @@ export class UserController {
   ) {
     return {
       message: 'success',
-      data: {
-        profile: await this.userService.updateUserProfile(
-          userid,
-          userUpdateDto,
-        ),
-      },
+      data: await this.userService.updateUserProfile(userid, userUpdateDto),
     };
   }
 }
