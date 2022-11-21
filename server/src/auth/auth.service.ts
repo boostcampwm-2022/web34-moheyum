@@ -1,4 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AuthCredentialsDto } from './dto/auth-credential-dto';
 import { UserCreateDto } from './dto/user-create-dto';
 import { UserRepository } from '../common/database/user.repository';
@@ -104,4 +109,30 @@ export class AuthService {
       return { accessToken, refreshToken };
     } else throw new UnauthorizedException('login failed');
   }
+
+  // public async emailSend(email: string) {
+  //   try {
+  //     const number: string = Math.floor(
+  //       100000 + Math.random() * 900000,
+  //     ).toString();
+
+  //     await this.mailService.sendMail({
+  //       to: email,
+  //       from: this.configService.get('NAVER_EMAIL_ID'),
+  //       subject: '이메일 인증 요청 코드입니다',
+  //       html: `인증 코드 : <b> ${number} </b>`,
+  //     });
+  //     const authNum: string = await bcrypt.hash(
+  //       number,
+  //       parseInt(this.configService.get('saltOrRounds')),
+  //     );
+  //     return authNum;
+  //   } catch (e) {
+  //     console.log(e);
+  //     throw new HttpException(
+  //       'Message 인증 코드 생성 에러 발생',
+  //       HttpStatus.BAD_REQUEST,
+  //     );
+  //   }
+  // }
 }

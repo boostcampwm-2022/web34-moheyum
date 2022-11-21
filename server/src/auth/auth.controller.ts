@@ -24,7 +24,7 @@ export class AuthController {
   @HttpCode(200)
   @Post('/signup')
   async signUp(@Body() userCreateDto: UserCreateDto) {
-    console.log(await this.authService.signUp(userCreateDto));
+    await this.authService.signUp(userCreateDto);
     return {
       message: 'success',
       data: {},
@@ -57,8 +57,6 @@ export class AuthController {
     const refreshToken = await this.authService.createRefreshToken(payload);
     res.cookie('a_t', accessToken, this.authService.getAccessOptions());
     res.cookie('r_t', refreshToken, this.authService.getRefreshOptions());
-    console.log(accessToken);
-    console.log(refreshToken);
     res.json({
       message: 'success',
       data: {},

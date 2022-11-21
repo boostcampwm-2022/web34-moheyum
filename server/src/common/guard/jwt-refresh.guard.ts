@@ -20,8 +20,6 @@ export class JwtRefreshGuard extends AuthGuard('jwt-refresh') {
         HttpStatus.FORBIDDEN,
       );
     }
-    console.log(info);
-    console.log(user);
     if (err || !user) {
       throw err || new UnauthorizedException();
     }
