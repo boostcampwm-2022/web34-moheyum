@@ -1,10 +1,9 @@
 import React, { useState, useRef, ChangeEvent, RefObject } from 'react';
 import Router from 'next/router';
 import Link from 'next/link';
-import styled from '@emotion/styled';
-import { displayCenter, boxStyle, displayColumn } from '../../styles/mixin';
-import COLORS from '../../styles/color';
-import { httpPost } from '../../utils/http';
+import { httpPost } from '../../../utils/http';
+import { Box, FindAccount, SignUp, Wrapper, Title } from './index.style';
+import COLORS from '../../../styles/color';
 
 function changeBorder(inputRef: RefObject<HTMLInputElement>, color: string) {
   const { current } = inputRef;
@@ -98,59 +97,3 @@ export default function Login() {
     </Wrapper>
   );
 }
-
-const Wrapper = styled.div`
-  width: 50%;
-  height: 100%;
-  ${displayColumn}
-  align-items: left;
-  @media only screen and (max-width: ${({ theme }) => theme.wideWindow}) {
-    width: 400px;
-    align-items: center;
-  }
-`;
-
-const Box = styled.div`
-  width: 400px;
-  height: 337px;
-  ${boxStyle}
-  input {
-    margin-bottom: 15px;
-    width: 75%;
-  }
-  button {
-    margin-bottom: 15px;
-    width: 75%;
-  }
-`;
-
-const Title = styled.div`
-  font-size: 28px;
-  margin-bottom: 20px;
-`;
-
-const FindAccount = styled.div`
-  ${displayCenter}
-  a {
-    margin: 5px;
-    text-decoration: none;
-    color: ${COLORS.BLACK};
-    &:focus-within {
-      font-weight: bold;
-    }
-  }
-`;
-
-const SignUp = styled.div`
-  width: 80%;
-  margin: 5%;
-  display: flex;
-  justify-content: space-evenly;
-  a {
-    text-decoration: none;
-    color: ${COLORS.BLACK};
-    &:focus-within {
-      font-weight: bold;
-    }
-  }
-`;

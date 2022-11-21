@@ -1,24 +1,8 @@
-import React from 'react';
-import Image from 'next/legacy/image';
 import styled from '@emotion/styled';
-import { displayCenter } from '../../../styles/mixin';
-import COLORS from '../../../styles/color';
+import { displayCenter } from '../../../../styles/mixin';
+import COLORS from '../../../../styles/color';
 
-export default function Menu({ imgSrc, text }: { imgSrc: string; text: string }) {
-  return (
-    <Wrapper>
-      <div>
-        <div className="imageBox">
-          <Image src={imgSrc} alt="item" width={25} height={25} priority />
-        </div>
-        <div className="text">{text}</div>
-      </div>
-      <span />
-    </Wrapper>
-  );
-}
-
-const Wrapper = styled.div`
+export const Wrapper = styled.div`
   width: 100%;
   height: 50px;
   display: flex;

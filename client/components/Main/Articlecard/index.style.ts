@@ -1,47 +1,7 @@
 import styled from '@emotion/styled';
-import Image from 'next/legacy/image';
-import React from 'react';
-import COLORS from '../../styles/color';
+import COLORS from '../../../styles/color';
 
-interface Props {
-  title?: string;
-  description?: string;
-  author?: string;
-}
-
-ArticleCard.defaultProps = {
-  title: '',
-  description: '',
-  author: '',
-};
-
-export default function ArticleCard({ title, description, author }: Props) {
-  return (
-    <Wrapper>
-      <ArticleHeader>
-        <Author>
-          <div />
-          {author || '작성자 이름'}
-        </Author>
-        <div>{title || '제목 없음'}</div>
-        <HeaderInfo>
-          <Comments>
-            <Image src="/ico_comment.svg" width={20} height={20} />
-            <span>2</span>
-          </Comments>
-          <PostedAt>2시간 전</PostedAt>
-        </HeaderInfo>
-      </ArticleHeader>
-      <hr />
-      <ArticleContent>
-        <Content>{description || '글 내용이 없어용!'}</Content>
-        <ArticleImage />
-      </ArticleContent>
-    </Wrapper>
-  );
-}
-
-const Wrapper = styled.div`
+export const Wrapper = styled.div`
   width: inherit;
   margin: 10px 20px;
   background-color: ${COLORS.WHITE};
@@ -63,14 +23,14 @@ const Wrapper = styled.div`
   }
 `;
 
-const ArticleHeader = styled.div`
+export const ArticleHeader = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 `;
 
-const Author = styled.div`
+export const Author = styled.div`
   color: ${COLORS.BLACK};
   font-weight: 600;
   font-size: 22px;
@@ -87,14 +47,14 @@ const Author = styled.div`
   }
 `;
 
-const HeaderInfo = styled.div`
+export const HeaderInfo = styled.div`
   display: flex;
   flex-direction: row;
   font-size: 20px;
   align-items: center;
 `;
 
-const Comments = styled.div`
+export const Comments = styled.div`
   color: ${COLORS.BLACK};
   margin-right: 10px;
   display: flex;
@@ -105,21 +65,21 @@ const Comments = styled.div`
   }
 `;
 
-const PostedAt = styled.div`
+export const PostedAt = styled.div`
   color: ${COLORS.GRAY2};
 `;
 
-const ArticleContent = styled.div`
+export const ArticleContent = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row;
 `;
 
-const Content = styled.div`
+export const Content = styled.div`
   flex: 1;
 `;
 
-const ArticleImage = styled.div`
+export const ArticleImage = styled.div`
   width: 130px;
   height: 130px;
   background-color: ${COLORS.GRAY4};
