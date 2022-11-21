@@ -8,6 +8,7 @@ import { mongooseConfig } from './common/config/mongooseConfig';
 import { redisOptions } from './common/config/redisConfig';
 import { RedisModule } from '@liaoliaots/nestjs-redis/dist/redis/redis.module';
 import { LoggerMiddleware } from './common/middleware/logger';
+import { UserModule } from './user/user.module';
 
 // CacheModule.register({
 //   isGlobal: true,
@@ -31,6 +32,7 @@ import { LoggerMiddleware } from './common/middleware/logger';
     MongooseModule.forRootAsync(mongooseConfig),
     PostModule,
     AuthModule,
+    UserModule,
   ],
 })
 export class AppModule {

@@ -20,7 +20,6 @@ import { GetPayload } from 'src/common/decorator/get-jwt-data.decorator';
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
-
   @HttpCode(200)
   @Post('/signup')
   async signUp(@Body() userCreateDto: UserCreateDto) {
