@@ -6,6 +6,7 @@ import {
   Res,
   Get,
   HttpCode,
+  Query,
 } from '@nestjs/common';
 // import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
@@ -16,6 +17,9 @@ import { UserCreateDto } from './dto/user-create-dto';
 import { Response } from 'express';
 import { JwtRefreshGuard } from 'src/common/guard/jwt-refresh.guard';
 import { GetPayload } from 'src/common/decorator/get-jwt-data.decorator';
+import { EmailRequestDto } from './dto/email-request-dto';
+import { EmailCheckDto } from './dto/email-check-dto';
+import { Cookies } from 'src/common/decorator/cookie.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -62,6 +66,35 @@ export class AuthController {
       data: {},
     });
   }
+
+  @HttpCode(200)
+  @Post('email-verification')
+  async sendEmailCode(
+    @Body() emailCheckDto: EmailRequestDto,
+    @Res() res: Response,
+  ) {
+    const authNum: string = await this.authService.emailSend(emailCheckDto);
+    res.cookie('authNum', authNum, this.authService.getEmailOptions());
+    return res.send({
+      message: 'success',
+      data: {},
+    });
+  }
+
+  @Get('email-verification')
+  async checkEmailCode(
+    @Query() emailCheckDto: EmailCheckDto,
+    @Cookies('authNum') authNum: string,
+    @Res() res: Response,
+  ) {
+    await this.authService.checkEmailCode(emailCheckDto, authNum);
+    res.cookie('authNum', '', this.authService.deleteCookie());
+    return res.send({
+      message: 'success',
+      data: {},
+    });
+  }
+
   // @Get('/:userid')
   // async getUserInfo(@Param('userid') userid: string) {
   //   this.authService.findUser(userid);
