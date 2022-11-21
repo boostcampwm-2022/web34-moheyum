@@ -14,7 +14,7 @@ export async function middleware(request: NextRequest) {
   }
   if (request.cookies.get('r_t')) isLoggedin = true;
   else isLoggedin = false;
-  console.log(`logged in = ${isLoggedin}`);
+  // console.log(`logged in = ${isLoggedin}`);
 
   if (!isLoggedin) {
     switch (url.pathname) {
