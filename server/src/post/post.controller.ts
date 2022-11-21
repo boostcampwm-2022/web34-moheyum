@@ -9,13 +9,13 @@ import {
   UseGuards,
   HttpCode,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/common/decorator/get-user.decorator';
 import { User } from 'src/common/database/user.schema';
 import { Post as Post_ } from '../common/database/post.schema';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PostIdValidationPipe } from './pipes/post-id-validation.pipe';
+import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
 
 @Controller('post')
 export class PostController {
@@ -39,7 +39,7 @@ export class PostController {
 
   @HttpCode(200)
   @Post()
-  @UseGuards(AuthGuard())
+  @UseGuards(JwtAuthGuard)
   CreatePost(
     @Body() createPostDto: CreatePostDto,
     @GetUser() user: User,
@@ -47,6 +47,7 @@ export class PostController {
     message: string;
     data: { post: Promise<Post_> };
   } {
+    console.log(createPostDto.description);
     return {
       message: 'success',
       data: { post: this.postService.createPost(createPostDto, user) },
@@ -65,7 +66,7 @@ export class PostController {
   }
   @HttpCode(200)
   @Delete('/:id')
-  @UseGuards(AuthGuard())
+  @UseGuards(JwtAuthGuard)
   deletePost(
     @Param('id', PostIdValidationPipe) id: string,
     @GetUser() user: User,

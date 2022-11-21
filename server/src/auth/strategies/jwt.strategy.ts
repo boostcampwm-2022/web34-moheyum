@@ -19,7 +19,6 @@ export class JwtStartegy extends PassportStrategy(Strategy, 'jwt-strategy') {
         },
       ]),
       secretOrKey: configService.get('JWT_ACCESS_TOKEN_SECRET'),
-      passReqToCallback: true,
     });
   }
 

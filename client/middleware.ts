@@ -1,8 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { httpGet } from './utils/http';
 
-const isLoggedin = false;
+let isLoggedin = false;
 
 // TODO : 인증이 필요한 페이지 url list를 만들어 체크하도록 변경
 // middleware 자체의 내용이 인증이 필요한 페이지에서만 작동하도록 리팩토링이 필요합니다.
@@ -17,9 +16,6 @@ export async function middleware(request: NextRequest) {
     request.cookies.getAll().forEach((c) => {
       cookies += `${c.name}=${c.value}; `;
     });
-    console.log('dd');
-    console.log(cookies);
-    console.log('---');
     if (!isLoggedin) {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, {
         credentials: 'include',
@@ -30,15 +26,10 @@ export async function middleware(request: NextRequest) {
       });
       const a = response.headers.get('set-cookie');
 
-      // response.headers.forEach((e) => {
-      //   console.log('ddaaa');
-      //   console.log(e);
-      // });
       if (a) request.headers.set('set-cookie', a);
-      console.log(a);
     }
-    // if (request.cookies.get('r_t')) isLoggedin = true;
-    // else isLoggedin = false;
+    if (request.cookies.get('r_t')) isLoggedin = true;
+    else isLoggedin = false;
 
     if (!isLoggedin) return Promise.resolve(NextResponse.redirect(new URL('/login', request.url)));
   }

@@ -79,7 +79,7 @@ export class AuthService {
       httpOnly: true,
       path: '/',
       sameSite: 'strict',
-      maxAge: 3000,
+      maxAge: 300000,
     };
   }
   public getRefreshOptions(): CookieOptions {

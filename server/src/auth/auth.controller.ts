@@ -57,8 +57,8 @@ export class AuthController {
     const refreshToken = await this.authService.createRefreshToken(payload);
     res.cookie('a_t', accessToken, this.authService.getAccessOptions());
     res.cookie('r_t', refreshToken, this.authService.getRefreshOptions());
-    console.log(accessToken);
-    console.log(refreshToken);
+    // console.log(accessToken);
+    // console.log(refreshToken);
     res.json({
       message: 'success',
       data: {},
