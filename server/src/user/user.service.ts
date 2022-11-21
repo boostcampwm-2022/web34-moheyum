@@ -3,28 +3,52 @@ import { User } from 'src/common/database/user.schema';
 import { UserUpdateDto } from './dto/user-Update-dto';
 import { UserRepository } from 'src/common/database/user.repository';
 
+interface UserData {
+  userId: string;
+  nickName: string;
+  Email: string;
+  bio: string;
+  profileImg: string;
+}
 @Injectable()
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async getUserData(
-    userid: string,
-  ): Promise<{ userId: string; nickName: string; Email: string }> {
+  async getUserData(userid: string): Promise<{
+    userId: string;
+    nickName: string;
+    email: string;
+    bio: string;
+    profileImg: string;
+  }> {
     const data = await this.userRepository.findOne({ userid });
     return Promise.resolve({
       userId: data.userid,
       nickName: data.nickname,
-      Email: data.email,
+      email: data.email,
+      bio: data.bio,
+      profileImg: data.profileimg,
     });
   }
 
-  updateUserProfile(
+  async updateUserProfile(
     userid: string,
     userUpdateDto: UserUpdateDto,
-  ): Promise<User> {
-    return this.userRepository.findOneAndUpdate(
+  ): Promise<{
+    userId: string;
+    nickName: string;
+    bio: string;
+    profileImg: string;
+  }> {
+    const data = await this.userRepository.findOneAndUpdate(
       { userid: userid },
       userUpdateDto,
     );
+    return Promise.resolve({
+      userId: data.userid,
+      nickName: data.nickname,
+      bio: data.bio,
+      profileImg: data.profileimg,
+    });
   }
 }
