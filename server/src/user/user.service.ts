@@ -3,13 +3,6 @@ import { User } from 'src/common/database/user.schema';
 import { UserUpdateDto } from './dto/user-Update-dto';
 import { UserRepository } from 'src/common/database/user.repository';
 
-interface UserData {
-  userId: string;
-  nickName: string;
-  Email: string;
-  bio: string;
-  profileImg: string;
-}
 @Injectable()
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
