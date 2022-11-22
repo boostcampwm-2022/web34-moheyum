@@ -7,10 +7,14 @@ import Frame from '../../styles/frame';
 import { httpGet } from '../../utils/http';
 
 interface Props {
-  _id: string;
-  title: string;
-  description: string;
-  author: string;
+  data: {
+    post: {
+      _id: string;
+      title: string;
+      description: string;
+      author: string;
+    };
+  };
 }
 
 export default function Post({ response }: { response: Props }) {
@@ -19,7 +23,7 @@ export default function Post({ response }: { response: Props }) {
   return (
     <Frame>
       <SideBar />
-      <ReadPost postData={response} />
+      <ReadPost postData={response.data.post} />
     </Frame>
   );
 }

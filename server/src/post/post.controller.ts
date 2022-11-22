@@ -27,14 +27,13 @@ export class PostController {
   }
 
   @Get('/author/:userid')
-  async getUserPosts(@Param('userid') userid: string): Promise<{
+  getUserPosts(@Param('userid') userid: string): {
     message: string;
-    data: { post: Post_[] };
-  }> {
-    const data = await this.postService.getUserPosts(userid);
+    data: { post: Promise<Post_[]> };
+  } {
     return {
       message: 'success',
-      data: { post: data },
+      data: { post: this.postService.getUserPosts(userid) },
     };
   }
 
@@ -48,7 +47,6 @@ export class PostController {
     message: string;
     data: { post: Promise<Post_> };
   } {
-    console.log(createPostDto.description);
     return {
       message: 'success',
       data: { post: this.postService.createPost(createPostDto, user) },
@@ -56,13 +54,14 @@ export class PostController {
   }
 
   @Get('/:id')
-  getPostById(@Param('id', PostIdValidationPipe) id: string): {
+  async getPostById(@Param('id', PostIdValidationPipe) id: string): Promise<{
     message: string;
-    data: { post: Promise<Post_> };
-  } {
+    data: { post: Post_ };
+  }> {
+    const postData = await this.postService.getPostById(id);
     return {
       message: 'success',
-      data: { post: this.postService.getPostById(id) },
+      data: { post: postData },
     };
   }
   @HttpCode(200)

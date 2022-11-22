@@ -22,6 +22,7 @@ interface Props {
 }
 
 export default function ReadPost({ postData }: Props) {
+  console.log(postData);
   const goBack = () => {
     Router.back();
   };
@@ -29,21 +30,18 @@ export default function ReadPost({ postData }: Props) {
     <Wrapper>
       <TopButtonConatiner>
         <ButtonBack type="button" onClick={goBack} />
-        <h1>글 제목{postData.title}</h1>
+        <h1>{postData.title || '글 제목'}</h1>
         <div>&nbsp;</div>
       </TopButtonConatiner>
       <ContentBox>
         <PostHeader>
           <Author>
             <Profile />
-            작성자 이름
+            {postData.author || '작성자 이름'}
           </Author>
           <PostedAt>2시간 전</PostedAt>
         </PostHeader>
-        <PostContent>
-          글 내용
-          {postData.description}
-        </PostContent>
+        <PostContent>{postData.description || '글 내용'}</PostContent>
       </ContentBox>
     </Wrapper>
   );
