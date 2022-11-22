@@ -1,5 +1,5 @@
 import Router from 'next/router';
-import React, { ClipboardEvent, createElement, KeyboardEvent, ReactNode, useRef, useState } from 'react';
+import React, { ClipboardEvent, createElement, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { httpPost } from '../../utils/http';
 import {
   BottomButtonConatiner,
@@ -17,8 +17,14 @@ import {
 
 export default function Editor() {
   const contentRef = useRef<HTMLDivElement>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
   const [tabIndex, setTabIndex] = useState(0); // 0 Editor, 1 Preview
   const [content, setContent] = useState<string>('');
+
+  useEffect(() => {
+    if (!previewRef.current) return;
+    previewRef.current.innerHTML = renderPreview(content);
+  }, [content]);
 
   const handlePaste = (e: ClipboardEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -46,12 +52,11 @@ export default function Editor() {
   };
 
   const handleKeyUp = (e: KeyboardEvent<HTMLDivElement>) => {
-    // const cursor = window.getSelection();
     if (!contentRef.current) return;
     const { key } = e;
-    if (key === 'Backspace') {
-      if (contentRef.current.innerHTML === '') {
-        contentRef.current.innerHTML = '<div></div>';
+    if (key === 'Backspace' || key === 'Delete') {
+      if (contentRef.current.innerHTML === '' || contentRef.current.innerHTML === '<br>') {
+        contentRef.current.innerHTML = '<div><br/></div>';
       }
     }
     setContent(contentRef.current.innerText.replace(/\n\n/g, '\n'));
@@ -63,7 +68,6 @@ export default function Editor() {
     if (!cursor) return;
     if (key === 'Tab') {
       e.preventDefault();
-      console.log(cursor);
       if (cursor.type === 'Caret') {
         if (!cursor.anchorNode) return;
         const position = cursor.anchorOffset + 2;
@@ -115,32 +119,10 @@ export default function Editor() {
     }
   };
 
-  const renderPreview = (str: string): ReactNode[] => {
-    const lines = str.split('\n');
-    console.log(str);
-    let result = [];
-    // console.log(lines);
-    result = lines.map((e) => {
-      let data = e === '' ? ' ' : e;
-      let rowType = 'div';
-      if (e.match(/^# [\S]+/)) {
-        rowType = 'h1';
-        data = data.replace('# ', '');
-      }
-      if (e.match(/^## [\S]+/)) {
-        rowType = 'h2';
-        data = data.replace('## ', '');
-      }
-      if (e.match(/^### [\S]+/)) {
-        rowType = 'h3';
-        data = data.replace('### ', '');
-      }
-      const newDiv = createElement(rowType, null, `${data}\xa0`);
-      console.log(newDiv.props);
-      return newDiv;
-    });
-    console.log(`lines : ${result.length}`);
-    return result;
+  const renderPreview = (str: string) => {
+    const rawString = str.replace(/</g, '&lt;').replace(/</g, '&gt;');
+    console.log(rawString.match(/^[\n]*#+ [\S]*\n/gm));
+    return rawString;
   };
 
   return (
@@ -170,12 +152,16 @@ export default function Editor() {
         <EditorTextBox
           contentEditable={tabIndex === 0}
           ref={contentRef}
-          suppressContentEditableWarning
           onKeyUp={handleKeyUp}
           onKeyDown={handleKeyDown}
           onPaste={handlePaste}
-        />
-        <PreviewTextBox>{renderPreview(content)}</PreviewTextBox>
+          suppressContentEditableWarning
+        >
+          <div>
+            <br />
+          </div>
+        </EditorTextBox>
+        <PreviewTextBox ref={previewRef} />
       </EditorContainer>
       <BottomButtonConatiner>
         <button type="button" onClick={submitHandler}>
