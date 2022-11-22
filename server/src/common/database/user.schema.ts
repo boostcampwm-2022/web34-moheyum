@@ -28,10 +28,14 @@ export class User {
   })
   password: string;
 
-  @Prop()
+  @Prop({
+    default: '',
+  })
   profileimg: string;
 
-  @Prop()
+  @Prop({
+    default: '',
+  })
   bio: string;
 }
 
