@@ -5,6 +5,7 @@ import {
   Matches,
   IsByteLength,
   IsEmail,
+  IsOptional,
 } from 'class-validator';
 
 export class UserCreateDto {
@@ -31,9 +32,11 @@ export class UserCreateDto {
   @Matches(/^[a-zA-Z\d!@#$%^&*()-_=+]{6,16}$/)
   password: string;
 
+  @IsOptional()
   @IsString()
   profileimg: string = '';
 
+  @IsOptional()
   @IsString()
   @MaxLength(500)
   bio: string = '';
