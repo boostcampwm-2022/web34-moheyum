@@ -185,31 +185,47 @@ export class AuthService {
    * @param email
    * @returns Promise<string>
    */
-  public async emailSend(email: EmailDto): Promise<string> {
+  private async emailSend(
+    email: string,
+    subject: string,
+    html: string,
+  ): Promise<boolean> {
+    try {
+      await this.mailService.sendMail({
+        to: email,
+        from: this.configService.get('NAVER_EMAIL_ID'),
+        subject: subject,
+        html: html,
+      });
+      return true;
+    } catch (e) {
+      console.log(e);
+      throw new BadRequestException({
+        message: '메시지 전송 실패',
+      });
+    }
+  }
+
+  async sendEmailCode(email: EmailDto) {
     try {
       // 숫자 고르기
       const number: string = Math.floor(
         100000 + Math.random() * 900000,
       ).toString();
-
-      await this.mailService.sendMail({
-        to: email.email,
-        from: this.configService.get('NAVER_EMAIL_ID'),
-        subject: '이메일 인증 요청 코드입니다',
-        html: `인증 코드 : <b> ${number} </b>`,
-      });
-      /* authNum을 return해 쿠키에 가지게 한다 */
+      await this.emailSend(
+        email.email,
+        '이메일 인증 요청 코드입니다',
+        `인증 코드 : <b> ${number} </b>`,
+      );
       const authNum: string = await bcrypt.hash(
         number,
         parseInt(this.configService.get('saltOrRounds')),
       );
       return authNum;
     } catch (e) {
-      console.log(e);
-      throw new HttpException(
-        'Message 인증 코드 생성 에러 발생',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException({
+        message: 'Message 인증 코드 생성 에러 발생',
+      });
     }
   }
 
@@ -228,17 +244,13 @@ export class AuthService {
       if (rightNum) {
         return true;
       } else {
-        throw new HttpException(
-          '인증코드가 일치하지 않습니다',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException({
+          message: '인증코드가 일치하지 않습니다',
+        });
       }
     } catch (e) {
       console.log(e);
-      throw new HttpException(
-        '다시 요청해 주시기 바랍니다',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException({ message: '다시 요청해 주시기 바랍니다' });
     }
   }
   /**
@@ -256,9 +268,9 @@ export class AuthService {
       const userid = `${user.userid.slice(0, -3)}***`;
       return userid;
     }
-    throw new BadRequestException(
-      '해당 이메일과 닉네임으로 가입되어 있지 않습니다',
-    );
+    throw new BadRequestException({
+      message: '해당 이메일과 닉네임으로 가입되어 있지 않습니다',
+    });
   }
 
   async findPw(findPwDTO: FindPwDto) {
@@ -272,13 +284,27 @@ export class AuthService {
         length: 12,
         numbers: true,
       });
-      console.log(pw);
-      return user.email;
+      const hashPw = await bcrypt.hash(
+        pw,
+        +this.configService.get('saltOrRounds'),
+      );
+      await this.userRepository.findOneAndUpdate(
+        {
+          userid: userid,
+        },
+        {
+          password: hashPw,
+        },
+      );
+      await this.emailSend(
+        email,
+        '임시 비밀번호 발급',
+        `임시 비밀번호 : <b> ${pw} </b>`,
+      );
+      return true;
     }
-    throw new HttpException(
-      '해당 이메일과 아이디로 가입되어 있지 않습니다',
-      HttpStatus.BAD_REQUEST,
-    );
-    return user.email;
+    throw new BadRequestException({
+      message: '해당 이메일과 아이디로 가입되어 있지 않습니다',
+    });
   }
 }

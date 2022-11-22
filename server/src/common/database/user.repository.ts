@@ -2,6 +2,7 @@ import {
   Injectable,
   ConflictException,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from '../database/user.schema';
@@ -33,5 +34,14 @@ export class UserRepository {
 
   async findOne(userFilterQuery: FilterQuery<User>): Promise<User> {
     return this.userModel.findOne(userFilterQuery);
+  }
+
+  async findOneAndUpdate(
+    userFilterQuery: FilterQuery<User>,
+    user: Partial<User>,
+  ): Promise<User> {
+    const result = await this.userModel.findOneAndUpdate(userFilterQuery, user);
+    if (!result) throw new NotFoundException();
+    return result;
   }
 }

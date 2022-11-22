@@ -22,7 +22,7 @@ export class PostRepository {
 
     const newPost = new this.postModel({
       title,
-      description: description + process.env.HELLO,
+      description: description,
       author: user.userid,
     });
     return newPost.save();

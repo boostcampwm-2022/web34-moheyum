@@ -18,7 +18,7 @@ export class BadRequestExceptionFilter implements ExceptionFilter {
       .json({
         success: 'false',
         path: request.url,
-        message: '잘못된 형태의 입력이 들어왔습니다',
+        message: exception.message ?? '잘못된 형태의 입력이 들어왔습니다',
       });
   }
 }

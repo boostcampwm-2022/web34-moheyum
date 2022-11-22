@@ -7,9 +7,6 @@ import {
   Get,
   HttpCode,
   Query,
-  UseFilters,
-  HttpException,
-  HttpStatus,
 } from '@nestjs/common';
 // import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
@@ -24,8 +21,6 @@ import { EmailDto } from './dto/email-dto';
 import { EmailCheckDto } from './dto/email-check-dto';
 import { Cookies } from 'src/common/decorator/cookie.decorator';
 import { FindPwDto } from './dto/find-pw-dto';
-import { BadRequestExceptionFilter } from 'src/common/filter/badrequest.filter';
-import { HttpExceptionFilter } from 'src/common/filter/httpexecption.filter';
 
 @Controller('auth')
 export class AuthController {
@@ -76,7 +71,7 @@ export class AuthController {
   @HttpCode(200)
   @Post('email-verification')
   async sendEmailCode(@Body() emailCheckDto: EmailDto, @Res() res: Response) {
-    const authNum: string = await this.authService.emailSend(emailCheckDto);
+    const authNum: string = await this.authService.sendEmailCode(emailCheckDto);
     res.cookie('authNum', authNum, this.authService.getEmailOptions());
     return res.send({
       message: 'success',
@@ -113,10 +108,11 @@ export class AuthController {
   @HttpCode(200)
   @Post('password-inquiry')
   async findPw(@Body() findPwDTO: FindPwDto) {
-    try {
-      this.authService.findPw(findPwDTO);
-    } catch (e) {
-      throw new HttpException(e, HttpStatus.BAD_REQUEST);
+    if (await this.authService.findPw(findPwDTO)) {
+      return {
+        message: 'success',
+        data: {},
+      };
     }
   }
 }
