@@ -40,7 +40,7 @@ export class FollowRepository {
   async findFollowers({ targetid }) {
     return this.followModel.aggregate([
       {
-        $match: { targetid: { $regex: targetid } },
+        $match: { targetid: targetid },
       },
       {
         $lookup: {
@@ -67,7 +67,7 @@ export class FollowRepository {
   async findFollowing({ userid }) {
     return this.followModel.aggregate([
       {
-        $match: { userid: { $regex: userid } },
+        $match: { userid: userid },
       },
       {
         $lookup: {
