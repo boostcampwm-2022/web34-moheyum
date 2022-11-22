@@ -1,4 +1,5 @@
 import { atom } from 'recoil';
+
 interface newsfeedType {
   _id: string;
   title: string;
@@ -10,4 +11,9 @@ const newsfeedState = atom({
   default: [] as newsfeedType[],
 });
 
-export default newsfeedState;
+const isLoggedIn = atom({
+  key: 'isLoggedIn',
+  default: false,
+});
+
+export { newsfeedState, isLoggedIn };

@@ -28,6 +28,16 @@ export class User {
     required: true,
   })
   password: string;
+
+  @Prop({
+    required: true,
+  })
+  profileimg: string;
+
+  @Prop({
+    required: true,
+  })
+  bio: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -30,4 +30,11 @@ export class UserCreateDto {
   @IsString()
   @Matches(/^[a-zA-Z\d!@#$%^&*()-_=+]{6,16}$/)
   password: string;
+
+  @IsString()
+  profileimg: string = '';
+
+  @IsString()
+  @MaxLength(500)
+  bio: string = '';
 }

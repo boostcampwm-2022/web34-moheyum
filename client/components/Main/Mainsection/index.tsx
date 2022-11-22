@@ -2,7 +2,7 @@ import React from 'react';
 import { useRecoilValue } from 'recoil';
 import Link from 'next/link';
 import ArticleCard from '../Articlecard';
-import newsfeedState from '../../../atom/newsfeedState';
+import { newsfeedState } from '../../../atom';
 import { ArticlesSection, FakeButton, NewArticleSection, Placeholder, Wrapper } from './index.style';
 
 export default function MainSection() {
@@ -18,15 +18,16 @@ export default function MainSection() {
         </NewArticleSection>
       </Link>
       <ArticlesSection>
-        {newsfeedList.map((item) => (
-          <ArticleCard
-            author={item.author}
-            key={item._id}
-            id={item._id}
-            description={item.description}
-            title={item.title}
-          />
-        ))}
+        {Array.isArray(newsfeedList) &&
+          newsfeedList.map((item) => (
+            <ArticleCard
+              author={item.author}
+              key={item._id}
+              id={item._id}
+              description={item.description}
+              title={item.title}
+            />
+          ))}
       </ArticlesSection>
     </Wrapper>
   );

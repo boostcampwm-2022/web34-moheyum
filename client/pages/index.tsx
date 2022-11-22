@@ -4,7 +4,7 @@ import { httpGet } from '../utils/http';
 import Frame from '../styles/frame';
 import SideBar from '../components/Main/SideBar';
 import MainSection from '../components/Main/Mainsection';
-import newsfeedState from '../atom/newsfeedState';
+import { newsfeedState } from '../atom';
 
 interface newsPeedType {
   _id: string;

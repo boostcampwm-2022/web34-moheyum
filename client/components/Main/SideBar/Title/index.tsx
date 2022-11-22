@@ -6,7 +6,7 @@ import { Icon, SmallIcon, Wrapper } from './index.style';
 export default function Title() {
   return (
     <Wrapper>
-      <Link href="/main">
+      <Link href="/">
         <Icon>
           <Image src="/logo_purple.svg" alt="Logo" width={175} height={75} priority />
         </Icon>

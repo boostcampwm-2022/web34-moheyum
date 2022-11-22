@@ -53,7 +53,7 @@ export class AuthService {
     await this.redisService.set(
       userid,
       hashedToken,
-      +this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME') * 60,
+      +this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME') * 1000,
     );
   }
 
