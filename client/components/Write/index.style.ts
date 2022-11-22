@@ -9,18 +9,6 @@ export const Wrapper = styled.div`
   flex-direction: column;
 `;
 
-export const EditorTextBox = styled.div`
-  width: 100%;
-  overflow-y: scroll;
-  padding: 10px;
-  font-size: 12px;
-  flex: 1;
-  /* display: inline-block; */
-  &:focus {
-    outline: none;
-  }
-`;
-
 export const TopButtonConatiner = styled.div`
   width: 100%;
   border-bottom: 2px solid ${COLORS.GRAY1};
@@ -120,4 +108,30 @@ export const BottomButtonConatiner = styled.div`
     ${buttonStyle}
     margin: 10px 20px;
   }
+`;
+
+export const EditorTextBox = styled.div`
+  width: 100%;
+  overflow-y: scroll;
+  padding: 10px;
+  font-size: 12px;
+  flex: 1;
+  /* display: inline-block; */
+  &:focus {
+    outline: none;
+  }
+`;
+
+export const EditorContainer = styled.div`
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+`;
+
+export const PreviewTextBox = styled.div`
+  width: 100%;
+  flex: 1;
+  padding: 10px;
+  font-size: 12px;
 `;

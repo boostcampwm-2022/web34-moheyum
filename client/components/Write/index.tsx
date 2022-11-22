@@ -1,13 +1,15 @@
 import Router from 'next/router';
-import React, { KeyboardEvent, useRef, useState } from 'react';
+import React, { ClipboardEvent, KeyboardEvent, useRef, useState } from 'react';
 import { httpPost } from '../../utils/http';
 import {
   BottomButtonConatiner,
   ButtonBack,
+  EditorContainer,
   EditorTabItem,
   EditorTabs,
   EditorTabTool,
   EditorTextBox,
+  PreviewTextBox,
   ToolbarContainer,
   TopButtonConatiner,
   Wrapper,
@@ -16,13 +18,70 @@ import {
 export default function Editor() {
   const contentRef = useRef<HTMLDivElement>(null);
   const [tabIndex, setTabIndex] = useState(0); // 0 Editor, 1 Preview
+  const [content, setContent] = useState<string>('');
+
+  const handlePaste = (e: ClipboardEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const data = e.clipboardData?.getData('Text');
+    const cursor = window.getSelection();
+    if (!cursor) return;
+    if (cursor.type === 'Caret') {
+      if (!cursor.anchorNode) return;
+      cursor.anchorNode.textContent = `${cursor.anchorNode?.textContent?.slice(
+        0,
+        cursor.anchorOffset
+      )}${data}${cursor.anchorNode?.textContent?.slice(cursor.anchorOffset)}`;
+      window.getSelection()?.collapse(cursor.anchorNode, cursor.anchorOffset);
+    }
+    if (cursor.type === 'Range') {
+      if (!cursor.anchorNode || !cursor.focusNode) return;
+      cursor.deleteFromDocument();
+      const position = cursor.anchorOffset + data.length;
+      cursor.anchorNode.textContent = `${cursor.anchorNode?.textContent?.slice(
+        0,
+        cursor.anchorOffset
+      )}${data}${cursor.anchorNode?.textContent?.slice(cursor.anchorOffset)}`;
+      window.getSelection()?.collapse(cursor.anchorNode, position);
+    }
+  };
 
   const handleKeyUp = (e: KeyboardEvent<HTMLDivElement>) => {
     // const cursor = window.getSelection();
+    if (!contentRef.current) return;
     const { key } = e;
     if (key === 'Backspace') {
-      if (contentRef.current?.innerHTML === '') {
+      if (contentRef.current.innerHTML === '') {
         contentRef.current.innerHTML = '<div><br></div>';
+      }
+    }
+    setContent(contentRef.current.innerText);
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    const { key } = e;
+    const cursor = window.getSelection();
+    if (!cursor) return;
+    if (key === 'Tab') {
+      e.preventDefault();
+      console.log(cursor);
+      if (cursor.type === 'Caret') {
+        if (!cursor.anchorNode) return;
+        const position = cursor.anchorOffset + 2;
+        cursor.anchorNode.textContent = `${cursor.anchorNode?.textContent?.slice(
+          0,
+          cursor.anchorOffset
+        )}\xa0\xa0${cursor.anchorNode?.textContent?.slice(cursor.anchorOffset)}`;
+        window.getSelection()?.collapse(cursor.anchorNode, position);
+      }
+      if (cursor.type === 'Range') {
+        if (!cursor.anchorNode || !cursor.focusNode) return;
+        cursor.deleteFromDocument();
+        const position = cursor.anchorOffset + 2;
+        cursor.anchorNode.textContent = `${cursor.anchorNode?.textContent?.slice(
+          0,
+          cursor.anchorOffset
+        )}\xa0\xa0${cursor.anchorNode?.textContent?.slice(cursor.anchorOffset)}`;
+        window.getSelection()?.collapse(cursor.anchorNode, position);
       }
     }
   };
@@ -51,6 +110,7 @@ export default function Editor() {
       setTabIndex(0);
     }
     if (index === 1) {
+      // preview
       setTabIndex(1);
     }
   };
@@ -78,16 +138,21 @@ export default function Editor() {
           <EditorTabTool style={{ textDecorationLine: 'underline' }}>U</EditorTabTool>
         </EditorTabs>
       </ToolbarContainer>
-      <EditorTextBox
-        contentEditable={tabIndex === 0}
-        ref={contentRef}
-        suppressContentEditableWarning
-        onKeyUp={handleKeyUp}
-      >
-        <div>
-          <br />
-        </div>
-      </EditorTextBox>
+      <EditorContainer>
+        <EditorTextBox
+          contentEditable={tabIndex === 0}
+          ref={contentRef}
+          suppressContentEditableWarning
+          onKeyUp={handleKeyUp}
+          onKeyDown={handleKeyDown}
+          onPaste={handlePaste}
+        >
+          <div>
+            <br />
+          </div>
+        </EditorTextBox>
+        <PreviewTextBox>{content}</PreviewTextBox>
+      </EditorContainer>
       <BottomButtonConatiner>
         <button type="button" onClick={submitHandler}>
           작성 완료
