@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import Router from 'next/router';
 import React from 'react';
 import COLORS from '../../styles/color';
 
@@ -12,10 +13,13 @@ interface Props {
 }
 
 export default function ReadPost({ postData }: Props) {
+  const goBack = () => {
+    Router.back();
+  };
   return (
     <Wrapper>
       <TopButtonConatiner>
-        <ButtonBack />
+        <ButtonBack type="button" onClick={goBack} />
         <h1>글 제목{postData.title}</h1>
         <div>&nbsp;</div>
       </TopButtonConatiner>
