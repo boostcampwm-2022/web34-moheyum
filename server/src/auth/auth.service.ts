@@ -18,7 +18,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { EmailDto } from './dto/email-dto';
 import { EmailCheckDto } from './dto/email-check-dto';
 import { FindPwDto } from './dto/find-pw-dto';
-
+import * as generator from 'generate-password';
 @Injectable()
 export class AuthService {
   constructor(
@@ -267,6 +267,18 @@ export class AuthService {
       userid: userid,
       email: email,
     });
+    if (user) {
+      const pw = generator.generate({
+        length: 12,
+        numbers: true,
+      });
+      console.log(pw);
+      return user.email;
+    }
+    throw new HttpException(
+      '해당 이메일과 아이디로 가입되어 있지 않습니다',
+      HttpStatus.BAD_REQUEST,
+    );
     return user.email;
   }
 }

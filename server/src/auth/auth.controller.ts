@@ -7,6 +7,9 @@ import {
   Get,
   HttpCode,
   Query,
+  UseFilters,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 // import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
@@ -21,6 +24,8 @@ import { EmailDto } from './dto/email-dto';
 import { EmailCheckDto } from './dto/email-check-dto';
 import { Cookies } from 'src/common/decorator/cookie.decorator';
 import { FindPwDto } from './dto/find-pw-dto';
+import { BadRequestExceptionFilter } from 'src/common/filter/badrequest.filter';
+import { HttpExceptionFilter } from 'src/common/filter/httpexecption.filter';
 
 @Controller('auth')
 export class AuthController {
@@ -108,6 +113,10 @@ export class AuthController {
   @HttpCode(200)
   @Post('password-inquiry')
   async findPw(@Body() findPwDTO: FindPwDto) {
-    this.authService.findPw(findPwDTO);
+    try {
+      this.authService.findPw(findPwDTO);
+    } catch (e) {
+      throw new HttpException(e, HttpStatus.BAD_REQUEST);
+    }
   }
 }

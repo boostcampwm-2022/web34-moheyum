@@ -9,18 +9,6 @@ import { redisOptions } from './common/config/redisConfig';
 import { RedisModule } from '@liaoliaots/nestjs-redis/dist/redis/redis.module';
 import { LoggerMiddleware } from './common/middleware/logger';
 
-// CacheModule.register({
-//   isGlobal: true,
-//   store: redisStore,
-//   clusterConfig: {
-//     nodes: [
-//       {
-//         port: 6379,
-//         host: '49.50.166.184',
-//       },
-//     ],
-//   },
-// }),
 @Module({
   imports: [
     ConfigModule.forRoot({
