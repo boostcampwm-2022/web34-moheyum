@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   HttpException,
   HttpStatus,
   Injectable,
@@ -14,8 +15,9 @@ import { CookieOptions } from 'express';
 import { User } from 'src/common/database/user.schema';
 import { RedisService } from 'src/redis/redis.service';
 import { MailerService } from '@nestjs-modules/mailer';
-import { EmailRequestDto } from './dto/email-request-dto';
+import { EmailDto } from './dto/email-dto';
 import { EmailCheckDto } from './dto/email-check-dto';
+import { FindPwDto } from './dto/find-pw-dto';
 
 @Injectable()
 export class AuthService {
@@ -27,6 +29,11 @@ export class AuthService {
     private readonly mailService: MailerService,
   ) {}
 
+  /**
+   * @description 회원가입
+   * @param userCreateDto
+   * @returns Promise<User>
+   */
   async signUp(userCreateDto: UserCreateDto): Promise<User> {
     userCreateDto.password = await bcrypt.hash(
       userCreateDto.password,
@@ -35,6 +42,11 @@ export class AuthService {
     return this.userRepository.createUser(userCreateDto);
   }
 
+  /**
+   * @description 액세스 토큰 생성
+   * @param payload
+   * @returns string
+   */
   public async createAccessToken(payload) {
     const expiresIn = `${this.configService.get(
       'JWT_ACCESS_TOKEN_EXPIRATION_TIME',
@@ -44,7 +56,11 @@ export class AuthService {
       expiresIn,
     });
   }
-
+  /**
+   * @description 리프레시 토큰 레디스 설정
+   * @param refreshToken
+   * @param userid
+   */
   private async setRefreshTokenInRedis(refreshToken: string, userid: string) {
     const hashedToken = await bcrypt.hash(
       refreshToken,
@@ -56,7 +72,11 @@ export class AuthService {
       +this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME') * 60,
     );
   }
-
+  /**
+   * @description 리프레시 토큰 생성
+   * @param payload
+   * @returns string
+   */
   public async createRefreshToken(payload: { userid: string }) {
     const expiresIn = `${this.configService.get(
       'JWT_REFRESH_TOKEN_EXPIRATION_TIME',
@@ -69,6 +89,12 @@ export class AuthService {
     return jwt;
   }
 
+  /**
+   * @description 리프레시 토큰 검증
+   * @param refreshToken
+   * @param userid
+   * @returns Promise<boolean>
+   */
   public async checkRefreshTokenValidation(
     refreshToken: string,
     userid: string,
@@ -78,11 +104,17 @@ export class AuthService {
     if (isValidate) return true;
     return false;
   }
-
+  /**
+   * @description Redis에서 리프레시 토큰 제거
+   * @param userid
+   */
   public async removeRefeshTokenfromRedis(userid) {
     await this.redisService.del(userid);
   }
-
+  /**
+   * @description Access토큰 옵션 설정
+   * @returns CookieOptions
+   */
   public getAccessOptions(): CookieOptions {
     return {
       httpOnly: true,
@@ -92,6 +124,11 @@ export class AuthService {
         +this.configService.get('JWT_ACCESS_TOKEN_EXPIRATION_TIME') * 1000,
     };
   }
+
+  /**
+   * @description 리프레시 토큰 쿠키 설정
+   * @returns CookieOptions
+   */
   public getRefreshOptions(): CookieOptions {
     return {
       httpOnly: true,
@@ -101,6 +138,11 @@ export class AuthService {
         +this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME') * 1000,
     };
   }
+
+  /**
+   * @description 이메일 옵션 설정
+   * @returns CookieOptions
+   */
   public getEmailOptions(): CookieOptions {
     return {
       httpOnly: true,
@@ -109,11 +151,21 @@ export class AuthService {
       expires: new Date(Date.now() + 300000),
     };
   }
+
+  /**
+   * @description 쿠키제거
+   * @Creturns CookieOptions
+   */
   public deleteCookie(): CookieOptions {
     return {
       maxAge: 0,
     };
   }
+  /**
+   * @description 로그인
+   * @param authCredentialsDto
+   * @returns Promise<{ accessToken: string; refreshToken: string }>
+   */
   public async signIn(
     authCredentialsDto: AuthCredentialsDto,
   ): Promise<{ accessToken: string; refreshToken: string }> {
@@ -133,8 +185,7 @@ export class AuthService {
    * @param email
    * @returns Promise<string>
    */
-
-  public async emailSend(email: EmailRequestDto): Promise<string> {
+  public async emailSend(email: EmailDto): Promise<string> {
     try {
       // 숫자 고르기
       const number: string = Math.floor(
@@ -189,5 +240,33 @@ export class AuthService {
         HttpStatus.BAD_REQUEST,
       );
     }
+  }
+  /**
+   * @description 아이디 찾기
+   * @param findIdDTO
+   * @returns Promise<string>
+   */
+  async findId(emailDTO: EmailDto): Promise<string> {
+    const { email } = emailDTO;
+    const user = await this.userRepository.findOne({
+      email: email,
+    });
+
+    if (user) {
+      const userid = `${user.userid.slice(0, -3)}***`;
+      return userid;
+    }
+    throw new BadRequestException(
+      '해당 이메일과 닉네임으로 가입되어 있지 않습니다',
+    );
+  }
+
+  async findPw(findPwDTO: FindPwDto) {
+    const { userid, email } = findPwDTO;
+    const user = await this.userRepository.findOne({
+      userid: userid,
+      email: email,
+    });
+    return user.email;
   }
 }
