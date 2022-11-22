@@ -41,4 +41,8 @@ export class PostService {
   async updatePost(id: string, createPostDto: CreatePostDto): Promise<Post> {
     return this.postRepository.findOneAndUpdate({ _id: id }, createPostDto);
   }
+
+  async test() {
+    return await this.postRepository.find({});
+  }
 }

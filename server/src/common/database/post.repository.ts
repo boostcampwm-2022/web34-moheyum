@@ -10,7 +10,7 @@ export class PostRepository {
   constructor(@InjectModel(Post.name) private postModel: Model<PostDocument>) {}
 
   async find(postFilterQuery: FilterQuery<Post>): Promise<Post[]> {
-    return this.postModel.find(postFilterQuery);
+    return this.postModel.find(postFilterQuery).sort({ createdAt: -1 });
   }
 
   async findOne(postFilterQuery: FilterQuery<Post>): Promise<Post> {
@@ -22,7 +22,7 @@ export class PostRepository {
 
     const newPost = new this.postModel({
       title,
-      description: description + process.env.HELLO,
+      description: description,
       author: user.userid,
     });
     return newPost.save();

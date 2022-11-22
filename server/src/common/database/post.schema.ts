@@ -1,21 +1,29 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { timeStamp } from 'console';
 import { HydratedDocument } from 'mongoose';
-
+import { timestamp } from 'rxjs';
 export type PostDocument = HydratedDocument<Post>;
 
-@Schema({ versionKey: false })
+@Schema({ versionKey: false, timestamps: true })
 export class Post {
-  @Prop()
+  @Prop({
+    required: true,
+  })
   title: string;
 
-  @Prop()
+  @Prop({
+    required: true,
+  })
   description: string;
 
   // @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User'})
-  @Prop()
+  @Prop({
+    required: true,
+  })
   author: string;
-
-  // TODO : Date 추가
 }
-
-export const PostSchema = SchemaFactory.createForClass(Post);
+const PostSchema = SchemaFactory.createForClass(Post);
+PostSchema.index({
+  createdAt: -1,
+});
+export { PostSchema };

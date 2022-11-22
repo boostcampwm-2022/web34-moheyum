@@ -40,16 +40,13 @@ export class PostController {
   @HttpCode(200)
   @Post()
   @UseGuards(JwtAuthGuard)
-  CreatePost(
+  async CreatePost(
     @Body() createPostDto: CreatePostDto,
     @GetUser() user: User,
-  ): {
-    message: string;
-    data: { post: Promise<Post_> };
-  } {
+  ) {
     return {
       message: 'success',
-      data: { post: this.postService.createPost(createPostDto, user) },
+      data: await this.postService.createPost(createPostDto, user),
     };
   }
 
@@ -92,5 +89,10 @@ export class PostController {
       message: 'success',
       data: { post: this.postService.updatePost(id, post) },
     };
+  }
+
+  @Get('test')
+  async test() {
+    console.log(await this.postService.test());
   }
 }
