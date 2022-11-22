@@ -27,13 +27,14 @@ export class PostController {
   }
 
   @Get('/author/:userid')
-  getUserPosts(@Param('userid') userid: string): {
+  async getUserPosts(@Param('userid') userid: string): Promise<{
     message: string;
-    data: { post: Promise<Post_[]> };
-  } {
+    data: { post: Post_[] };
+  }> {
+    const data = await this.postService.getUserPosts(userid);
     return {
       message: 'success',
-      data: { post: this.postService.getUserPosts(userid) },
+      data: { post: data },
     };
   }
 
@@ -47,6 +48,7 @@ export class PostController {
     message: string;
     data: { post: Promise<Post_> };
   } {
+    console.log(createPostDto.description);
     return {
       message: 'success',
       data: { post: this.postService.createPost(createPostDto, user) },
