@@ -288,7 +288,7 @@ export class AuthService {
         pw,
         +this.configService.get('saltOrRounds'),
       );
-      await this.userRepository.findOneAndUpdate(
+      await this.userRepository.findOneAndUpdatePW(
         {
           userid: userid,
         },
