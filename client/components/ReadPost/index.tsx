@@ -22,7 +22,6 @@ interface Props {
 }
 
 export default function ReadPost({ postData }: Props) {
-  console.log(postData);
   const goBack = () => {
     Router.back();
   };

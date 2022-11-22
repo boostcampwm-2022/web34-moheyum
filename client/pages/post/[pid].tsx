@@ -1,5 +1,4 @@
 import { GetServerSidePropsContext } from 'next';
-import { useRouter } from 'next/router';
 import React from 'react';
 import SideBar from '../../components/Main/SideBar';
 import ReadPost from '../../components/ReadPost';
@@ -18,8 +17,6 @@ interface Props {
 }
 
 export default function Post({ response }: { response: Props }) {
-  const router = useRouter();
-  console.log(router.query);
   return (
     <Frame>
       <SideBar />
