@@ -47,7 +47,17 @@ export class FollowController {
   @UseGuards(JwtAuthGuard)
   async followerList(@GetUser() user: User) {
     const list = await this.followService.getFollowerList(user);
-    console.log(list);
+    return {
+      message: 'success',
+      data: list,
+    };
+  }
+
+  @HttpCode(200)
+  @Get('/list/following')
+  @UseGuards(JwtAuthGuard)
+  async followingList(@GetUser() user: User) {
+    const list = await this.followService.getFollowingList(user);
     return {
       message: 'success',
       data: list,

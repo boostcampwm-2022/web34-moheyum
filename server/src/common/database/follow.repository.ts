@@ -38,7 +38,6 @@ export class FollowRepository {
   }
 
   async findFollowers({ targetid }) {
-    console.log(targetid);
     return this.followModel.aggregate([
       {
         $match: { targetid: { $regex: targetid } },
@@ -60,6 +59,33 @@ export class FollowRepository {
           targetid: 1,
           profileimg: '$followerlist.profileimg',
           nickname: '$followerlist.nickname',
+        },
+      },
+    ]);
+  }
+
+  async findFollowing({ userid }) {
+    return this.followModel.aggregate([
+      {
+        $match: { userid: { $regex: userid } },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'targetid',
+          foreignField: 'userid',
+          as: 'followinglist',
+        },
+      },
+      {
+        $unwind: '$followinglist',
+      },
+      {
+        $project: {
+          userid: 1,
+          targetid: 1,
+          profileimg: '$followinglist.profileimg',
+          nickname: '$followinglist.nickname',
         },
       },
     ]);

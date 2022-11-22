@@ -20,4 +20,8 @@ export class FollowService {
   getFollowerList(user: User) {
     return this.followRepository.findFollowers({ targetid: user.userid });
   }
+
+  getFollowingList(user: User) {
+    return this.followRepository.findFollowing({ userid: user.userid });
+  }
 }
