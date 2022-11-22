@@ -137,19 +137,19 @@ export const PreviewTextBox = styled.div`
   padding: 10px;
   font-size: 12px;
   white-space: pre-line;
-  line-height: 12px;
+  line-height: 16px;
   min-height: 12px;
 
   & > * {
     margin-bottom: 8px;
   }
 
-  & > h1,
+  & h1,
   h2 {
     border-bottom: 1px solid ${COLORS.GRAY4};
   }
 
-  & > h1 {
+  & h1 {
     margin-top: 24px;
     padding-bottom: 8px;
     line-height: 1.25;
@@ -157,7 +157,7 @@ export const PreviewTextBox = styled.div`
     font-weight: 700;
   }
 
-  & > h2 {
+  & h2 {
     margin-top: 20px;
     padding-bottom: 6px;
     line-height: 1.25;
@@ -165,9 +165,16 @@ export const PreviewTextBox = styled.div`
     font-weight: 600;
   }
 
-  & > h3 {
+  & h3 {
     line-height: 1.25;
     font-size: 18px;
     font-weight: 500;
+  }
+
+  & code {
+    padding: 2px 4px;
+    background-color: ${COLORS.GRAY3};
+    border-radius: 6px;
+    font-size: 85%;
   }
 `;

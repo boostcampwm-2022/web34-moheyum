@@ -1,6 +1,7 @@
 import Router from 'next/router';
-import React, { ClipboardEvent, createElement, KeyboardEvent, useEffect, useRef, useState } from 'react';
+import React, { ClipboardEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { httpPost } from '../../utils/http';
+import renderMarkdown from '../../utils/markdown';
 import {
   BottomButtonConatiner,
   ButtonBack,
@@ -23,7 +24,8 @@ export default function Editor() {
 
   useEffect(() => {
     if (!previewRef.current) return;
-    previewRef.current.innerHTML = renderPreview(content);
+    // previewRef.current.innerHTML = renderPreview(content);
+    previewRef.current.innerHTML = renderMarkdown(content);
   }, [content]);
 
   const handlePaste = (e: ClipboardEvent<HTMLDivElement>) => {
@@ -119,11 +121,11 @@ export default function Editor() {
     }
   };
 
-  const renderPreview = (str: string) => {
-    const rawString = str.replace(/</g, '&lt;').replace(/</g, '&gt;');
-    console.log(rawString.match(/^[\n]*#+ [\S]*\n/gm));
-    return rawString;
-  };
+  // const renderPreview = (str: string) => {
+  //   const rawString = str.replace(/</g, '&lt;').replace(/</g, '&gt;');
+  //   console.log(rawString.match(/^[\n]*#+ [\S]*\n/gm));
+  //   return rawString;
+  // };
 
   return (
     <Wrapper>
