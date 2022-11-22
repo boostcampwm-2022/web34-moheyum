@@ -47,6 +47,7 @@ export class PostController {
     message: string;
     data: { post: Promise<Post_> };
   } {
+    console.log(createPostDto.description);
     return {
       message: 'success',
       data: { post: this.postService.createPost(createPostDto, user) },

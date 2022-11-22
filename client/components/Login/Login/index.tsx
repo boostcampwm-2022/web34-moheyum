@@ -50,8 +50,9 @@ export default function Login() {
     }
     try {
       const response = await httpPost('/auth/signin', { userid: account.id, password: account.pw });
-      if (response.accessToken) {
+      if (response.message === 'success') {
         Router.push('/');
+        return;
       }
       switch (response.statusCode) {
         case 401:

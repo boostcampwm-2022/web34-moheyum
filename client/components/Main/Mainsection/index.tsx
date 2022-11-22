@@ -2,7 +2,7 @@ import React from 'react';
 import { useRecoilValue } from 'recoil';
 import Link from 'next/link';
 import ArticleCard from '../Articlecard';
-import newsfeedState from '../../../atom/newsfeedState';
+import { newsfeedState } from '../../../atom';
 import { ArticlesSection, FakeButton, NewArticleSection, Placeholder, Wrapper } from './index.style';
 
 export default function MainSection() {
@@ -19,10 +19,11 @@ export default function MainSection() {
       </Link>
       <ArticlesSection>
         <ArticleCard />
-        {newsfeedList.map((item) => (
-          // eslint-disable-next-line no-underscore-dangle
-          <ArticleCard author={item.author} key={item._id} description={item.description} title={item.title} />
-        ))}
+        {Array.isArray(newsfeedList) &&
+          newsfeedList.map((item) => (
+            // eslint-disable-next-line no-underscore-dangle
+            <ArticleCard author={item.author} key={item._id} description={item.description} title={item.title} />
+          ))}
       </ArticlesSection>
     </Wrapper>
   );
