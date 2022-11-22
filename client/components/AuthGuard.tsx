@@ -24,7 +24,10 @@ export default function AuthGuard({ children, noRedirect=false }: AuthProps ) {
     if (result.message === "Unauthorized") {
       setAuthorized(false);
       if (!noRedirect)
-        router.push("/login");
+        router.push({
+          pathname:"/login",
+          query: { returnUrl: router.asPath}
+        });
     }
   }
 
