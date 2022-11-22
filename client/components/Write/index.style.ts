@@ -112,11 +112,13 @@ export const BottomButtonConatiner = styled.div`
 
 export const EditorTextBox = styled.div`
   width: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
   padding: 10px;
   font-size: 12px;
+  line-height: 16px;
   flex: 1;
   /* display: inline-block; */
+  white-space: pre-wrap;
   &:focus {
     outline: none;
   }
@@ -134,4 +136,38 @@ export const PreviewTextBox = styled.div`
   flex: 1;
   padding: 10px;
   font-size: 12px;
+  white-space: pre-line;
+  line-height: 12px;
+  min-height: 12px;
+
+  & > * {
+    margin-bottom: 8px;
+  }
+
+  & > h1,
+  h2 {
+    border-bottom: 1px solid ${COLORS.GRAY4};
+  }
+
+  & > h1 {
+    margin-top: 24px;
+    padding-bottom: 8px;
+    line-height: 1.25;
+    font-size: 30px;
+    font-weight: 700;
+  }
+
+  & > h2 {
+    margin-top: 20px;
+    padding-bottom: 6px;
+    line-height: 1.25;
+    font-size: 22px;
+    font-weight: 600;
+  }
+
+  & > h3 {
+    line-height: 1.25;
+    font-size: 18px;
+    font-weight: 500;
+  }
 `;

@@ -1,5 +1,5 @@
 import Router from 'next/router';
-import React, { ClipboardEvent, KeyboardEvent, useRef, useState } from 'react';
+import React, { ClipboardEvent, createElement, KeyboardEvent, ReactNode, useRef, useState } from 'react';
 import { httpPost } from '../../utils/http';
 import {
   BottomButtonConatiner,
@@ -51,10 +51,10 @@ export default function Editor() {
     const { key } = e;
     if (key === 'Backspace') {
       if (contentRef.current.innerHTML === '') {
-        contentRef.current.innerHTML = '<div><br></div>';
+        contentRef.current.innerHTML = '<div></div>';
       }
     }
-    setContent(contentRef.current.innerText);
+    setContent(contentRef.current.innerText.replace(/\n\n/g, '\n'));
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
@@ -115,6 +115,34 @@ export default function Editor() {
     }
   };
 
+  const renderPreview = (str: string): ReactNode[] => {
+    const lines = str.split('\n');
+    console.log(str);
+    let result = [];
+    // console.log(lines);
+    result = lines.map((e) => {
+      let data = e === '' ? ' ' : e;
+      let rowType = 'div';
+      if (e.match(/^# [\S]+/)) {
+        rowType = 'h1';
+        data = data.replace('# ', '');
+      }
+      if (e.match(/^## [\S]+/)) {
+        rowType = 'h2';
+        data = data.replace('## ', '');
+      }
+      if (e.match(/^### [\S]+/)) {
+        rowType = 'h3';
+        data = data.replace('### ', '');
+      }
+      const newDiv = createElement(rowType, null, `${data}\xa0`);
+      console.log(newDiv.props);
+      return newDiv;
+    });
+    console.log(`lines : ${result.length}`);
+    return result;
+  };
+
   return (
     <Wrapper>
       <TopButtonConatiner>
@@ -146,12 +174,8 @@ export default function Editor() {
           onKeyUp={handleKeyUp}
           onKeyDown={handleKeyDown}
           onPaste={handlePaste}
-        >
-          <div>
-            <br />
-          </div>
-        </EditorTextBox>
-        <PreviewTextBox>{content}</PreviewTextBox>
+        />
+        <PreviewTextBox>{renderPreview(content)}</PreviewTextBox>
       </EditorContainer>
       <BottomButtonConatiner>
         <button type="button" onClick={submitHandler}>

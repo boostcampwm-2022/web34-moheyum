@@ -6,7 +6,7 @@ let isLoggedin = false;
 // TODO : 인증이 필요한 페이지 url list를 만들어 체크하도록 변경
 // middleware 자체의 내용이 인증이 필요한 페이지에서만 작동하도록 리팩토링이 필요합니다.
 
-const AUTH_NEEDED = ['/', '/announce', '/myaccount', '/search', '/write'];
+const AUTH_NEEDED = ['/', '/announce', '/myaccount', '/search'];
 
 export async function middleware(request: NextRequest) {
   const url = request.nextUrl.clone();
