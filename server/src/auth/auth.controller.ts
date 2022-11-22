@@ -24,7 +24,6 @@ import { Cookies } from 'src/common/decorator/cookie.decorator';
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
-
   @HttpCode(200)
   @Post('/signup')
   async signUp(@Body() userCreateDto: UserCreateDto) {
