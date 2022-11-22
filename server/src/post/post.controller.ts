@@ -90,9 +90,4 @@ export class PostController {
       data: { post: this.postService.updatePost(id, post) },
     };
   }
-
-  @Get('test')
-  async test() {
-    console.log(await this.postService.test());
-  }
 }

@@ -7,13 +7,17 @@ import { User } from 'src/common/database/user.schema';
 export class FollowService {
   constructor(private readonly followRepository: FollowRepository) {}
 
-  async followUser(targetid: string, user: User) {
+  followUser(targetid: string, user: User) {
     return this.followRepository.create(targetid, user);
   }
-  async followCancel(targetid: string, user: User) {
+  followCancel(targetid: string, user: User) {
     return this.followRepository.delete({
       userid: user.userid,
       targetid,
     });
+  }
+
+  getFollowerList(user: User) {
+    return this.followRepository.findFollowers({ targetid: user.userid });
   }
 }

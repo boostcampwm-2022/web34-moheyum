@@ -36,4 +36,32 @@ export class FollowRepository {
     if (result.deletedCount === 0) throw new NotFoundException();
     return result.deletedCount;
   }
+
+  async findFollowers({ targetid }) {
+    console.log(targetid);
+    return this.followModel.aggregate([
+      {
+        $match: { targetid: { $regex: targetid } },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userid',
+          foreignField: 'userid',
+          as: 'followerlist',
+        },
+      },
+      {
+        $unwind: '$followerlist',
+      },
+      {
+        $project: {
+          userid: 1,
+          targetid: 1,
+          profileimg: '$followerlist.profileimg',
+          nickname: '$followerlist.nickname',
+        },
+      },
+    ]);
+  }
 }
