@@ -2,11 +2,15 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react"
 
 type AuthProps = {
-  children: React.ReactNode;
+  // children: React.ReactNode;
   noRedirect?: boolean;
 }
 
-export default function AuthGuard({ children, noRedirect=false }: AuthProps ) {
+AuthGuard.defaultProps = {
+  noRedirect: false
+}
+
+export default function AuthGuard({ children, noRedirect }: React.PropsWithChildren<AuthProps> ) {
   const router = useRouter();
   const [authorized, setAuthorized] = useState(false);
 
@@ -32,8 +36,7 @@ export default function AuthGuard({ children, noRedirect=false }: AuthProps ) {
   }
 
   return (
-    <>
-      {(noRedirect || authorized) && children}
-    </>
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    <>{(noRedirect || authorized) && children}</>
   )
 }

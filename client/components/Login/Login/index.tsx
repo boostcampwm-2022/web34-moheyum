@@ -52,7 +52,7 @@ export default function Login() {
       const response = await httpPost('/auth/signin', { userid: account.id, password: account.pw });
       if (response.message === 'success') {
         let returnUrl = Router.query.returnUrl || '/';
-        if (Array.isArray(returnUrl)) returnUrl = returnUrl[0];
+        if (Array.isArray(returnUrl)) [returnUrl] = [...returnUrl];
         Router.push(returnUrl);
         return;
       }
