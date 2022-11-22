@@ -1,27 +1,44 @@
 import {
-  Body,
+  UseGuards,
   Controller,
   Get,
   Param,
-  Put,
+  Delete,
   HttpCode,
   Post,
 } from '@nestjs/common';
 import { FollowService } from './follow.service';
-import { FollowCreateDto } from './dto/follow-create-dto';
+import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
+import { GetUser } from 'src/common/decorator/get-user.decorator';
+import { User } from 'src/common/database/user.schema';
 
 @Controller('follow')
 export class FollowController {
   constructor(private followService: FollowService) {}
   @HttpCode(200)
-  @Post('/:userid/following/:targetid')
-  async followUser(
-    @Param('userid') userid: string,
+  @Post('/following/:targetid')
+  @UseGuards(JwtAuthGuard)
+  async followUser(@Param('targetid') targetid: string, @GetUser() user: User) {
+    return {
+      message: 'success',
+      data: {
+        followCount: await this.followService.followUser(targetid, user),
+      },
+    };
+  }
+
+  @HttpCode(200)
+  @Delete('/following/:targetid')
+  @UseGuards(JwtAuthGuard)
+  async followCancel(
     @Param('targetid') targetid: string,
+    @GetUser() user: User,
   ) {
     return {
       message: 'success',
-      data: await this.followService.followUser(userid, targetid),
+      data: {
+        followCancel: await this.followService.followCancel(targetid, user),
+      },
     };
   }
 }

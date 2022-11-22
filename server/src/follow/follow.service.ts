@@ -1,20 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { Follow } from 'src/common/database/follow.schema';
-import { FollowCreateDto } from './dto/follow-create-dto';
 import { FollowRepository } from 'src/common/database/follow.repository';
+import { User } from 'src/common/database/user.schema';
 
 @Injectable()
 export class FollowService {
-  constructor(private readonly userRepository: FollowRepository) {}
+  constructor(private readonly followRepository: FollowRepository) {}
 
-  async followUser(userid: string, targetid: string) {
-    const data = await this.userRepository.create({
-      userid,
+  async followUser(targetid: string, user: User) {
+    return this.followRepository.create(targetid, user);
+  }
+  async followCancel(targetid: string, user: User) {
+    return this.followRepository.delete({
+      userid: user.userid,
       targetid,
-    });
-    console.log(data);
-    return Promise.resolve({
-      data,
     });
   }
 }

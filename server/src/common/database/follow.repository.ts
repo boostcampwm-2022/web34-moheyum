@@ -7,21 +7,22 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Follow, FollowDocument } from './follow.schema';
 import { Model, FilterQuery } from 'mongoose';
-import { FollowCreateDto } from 'src/follow/dto/follow-create-dto';
+import { User } from './user.schema';
 
 @Injectable()
 export class FollowRepository {
   constructor(
     @InjectModel(Follow.name) private followModel: Model<FollowDocument>,
   ) {}
-  create(followCreateDto: FollowCreateDto): Promise<Follow> {
-    const { userid, targetid } = followCreateDto;
-    const newFollow = new this.followModel({
-      userid,
-      targetid,
-    });
+  async create(targetid: string, user: User) {
+    const newFollow = await this.followModel.updateOne(
+      { userid: user.userid, targetid },
+      { userid: user.userid, targetid },
+      { upsert: true },
+    );
+    if (newFollow.matchedCount > 0) throw new ConflictException();
     try {
-      return newFollow.save();
+      return newFollow.upsertedCount;
     } catch (error) {
       if (error.code === 11000) throw new ConflictException();
       else {
@@ -29,5 +30,10 @@ export class FollowRepository {
         throw new InternalServerErrorException();
       }
     }
+  }
+  async delete(followFilterQuery: FilterQuery<Follow>): Promise<number> {
+    const result = await this.followModel.deleteOne(followFilterQuery);
+    if (result.deletedCount === 0) throw new NotFoundException();
+    return result.deletedCount;
   }
 }
