@@ -21,7 +21,7 @@ interface AuthedUser {
 export const defaultAuthedUser: AuthedUser = {
   logined: false,
   userid: "",
-  profileimg: "",
+  profileimg: "/default-profile.png",
   nickname: ""
 }
 
