@@ -307,4 +307,9 @@ export class AuthService {
       message: '해당 이메일과 아이디로 가입되어 있지 않습니다',
     });
   }
+
+  async checkUserAuthData(userid: string) {
+    const {nickname, profileimg} = await this.userRepository.findOne({ userid });
+    return {userid, nickname, profileimg}
+  }
 }

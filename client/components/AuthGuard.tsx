@@ -1,5 +1,7 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react"
+import { useSetRecoilState } from "recoil";
+import { authedUser, defaultAuthedUser } from "../atom";
 
 type AuthProps = {
   // children: React.ReactNode;
@@ -13,6 +15,7 @@ AuthGuard.defaultProps = {
 export default function AuthGuard({ children, noRedirect }: React.PropsWithChildren<AuthProps> ) {
   const router = useRouter();
   const [authorized, setAuthorized] = useState(false);
+  const setAuthedUserInfo = useSetRecoilState(authedUser);
 
   useEffect(() => {
     authCheck();
@@ -22,11 +25,14 @@ export default function AuthGuard({ children, noRedirect }: React.PropsWithChild
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`,
     {credentials: "include"});
     const result = await response.json();
+    
     if (result.message === "success") {
+      setAuthedUserInfo({logined: true, ...result.data});
       setAuthorized(true);
     }
     if (result.message === "Unauthorized") {
       setAuthorized(false);
+      setAuthedUserInfo(defaultAuthedUser);
       if (!noRedirect)
         router.push({
           pathname:"/login",
