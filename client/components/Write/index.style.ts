@@ -111,7 +111,7 @@ export const BottomButtonConatiner = styled.div`
 `;
 
 export const EditorTextBox = styled.div`
-  width: 100%;
+  width: 50%;
   overflow-y: auto;
   padding: 10px;
   font-size: 12px;
@@ -119,6 +119,7 @@ export const EditorTextBox = styled.div`
   flex: 1;
   /* display: inline-block; */
   white-space: pre-wrap;
+  word-wrap: break-word;
   &:focus {
     outline: none;
   }
@@ -132,16 +133,16 @@ export const EditorContainer = styled.div`
 `;
 
 export const PreviewTextBox = styled.div`
-  width: 100%;
+  width: 50%;
   flex: 1;
   padding: 10px;
-  font-size: 12px;
+  font-size: 14px;
   white-space: pre-line;
-  line-height: 16px;
+  line-height: 14px;
   min-height: 12px;
 
   & > * {
-    margin-bottom: 8px;
+    margin-bottom: 4px;
   }
 
   & h1,
@@ -176,5 +177,17 @@ export const PreviewTextBox = styled.div`
     background-color: ${COLORS.GRAY3};
     border-radius: 6px;
     font-size: 85%;
+  }
+
+  & pre {
+    background-color: ${COLORS.GRAY5};
+    border-radius: 6px;
+    padding: 16px;
+    overflow-x: hidden;
+    word-wrap: break-word;
+    white-space: nowrap;
+    & > div {
+      white-space: normal;
+    }
   }
 `;

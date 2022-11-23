@@ -19,6 +19,7 @@ export default function write() {
 const Frame = styled.div`
   background-color: ${COLORS.OFF_WHITE};
   width: 1280px;
+  max-width: 1280px;
   height: 100%;
   display: flex;
   flex-direction: row;
@@ -28,4 +29,5 @@ const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
+  max-width: 1090px;
 `;
