@@ -8,9 +8,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Follow, FollowDocument } from './follow.schema';
 import { Model, FilterQuery } from 'mongoose';
 import { User } from './user.schema';
-
 @Injectable()
 export class FollowRepository {
+  limitData = 2;
   constructor(
     @InjectModel(Follow.name) private followModel: Model<FollowDocument>,
   ) {}
@@ -37,10 +37,10 @@ export class FollowRepository {
     return result.deletedCount;
   }
 
-  async findFollowers({ targetid }) {
-    return this.followModel.aggregate([
+  async findFollowers({ targetid }, page: number) {
+    const dataList = await this.followModel.aggregate([
       {
-        $match: { targetid: { $regex: targetid } },
+        $match: { targetid: targetid },
       },
       {
         $lookup: {
@@ -61,11 +61,25 @@ export class FollowRepository {
           nickname: '$followerlist.nickname',
         },
       },
+      {
+        $facet: {
+          metadata: [
+            { $count: 'dataTotalCount' },
+            { $addFields: { nextpage: page + 1 } },
+          ],
+          followerlist: [
+            { $skip: page * this.limitData },
+            { $limit: this.limitData },
+          ],
+        },
+      },
     ]);
+    if (dataList.at(0).followerlist.length === 0) return [];
+    return dataList;
   }
 
-  async findFollowing({ userid }) {
-    return this.followModel.aggregate([
+  async findFollowing({ userid }, page: number) {
+    const dataList = await this.followModel.aggregate([
       {
         $match: { userid: userid },
       },
@@ -88,7 +102,21 @@ export class FollowRepository {
           nickname: '$followinglist.nickname',
         },
       },
+      {
+        $facet: {
+          metadata: [
+            { $count: 'dataTotalCount' },
+            { $addFields: { nextpage: page + 1 } },
+          ],
+          followinglist: [
+            { $skip: page * this.limitData },
+            { $limit: this.limitData },
+          ],
+        },
+      },
     ]);
+    if (dataList.at(0).followinglist.length === 0) return [];
+    return dataList;
   }
 
   async getFollowingPostList(userid) {

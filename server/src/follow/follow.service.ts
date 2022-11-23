@@ -17,11 +17,11 @@ export class FollowService {
     });
   }
 
-  getFollowerList(user: User) {
-    return this.followRepository.findFollowers({ targetid: user.userid });
+  getFollowerList(user: User, page: number) {
+    return this.followRepository.findFollowers({ targetid: user.userid }, page);
   }
 
-  getFollowingList(user: User) {
-    return this.followRepository.findFollowing({ userid: user.userid });
+  getFollowingList(user: User, page: number) {
+    return this.followRepository.findFollowing({ userid: user.userid }, page);
   }
 }
