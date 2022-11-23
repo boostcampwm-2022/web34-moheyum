@@ -6,6 +6,7 @@ import {
   Delete,
   HttpCode,
   Post,
+  Query,
 } from '@nestjs/common';
 import { FollowService } from './follow.service';
 import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
@@ -45,8 +46,8 @@ export class FollowController {
   @HttpCode(200)
   @Get('/list/follower')
   @UseGuards(JwtAuthGuard)
-  async followerList(@GetUser() user: User) {
-    const list = await this.followService.getFollowerList(user);
+  async followerList(@Query('page') page: number, @GetUser() user: User) {
+    const list = await this.followService.getFollowerList(user, page);
     return {
       message: 'success',
       data: list,
@@ -56,8 +57,8 @@ export class FollowController {
   @HttpCode(200)
   @Get('/list/following')
   @UseGuards(JwtAuthGuard)
-  async followingList(@GetUser() user: User) {
-    const list = await this.followService.getFollowingList(user);
+  async followingList(@Query('page') page: number, @GetUser() user: User) {
+    const list = await this.followService.getFollowingList(user, page);
     return {
       message: 'success',
       data: list,
