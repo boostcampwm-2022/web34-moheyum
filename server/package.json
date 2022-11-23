@@ -40,6 +40,7 @@
     "cookie-parser": "^1.4.6",
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",
+    "generate-password": "^1.7.0",
     "handlebars": "^4.7.7",
     "ioredis": "^5.2.4",
     "jsonwebtoken": "^8.5.1",

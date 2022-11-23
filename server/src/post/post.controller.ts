@@ -8,6 +8,7 @@ import {
   Post,
   UseGuards,
   HttpCode,
+  Query,
 } from '@nestjs/common';
 import { GetUser } from 'src/common/decorator/get-user.decorator';
 import { User } from 'src/common/database/user.schema';
@@ -16,6 +17,7 @@ import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PostIdValidationPipe } from './pipes/post-id-validation.pipe';
 import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
+import { FollowerPostDto } from './dto/follower-post.dto';
 
 @Controller('post')
 export class PostController {
@@ -40,27 +42,39 @@ export class PostController {
   @HttpCode(200)
   @Post()
   @UseGuards(JwtAuthGuard)
-  CreatePost(
+  async CreatePost(
     @Body() createPostDto: CreatePostDto,
     @GetUser() user: User,
-  ): {
-    message: string;
-    data: { post: Promise<Post_> };
-  } {
+  ) {
     return {
       message: 'success',
-      data: { post: this.postService.createPost(createPostDto, user) },
+      data: { post: await this.postService.createPost(createPostDto, user) },
+    };
+  }
+
+  @Get('newsfeed')
+  @UseGuards(JwtAuthGuard)
+  async getFollowerPost(
+    @GetUser() user: User,
+    @Query() followerPostDTO: FollowerPostDto,
+  ) {
+    return {
+      message: 'success',
+      data: {
+        post: await this.postService.getFollowerPost(user, followerPostDTO),
+      },
     };
   }
 
   @Get('/:id')
-  getPostById(@Param('id', PostIdValidationPipe) id: string): {
+  async getPostById(@Param('id', PostIdValidationPipe) id: string): Promise<{
     message: string;
-    data: { post: Promise<Post_> };
-  } {
+    data: { post: Post_ };
+  }> {
+    const postData = await this.postService.getPostById(id);
     return {
       message: 'success',
-      data: { post: this.postService.getPostById(id) },
+      data: { post: postData },
     };
   }
   @HttpCode(200)

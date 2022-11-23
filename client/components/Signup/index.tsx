@@ -110,14 +110,27 @@ export default function SignupModal() {
     if (!validateForm()) return;
     setErrorMessages({ id: '', password: '', password_confirm: '', name: '', email: '', verify: '' });
     // do Signup
-    const response = await httpPost('/api/auth/signup', {
+    const response = await httpPost('/auth/signup', {
       userid: formValues.id,
       nickname: formValues.name,
       email: formValues.email,
       password: formValues.password,
     });
-    console.log(response);
-    Router.push('/main');
+    if (response.statusCode !== 200) {
+      alert(`오류가 발생했습니다.\nERROR statusCode: ${response.statusCode}\nERROR message: ${response.message}`);
+      return;
+    }
+    const signinResponse = await httpPost('/auth/signin', {
+      userid: formValues.id,
+      password: formValues.password,
+    });
+    if (signinResponse.statusCode !== 200) {
+      alert(
+        `회원 가입에 성공했으나 로그인에 실패했습니다.\nERROR statusCode: ${signinResponse.statusCode}\nERROR message: ${signinResponse.message}`
+      );
+      return;
+    }
+    Router.push('/');
   };
 
   const validateForm = (): boolean => {

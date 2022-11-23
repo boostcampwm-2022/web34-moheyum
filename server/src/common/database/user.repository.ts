@@ -7,7 +7,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from '../database/user.schema';
 import { Model, FilterQuery } from 'mongoose';
-import { UserCreateDto } from '../../auth/dto/user-create-dto';
+import { UserCreateDto } from '../../auth/dto/user-create.dto';
 import { UserUpdateDto } from 'src/user/dto/user-Update-dto';
 
 @Injectable()
@@ -53,5 +53,14 @@ export class UserRepository {
 
   async findOne(userFilterQuery: FilterQuery<User>): Promise<User> {
     return this.userModel.findOne(userFilterQuery);
+  }
+
+  async findOneAndUpdatePW(
+    userFilterQuery: FilterQuery<User>,
+    user: Partial<User>,
+  ): Promise<User> {
+    const result = await this.userModel.findOneAndUpdate(userFilterQuery, user);
+    if (!result) throw new NotFoundException();
+    return result;
   }
 }

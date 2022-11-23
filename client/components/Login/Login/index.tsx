@@ -50,8 +50,11 @@ export default function Login() {
     }
     try {
       const response = await httpPost('/auth/signin', { userid: account.id, password: account.pw });
-      if (response.accessToken) {
-        Router.push('/');
+      if (response.message === 'success') {
+        let returnUrl = Router.query.returnUrl || '/';
+        if (Array.isArray(returnUrl)) [returnUrl] = [...returnUrl];
+        Router.push(returnUrl);
+        return;
       }
       switch (response.statusCode) {
         case 401:

@@ -37,6 +37,11 @@ export class User {
     default: '',
   })
   bio: string;
+
+  @Prop({
+    default: true,
+  })
+  state: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

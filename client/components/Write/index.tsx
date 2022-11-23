@@ -39,11 +39,10 @@ export default function Editor() {
       title: 'title',
       description: contentRef.current.innerText,
     });
-    // if (!result.ok) {
-    //   console.log('error');
-    //   return;
-    // }
-    console.log(result);
+    if (result.statusCode !== 200) {
+      alert(`글 작성에 실패했습니다.\nERROR statusCode: ${result.statusCode}\nERROR message: ${result.message}`);
+      return;
+    }
     Router.push('/');
   };
 
