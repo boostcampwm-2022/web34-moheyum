@@ -36,7 +36,7 @@ export class PostService {
     return post;
   }
 
-  async getPostById(id: string): Promise<Post> {
+  async getPostById(id: string) {
     const found = await this.postRepository.findOne({ _id: id });
     if (!found) throw new NotFoundException(`Can't find Board with ${id}`);
     return found;
