@@ -63,4 +63,46 @@ export class UserRepository {
     if (!result) throw new NotFoundException();
     return result;
   }
+
+  async updatePostCount(userFilterQuery: FilterQuery<User>, postCount: number) {
+    const result = this.userModel.findOneAndUpdate(
+      userFilterQuery,
+      {
+        $inc: { postcount: postCount },
+      },
+      { new: true },
+    );
+    if (!result) throw new NotFoundException();
+    return result;
+  }
+
+  async updateFollowerCount(
+    userFilterQuery: FilterQuery<User>,
+    followerCount: number,
+  ) {
+    const result = this.userModel.findOneAndUpdate(
+      userFilterQuery,
+      {
+        $inc: { follower: followerCount },
+      },
+      { new: true },
+    );
+    if (!result) throw new NotFoundException();
+    return result;
+  }
+
+  async updateFollowingCount(
+    userFilterQuery: FilterQuery<User>,
+    followingCount: number,
+  ) {
+    const result = this.userModel.findOneAndUpdate(
+      userFilterQuery,
+      {
+        $inc: { following: followingCount },
+      },
+      { new: true },
+    );
+    if (!result) throw new NotFoundException();
+    return result;
+  }
 }

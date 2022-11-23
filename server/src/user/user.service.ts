@@ -13,6 +13,10 @@ export class UserService {
     email: string;
     bio: string;
     profileImg: string;
+    postcount: number;
+    follower: number;
+    following: number;
+    state: boolean;
   }> {
     const data = await this.userRepository.findOne({ userid });
     return Promise.resolve({
@@ -21,6 +25,10 @@ export class UserService {
       email: data.email,
       bio: data.bio,
       profileImg: data.profileimg,
+      postcount: data.postcount,
+      follower: data.follower,
+      following: data.following,
+      state: data.state,
     });
   }
 

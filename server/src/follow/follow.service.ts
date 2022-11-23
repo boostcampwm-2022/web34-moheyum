@@ -1,20 +1,29 @@
 import { Injectable } from '@nestjs/common';
-import { Follow } from 'src/common/database/follow.schema';
+import { UserRepository } from 'src/common/database/user.repository';
 import { FollowRepository } from 'src/common/database/follow.repository';
 import { User } from 'src/common/database/user.schema';
 
 @Injectable()
 export class FollowService {
-  constructor(private readonly followRepository: FollowRepository) {}
+  constructor(
+    private readonly followRepository: FollowRepository,
+    private readonly userRepository: UserRepository,
+  ) {}
 
   followUser(targetid: string, user: User) {
-    return this.followRepository.create(targetid, user);
+    const follow = this.followRepository.create(targetid, user);
+    this.userRepository.updateFollowingCount({ userid: user.userid }, 1);
+    this.userRepository.updateFollowerCount({ userid: targetid }, 1);
+    return follow;
   }
   followCancel(targetid: string, user: User) {
-    return this.followRepository.delete({
+    const cancel = this.followRepository.delete({
       userid: user.userid,
       targetid,
     });
+    this.userRepository.updateFollowingCount({ userid: user.userid }, -1);
+    this.userRepository.updateFollowerCount({ userid: targetid }, -1);
+    return cancel;
   }
 
   getFollowerList(user: User, page: number) {

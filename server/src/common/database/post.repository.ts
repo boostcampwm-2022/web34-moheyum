@@ -20,12 +20,12 @@ export class PostRepository {
 
   async create(createPostDto: CreatePostDto, user: User): Promise<Post> {
     const { title, description } = createPostDto;
-
     const newPost = new this.postModel({
       title,
       description: description,
       author: user.userid,
     });
+
     return newPost.save();
   }
 

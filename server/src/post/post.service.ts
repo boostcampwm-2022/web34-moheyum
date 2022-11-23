@@ -9,12 +9,14 @@ import { PostRepository } from '../common/database/post.repository';
 import { User } from 'src/common/database/user.schema';
 import { FollowRepository } from 'src/common/database/follow.repository';
 import { FollowerPostDto } from './dto/follower-post.dto';
+import { UserRepository } from 'src/common/database/user.repository';
 
 @Injectable()
 export class PostService {
   constructor(
     private readonly postRepository: PostRepository,
     private readonly followRepository: FollowRepository,
+    private readonly userRepository: UserRepository,
   ) {}
 
   getAllPosts(): Promise<Post[]> {
@@ -29,7 +31,9 @@ export class PostService {
   }
 
   createPost(createBoardDto: CreatePostDto, user: User): Promise<Post> {
-    return this.postRepository.create(createBoardDto, user);
+    const post = this.postRepository.create(createBoardDto, user);
+    this.userRepository.updatePostCount({ userid: user.userid }, 1);
+    return post;
   }
 
   async getPostById(id: string): Promise<Post> {
@@ -43,6 +47,7 @@ export class PostService {
     if (!post) throw new NotFoundException();
     if (post.author !== user.userid) throw new UnauthorizedException();
     this.postRepository.deleteOne({ _id: id });
+    this.userRepository.updatePostCount({ userid: user.userid }, -1);
     return;
   }
 
