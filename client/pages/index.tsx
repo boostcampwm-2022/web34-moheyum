@@ -4,7 +4,8 @@ import { httpGet } from '../utils/http';
 import Frame from '../styles/frame';
 import SideBar from '../components/Main/SideBar';
 import MainSection from '../components/Main/Mainsection';
-import newsfeedState from '../atom/newsfeedState';
+import { newsfeedState } from '../atom';
+import AuthGuard from '../components/AuthGuard';
 
 interface newsPeedType {
   _id: string;
@@ -19,10 +20,12 @@ export default function Home({ response }: { response: newsPeedType[] }) {
     setNewsPeedList(response);
   }, []);
   return (
+    <AuthGuard>
     <Frame>
       <SideBar />
       <MainSection />
     </Frame>
+    </AuthGuard>
   );
 }
 // SSR

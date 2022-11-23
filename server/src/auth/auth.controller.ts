@@ -17,9 +17,10 @@ import { UserCreateDto } from './dto/user-create.dto';
 import { Response } from 'express';
 import { JwtRefreshGuard } from 'src/common/guard/jwt-refresh.guard';
 import { GetPayload } from 'src/common/decorator/get-jwt-data.decorator';
-import { EmailRequestDto } from './dto/email-request.dto';
+import { EmailDto } from './dto/email.dto';
 import { EmailCheckDto } from './dto/email-check.dto';
 import { Cookies } from 'src/common/decorator/cookie.decorator';
+import { FindPwDto } from './dto/find-pw-dto';
 
 @Controller('auth')
 export class AuthController {
@@ -56,23 +57,21 @@ export class AuthController {
   async refresh(@GetPayload() userid: string, @Res() res: Response) {
     // TODO db상에서 가져와야함
     const payload = { userid };
+    const data = await this.authService.checkUserAuthData(userid);
     const accessToken = await this.authService.createAccessToken(payload);
     const refreshToken = await this.authService.createRefreshToken(payload);
     res.cookie('a_t', accessToken, this.authService.getAccessOptions());
     res.cookie('r_t', refreshToken, this.authService.getRefreshOptions());
     res.json({
       message: 'success',
-      data: {},
+      data: data,
     });
   }
 
   @HttpCode(200)
   @Post('email-verification')
-  async sendEmailCode(
-    @Body() emailCheckDto: EmailRequestDto,
-    @Res() res: Response,
-  ) {
-    const authNum: string = await this.authService.emailSend(emailCheckDto);
+  async sendEmailCode(@Body() emailCheckDto: EmailDto, @Res() res: Response) {
+    const authNum: string = await this.authService.sendEmailCode(emailCheckDto);
     res.cookie('authNum', authNum, this.authService.getEmailOptions());
     return res.send({
       message: 'success',
@@ -94,8 +93,26 @@ export class AuthController {
     });
   }
 
-  // @Get('/:userid')
-  // async getUserInfo(@Param('userid') userid: string) {
-  //   this.authService.findUser(userid);
-  // }
+  @HttpCode(200)
+  @Post('id-inquiry')
+  async findId(@Body() emailDTO: EmailDto) {
+    const userid = await this.authService.findId(emailDTO);
+    return {
+      message: 'success',
+      data: {
+        userid,
+      },
+    };
+  }
+
+  @HttpCode(200)
+  @Post('password-inquiry')
+  async findPw(@Body() findPwDTO: FindPwDto) {
+    if (await this.authService.findPw(findPwDTO)) {
+      return {
+        message: 'success',
+        data: {},
+      };
+    }
+  }
 }

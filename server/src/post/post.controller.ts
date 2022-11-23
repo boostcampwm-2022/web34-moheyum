@@ -48,7 +48,7 @@ export class PostController {
   ) {
     return {
       message: 'success',
-      data: await this.postService.createPost(createPostDto, user),
+      data: { post: await this.postService.createPost(createPostDto, user) },
     };
   }
 
@@ -62,13 +62,14 @@ export class PostController {
   }
 
   @Get('/:id')
-  getPostById(@Param('id', PostIdValidationPipe) id: string): {
+  async getPostById(@Param('id', PostIdValidationPipe) id: string): Promise<{
     message: string;
-    data: { post: Promise<Post_> };
-  } {
+    data: { post: Post_ };
+  }> {
+    const postData = await this.postService.getPostById(id);
     return {
       message: 'success',
-      data: { post: this.postService.getPostById(id) },
+      data: { post: postData },
     };
   }
   @HttpCode(200)

@@ -1,6 +1,6 @@
 import { IsString, IsNotEmpty, IsEmail, MaxLength } from 'class-validator';
 
-export class EmailRequestDto {
+export class EmailDto {
   @IsEmail()
   @IsNotEmpty()
   @IsString()
