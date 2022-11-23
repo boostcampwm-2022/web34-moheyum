@@ -20,7 +20,7 @@ export default function Home({ response }: { response: newsPeedType[] }) {
     setNewsPeedList(response);
   }, []);
   return (
-    <AuthGuard noRedirect>
+    <AuthGuard>
     <Frame>
       <SideBar />
       <MainSection />
