@@ -8,6 +8,7 @@ import {
   Post,
   UseGuards,
   HttpCode,
+  Query,
 } from '@nestjs/common';
 import { GetUser } from 'src/common/decorator/get-user.decorator';
 import { User } from 'src/common/database/user.schema';
@@ -16,6 +17,7 @@ import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PostIdValidationPipe } from './pipes/post-id-validation.pipe';
 import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
+import { FollowerPostDto } from './dto/follower-post.dto';
 
 @Controller('post')
 export class PostController {
@@ -48,6 +50,15 @@ export class PostController {
       message: 'success',
       data: await this.postService.createPost(createPostDto, user),
     };
+  }
+
+  @Get('newsfeed')
+  @UseGuards(JwtAuthGuard)
+  async getFollowerPost(
+    @GetUser() user: User,
+    @Query() followerPostDTO: FollowerPostDto,
+  ) {
+    return await this.postService.getFollowerPost(user, followerPostDTO);
   }
 
   @Get('/:id')
@@ -89,12 +100,5 @@ export class PostController {
       message: 'success',
       data: { post: this.postService.updatePost(id, post) },
     };
-  }
-
-  @HttpCode(200)
-  @Post('/test')
-  @UseGuards(JwtAuthGuard)
-  async test(@GetUser() user) {
-    await this.postService.test(user);
   }
 }

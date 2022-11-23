@@ -10,15 +10,15 @@ import {
 } from '@nestjs/common';
 // import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
-import { AuthCredentialsDto } from './dto/auth-credential-dto';
-import { UserCreateDto } from './dto/user-create-dto';
+import { AuthCredentialsDto } from './dto/auth-credential.dto';
+import { UserCreateDto } from './dto/user-create.dto';
 // import { GetUser } from '../common/decorator/get-user.decorator';
 // import { User } from '../common/database/user.schema';
 import { Response } from 'express';
 import { JwtRefreshGuard } from 'src/common/guard/jwt-refresh.guard';
 import { GetPayload } from 'src/common/decorator/get-jwt-data.decorator';
-import { EmailRequestDto } from './dto/email-request-dto';
-import { EmailCheckDto } from './dto/email-check-dto';
+import { EmailRequestDto } from './dto/email-request.dto';
+import { EmailCheckDto } from './dto/email-check.dto';
 import { Cookies } from 'src/common/decorator/cookie.decorator';
 
 @Controller('auth')

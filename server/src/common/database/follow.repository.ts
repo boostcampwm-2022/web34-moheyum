@@ -8,6 +8,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Follow, FollowDocument } from './follow.schema';
 import { Model, FilterQuery } from 'mongoose';
 import { User } from './user.schema';
+import { FollowerPostDto } from 'src/post/dto/follower-post.dto';
 @Injectable()
 export class FollowRepository {
   limitData = 2;
@@ -61,20 +62,11 @@ export class FollowRepository {
           nickname: '$followerlist.nickname',
         },
       },
-      {
-        $facet: {
-          metadata: [
-            { $count: 'dataTotalCount' },
-            { $addFields: { nextpage: page + 1 } },
-          ],
-          followerlist: [
-            { $skip: page * this.limitData },
-            { $limit: this.limitData },
-          ],
-        },
-      },
+      { $skip: page * this.limitData },
+      { $limit: this.limitData },
+      { $addFields: { nextpage: page + 1 } },
     ]);
-    if (dataList.at(0).followerlist.length === 0) return [];
+    if (dataList.length === 0) return [];
     return dataList;
   }
 
@@ -102,59 +94,57 @@ export class FollowRepository {
           nickname: '$followinglist.nickname',
         },
       },
-      {
-        $facet: {
-          metadata: [
-            { $count: 'dataTotalCount' },
-            { $addFields: { nextpage: page + 1 } },
-          ],
-          followinglist: [
-            { $skip: page * this.limitData },
-            { $limit: this.limitData },
-          ],
-        },
-      },
+      { $skip: page * this.limitData },
+      { $limit: this.limitData },
+      { $addFields: { nextpage: page + 1 } },
     ]);
-    if (dataList.at(0).followinglist.length === 0) return [];
+    if (dataList.length === 0) return [];
     return dataList;
   }
 
-  async getFollowingPostList(userid) {
-    return this.followModel.aggregate([
-      {
-        $match: { userid: userid },
-      },
-      {
-        $lookup: {
-          from: 'post',
-          localField: 'targetid',
-          foreignField: 'author',
-          as: 'author',
+  async getFollowingPostList(userid: string, followerPostDTO: FollowerPostDto) {
+    const { page, limit } = followerPostDTO;
+    return (
+      (await this.followModel.aggregate([
+        {
+          $match: { userid: userid },
         },
-      },
-      {
-        $unwind: '$author',
-      }, //이후 skip, limit추가
-      {
-        $sort: { createdAt: -1 },
-      },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'targetid',
-          foreignField: 'userid',
-          as: 'userinfo',
+        {
+          $lookup: {
+            from: 'posts',
+            localField: 'targetid',
+            foreignField: 'author',
+            as: 'author',
+          },
         },
-      },
-      {
-        $project: {
-          userinfo: 1,
-          author: 1,
-          targetid: 1,
-          profileimg: '$userinfo.profileimg',
-          nickname: '$userinfo.nickname',
+        {
+          $unwind: '$author',
+        }, //이후 skip, limit추가
+        {
+          $sort: { 'author.createdAt': -1 },
         },
-      },
-    ]);
+        {
+          $skip: page * limit,
+        },
+        {
+          $limit: limit,
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'targetid',
+            foreignField: 'userid',
+            as: 'userinfo',
+          },
+        },
+        {
+          $project: {
+            author: 1,
+            profileimg: '$userinfo.profileimg',
+            nickname: '$userinfo.nickname',
+          },
+        },
+      ])) ?? []
+    );
   }
 }

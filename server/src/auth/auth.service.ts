@@ -4,8 +4,8 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { AuthCredentialsDto } from './dto/auth-credential-dto';
-import { UserCreateDto } from './dto/user-create-dto';
+import { AuthCredentialsDto } from './dto/auth-credential.dto';
+import { UserCreateDto } from './dto/user-create.dto';
 import { UserRepository } from '../common/database/user.repository';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
@@ -14,8 +14,8 @@ import { CookieOptions } from 'express';
 import { User } from 'src/common/database/user.schema';
 import { RedisService } from 'src/redis/redis.service';
 import { MailerService } from '@nestjs-modules/mailer';
-import { EmailRequestDto } from './dto/email-request-dto';
-import { EmailCheckDto } from './dto/email-check-dto';
+import { EmailRequestDto } from './dto/email-request.dto';
+import { EmailCheckDto } from './dto/email-check.dto';
 
 @Injectable()
 export class AuthService {
