@@ -1,17 +1,20 @@
 import styled from '@emotion/styled';
 import React from 'react';
+import AuthGuard from '../components/AuthGuard';
 import SideBar from '../components/Main/SideBar';
 import Editor from '../components/Write';
 import COLORS from '../styles/color';
 
 export default function write() {
   return (
-    <Frame>
-      <SideBar />
-      <ContentWrapper>
-        <Editor />
-      </ContentWrapper>
-    </Frame>
+    <AuthGuard>
+      <Frame>
+        <SideBar />
+        <ContentWrapper>
+          <Editor />
+        </ContentWrapper>
+      </Frame>
+    </AuthGuard>
   );
 }
 
