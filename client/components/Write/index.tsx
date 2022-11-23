@@ -21,7 +21,7 @@ export default function Editor() {
   const previewRef = useRef<HTMLDivElement>(null);
   const [tabIndex, setTabIndex] = useState(0); // 0 Editor, 1 Preview
   const [content, setContent] = useState<string>('');
-  const [contentHTML, setContentHTML] = useState<string>(''); // 탭 전환용
+  const [contentHTML, setContentHTML] = useState<string>('<div><br></div>'); // 탭 전환용
 
   // useEffect(() => { // test function
   //   if (!previewRef.current) return;
@@ -34,24 +34,27 @@ export default function Editor() {
     // console.log(JSON.stringify(data));
     const cursor = window.getSelection();
     if (!cursor) return;
+    if (!contentRef.current) return;
+    const collapseNode = cursor.anchorNode;
     if (cursor.type === 'Caret') {
       if (!cursor.anchorNode) return;
-      const position = cursor.anchorOffset + data.length;
+      const position = cursor.anchorNode.nodeType === 3 ? cursor.anchorOffset + data.length : 1;
       cursor.anchorNode.textContent = `${cursor.anchorNode?.textContent?.slice(
         0,
         cursor.anchorOffset
       )}${data}${cursor.anchorNode?.textContent?.slice(cursor.anchorOffset)}`;
-      window.getSelection()?.collapse(cursor.anchorNode, position);
+
+      window.getSelection()?.collapse(collapseNode, position);
     }
     if (cursor.type === 'Range') {
       if (!cursor.anchorNode || !cursor.focusNode) return;
       cursor.deleteFromDocument();
-      const position = cursor.anchorOffset + data.length;
+      const position = cursor.anchorNode.nodeType === 3 ? cursor.anchorOffset + data.length : 1;
       cursor.anchorNode.textContent = `${cursor.anchorNode?.textContent?.slice(
         0,
         cursor.anchorOffset
       )}${data}${cursor.anchorNode?.textContent?.slice(cursor.anchorOffset)}`;
-      window.getSelection()?.collapse(cursor.anchorNode, position);
+      window.getSelection()?.collapse(collapseNode, position);
     }
   };
 
@@ -67,24 +70,34 @@ export default function Editor() {
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (!contentRef.current) return;
     const { key } = e;
     const cursor = window.getSelection();
     if (!cursor) return;
+    const collapseNode = cursor.anchorNode;
+
+    if (key === 'Backspace' || key === 'Delete') {
+      if (contentRef.current.innerHTML === '<div><br></div>') {
+        e.preventDefault();
+        return;
+      }
+    }
     if (key === 'Tab') {
       e.preventDefault();
       if (cursor.type === 'Caret') {
         if (!cursor.anchorNode) return;
-        const position = cursor.anchorOffset + 2;
+        const position = cursor.anchorNode.nodeType === 3 ? cursor.anchorOffset + 2 : 1;
         cursor.anchorNode.textContent = `${cursor.anchorNode?.textContent?.slice(
           0,
           cursor.anchorOffset
         )}\xa0\xa0${cursor.anchorNode?.textContent?.slice(cursor.anchorOffset)}`;
-        window.getSelection()?.collapse(cursor.anchorNode, position);
+
+        window.getSelection()?.collapse(collapseNode, position);
       }
       if (cursor.type === 'Range') {
         if (!cursor.anchorNode || !cursor.focusNode) return;
         cursor.deleteFromDocument();
-        const position = cursor.anchorOffset + 2;
+        const position = cursor.anchorNode.nodeType === 3 ? cursor.anchorOffset + 2 : 1;
         cursor.anchorNode.textContent = `${cursor.anchorNode?.textContent?.slice(
           0,
           cursor.anchorOffset
