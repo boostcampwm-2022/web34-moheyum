@@ -58,7 +58,12 @@ export class PostController {
     @GetUser() user: User,
     @Query() followerPostDTO: FollowerPostDto,
   ) {
-    return await this.postService.getFollowerPost(user, followerPostDTO);
+    return {
+      message: 'success',
+      data: {
+        post: await this.postService.getFollowerPost(user, followerPostDTO),
+      },
+    };
   }
 
   @Get('/:id')
