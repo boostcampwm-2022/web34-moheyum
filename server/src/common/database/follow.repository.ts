@@ -48,6 +48,15 @@ export class FollowRepository {
           from: 'users',
           localField: 'userid',
           foreignField: 'userid',
+          pipeline: [
+            {
+              $match: {
+                $expr: { $eq: [true, '$state'] },
+              },
+            },
+            { $skip: page * this.limitData },
+            { $limit: this.limitData },
+          ],
           as: 'followerlist',
         },
       },
@@ -62,8 +71,6 @@ export class FollowRepository {
           nickname: '$followerlist.nickname',
         },
       },
-      { $skip: page * this.limitData },
-      { $limit: this.limitData },
       { $addFields: { nextpage: page + 1 } },
     ]);
     if (dataList.length === 0) return [];
@@ -80,6 +87,15 @@ export class FollowRepository {
           from: 'users',
           localField: 'targetid',
           foreignField: 'userid',
+          pipeline: [
+            {
+              $match: {
+                $expr: { $eq: [true, '$state'] },
+              },
+            },
+            { $skip: page * this.limitData },
+            { $limit: this.limitData },
+          ],
           as: 'followinglist',
         },
       },
@@ -94,8 +110,6 @@ export class FollowRepository {
           nickname: '$followinglist.nickname',
         },
       },
-      { $skip: page * this.limitData },
-      { $limit: this.limitData },
       { $addFields: { nextpage: page + 1 } },
     ]);
     if (dataList.length === 0) return [];
