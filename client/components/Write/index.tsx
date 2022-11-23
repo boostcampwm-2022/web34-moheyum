@@ -31,16 +31,17 @@ export default function Editor() {
   const handlePaste = (e: ClipboardEvent<HTMLDivElement>) => {
     e.preventDefault();
     const data = e.clipboardData?.getData('Text');
-    console.log(JSON.stringify(data));
+    // console.log(JSON.stringify(data));
     const cursor = window.getSelection();
     if (!cursor) return;
     if (cursor.type === 'Caret') {
       if (!cursor.anchorNode) return;
+      const position = cursor.anchorOffset + data.length;
       cursor.anchorNode.textContent = `${cursor.anchorNode?.textContent?.slice(
         0,
         cursor.anchorOffset
       )}${data}${cursor.anchorNode?.textContent?.slice(cursor.anchorOffset)}`;
-      window.getSelection()?.collapse(cursor.anchorNode, cursor.anchorOffset);
+      window.getSelection()?.collapse(cursor.anchorNode, position);
     }
     if (cursor.type === 'Range') {
       if (!cursor.anchorNode || !cursor.focusNode) return;

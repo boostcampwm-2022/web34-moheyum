@@ -53,13 +53,30 @@ function strike(str: string): string {
   return result;
 }
 
+function link(str: string): string {
+  let result = str.replace(
+    /!\[(.+)\]\((http[s]?:\/\/(?:(?:[\dA-z]*)(?:\.[\dA-z]*)*)(?::[\d]+)?(?:\/.*)?)\)/gm,
+    '<img src="$2" alt="$1"/>'
+  );
+  result = result.replace(
+    /\[(.+)\]\((http[s]?:\/\/(?:(?:[\dA-z]*)(?:\.[\dA-z]*)*)(?::[\d]+)?(?:\/.*)?)\)/gm,
+    '<a href="$2">$1</a>'
+  );
+  return result;
+}
+
+function hr(str: string): string {
+  let result = str.replace(/^<div>[* ]+<\/div>$/gm, '<hr/>');
+  result = result.replace(/^<div>[- ]+<\/div>$/gm, '<hr/>');
+  return result;
+}
+
 export default function doParse(str: string): string {
   // console.log('parse start');
   let result = str;
   // console.log(JSON.stringify(result));
   result = blockQuote(result);
   result = emptyLines(result);
-  // console.log(JSON.stringify(result));
   result = headers(result);
   result = code(result);
   result = divideLines(result);
@@ -68,5 +85,8 @@ export default function doParse(str: string): string {
   result = italic(result);
   result = underline(result);
   result = strike(result);
+  result = link(result);
+  // console.log(JSON.stringify(result));
+  result = hr(result);
   return result;
 }
