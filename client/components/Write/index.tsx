@@ -31,6 +31,7 @@ export default function Editor() {
   const handlePaste = (e: ClipboardEvent<HTMLDivElement>) => {
     e.preventDefault();
     const data = e.clipboardData?.getData('Text');
+    console.log(JSON.stringify(data));
     const cursor = window.getSelection();
     if (!cursor) return;
     if (cursor.type === 'Caret') {

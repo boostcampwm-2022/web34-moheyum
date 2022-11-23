@@ -25,10 +25,20 @@ function codeBlock(str: string): string {
   return result;
 }
 
+function blockQuote(str: string): string {
+  let result = str.replace(/^> ([\s\S]+?)\n\n/gm, '<blockquote>$1</blockquote>\n');
+  result = result.replace(/^> /gm, '');
+  result = result.replace(/<blockquote>(.+?)\n/gm, '<blockquote><div>$1</div>\n'); // 첫줄 div 보정
+  return result;
+}
+
 export default function doParse(str: string): string {
   // console.log('parse start');
   let result = str;
+  console.log(JSON.stringify(result));
+  result = blockQuote(result);
   result = emptyLines(result);
+  console.log(JSON.stringify(result));
   result = headers(result);
   result = code(result);
   result = divideLines(result);
