@@ -1,12 +1,5 @@
-import {
-  IsString,
-  MaxLength,
-  IsNotEmpty,
-  Matches,
-  IsByteLength,
-  IsEmail,
-  IsOptional,
-} from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsString, IsNotEmpty, IsEmail, IsNumber } from 'class-validator';
 
 export class UserProfileDto {
   @IsNotEmpty()
@@ -23,10 +16,6 @@ export class UserProfileDto {
 
   @IsNotEmpty()
   @IsString()
-  password: string;
-
-  @IsNotEmpty()
-  @IsString()
   profileimg: string = '';
 
   @IsNotEmpty()
@@ -34,18 +23,20 @@ export class UserProfileDto {
   bio: string = '';
 
   @IsNotEmpty()
-  @IsString()
+  @Transform(({ value }) => parseInt(value))
+  @IsNumber()
   postcount: number;
 
   @IsNotEmpty()
-  @IsString()
+  @Transform(({ value }) => parseInt(value))
+  @IsNumber()
   follower: number;
 
   @IsNotEmpty()
-  @IsString()
+  @Transform(({ value }) => parseInt(value))
+  @IsNumber()
   following: number;
 
   @IsNotEmpty()
-  @IsString()
   state: boolean;
 }

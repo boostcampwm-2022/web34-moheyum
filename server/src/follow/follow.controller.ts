@@ -28,7 +28,6 @@ export class FollowController {
     };
   }
 
-  @HttpCode(200)
   @Get('/check/:targetid')
   @UseGuards(JwtAuthGuard)
   async followCheck(
@@ -58,7 +57,6 @@ export class FollowController {
     };
   }
 
-  @HttpCode(200)
   @Get('/list/follower')
   @UseGuards(JwtAuthGuard)
   async followerList(@Query('page') page: number, @GetUser() user: User) {
@@ -69,7 +67,6 @@ export class FollowController {
     };
   }
 
-  @HttpCode(200)
   @Get('/list/following')
   @UseGuards(JwtAuthGuard)
   async followingList(@Query('page') page: number, @GetUser() user: User) {

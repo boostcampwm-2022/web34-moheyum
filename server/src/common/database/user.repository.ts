@@ -68,6 +68,7 @@ export class UserRepository {
     return result;
   }
 
+  // post 감소, 증가 둘다 이 함수 사용
   async updatePostCount(userFilterQuery: FilterQuery<User>, postCount: number) {
     const result = this.userModel.findOneAndUpdate(
       userFilterQuery,

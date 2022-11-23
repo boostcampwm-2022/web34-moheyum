@@ -59,7 +59,7 @@ export class FollowRepository {
           pipeline: [
             {
               $match: {
-                $expr: { $eq: [true, '$state'] },
+                state: true,
               },
             },
             { $skip: page * this.limitData },
@@ -98,7 +98,7 @@ export class FollowRepository {
           pipeline: [
             {
               $match: {
-                $expr: { $eq: [true, '$state'] },
+                state: true,
               },
             },
             { $skip: page * this.limitData },

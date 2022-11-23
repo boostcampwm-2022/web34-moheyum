@@ -5,7 +5,6 @@ import { Model, FilterQuery } from 'mongoose';
 import { CreatePostDto } from '../../post/dto/create-post.dto';
 import { User } from 'src/common/database/user.schema';
 import { FollowerPostDto } from 'src/post/dto/follower-post.dto';
-import { compareSync } from 'bcrypt';
 
 @Injectable()
 export class PostRepository {
@@ -47,7 +46,6 @@ export class PostRepository {
         },
       },
     ]);
-    console.log(postOne);
     return postOne.at(0);
   }
 
