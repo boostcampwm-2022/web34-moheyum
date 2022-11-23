@@ -4,6 +4,7 @@ import { Post, PostDocument } from '../database/post.schema';
 import { Model, FilterQuery } from 'mongoose';
 import { CreatePostDto } from '../../post/dto/create-post.dto';
 import { User } from 'src/common/database/user.schema';
+import { FollowerPostDto } from 'src/post/dto/follower-post.dto';
 
 @Injectable()
 export class PostRepository {
@@ -42,5 +43,18 @@ export class PostRepository {
     //{ acknowledged: true, deletedCount: 1 }
     if (result.deletedCount === 0) throw new NotFoundException();
     return result.deletedCount;
+  }
+
+  async getUserPosts(authorid: string, followerPostDTO: FollowerPostDto) {
+    const { page, limit } = followerPostDTO;
+    console.log(authorid);
+    return this.postModel.aggregate([
+      {
+        $match: { author: authorid },
+      },
+      { $skip: page * limit },
+      { $limit: limit },
+      { $addFields: { nextpage: page + 1 } },
+    ]);
   }
 }

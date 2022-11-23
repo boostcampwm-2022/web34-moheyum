@@ -21,8 +21,11 @@ export class PostService {
     return this.postRepository.find({});
   }
 
-  getUserPosts(userid: string): Promise<Post[]> {
-    return this.postRepository.find({ author: userid });
+  getUserPosts(
+    userid: string,
+    followerPostDTO: FollowerPostDto,
+  ): Promise<Post[]> {
+    return this.postRepository.getUserPosts(userid, followerPostDTO);
   }
 
   createPost(createBoardDto: CreatePostDto, user: User): Promise<Post> {
@@ -47,7 +50,7 @@ export class PostService {
     return this.postRepository.findOneAndUpdate({ _id: id }, createPostDto);
   }
 
-  async getFollowerPost(user: User, followerPostDTO: FollowerPostDto) {
+  async getFollowingPost(user: User, followerPostDTO: FollowerPostDto) {
     return await this.followRepository.getFollowingPostList(
       user.userid,
       followerPostDTO,

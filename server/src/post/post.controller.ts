@@ -29,13 +29,15 @@ export class PostController {
   }
 
   @Get('/author/:userid')
-  getUserPosts(@Param('userid') userid: string): {
-    message: string;
-    data: { post: Promise<Post_[]> };
-  } {
+  async getUserPosts(
+    @Param('userid') userid: string,
+    @Query() followerPostDTO: FollowerPostDto,
+  ) {
     return {
       message: 'success',
-      data: { post: this.postService.getUserPosts(userid) },
+      data: {
+        post: await this.postService.getUserPosts(userid, followerPostDTO),
+      },
     };
   }
 
@@ -54,14 +56,14 @@ export class PostController {
 
   @Get('newsfeed')
   @UseGuards(JwtAuthGuard)
-  async getFollowerPost(
+  async getFollowingPost(
     @GetUser() user: User,
     @Query() followerPostDTO: FollowerPostDto,
   ) {
     return {
       message: 'success',
       data: {
-        post: await this.postService.getFollowerPost(user, followerPostDTO),
+        post: await this.postService.getFollowingPost(user, followerPostDTO),
       },
     };
   }
