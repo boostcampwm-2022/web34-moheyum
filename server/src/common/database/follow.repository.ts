@@ -67,7 +67,7 @@ export class FollowRepository {
   async findFollowing({ userid }) {
     return this.followModel.aggregate([
       {
-        $match: { userid: { $regex: userid } },
+        $match: { userid: userid },
       },
       {
         $lookup: {
@@ -86,6 +86,45 @@ export class FollowRepository {
           targetid: 1,
           profileimg: '$followinglist.profileimg',
           nickname: '$followinglist.nickname',
+        },
+      },
+    ]);
+  }
+
+  async getFollowingPostList(userid) {
+    return this.followModel.aggregate([
+      {
+        $match: { userid: userid },
+      },
+      {
+        $lookup: {
+          from: 'post',
+          localField: 'targetid',
+          foreignField: 'author',
+          as: 'author',
+        },
+      },
+      {
+        $unwind: '$author',
+      }, //이후 skip, limit추가
+      {
+        $sort: { createdAt: -1 },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'targetid',
+          foreignField: 'userid',
+          as: 'userinfo',
+        },
+      },
+      {
+        $project: {
+          userinfo: 1,
+          author: 1,
+          targetid: 1,
+          profileimg: '$userinfo.profileimg',
+          nickname: '$userinfo.nickname',
         },
       },
     ]);

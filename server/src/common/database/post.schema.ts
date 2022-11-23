@@ -1,7 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { timeStamp } from 'console';
 import { HydratedDocument } from 'mongoose';
-import { timestamp } from 'rxjs';
 export type PostDocument = HydratedDocument<Post>;
 
 @Schema({ versionKey: false, timestamps: true })

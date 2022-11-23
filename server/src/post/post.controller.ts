@@ -90,4 +90,11 @@ export class PostController {
       data: { post: this.postService.updatePost(id, post) },
     };
   }
+
+  @HttpCode(200)
+  @Post('/test')
+  @UseGuards(JwtAuthGuard)
+  async test(@GetUser() user) {
+    await this.postService.test(user);
+  }
 }
