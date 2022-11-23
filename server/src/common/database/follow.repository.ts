@@ -118,6 +118,19 @@ export class FollowRepository {
             localField: 'targetid',
             foreignField: 'author',
             as: 'author',
+            pipeline: [
+              {
+                $addFields: {
+                  createdKoreaAt: {
+                    $dateToString: {
+                      format: '%Y-%m-%d %H:%M:%S',
+                      date: '$createdAt',
+                      timezone: 'Asia/Seoul',
+                    },
+                  },
+                },
+              },
+            ],
           },
         },
         {
@@ -180,6 +193,19 @@ export class FollowRepository {
             localField: 'targetid',
             foreignField: 'author',
             as: 'author',
+            pipeline: [
+              {
+                $addFields: {
+                  createdKoreaAt: {
+                    $dateToString: {
+                      format: '%Y-%m-%d %H:%M:%S',
+                      date: '$createdAt',
+                      timezone: 'Asia/Seoul',
+                    },
+                  },
+                },
+              },
+            ],
           },
         },
         {
