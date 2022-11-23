@@ -7,10 +7,15 @@ import { Post } from '../common/database/post.schema';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PostRepository } from '../common/database/post.repository';
 import { User } from 'src/common/database/user.schema';
+import { FollowRepository } from 'src/common/database/follow.repository';
+import { FollowerPostDto } from './dto/follower-post.dto';
 
 @Injectable()
 export class PostService {
-  constructor(private readonly postRepository: PostRepository) {}
+  constructor(
+    private readonly postRepository: PostRepository,
+    private readonly followRepository: FollowRepository,
+  ) {}
 
   getAllPosts(): Promise<Post[]> {
     return this.postRepository.find({});
@@ -40,5 +45,12 @@ export class PostService {
 
   async updatePost(id: string, createPostDto: CreatePostDto): Promise<Post> {
     return this.postRepository.findOneAndUpdate({ _id: id }, createPostDto);
+  }
+
+  async getFollowerPost(user: User, followerPostDTO: FollowerPostDto) {
+    return await this.followRepository.getFollowingPostList(
+      user.userid,
+      followerPostDTO,
+    );
   }
 }
