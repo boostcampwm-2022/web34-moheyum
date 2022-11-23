@@ -102,9 +102,12 @@ export class FollowRepository {
     return dataList;
   }
 
-  async getFollowingPostList(userid: string, followerPostDTO: FollowerPostDto) {
-    const { page, limit } = followerPostDTO;
-    return (
+  async getFollowingPostListWithoutNext(
+    userid: string,
+    followerPostDTO: FollowerPostDto,
+  ) {
+    const { limit } = followerPostDTO;
+    const postList =
       (await this.followModel.aggregate([
         {
           $match: { userid: userid },
@@ -121,10 +124,82 @@ export class FollowRepository {
           $unwind: '$author',
         }, //이후 skip, limit추가
         {
-          $sort: { 'author.createdAt': -1 },
+          $sort: { 'author.createdAt': -1, 'author._id': -1 },
         },
         {
-          $skip: page * limit,
+          $limit: limit,
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'targetid',
+            foreignField: 'userid',
+            as: 'userinfo',
+          },
+        },
+        {
+          $project: {
+            author: 1,
+            profileimg: '$userinfo.profileimg',
+            nickname: '$userinfo.nickname',
+            cc: {
+              $dateToString: {
+                format: '%Y-%m-%d %H:%M:%S',
+                date: '$author.createdAt',
+                timezone: 'Asia/Seoul',
+              },
+            },
+          },
+        },
+      ])) ?? [];
+    const res = {};
+    res['post'] = postList;
+    if (postList.length === limit) {
+      const lastItem = postList.at(-1);
+      const next = `${lastItem.author.createdAt.toISOString()}_${
+        lastItem.author._id
+      }`;
+      res['next'] = next;
+    } else {
+      res['next'] = '';
+    }
+    return res;
+  }
+
+  async getFollowingPostList(userid: string, followerPostDTO: FollowerPostDto) {
+    const { limit, next } = followerPostDTO;
+    const [nextdate, nextid] = next.split('_');
+    const postList =
+      (await this.followModel.aggregate([
+        {
+          $match: { userid: userid },
+        },
+        {
+          $lookup: {
+            from: 'posts',
+            localField: 'targetid',
+            foreignField: 'author',
+            as: 'author',
+          },
+        },
+        {
+          $unwind: '$author',
+        }, //이후 skip, limit추가
+        {
+          $match: {
+            $or: [
+              {
+                'author.createdAt': { $lt: new Date(nextdate) },
+              },
+              {
+                'author.createdAt': new Date(nextdate),
+                'author._id': { $lt: nextid },
+              },
+            ],
+          },
+        },
+        {
+          $sort: { 'author.createdAt': -1, 'author._id': -1 },
         },
         {
           $limit: limit,
@@ -144,7 +219,18 @@ export class FollowRepository {
             nickname: '$userinfo.nickname',
           },
         },
-      ])) ?? []
-    );
+      ])) ?? [];
+    const res = {};
+    res['post'] = postList;
+    if (postList.length === limit) {
+      const lastItem = postList.at(-1);
+      const next = `${lastItem.author.createdAt.toISOString()}_${
+        lastItem.author._id
+      }`;
+      res['next'] = next;
+    } else {
+      res['next'] = '';
+    }
+    return res;
   }
 }

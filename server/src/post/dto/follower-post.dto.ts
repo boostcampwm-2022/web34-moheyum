@@ -1,13 +1,12 @@
-import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
-import { Transform } from 'class-transformer';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class FollowerPostDto {
-  @Transform(({ value }) => parseInt(value))
-  @IsNumber()
-  @IsNotEmpty()
-  page: number;
-
   @IsNumber()
   @IsOptional()
-  limit: number = 10;
+  limit = 10;
+
+  // @IsNotEmpty()
+  @IsString()
+  @IsOptional()
+  next = '';
 }

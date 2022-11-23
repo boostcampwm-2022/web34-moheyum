@@ -54,15 +54,13 @@ export class PostController {
 
   @Get('newsfeed')
   @UseGuards(JwtAuthGuard)
-  async getFollowerPost(
+  async getFollowingPost(
     @GetUser() user: User,
     @Query() followerPostDTO: FollowerPostDto,
   ) {
     return {
       message: 'success',
-      data: {
-        post: await this.postService.getFollowerPost(user, followerPostDTO),
-      },
+      data: await this.postService.getFollowingPost(user, followerPostDTO),
     };
   }
 
