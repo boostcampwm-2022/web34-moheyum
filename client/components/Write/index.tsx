@@ -21,12 +21,12 @@ export default function Editor() {
   const previewRef = useRef<HTMLDivElement>(null);
   const [tabIndex, setTabIndex] = useState(0); // 0 Editor, 1 Preview
   const [content, setContent] = useState<string>('');
+  const [contentHTML, setContentHTML] = useState<string>(''); // 탭 전환용
 
-  useEffect(() => {
-    if (!previewRef.current) return;
-    // previewRef.current.innerHTML = renderPreview(content);
-    previewRef.current.innerHTML = renderMarkdown(content);
-  }, [content]);
+  // useEffect(() => { // test function
+  //   if (!previewRef.current) return;
+  //   previewRef.current.innerHTML = renderMarkdown(content);
+  // }, [content]);
 
   const handlePaste = (e: ClipboardEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -119,15 +119,20 @@ export default function Editor() {
     }
     if (index === 1) {
       // preview
+      if (!contentRef.current) return;
+      setContentHTML(contentRef.current.innerHTML);
       setTabIndex(1);
     }
   };
 
-  // const renderPreview = (str: string) => {
-  //   const rawString = str.replace(/</g, '&lt;').replace(/</g, '&gt;');
-  //   console.log(rawString.match(/^[\n]*#+ [\S]*\n/gm));
-  //   return rawString;
-  // };
+  useEffect(() => {
+    if (!contentRef.current) {
+      if (!previewRef.current) return;
+      previewRef.current.innerHTML = renderMarkdown(content);
+    } else {
+      contentRef.current.innerHTML = contentHTML;
+    }
+  }, [tabIndex]);
 
   return (
     <Wrapper>
@@ -153,19 +158,22 @@ export default function Editor() {
         </EditorTabs>
       </ToolbarContainer>
       <EditorContainer>
-        <EditorTextBox
-          contentEditable={tabIndex === 0}
-          ref={contentRef}
-          onKeyUp={handleKeyUp}
-          onKeyDown={handleKeyDown}
-          onPaste={handlePaste}
-          suppressContentEditableWarning
-        >
-          <div>
-            <br />
-          </div>
-        </EditorTextBox>
-        <PreviewTextBox ref={previewRef} />
+        {tabIndex === 0 ? (
+          <EditorTextBox
+            contentEditable={tabIndex === 0}
+            ref={contentRef}
+            onKeyUp={handleKeyUp}
+            onKeyDown={handleKeyDown}
+            onPaste={handlePaste}
+            suppressContentEditableWarning
+          >
+            <div>
+              <br />
+            </div>
+          </EditorTextBox>
+        ) : (
+          <PreviewTextBox ref={previewRef} />
+        )}
       </EditorContainer>
       <BottomButtonConatiner>
         <button type="button" onClick={submitHandler}>
