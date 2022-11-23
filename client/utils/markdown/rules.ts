@@ -32,16 +32,41 @@ function blockQuote(str: string): string {
   return result;
 }
 
+function bold(str: string): string {
+  const result = str.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+  return result;
+}
+
+function italic(str: string): string {
+  const result = str.replace(/\*(.+?)\*/g, '<i>$1</i>');
+  return result;
+}
+
+function underline(str: string): string {
+  const result = str.replace(/_(.+?)_/g, '<u>$1</u>');
+  return result;
+}
+
+function strike(str: string): string {
+  let result = str.replace(/--(.+?)--/g, '<s>$1</s>');
+  result = result.replace(/~~(.+?)~~/g, '<s>$1</s>');
+  return result;
+}
+
 export default function doParse(str: string): string {
   // console.log('parse start');
   let result = str;
-  console.log(JSON.stringify(result));
+  // console.log(JSON.stringify(result));
   result = blockQuote(result);
   result = emptyLines(result);
-  console.log(JSON.stringify(result));
+  // console.log(JSON.stringify(result));
   result = headers(result);
   result = code(result);
   result = divideLines(result);
   result = codeBlock(result);
+  result = bold(result);
+  result = italic(result);
+  result = underline(result);
+  result = strike(result);
   return result;
 }

@@ -195,4 +195,12 @@ export const PreviewTextBox = styled.div`
     border-left: 4px solid ${COLORS.GRAY3};
     padding: 6px 10px;
   }
+
+  & b {
+    font-weight: 700;
+  }
+
+  & i {
+    font-style: italic;
+  }
 `;
