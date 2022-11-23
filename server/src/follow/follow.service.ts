@@ -26,6 +26,13 @@ export class FollowService {
     return cancel;
   }
 
+  followCheck(targetid: string, user: User) {
+    return this.followRepository.check({
+      userid: user.userid,
+      targetid,
+    });
+  }
+
   getFollowerList(user: User, page: number) {
     return this.followRepository.findFollowers({ targetid: user.userid }, page);
   }

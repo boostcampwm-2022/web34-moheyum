@@ -55,6 +55,10 @@ export class UserRepository {
     return this.userModel.findOne(userFilterQuery);
   }
 
+  async findOneProfile(userFilterQuery: FilterQuery<User>): Promise<User> {
+    return this.userModel.findOne(userFilterQuery, { password: 0 });
+  }
+
   async findOneAndUpdatePW(
     userFilterQuery: FilterQuery<User>,
     user: Partial<User>,

@@ -38,6 +38,14 @@ export class FollowRepository {
     return result.deletedCount;
   }
 
+  async check(followFilterQuery: FilterQuery<Follow>): Promise<boolean> {
+    const follow = await this.followModel.find(followFilterQuery);
+    if (follow.length) {
+      return true;
+    }
+    return false;
+  }
+
   async findFollowers({ targetid }, page: number) {
     const dataList = await this.followModel.aggregate([
       {

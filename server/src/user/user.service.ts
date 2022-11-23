@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { User } from 'src/common/database/user.schema';
+import { UserProfileDto } from './dto/user-profile-dto';
 import { UserUpdateDto } from './dto/user-Update-dto';
 import { UserRepository } from 'src/common/database/user.repository';
 
@@ -7,29 +7,8 @@ import { UserRepository } from 'src/common/database/user.repository';
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async getUserData(userid: string): Promise<{
-    userId: string;
-    nickName: string;
-    email: string;
-    bio: string;
-    profileImg: string;
-    postcount: number;
-    follower: number;
-    following: number;
-    state: boolean;
-  }> {
-    const data = await this.userRepository.findOne({ userid });
-    return Promise.resolve({
-      userId: data.userid,
-      nickName: data.nickname,
-      email: data.email,
-      bio: data.bio,
-      profileImg: data.profileimg,
-      postcount: data.postcount,
-      follower: data.follower,
-      following: data.following,
-      state: data.state,
-    });
+  async getUserData(userid: string): Promise<UserProfileDto> {
+    return this.userRepository.findOneProfile({ userid });
   }
 
   async updateUserProfile(
