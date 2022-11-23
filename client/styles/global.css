@@ -15,3 +15,7 @@ body {
 *:link {
   text-decoration: none;
 }
+
+a:hover {
+  color: #333;
+}

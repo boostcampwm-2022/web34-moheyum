@@ -18,11 +18,15 @@ export default function MainSection() {
         </NewArticleSection>
       </Link>
       <ArticlesSection>
-        <ArticleCard />
         {Array.isArray(newsfeedList) &&
           newsfeedList.map((item) => (
-            // eslint-disable-next-line no-underscore-dangle
-            <ArticleCard author={item.author} key={item._id} description={item.description} title={item.title} />
+            <ArticleCard
+              author={item.author}
+              key={item._id}
+              id={item._id}
+              description={item.description}
+              title={item.title}
+            />
           ))}
       </ArticlesSection>
     </Wrapper>
