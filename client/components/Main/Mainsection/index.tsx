@@ -1,12 +1,36 @@
-import React from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import Link from 'next/link';
 import { ArticleCard } from '../Articlecard';
-import { newsfeedState } from '../../../atom';
+import { authedUser, newsfeedState } from '../../../atom';
 import { ArticlesSection, FakeButton, NewArticleSection, Placeholder, Wrapper } from './index.style';
 
+import paginator, {NEXT} from '../../../utils/paginator';
+
 export default function MainSection() {
-  const newsfeedList = useRecoilValue(newsfeedState);
+
+  const authedUserInfo = useRecoilValue(authedUser);
+  
+  const [nextCursor, setNextCursor] = useState(NEXT.START)
+  const {
+    loading,
+    error,
+    pages,
+    next,
+  } = paginator(`/api/post/newsfeed`, nextCursor)
+
+  const observer = useRef<any>();
+  const lastFollowElementRef = useCallback( (node: any) => {
+    if (loading) return;
+    if (observer.current) observer.current.disconnect();
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && next !== NEXT.END) {
+        setNextCursor(next);
+      }
+    })
+    if (node) observer.current.observe(node);
+  }, [loading, next !== NEXT.END]);
+
 
   return (
     <Wrapper>
@@ -18,16 +42,26 @@ export default function MainSection() {
         </NewArticleSection>
       </Link>
       <ArticlesSection>
-        {Array.isArray(newsfeedList) &&
-          newsfeedList.map((item) => (
-            <ArticleCard
-              author={item.author}
-              key={item._id}
-              id={item._id}
-              description={item.description}
-              title={item.title}
+        {
+          pages.map((item: any, index:number) => {
+            if (pages.length === index + 1)
+              return <ArticleCard
+                author={item.author.author}
+                key={item.author._id}
+                id={item.author._id}
+                description={item.author.description}
+                title={item.author.title}
+                ref={lastFollowElementRef}
+              />
+            return <ArticleCard
+              author={item.author.author}
+              key={item.author._id}
+              id={item.author._id}
+              description={item.author.description}
+              title={item.author.title}
             />
-          ))}
+          })
+        }
       </ArticlesSection>
     </Wrapper>
   );
