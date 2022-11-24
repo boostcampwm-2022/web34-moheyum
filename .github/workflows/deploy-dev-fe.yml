@@ -19,7 +19,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: "16"
-          cache: 'yarn'
+          cache: "yarn"
           cache-dependency-path: client/yarn.lock
       - name: build frontend
         run: |
@@ -50,7 +50,7 @@ jobs:
             sshpass -p "${{ secrets.SCP_PASSWORD }}" scp -P ${{ secrets.SCP_PORT }} -r ${{ secrets.SCP_USERNAME }}@${{ secrets.SCP_HOST }}:~/ftp/client/ ~/moheyum/
             if [ "$(pm2 list | grep -c frontend )" -eq 0 ]; then
               cd ~/moheyum/client
-              pm2 start yarn --name frontend -i 1 -- dev # not working
+              pm2 start “yarn start” --name frontend
             else
               pm2 reload frontend
             fi
