@@ -20,10 +20,10 @@ interface Props {
 export default function Post({ response }: { response: Props }) {
   return (
     <AuthGuard noRedirect>
-    <Frame>
-      <SideBar />
-      <ReadPost postData={response.data.post} />
-    </Frame>
+      <Frame>
+        <SideBar />
+        <ReadPost postData={response.data.post} />
+      </Frame>
     </AuthGuard>
   );
 }

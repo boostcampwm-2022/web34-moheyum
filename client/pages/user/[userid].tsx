@@ -4,27 +4,16 @@ import AuthGuard from '../../components/AuthGuard';
 import SideBar from '../../components/Main/SideBar';
 import UserSection from '../../components/User';
 import Frame from '../../styles/frame';
+import { PostProps } from '../../types/Post';
 import { httpGet } from '../../utils/http';
 
-export interface Props {
-  userid: string;
-  nickname: string;
-  email: string;
-  bio: string;
-  profileimg: string;
-  state: boolean;
-  following: number;
-  follower: number;
-  postcount: number;
-}
-
-export default function Post({ userData }: { userData: Props }) {
+export default function Post({ userData }: { userData: PostProps }) {
   return (
     <AuthGuard noRedirect>
-    <Frame>
-      <SideBar />
-      <UserSection userData={userData}/>
-    </Frame>
+      <Frame>
+        <SideBar />
+        <UserSection userData={userData} />
+      </Frame>
     </AuthGuard>
   );
 }
@@ -50,10 +39,9 @@ export async function getServerSideProps({ query: { userid } }: GetServerSidePro
         userData: userData.data,
       },
     };
-  else 
-   return {
+  return {
     props: {
       userData: null,
     },
-  }
+  };
 }

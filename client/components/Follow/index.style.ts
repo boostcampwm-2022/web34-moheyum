@@ -56,21 +56,21 @@ export const TopFollowActivated = styled.div`
   text-align: center;
   font-weight: 700;
   font-size: 24px;
-  flex:1;
-`
+  flex: 1;
+`;
 
 export const TopFollowDeactivated = styled.div`
   text-align: center;
   color: ${COLORS.GRAY2};
   font-size: 24px;
   flex: 1;
-`
+`;
 
 export const TopFollowUnderline = styled.div`
   position: absolute;
   bottom: 0px;
-`
+`;
 
 export const FollowContainer = styled.div`
   overflow-y: scroll;
-`
+`;

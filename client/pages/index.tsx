@@ -1,6 +1,4 @@
-import React, { useEffect } from 'react';
-import { useSetRecoilState } from 'recoil';
-import { httpGet } from '../utils/http';
+import React from 'react';
 import Frame from '../styles/frame';
 import SideBar from '../components/Main/SideBar';
 import MainSection from '../components/Main/Mainsection';

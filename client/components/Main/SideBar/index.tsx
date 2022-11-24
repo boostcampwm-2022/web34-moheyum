@@ -26,14 +26,14 @@ export default function SideBar() {
       <SideMenuBox>
         {menuList.map((item) => (
           <Link key={item.routeSrc} href={item.routeSrc}>
-            <Menu imgSrc={item.imgSrc} text={item.text} avatar={false}/>
+            <Menu imgSrc={item.imgSrc} text={item.text} avatar={false} />
           </Link>
         ))}
-        {authedUserInfo.logined &&
+        {authedUserInfo.logined && (
           <Link key={`/user/${authedUserInfo.userid}`} href={`/user/${authedUserInfo.userid}`}>
-          <Menu imgSrc={authedUserInfo.profileimg} text={authedUserInfo.nickname} avatar/>
+            <Menu imgSrc={authedUserInfo.profileimg} text={authedUserInfo.nickname} avatar />
           </Link>
-        }
+        )}
       </SideMenuBox>
       {dropdownState && (
         <Dropdown ref={dropdownRef}>
@@ -48,7 +48,7 @@ export default function SideBar() {
         </Dropdown>
       )}
       <Setting onClick={showSettingdropdown}>
-        <Menu imgSrc="/setting.svg" text="설정" avatar={false}/>
+        <Menu imgSrc="/setting.svg" text="설정" avatar={false} />
       </Setting>
     </Wrapper>
   );

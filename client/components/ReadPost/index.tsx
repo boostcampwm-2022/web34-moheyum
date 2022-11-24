@@ -42,10 +42,10 @@ export default function ReadPost({ postData }: Props) {
       <ContentBox>
         <PostHeader>
           <Link href={`/user/${postData.author}`}>
-          <Author>
-            <Profile />
-            {postData.author || '작성자 이름'}
-          </Author>
+            <Author>
+              <Profile />
+              {postData.author || '작성자 이름'}
+            </Author>
           </Link>
           <PostedAt>2시간 전</PostedAt>
         </PostHeader>
