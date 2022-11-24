@@ -69,3 +69,73 @@ export const boxStyle = css`
     ${buttonStyle}
   }
 `;
+
+export const markdownStyle = css`
+  padding: 10px;
+  font-size: 16px;
+  white-space: normal;
+  line-height: 16px;
+  min-height: 12px;
+
+  & * {
+    margin-bottom: 16px;
+  }
+
+  & h1,
+  h2 {
+    border-bottom: 1px solid ${COLORS.GRAY4};
+  }
+
+  & h1 {
+    margin-top: 24px;
+    padding-bottom: 8px;
+    line-height: 1.25;
+    font-size: 30px;
+    font-weight: 700;
+  }
+
+  & h2 {
+    margin-top: 20px;
+    padding-bottom: 6px;
+    line-height: 1.25;
+    font-size: 22px;
+    font-weight: 600;
+  }
+
+  & h3 {
+    line-height: 1.25;
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  & code {
+    padding: 2px 4px;
+    background-color: ${COLORS.GRAY3};
+    border-radius: 6px;
+    font-size: 85%;
+  }
+
+  & pre {
+    background-color: ${COLORS.GRAY5};
+    border-radius: 6px;
+    padding: 16px;
+    overflow-x: hidden;
+    word-wrap: break-word;
+    white-space: nowrap;
+    & > div {
+      white-space: pre-wrap;
+    }
+  }
+  & blockquote {
+    border-left: 4px solid ${COLORS.GRAY3};
+    padding: 6px 10px;
+  }
+
+  & b {
+    font-weight: 700;
+  }
+
+  & i {
+    font-style: italic;
+  }
+`;
