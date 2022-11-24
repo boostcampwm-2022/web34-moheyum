@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import Router from 'next/router';
 import React from 'react';
 import {
@@ -34,10 +35,12 @@ export default function ReadPost({ postData }: Props) {
       </TopButtonConatiner>
       <ContentBox>
         <PostHeader>
+          <Link href={`/user/${postData.author}`}>
           <Author>
             <Profile />
             {postData.author || '작성자 이름'}
           </Author>
+          </Link>
           <PostedAt>2시간 전</PostedAt>
         </PostHeader>
         <PostContent>{postData.description || '글 내용'}</PostContent>

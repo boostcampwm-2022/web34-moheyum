@@ -20,14 +20,15 @@ interface Props {
   author?: string;
 }
 
-ArticleCard.defaultProps = {
-  title: '',
-  description: '',
-  author: '',
-};
+// ArticleCard.defaultProps = {
+//   title: '',
+//   description: '',
+//   author: '',
+// };
 
-export default function ArticleCard({ id, title, description, author }: Props) {
+export const ArticleCard = React.forwardRef<HTMLInputElement, Props>(({ id, title, description, author }: Props, ref)=>{
   return (
+    <div ref={ref}>
     <Link href={`/post/${id}`}>
       <Wrapper>
         <ArticleHeader>
@@ -51,5 +52,6 @@ export default function ArticleCard({ id, title, description, author }: Props) {
         </ArticleContent>
       </Wrapper>
     </Link>
+    </div>
   );
-}
+})

@@ -4,7 +4,6 @@ import { Wrapper } from './index.style';
 
 
 export default function Menu({ imgSrc, text, avatar }: { imgSrc: string; text: string, avatar: boolean }) {
-  console.log(text, avatar, imgSrc);
   return (
     <Wrapper>
       <div>

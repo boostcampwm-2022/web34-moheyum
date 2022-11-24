@@ -44,7 +44,7 @@ export const Wrapper = styled.div`
 
 export const TopButtonConatiner = styled.div`
   width: 100%;
-  border-bottom: 2px solid ${COLORS.GRAY1};
+  border-bottom: 2px solid ${COLORS.GRAY3};
   padding: 15px;
   display: flex;
   flex-direction: row;
