@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { authedUser } from '../../../atom';
 import { Avatar, Button, ButtonArea, Container, Information, UserId, UserNickname } from './index.style';
 
 interface UserData {
@@ -12,7 +14,11 @@ interface UserData {
 export const FollowMember = React.forwardRef<HTMLInputElement, UserData>(
   ({ userid, nickname, profileimg, displayButton }: UserData, ref) => {
     const [following, setFollowing] = useState(false);
+    const authedUserInfo = useRecoilValue(authedUser);
+
+    
     useEffect(() => {
+      if (authedUserInfo.logined)
       fetch(`/api/follow/check/${userid}`, {
         credentials: 'include',
       })
@@ -50,7 +56,7 @@ export const FollowMember = React.forwardRef<HTMLInputElement, UserData>(
           BIOBIOBIO
         </UserBio> */}
           </Information>
-          {displayButton && (
+          {displayButton && authedUserInfo.logined && userid !== authedUserInfo.userid && (
             <ButtonArea>
               <Button onClick={ToggleFollowing}>{following ? '취소' : '팔로우'}</Button>
             </ButtonArea>
