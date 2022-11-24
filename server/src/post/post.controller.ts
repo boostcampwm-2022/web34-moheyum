@@ -18,6 +18,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { PostIdValidationPipe } from './pipes/post-id-validation.pipe';
 import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
 import { FollowerPostDto } from './dto/follower-post.dto';
+import { PostGuard } from 'src/common/guard/post.guard';
 
 @Controller('post')
 export class PostController {
@@ -76,6 +77,7 @@ export class PostController {
     };
   }
   @HttpCode(200)
+  @UseGuards(JwtAuthGuard, PostGuard)
   @Delete('/:id')
   @UseGuards(JwtAuthGuard)
   deletePost(
@@ -92,6 +94,7 @@ export class PostController {
   }
 
   @HttpCode(200)
+  @UseGuards(JwtAuthGuard, PostGuard)
   @Patch('/:id')
   updatePost(
     @Param('id', PostIdValidationPipe) id: string,
