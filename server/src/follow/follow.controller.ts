@@ -58,26 +58,30 @@ export class FollowController {
     };
   }
 
-  @Get('/list/follower')
-  @UseGuards(JwtAuthGuard)
-  async followerList(
+  @Get('/list/follower/:targetid')
+  async targetFollowerList(
     @Query() followListDTO: FollowListDto,
-    @GetUser() user: User,
+    @Param('targetid') targetid: string,
   ) {
-    const list = await this.followService.getFollowerList(user, followListDTO);
+    const list = await this.followService.getFollowerList(
+      targetid,
+      followListDTO,
+    );
     return {
       message: 'success',
       data: list,
     };
   }
 
-  @Get('/list/following')
-  @UseGuards(JwtAuthGuard)
-  async followingList(
+  @Get('/list/following/:targetid')
+  async targetFollowingList(
     @Query() followListDTO: FollowListDto,
-    @GetUser() user: User,
+    @Param('targetid') targetid: string,
   ) {
-    const list = await this.followService.getFollowingList(user, followListDTO);
+    const list = await this.followService.getFollowingList(
+      targetid,
+      followListDTO,
+    );
     return {
       message: 'success',
       data: list,
