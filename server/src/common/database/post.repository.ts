@@ -95,6 +95,17 @@ export class PostRepository {
             ],
           },
         },
+        {
+          $addFields: {
+            createdKoreaAt: {
+              $dateToString: {
+                format: '%Y-%m-%d %H:%M:%S',
+                date: '$createdAt',
+                timezone: 'Asia/Seoul',
+              },
+            },
+          },
+        },
         { $sort: { _id: -1 } },
         { $limit: limit },
       ])) ?? [];
@@ -113,6 +124,17 @@ export class PostRepository {
         {
           $match: {
             $and: [{ author: authorid }],
+          },
+        },
+        {
+          $addFields: {
+            createdKoreaAt: {
+              $dateToString: {
+                format: '%Y-%m-%d %H:%M:%S',
+                date: '$createdAt',
+                timezone: 'Asia/Seoul',
+              },
+            },
           },
         },
         { $sort: { _id: -1 } },
