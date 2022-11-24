@@ -17,3 +17,6 @@ export class Follow {
 }
 
 export const FollowSchema = SchemaFactory.createForClass(Follow);
+// FollowSchema.indexes([
+
+// ])

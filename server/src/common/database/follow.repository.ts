@@ -6,9 +6,10 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Follow, FollowDocument } from './follow.schema';
-import { Model, FilterQuery } from 'mongoose';
+import mongoose, { Model, FilterQuery } from 'mongoose';
 import { User } from './user.schema';
 import { FollowerPostDto } from 'src/post/dto/follower-post.dto';
+import { FollowListDto } from 'src/follow/dto/follow-list.dto';
 @Injectable()
 export class FollowRepository {
   limitData = 2;
@@ -38,11 +39,13 @@ export class FollowRepository {
     return result.deletedCount;
   }
 
-  async findFollowers({ targetid }, page: number) {
+  async findFollowers({ targetid }, followListDTO: FollowListDto) {
+    const { limit } = followListDTO;
     const dataList = await this.followModel.aggregate([
       {
         $match: { targetid: targetid },
       },
+      { $limit: limit },
       {
         $lookup: {
           from: 'users',
@@ -62,19 +65,58 @@ export class FollowRepository {
           nickname: '$followerlist.nickname',
         },
       },
-      { $skip: page * this.limitData },
-      { $limit: this.limitData },
-      { $addFields: { nextpage: page + 1 } },
     ]);
-    if (dataList.length === 0) return [];
-    return dataList;
+    const res = {};
+    res['post'] = dataList;
+    res['next'] = dataList.length === this.limitData ? dataList.at(-1)._id : '';
+    return res;
+  }
+  async findFollowersWithNext({ targetid }, followListDTO: FollowListDto) {
+    const { next, limit } = followListDTO;
+    const dataList = await this.followModel.aggregate([
+      {
+        $match: {
+          $and: [
+            { targetid: targetid },
+            { _id: { $gt: new mongoose.Types.ObjectId(next) } },
+          ],
+        },
+      },
+      { $limit: limit },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userid',
+          foreignField: 'userid',
+          as: 'followerlist',
+        },
+      },
+      {
+        $unwind: '$followerlist',
+      },
+      {
+        $project: {
+          userid: 1,
+          targetid: 1,
+          profileimg: '$followerlist.profileimg',
+          nickname: '$followerlist.nickname',
+        },
+      },
+    ]);
+    const res = {};
+    res['post'] = dataList;
+    res['next'] = dataList.length === this.limitData ? dataList.at(-1)._id : '';
+    return res;
   }
 
-  async findFollowing({ userid }, page: number) {
+  async findFollowing({ userid }, followListDTO: FollowListDto) {
+    const { limit } = followListDTO;
+
     const dataList = await this.followModel.aggregate([
       {
         $match: { userid: userid },
       },
+      { $limit: limit },
       {
         $lookup: {
           from: 'users',
@@ -94,17 +136,59 @@ export class FollowRepository {
           nickname: '$followinglist.nickname',
         },
       },
-      { $skip: page * this.limitData },
-      { $limit: this.limitData },
-      { $addFields: { nextpage: page + 1 } },
     ]);
     if (dataList.length === 0) return [];
-    return dataList;
+    const res = {};
+    res['post'] = dataList;
+    res['next'] = dataList.length === this.limitData ? dataList.at(-1)._id : '';
+    return res;
+  }
+  async findFollowingWithNext({ userid }, followListDTO: FollowListDto) {
+    const { next, limit } = followListDTO;
+    const dataList = await this.followModel.aggregate([
+      {
+        $match: {
+          $and: [
+            { userid: userid },
+            { _id: { $gt: new mongoose.Types.ObjectId(next) } },
+          ],
+        },
+      },
+      { $limit: limit },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'targetid',
+          foreignField: 'userid',
+          as: 'followinglist',
+        },
+      },
+      {
+        $unwind: '$followinglist',
+      },
+      {
+        $project: {
+          userid: 1,
+          targetid: 1,
+          profileimg: '$followinglist.profileimg',
+          nickname: '$followinglist.nickname',
+        },
+      },
+    ]);
+    if (dataList.length === 0) return [];
+    const res = {};
+    res['post'] = dataList;
+    res['next'] = dataList.length === this.limitData ? dataList.at(-1)._id : '';
+
+    return res;
   }
 
-  async getFollowingPostList(userid: string, followerPostDTO: FollowerPostDto) {
-    const { page, limit } = followerPostDTO;
-    return (
+  async getFollowingPostListWithoutNext(
+    userid: string,
+    followerPostDTO: FollowerPostDto,
+  ) {
+    const { limit } = followerPostDTO;
+    const postList =
       (await this.followModel.aggregate([
         {
           $match: { userid: userid },
@@ -115,16 +199,26 @@ export class FollowRepository {
             localField: 'targetid',
             foreignField: 'author',
             as: 'author',
+            pipeline: [
+              {
+                $addFields: {
+                  createdKoreaAt: {
+                    $dateToString: {
+                      format: '%Y-%m-%d %H:%M:%S',
+                      date: '$createdAt',
+                      timezone: 'Asia/Seoul',
+                    },
+                  },
+                },
+              },
+            ],
           },
         },
         {
           $unwind: '$author',
         }, //이후 skip, limit추가
         {
-          $sort: { 'author.createdAt': -1 },
-        },
-        {
-          $skip: page * limit,
+          $sort: { 'author.createdAt': -1, 'author._id': -1 },
         },
         {
           $limit: limit,
@@ -142,9 +236,111 @@ export class FollowRepository {
             author: 1,
             profileimg: '$userinfo.profileimg',
             nickname: '$userinfo.nickname',
+            cc: {
+              $dateToString: {
+                format: '%Y-%m-%d %H:%M:%S',
+                date: '$author.createdAt',
+                timezone: 'Asia/Seoul',
+              },
+            },
           },
         },
-      ])) ?? []
-    );
+      ])) ?? [];
+    const res = {};
+    res['post'] = postList;
+    if (postList.length === limit) {
+      const lastItem = postList.at(-1);
+      const next = `${lastItem.author.createdAt.toISOString()}_${
+        lastItem.author._id
+      }`;
+      res['next'] = next;
+    } else {
+      res['next'] = '';
+    }
+    return res;
+  }
+
+  async getFollowingPostList(userid: string, followerPostDTO: FollowerPostDto) {
+    const { limit, next } = followerPostDTO;
+    const [nextdate, nextid] = next.split('_');
+    const postList =
+      (await this.followModel
+        .aggregate([
+          {
+            $match: { userid: userid },
+          },
+          {
+            $lookup: {
+              from: 'posts',
+              localField: 'targetid',
+              foreignField: 'author',
+              as: 'author',
+              pipeline: [
+                {
+                  $addFields: {
+                    createdKoreaAt: {
+                      $dateToString: {
+                        format: '%Y-%m-%d %H:%M:%S',
+                        date: '$createdAt',
+                        timezone: 'Asia/Seoul',
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          },
+          {
+            $unwind: '$author',
+          }, //이후 skip, limit추가
+          {
+            $match: {
+              $or: [
+                {
+                  'author.createdAt': { $lt: new Date(nextdate) },
+                },
+                {
+                  'author.createdAt': new Date(nextdate),
+                  'author._id': { $lt: new mongoose.Types.ObjectId(nextid) },
+                },
+              ],
+            },
+          },
+          {
+            $sort: { 'author._id': -1 },
+          },
+          {
+            $limit: limit,
+          },
+          {
+            $lookup: {
+              from: 'users',
+              localField: 'targetid',
+              foreignField: 'userid',
+              as: 'userinfo',
+            },
+          },
+          {
+            $project: {
+              author: 1,
+              profileimg: '$userinfo.profileimg',
+              nickname: '$userinfo.nickname',
+            },
+          },
+          // ])) ?? [];
+        ])
+        .explain()) ?? [];
+    const res = {};
+    res['post'] = postList;
+    if (postList.length === limit) {
+      const lastItem = postList.at(-1);
+      const next = `${lastItem.author.createdAt.toISOString()}_${
+        lastItem.author._id
+      }`;
+      res['next'] = next;
+    } else {
+      res['next'] = '';
+    }
+    return res;
   }
 }

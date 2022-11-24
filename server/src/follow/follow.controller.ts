@@ -12,6 +12,7 @@ import { FollowService } from './follow.service';
 import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
 import { GetUser } from 'src/common/decorator/get-user.decorator';
 import { User } from 'src/common/database/user.schema';
+import { FollowListDto } from './dto/follow-list.dto';
 
 @Controller('follow')
 export class FollowController {
@@ -46,8 +47,11 @@ export class FollowController {
   @HttpCode(200)
   @Get('/list/follower')
   @UseGuards(JwtAuthGuard)
-  async followerList(@Query('page') page: number, @GetUser() user: User) {
-    const list = await this.followService.getFollowerList(user, page);
+  async followerList(
+    @Query() followListDTO: FollowListDto,
+    @GetUser() user: User,
+  ) {
+    const list = await this.followService.getFollowerList(user, followListDTO);
     return {
       message: 'success',
       data: list,
@@ -57,8 +61,11 @@ export class FollowController {
   @HttpCode(200)
   @Get('/list/following')
   @UseGuards(JwtAuthGuard)
-  async followingList(@Query('page') page: number, @GetUser() user: User) {
-    const list = await this.followService.getFollowingList(user, page);
+  async followingList(
+    @Query() followListDTO: FollowListDto,
+    @GetUser() user: User,
+  ) {
+    const list = await this.followService.getFollowingList(user, followListDTO);
     return {
       message: 'success',
       data: list,
