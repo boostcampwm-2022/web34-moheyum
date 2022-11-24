@@ -19,11 +19,14 @@ export default function Paginator(fetchUrl: string, nextCursor: string) {
   }, [fetchUrl]);
 
   useEffect(() => {
+    const abortController = new AbortController();
+
     setLoading(true);
     setError(false);
     let fetchUrlwithNext = fetchUrl;
     if (next !== NEXT.START && next !== NEXT.END) fetchUrlwithNext += `?next=${next}`;
     fetch(`${fetchUrlwithNext}`, {
+      signal: abortController.signal,
       method: 'GET',
       credentials: 'include',
     })
@@ -40,8 +43,13 @@ export default function Paginator(fetchUrl: string, nextCursor: string) {
         setLoading(false);
       })
       .catch(() => {
+        if (abortController.signal.aborted) return;
         setError(true);
       });
+
+      return () => {
+        abortController.abort();
+      };
   }, [fetchUrl, nextCursor]);
 
   return { loading, error, pages, next };
