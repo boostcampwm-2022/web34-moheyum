@@ -8,19 +8,19 @@ export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
   async getUserData(userid: string): Promise<{
-    userId: string;
-    nickName: string;
+    userid: string;
+    nickname: string;
     email: string;
     bio: string;
-    profileImg: string;
+    profileimg: string;
   }> {
     const data = await this.userRepository.findOne({ userid });
     return Promise.resolve({
-      userId: data.userid,
-      nickName: data.nickname,
+      userid: data.userid,
+      nickname: data.nickname,
       email: data.email,
       bio: data.bio,
-      profileImg: data.profileimg,
+      profileimg: data.profileimg,
     });
   }
 
