@@ -15,8 +15,8 @@ export class UserService {
     userid: string,
     userUpdateDto: UserUpdateDto,
   ): Promise<{
-    userId: string;
-    nickName: string;
+    userid: string;
+    nickname: string;
     bio: string;
     profileImg: string;
   }> {
@@ -25,8 +25,8 @@ export class UserService {
       userUpdateDto,
     );
     return Promise.resolve({
-      userId: data.userid,
-      nickName: data.nickname,
+      userid: data.userid,
+      nickname: data.nickname,
       bio: data.bio,
       profileImg: data.profileimg,
     });
