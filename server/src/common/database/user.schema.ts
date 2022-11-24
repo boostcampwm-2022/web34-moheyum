@@ -28,11 +28,35 @@ export class User {
   })
   password: string;
 
-  @Prop()
+  @Prop({
+    default: '',
+  })
   profileimg: string;
 
-  @Prop()
+  @Prop({
+    default: '',
+  })
   bio: string;
+
+  @Prop({
+    default: 0,
+  })
+  postcount: number;
+
+  @Prop({
+    default: 0,
+  })
+  follower: number;
+
+  @Prop({
+    default: 0,
+  })
+  following: number;
+
+  @Prop({
+    default: true,
+  })
+  state: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

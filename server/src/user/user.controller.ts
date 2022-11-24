@@ -5,15 +5,16 @@ import {
   Param,
   Put,
   HttpCode,
-  Res,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserUpdateDto } from './dto/user-Update-dto';
+import { UpdateAuthGuard } from 'src/common/guard/update-user.guard';
+import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
 
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
-  @HttpCode(200)
   @Get('/:userid')
   async getUserProfile(@Param('userid') userid: string) {
     return {
@@ -23,6 +24,7 @@ export class UserController {
   }
 
   @HttpCode(200)
+  @UseGuards(JwtAuthGuard, UpdateAuthGuard)
   @Put('/:userid')
   async updateUserProfile(
     @Param('userid') userid: string,

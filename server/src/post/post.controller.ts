@@ -8,6 +8,7 @@ import {
   Post,
   UseGuards,
   HttpCode,
+  Query,
 } from '@nestjs/common';
 import { GetUser } from 'src/common/decorator/get-user.decorator';
 import { User } from 'src/common/database/user.schema';
@@ -16,6 +17,8 @@ import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PostIdValidationPipe } from './pipes/post-id-validation.pipe';
 import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
+import { FollowerPostDto } from './dto/follower-post.dto';
+import { PostGuard } from 'src/common/guard/post.guard';
 
 @Controller('post')
 export class PostController {
@@ -27,30 +30,38 @@ export class PostController {
   }
 
   @Get('/author/:userid')
-  getUserPosts(@Param('userid') userid: string): {
-    message: string;
-    data: { post: Promise<Post_[]> };
-  } {
+  async getUserPosts(
+    @Param('userid') userid: string,
+    @Query() followerPostDTO: FollowerPostDto,
+  ) {
     return {
       message: 'success',
-      data: { post: this.postService.getUserPosts(userid) },
+      data: await this.postService.getUserPosts(userid, followerPostDTO),
     };
   }
 
   @HttpCode(200)
   @Post()
   @UseGuards(JwtAuthGuard)
-  CreatePost(
+  async CreatePost(
     @Body() createPostDto: CreatePostDto,
     @GetUser() user: User,
-  ): {
-    message: string;
-    data: { post: Promise<Post_> };
-  } {
-    console.log(createPostDto.description);
+  ) {
     return {
       message: 'success',
-      data: { post: this.postService.createPost(createPostDto, user) },
+      data: { post: await this.postService.createPost(createPostDto, user) },
+    };
+  }
+
+  @Get('newsfeed')
+  @UseGuards(JwtAuthGuard)
+  async getFollowingPost(
+    @GetUser() user: User,
+    @Query() followerPostDTO: FollowerPostDto,
+  ) {
+    return {
+      message: 'success',
+      data: await this.postService.getFollowingPost(user, followerPostDTO),
     };
   }
 
@@ -66,6 +77,7 @@ export class PostController {
     };
   }
   @HttpCode(200)
+  @UseGuards(JwtAuthGuard, PostGuard)
   @Delete('/:id')
   @UseGuards(JwtAuthGuard)
   deletePost(
@@ -82,6 +94,7 @@ export class PostController {
   }
 
   @HttpCode(200)
+  @UseGuards(JwtAuthGuard, PostGuard)
   @Patch('/:id')
   updatePost(
     @Param('id', PostIdValidationPipe) id: string,

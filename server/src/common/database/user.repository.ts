@@ -7,7 +7,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from '../database/user.schema';
 import { Model, FilterQuery } from 'mongoose';
-import { UserCreateDto } from '../../auth/dto/user-create-dto';
+import { UserCreateDto } from '../../auth/dto/user-create.dto';
 import { UserUpdateDto } from 'src/user/dto/user-Update-dto';
 
 @Injectable()
@@ -55,11 +55,58 @@ export class UserRepository {
     return this.userModel.findOne(userFilterQuery);
   }
 
+  async findOneProfile(userFilterQuery: FilterQuery<User>): Promise<User> {
+    return this.userModel.findOne(userFilterQuery, { password: 0 });
+  }
+
   async findOneAndUpdatePW(
     userFilterQuery: FilterQuery<User>,
     user: Partial<User>,
   ): Promise<User> {
     const result = await this.userModel.findOneAndUpdate(userFilterQuery, user);
+    if (!result) throw new NotFoundException();
+    return result;
+  }
+
+  // post 감소, 증가 둘다 이 함수 사용
+  async updatePostCount(userFilterQuery: FilterQuery<User>, postCount: number) {
+    const result = this.userModel.findOneAndUpdate(
+      userFilterQuery,
+      {
+        $inc: { postcount: postCount },
+      },
+      { new: true },
+    );
+    if (!result) throw new NotFoundException();
+    return result;
+  }
+
+  async updateFollowerCount(
+    userFilterQuery: FilterQuery<User>,
+    followerCount: number,
+  ) {
+    const result = this.userModel.findOneAndUpdate(
+      userFilterQuery,
+      {
+        $inc: { follower: followerCount },
+      },
+      { new: true },
+    );
+    if (!result) throw new NotFoundException();
+    return result;
+  }
+
+  async updateFollowingCount(
+    userFilterQuery: FilterQuery<User>,
+    followingCount: number,
+  ) {
+    const result = this.userModel.findOneAndUpdate(
+      userFilterQuery,
+      {
+        $inc: { following: followingCount },
+      },
+      { new: true },
+    );
     if (!result) throw new NotFoundException();
     return result;
   }

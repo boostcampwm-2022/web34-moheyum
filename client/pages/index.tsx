@@ -9,10 +9,10 @@ import AuthGuard from '../components/AuthGuard';
 export default function Home() {
   return (
     <AuthGuard>
-    <Frame>
-      <SideBar />
-      <MainSection />
-    </Frame>
+      <Frame>
+        <SideBar />
+        <MainSection />
+      </Frame>
     </AuthGuard>
   );
 }

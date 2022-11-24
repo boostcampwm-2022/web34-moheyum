@@ -26,6 +26,7 @@ export default function paginator(fetchUrl: string, nextCursor: string) {
       method: 'GET',
       credentials: "include"
     }).then(res => res.json()).then(res => {
+      console.log(res);
       if (res.data?.post === undefined) //데이터 끝
         res.data = {
           post: [],

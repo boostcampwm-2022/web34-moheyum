@@ -63,6 +63,19 @@ export const SignupRowMessage = styled.li`
   font-weight: 600;
 `;
 
+export const SignupVerifyMessage = styled.li`
+  list-style: none;
+  width: 60%;
+  height: 0;
+  display: flex;
+  align-items: flex-end;
+  margin-left: calc(25% + 30px);
+  font-size: 12px;
+  color: ${COLORS.RED};
+  font-weight: 600;
+  align-self: flex-end;
+`;
+
 export const FieldName = styled.div`
   width: 25%;
   text-align: right;
