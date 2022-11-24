@@ -16,11 +16,11 @@ export class UserProfileDto {
 
   @IsNotEmpty()
   @IsString()
-  profileimg: string = '';
+  profileimg = '';
 
   @IsNotEmpty()
   @IsString()
-  bio: string = '';
+  bio = '';
 
   @IsNotEmpty()
   @Transform(({ value }) => parseInt(value))
