@@ -3,7 +3,7 @@ function getAbsoluteURL(url: string): string {
   return `${process.env.NEXT_PUBLIC_API_URL}${url}`;
 }
 
-async function httpGet(url: string): Promise<Response> {
+async function httpGet(url: string): Promise<any> {
   const absoluteURL = getAbsoluteURL(url);
 
   const response = await fetch(absoluteURL, {

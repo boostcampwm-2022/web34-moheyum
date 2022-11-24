@@ -7,8 +7,6 @@ import { Global, ThemeProvider } from '@emotion/react';
 import { displayCenter } from '../styles/mixin';
 import COLORS from '../styles/color';
 import theme from '../styles/theme';
-// import '../styles/global.css';
-// import '../styles/reset.css';
 import globalStyle from '../styles/global';
 
 export default function App({ Component, pageProps }: AppProps) {

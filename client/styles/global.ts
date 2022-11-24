@@ -1,4 +1,4 @@
-import { Global, css } from '@emotion/react';
+import { css } from '@emotion/react';
 
 const globalStyle = css`
   @import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
