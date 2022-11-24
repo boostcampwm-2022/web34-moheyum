@@ -66,7 +66,7 @@ export default function FollowerSection({ userData }: { userData: Props }) {
                 nickname={item.nickname}
                 profileimg={item.profileimg}
                 displayButton
-                key={item.targetid}
+                key={item.userid}
                 ref={lastFollowElementRef}
               />
             );
@@ -76,7 +76,7 @@ export default function FollowerSection({ userData }: { userData: Props }) {
               nickname={item.nickname}
               profileimg={item.profileimg}
               displayButton
-              key={item.targetid}
+              key={item.userid}
             />
           );
         })}
