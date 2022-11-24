@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import AWS from 'aws-sdk';
+import * as AWS from 'aws-sdk';
 import { randomBytes } from 'node:crypto';
 
 @Injectable()
@@ -13,7 +13,7 @@ export class NcloudService {
     const SECRET_KEY = 'NCLOUD_SECRET_KEY';
     const REGION = 'NCLOUD_REGION';
     const BUCKET = 'NCLOUD_BUCKET';
-
+    console.log(AWS);
     this.ncloudRepository = new AWS.S3({
       credentials: {
         accessKeyId: this.configService.get(ACCESS_KEY) as string,
@@ -38,9 +38,12 @@ export class NcloudService {
         Key,
         ACL: 'public-read',
         Body: file.buffer,
+        ContentType: 'image/png',
       })
       .promise();
 
-    return Key;
+    return {
+      imageLink: `https://kr.object.ncloudstorage.com/${this.BUCKET}/${Key}`,
+    };
   }
 }
