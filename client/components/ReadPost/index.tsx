@@ -1,5 +1,6 @@
 import Router from 'next/router';
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import renderMarkdown from '../../utils/markdown';
 import {
   Author,
   ButtonBack,
@@ -22,6 +23,11 @@ interface Props {
 }
 
 export default function ReadPost({ postData }: Props) {
+  const contentRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!contentRef.current) return;
+    contentRef.current.innerHTML = renderMarkdown(postData.description);
+  }, []);
   const goBack = () => {
     Router.back();
   };
@@ -40,7 +46,7 @@ export default function ReadPost({ postData }: Props) {
           </Author>
           <PostedAt>2시간 전</PostedAt>
         </PostHeader>
-        <PostContent>{postData.description || '글 내용'}</PostContent>
+        <PostContent ref={contentRef}>{postData.description || '글 내용'}</PostContent>
       </ContentBox>
     </Wrapper>
   );
