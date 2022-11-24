@@ -38,7 +38,6 @@ function UserProfile({ userData }: { userData: PostProps }) {
     })
       .then((res) => res.json())
       .then((result) => {
-        console.log(result);
         if (result.message === 'success') {
           setImFollowing(false);
         }
@@ -52,7 +51,6 @@ function UserProfile({ userData }: { userData: PostProps }) {
     })
       .then((res) => res.json())
       .then((result) => {
-        console.log(result);
         if (result.message === 'success') setImFollowing(true);
       });
   };
