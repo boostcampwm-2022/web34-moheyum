@@ -1,6 +1,5 @@
 import {
   CanActivate,
-  ConsoleLogger,
   ExecutionContext,
   Injectable,
   UnauthorizedException,
