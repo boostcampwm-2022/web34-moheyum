@@ -19,6 +19,11 @@ export class Post {
     required: true,
   })
   author: string;
+  // @Prop({
+  //   type: Date,
+  //   default: dateKorea,
+  // })
+  // Created: Date;
 }
 const PostSchema = SchemaFactory.createForClass(Post);
 PostSchema.index({

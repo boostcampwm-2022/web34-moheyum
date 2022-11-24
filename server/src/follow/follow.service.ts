@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UserRepository } from 'src/common/database/user.repository';
 import { FollowRepository } from 'src/common/database/follow.repository';
 import { User } from 'src/common/database/user.schema';
+import { FollowListDto } from './dto/follow-list.dto';
 
 @Injectable()
 export class FollowService {
@@ -33,11 +34,31 @@ export class FollowService {
     });
   }
 
-  getFollowerList(user: User, page: number) {
-    return this.followRepository.findFollowers({ targetid: user.userid }, page);
+  getFollowerList(user: User, followListDTO: FollowListDto) {
+    return followListDTO.next === ''
+      ? this.followRepository.findFollowers(
+          { targetid: user.userid },
+          followListDTO,
+        )
+      : this.followRepository.findFollowersWithNext(
+          { targetid: user.userid },
+          followListDTO,
+        );
+    // return this.followRepository.findFollowers(
+    //   { targetid: user.userid },
+    //   followListDTO,
+    // );
   }
 
-  getFollowingList(user: User, page: number) {
-    return this.followRepository.findFollowing({ userid: user.userid }, page);
+  getFollowingList(user: User, followListDTO: FollowListDto) {
+    return followListDTO.next === ''
+      ? this.followRepository.findFollowing(
+          { userid: user.userid },
+          followListDTO,
+        )
+      : this.followRepository.findFollowingWithNext(
+          { userid: user.userid },
+          followListDTO,
+        );
   }
 }

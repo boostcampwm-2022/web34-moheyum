@@ -57,10 +57,20 @@ export class PostService {
     return this.postRepository.findOneAndUpdate({ _id: id }, createPostDto);
   }
 
-  async getFollowingPost(user: User, followerPostDTO: FollowerPostDto) {
-    return await this.followRepository.getFollowingPostList(
-      user.userid,
-      followerPostDTO,
-    );
+
+  getFollowingPost(user: User, followerPostDTO: FollowerPostDto) {
+    return followerPostDTO.next === ''
+      ? this.followRepository.getFollowingPostListWithoutNext(
+          user.userid,
+          followerPostDTO,
+        )
+      : this.followRepository.getFollowingPostList(
+          user.userid,
+          followerPostDTO,
+        );
+    // return this.followRepository.getFollowingPostList(
+    //   user.userid,
+    //   followerPostDTO,
+    // );
   }
 }

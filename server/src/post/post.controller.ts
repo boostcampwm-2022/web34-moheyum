@@ -61,9 +61,7 @@ export class PostController {
   ) {
     return {
       message: 'success',
-      data: {
-        post: await this.postService.getFollowingPost(user, followerPostDTO),
-      },
+      data: await this.postService.getFollowingPost(user, followerPostDTO),
     };
   }
 
