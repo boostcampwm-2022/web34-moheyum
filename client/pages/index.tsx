@@ -7,24 +7,24 @@ import MainSection from '../components/Main/Mainsection';
 import { newsfeedState } from '../atom';
 import AuthGuard from '../components/AuthGuard';
 
-interface newsPeedType {
+interface newsfeedType {
   _id: string;
   title: string;
   description: string;
   author: string;
 }
 
-export default function Home({ response }: { response: newsPeedType[] }) {
-  const setNewsPeedList = useSetRecoilState(newsfeedState);
+export default function Home({ response }: { response: newsfeedType[] }) {
+  const setNewsfeedList = useSetRecoilState(newsfeedState);
   useEffect(() => {
-    setNewsPeedList(response);
+    setNewsfeedList(response);
   }, []);
   return (
     <AuthGuard>
-    <Frame>
-      <SideBar />
-      <MainSection />
-    </Frame>
+      <Frame>
+        <SideBar />
+        <MainSection />
+      </Frame>
     </AuthGuard>
   );
 }
