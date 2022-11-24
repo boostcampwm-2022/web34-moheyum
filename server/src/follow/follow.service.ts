@@ -17,30 +17,23 @@ export class FollowService {
     });
   }
 
-  getFollowerList(user: User, followListDTO: FollowListDto) {
+  getFollowerList(targetid: string, followListDTO: FollowListDto) {
     return followListDTO.next === ''
       ? this.followRepository.findFollowers(
-          { targetid: user.userid },
+          { targetid: targetid },
           followListDTO,
         )
       : this.followRepository.findFollowersWithNext(
-          { targetid: user.userid },
+          { targetid: targetid },
           followListDTO,
         );
-    // return this.followRepository.findFollowers(
-    //   { targetid: user.userid },
-    //   followListDTO,
-    // );
   }
 
-  getFollowingList(user: User, followListDTO: FollowListDto) {
+  getFollowingList(targetid: string, followListDTO: FollowListDto) {
     return followListDTO.next === ''
-      ? this.followRepository.findFollowing(
-          { userid: user.userid },
-          followListDTO,
-        )
+      ? this.followRepository.findFollowing({ userid: targetid }, followListDTO)
       : this.followRepository.findFollowingWithNext(
-          { userid: user.userid },
+          { userid: targetid },
           followListDTO,
         );
   }
