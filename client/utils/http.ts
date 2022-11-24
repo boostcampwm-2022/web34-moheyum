@@ -3,7 +3,13 @@ function getAbsoluteURL(url: string): string {
   return `${process.env.NEXT_PUBLIC_API_URL}${url}`;
 }
 
-async function httpGet(url: string): Promise<any> {
+interface ResponseType {
+  message: string;
+  data: object;
+  statusCode: number;
+}
+
+async function httpGet(url: string): Promise<ResponseType> {
   const absoluteURL = getAbsoluteURL(url);
 
   const response = await fetch(absoluteURL, {
@@ -39,7 +45,7 @@ async function httpGet(url: string): Promise<any> {
   return result;
 }
 
-async function httpPost(url: string, body: object): Promise<any> {
+async function httpPost(url: string, body: object): Promise<ResponseType> {
   const absoluteURL = getAbsoluteURL(url);
 
   const response = await fetch(absoluteURL, {
