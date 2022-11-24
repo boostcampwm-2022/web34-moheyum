@@ -13,7 +13,6 @@ export class NcloudService {
     const SECRET_KEY = 'NCLOUD_SECRET_KEY';
     const REGION = 'NCLOUD_REGION';
     const BUCKET = 'NCLOUD_BUCKET';
-    console.log(AWS);
     this.ncloudRepository = new AWS.S3({
       credentials: {
         accessKeyId: this.configService.get(ACCESS_KEY),

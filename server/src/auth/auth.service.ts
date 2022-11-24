@@ -197,7 +197,6 @@ export class AuthService {
       });
       return true;
     } catch (e) {
-      console.log(e);
       throw new BadRequestException({
         message: '메시지 전송 실패',
       });
@@ -247,7 +246,6 @@ export class AuthService {
         });
       }
     } catch (e) {
-      console.log(e);
       throw new BadRequestException({ message: '다시 요청해 주시기 바랍니다' });
     }
   }

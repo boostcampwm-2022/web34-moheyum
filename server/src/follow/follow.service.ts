@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UserRepository } from 'src/common/database/user.repository';
 import { FollowRepository } from 'src/common/database/follow.repository';
 import { User } from 'src/common/database/user.schema';
@@ -36,7 +32,6 @@ export class FollowService {
         return res;
       })
       .catch((err) => {
-        console.log(err);
         if (err.status === 409)
           throw new BadRequestException({
             message: '이미 팔로우 된 사용자입니다',
