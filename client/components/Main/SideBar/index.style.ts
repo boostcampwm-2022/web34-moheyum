@@ -28,6 +28,7 @@ export const Dropdown = styled.div`
 
 export const Wrapper = styled.aside`
   width: ${({ theme }) => theme.sidebar.maxWidth};
+  min-width: ${({ theme }) => theme.sidebar.maxWidth};
   height: 100%;
   display: flex;
   flex-direction: column;
