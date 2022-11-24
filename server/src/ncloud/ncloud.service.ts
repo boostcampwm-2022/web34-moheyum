@@ -16,14 +16,14 @@ export class NcloudService {
     console.log(AWS);
     this.ncloudRepository = new AWS.S3({
       credentials: {
-        accessKeyId: this.configService.get(ACCESS_KEY) as string,
-        secretAccessKey: this.configService.get(SECRET_KEY) as string,
+        accessKeyId: this.configService.get(ACCESS_KEY),
+        secretAccessKey: this.configService.get(SECRET_KEY),
       },
-      region: this.configService.get(REGION) as string,
+      region: this.configService.get(REGION),
       endpoint: 'https://kr.object.ncloudstorage.com',
     });
 
-    this.BUCKET = this.configService.get(BUCKET) as string;
+    this.BUCKET = this.configService.get(BUCKET);
   }
 
   private createHash() {
