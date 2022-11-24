@@ -57,7 +57,6 @@ export class PostService {
     return this.postRepository.findOneAndUpdate({ _id: id }, createPostDto);
   }
 
-
   getFollowingPost(user: User, followerPostDTO: FollowerPostDto) {
     return followerPostDTO.next === ''
       ? this.followRepository.getFollowingPostListWithoutNext(

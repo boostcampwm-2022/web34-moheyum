@@ -36,7 +36,6 @@ export class PostController {
     return {
       message: 'success',
       data: await this.postService.getUserPosts(userid, followerPostDTO),
-
     };
   }
 
