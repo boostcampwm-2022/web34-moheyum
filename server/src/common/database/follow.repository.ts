@@ -39,6 +39,14 @@ export class FollowRepository {
     return result.deletedCount;
   }
 
+  async check(followFilterQuery: FilterQuery<Follow>): Promise<boolean> {
+    const follow = await this.followModel.find(followFilterQuery);
+    if (follow.length) {
+      return true;
+    }
+    return false;
+  }
+
   async findFollowers({ targetid }, followListDTO: FollowListDto) {
     const { limit } = followListDTO;
     const dataList = await this.followModel.aggregate([
@@ -51,6 +59,13 @@ export class FollowRepository {
           from: 'users',
           localField: 'userid',
           foreignField: 'userid',
+          pipeline: [
+            {
+              $match: {
+                state: true,
+              },
+            },
+          ],
           as: 'followerlist',
         },
       },
@@ -89,6 +104,13 @@ export class FollowRepository {
           localField: 'userid',
           foreignField: 'userid',
           as: 'followerlist',
+          pipeline: [
+            {
+              $match: {
+                state: true,
+              },
+            },
+          ],
         },
       },
       {
@@ -123,6 +145,13 @@ export class FollowRepository {
           localField: 'targetid',
           foreignField: 'userid',
           as: 'followinglist',
+          pipeline: [
+            {
+              $match: {
+                state: true,
+              },
+            },
+          ],
         },
       },
       {
@@ -160,6 +189,13 @@ export class FollowRepository {
           from: 'users',
           localField: 'targetid',
           foreignField: 'userid',
+          pipeline: [
+            {
+              $match: {
+                state: true,
+              },
+            },
+          ],
           as: 'followinglist',
         },
       },
