@@ -1,12 +1,28 @@
-import React from 'react';
-import { useRecoilValue } from 'recoil';
+import React, { useCallback, useRef, useState } from 'react';
 import Link from 'next/link';
-import ArticleCard from '../Articlecard';
-import { newsfeedState } from '../../../atom';
+import { ArticleCard } from '../Articlecard';
 import { ArticlesSection, FakeButton, NewArticleSection, Placeholder, Wrapper } from './index.style';
 
+import Paginator, { NEXT } from '../../../utils/paginator';
+
 export default function MainSection() {
-  const newsfeedList = useRecoilValue(newsfeedState);
+  const [nextCursor, setNextCursor] = useState(NEXT.START);
+  const { loading, pages, next } = Paginator(`/api/post/newsfeed`, nextCursor);
+
+  const observer = useRef<any>();
+  const lastFollowElementRef = useCallback(
+    (node: any) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && next !== NEXT.END) {
+          setNextCursor(next);
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [loading, next !== NEXT.END]
+  );
 
   return (
     <Wrapper>
@@ -18,16 +34,28 @@ export default function MainSection() {
         </NewArticleSection>
       </Link>
       <ArticlesSection>
-        {Array.isArray(newsfeedList) &&
-          newsfeedList.map((item) => (
+        {pages.map((item: any, index: number) => {
+          if (pages.length === index + 1)
+            return (
+              <ArticleCard
+                author={item.author.author}
+                key={item.author._id}
+                id={item.author._id}
+                description={item.author.description}
+                title={item.author.title}
+                ref={lastFollowElementRef}
+              />
+            );
+          return (
             <ArticleCard
-              author={item.author}
-              key={item._id}
-              id={item._id}
-              description={item.description}
-              title={item.title}
+              author={item.author.author}
+              key={item.author._id}
+              id={item.author._id}
+              description={item.author.description}
+              title={item.author.title}
             />
-          ))}
+          );
+        })}
       </ArticlesSection>
     </Wrapper>
   );

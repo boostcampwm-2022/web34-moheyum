@@ -1,5 +1,6 @@
 import { GetServerSidePropsContext } from 'next';
 import React from 'react';
+import AuthGuard from '../../components/AuthGuard';
 import SideBar from '../../components/Main/SideBar';
 import ReadPost from '../../components/ReadPost';
 import Frame from '../../styles/frame';
@@ -18,10 +19,12 @@ interface Props {
 
 export default function Post({ response }: { response: Props }) {
   return (
-    <Frame>
-      <SideBar />
-      <ReadPost postData={response.data.post} />
-    </Frame>
+    <AuthGuard noRedirect>
+      <Frame>
+        <SideBar />
+        <ReadPost postData={response.data.post} />
+      </Frame>
+    </AuthGuard>
   );
 }
 

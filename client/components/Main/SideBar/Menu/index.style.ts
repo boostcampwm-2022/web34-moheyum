@@ -49,6 +49,16 @@ export const Wrapper = styled.div`
       width: 100%;
     }
   }
+  .avatarBox {
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+    border: 2px solid ${COLORS.GRAY2};
+    background-color: ${COLORS.GRAY3};
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
   .text {
     margin-right: 5px;
     width: 65%;

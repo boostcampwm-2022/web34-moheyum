@@ -1,4 +1,4 @@
-import { atom, RecoilState } from 'recoil';
+import { atom } from 'recoil';
 
 interface newsfeedType {
   _id: string;
@@ -20,13 +20,12 @@ interface AuthedUser {
 
 export const defaultAuthedUser: AuthedUser = {
   logined: false,
-  userid: "",
-  profileimg: "",
-  nickname: ""
-}
+  userid: '',
+  profileimg: '/default-profile.png',
+  nickname: '',
+};
 
 export const authedUser = atom<AuthedUser>({
-  key: "authedUser",
-  default: defaultAuthedUser
-})
-
+  key: 'authedUser',
+  default: defaultAuthedUser,
+});

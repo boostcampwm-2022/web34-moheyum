@@ -22,6 +22,9 @@ export const Profile = styled.div`
   border-radius: 40px;
   border: 2px solid ${COLORS.GRAY2};
   background-color: ${COLORS.GRAY3};
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
   margin: 15px;
 `;
 
@@ -33,7 +36,7 @@ export const PostedAt = styled.div`
 `;
 
 export const Wrapper = styled.div`
-  width: 100%;
+  width: ${({ theme }) => theme.mainSection.width};
   height: 100%;
   background-color: white;
   display: flex;
@@ -42,7 +45,7 @@ export const Wrapper = styled.div`
 
 export const TopButtonConatiner = styled.div`
   width: 100%;
-  border-bottom: 2px solid ${COLORS.GRAY1};
+  border-bottom: 2px solid ${COLORS.GRAY3};
   padding: 15px;
   display: flex;
   flex-direction: row;
