@@ -4,6 +4,7 @@ import Link from 'next/link';
 import {
   ButtonBack,
   FollowContainer,
+  NoFollowersMessage,
   TopButtonConatiner,
   TopFollowActivated,
   TopFollowContainer,
@@ -66,7 +67,7 @@ export default function FollowerSection({ userData }: { userData: Props }) {
                 nickname={item.nickname}
                 profileimg={item.profileimg}
                 displayButton
-                key={item.targetid}
+                key={item.userid}
                 ref={lastFollowElementRef}
               />
             );
@@ -76,12 +77,12 @@ export default function FollowerSection({ userData }: { userData: Props }) {
               nickname={item.nickname}
               profileimg={item.profileimg}
               displayButton
-              key={item.targetid}
+              key={item.userid}
             />
           );
         })}
-        <div>{loading && 'Loading'}</div>
-        <div>{error && 'error'}</div>
+        {loading && <NoFollowersMessage>Loading</NoFollowersMessage>}
+        {error && <NoFollowersMessage>error</NoFollowersMessage>}
       </FollowContainer>
     </Wrapper>
   );

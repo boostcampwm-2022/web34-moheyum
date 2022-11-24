@@ -4,6 +4,7 @@ import Link from 'next/link';
 import {
   ButtonBack,
   FollowContainer,
+  NoFollowersMessage,
   TopButtonConatiner,
   TopFollowActivated,
   TopFollowContainer,
@@ -33,7 +34,6 @@ export default function FollowingSection({ userData }: { userData: Props }) {
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && next !== NEXT.END) {
           setNextCursor(next);
-          console.log(next);
         }
       });
       if (node) observer.current.observe(node);
@@ -81,8 +81,8 @@ export default function FollowingSection({ userData }: { userData: Props }) {
             />
           );
         })}
-        <div>{loading && 'Loading'}</div>
-        <div>{error && 'error'}</div>
+        {loading && <NoFollowersMessage>Loading</NoFollowersMessage>}
+        {error && <NoFollowersMessage>error</NoFollowersMessage>}
       </FollowContainer>
     </Wrapper>
   );

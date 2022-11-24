@@ -47,9 +47,9 @@ export default function Paginator(fetchUrl: string, nextCursor: string) {
         setError(true);
       });
 
-      return () => {
-        abortController.abort();
-      };
+    return () => {
+      abortController.abort();
+    };
   }, [fetchUrl, nextCursor]);
 
   return { loading, error, pages, next };

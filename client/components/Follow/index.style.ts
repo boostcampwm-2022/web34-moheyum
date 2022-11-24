@@ -50,20 +50,24 @@ export const TopFollowContainer = styled.div`
   padding: 15px;
   display: flex;
   flex-direction: row;
+  justify-content: space-around;
 `;
 
 export const TopFollowActivated = styled.div`
   text-align: center;
   font-weight: 700;
   font-size: 24px;
-  flex: 1;
+  & > a {
+    padding: 8px 15px;
+    height: 100%;
+    border-bottom: 3px solid ${COLORS.PRIMARY_DARK};
+  }
 `;
 
 export const TopFollowDeactivated = styled.div`
   text-align: center;
   color: ${COLORS.GRAY2};
   font-size: 24px;
-  flex: 1;
 `;
 
 export const TopFollowUnderline = styled.div`
@@ -73,4 +77,13 @@ export const TopFollowUnderline = styled.div`
 
 export const FollowContainer = styled.div`
   overflow-y: scroll;
+  height: 100%;
+`;
+
+export const NoFollowersMessage = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

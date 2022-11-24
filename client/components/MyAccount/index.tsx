@@ -81,7 +81,8 @@ export default function MyAccountSection() {
         console.error(e);
       })
       .finally(() => {
-        Router.reload();
+        // Router.reload();
+        goBack();
       });
   };
 
