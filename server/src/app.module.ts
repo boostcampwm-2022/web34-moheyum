@@ -10,6 +10,7 @@ import { RedisModule } from '@liaoliaots/nestjs-redis/dist/redis/redis.module';
 import { LoggerMiddleware } from './common/middleware/logger';
 import { UserModule } from './user/user.module';
 import { FollowModule } from './follow/follow.module';
+import { NcloudModule } from './ncloud/ncloud.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { FollowModule } from './follow/follow.module';
     AuthModule,
     UserModule,
     FollowModule,
+    NcloudModule,
   ],
 })
 export class AppModule {
