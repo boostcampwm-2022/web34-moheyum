@@ -23,20 +23,15 @@ function UserProfile({ userData }: { userData: PostProps }) {
   const [imfLoading, setImfLoading] = useState(true);
 
   useEffect(() => {
-    // fetch Following
     httpGet(`/follow/check/${userData.userid}`).then((res) => {
       if (res.message === 'success') {
         setImfLoading(false);
         setImFollowing(res.data.isFollow);
       }
     });
-    // setImFollowing(false);
-    // setImfLoading(false);
   }, []);
 
   const cancleFollow = () => {
-    // fetch toggle following
-    // Delete following/:targetID
     fetch(`/api/follow/following/${userData.userid}`, {
       method: 'DELETE',
       credentials: 'include',
@@ -48,16 +43,9 @@ function UserProfile({ userData }: { userData: PostProps }) {
           setImFollowing(false);
         }
       });
-    // const result = { data : {
-    //   followCancel: 1
-    // }};
-    // if (result.data.followCancel >= 1)
-    //   setImFollowing(false);
   };
 
   const submitFollow = () => {
-    // fetch toggle following
-    // Post following/:targetID
     fetch(`/api/follow/following/${userData.userid}`, {
       method: 'POST',
       credentials: 'include',
@@ -67,11 +55,6 @@ function UserProfile({ userData }: { userData: PostProps }) {
         console.log(result);
         if (result.message === 'success') setImFollowing(true);
       });
-    // const result = { data : {
-    //   followCount: 1
-    // }};
-    // if (result.data.followCount >= 1)
-    //   setImFollowing(true);
   };
 
   return (

@@ -82,17 +82,6 @@ export default function FollowerSection({ userData }: { userData: Props }) {
         })}
         <div>{loading && 'Loading'}</div>
         <div>{error && 'error'}</div>
-        {/* {Array.isArray(userData.FollowingList) &&
-          userData.FollowingList.map((item) => {
-            return (
-              <FollowMember
-                userid={item.targetid}
-                nickname={item.nickname}
-                profileimg={item.profileimg}
-                displayButton
-              />
-            );
-          })} */}
       </FollowContainer>
     </Wrapper>
   );

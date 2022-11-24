@@ -50,18 +50,6 @@ export default function PostList({ userData }: { userData: PostProps }) {
           />
         );
       })}
-      {/* <ArticlesSection> */}
-      {/* {Array.isArray(newsfeedList) &&
-          newsfeedList.map((item) => (
-            <ArticleCard
-              author={item.author}
-              key={item._id}
-              id={item._id}
-              description={item.description}
-              title={item.title}
-            />
-          ))} */}
-      {/* </ArticlesSection> */}
     </>
   );
 }

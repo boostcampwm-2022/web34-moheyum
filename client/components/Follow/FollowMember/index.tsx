@@ -9,7 +9,6 @@ interface UserData {
   displayButton?: boolean;
 }
 
-// export function FollowMember({ userid, nickname, profileimg, displayButton, innerRef }: UserData) {
 export const FollowMember = React.forwardRef<HTMLInputElement, UserData>(
   ({ userid, nickname, profileimg, displayButton }: UserData, ref) => {
     const [following, setFollowing] = useState(false);

@@ -7,7 +7,6 @@ import { PostProps } from '../../types/Post';
 export default function UserSection({ userData }: { userData: PostProps | null }) {
   if (userData === null) return <Wrapper>존재하지 않는 계정입니다.</Wrapper>;
   // TODO : API 최신화
-  // userData.state = true; // API 테스트 후 제거해야 함
   if (userData?.state === true)
     return (
       <Wrapper>
