@@ -2,7 +2,7 @@ import Router from 'next/router';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { authedUser } from '../../atom';
-import { httpGet } from '../../utils/http';
+import { ResponseType, httpGet } from '../../utils/http';
 import {
   ButtonBack,
   TopButtonConatiner,
@@ -47,7 +47,7 @@ export default function MyAccountSection() {
   });
 
   useEffect(() => {
-    httpGet(`/user/${authedUserInfo.userid}`).then((res: { message: string; data: Profile }) => {
+    httpGet(`/user/${authedUserInfo.userid}`).then((res: ResponseType) => {
       if (res.message === 'success') {
         setMyProfile(res.data);
       }

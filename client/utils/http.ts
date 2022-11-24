@@ -3,9 +3,9 @@ function getAbsoluteURL(url: string): string {
   return `${process.env.NEXT_PUBLIC_API_URL}${url}`;
 }
 
-interface ResponseType {
+export interface ResponseType {
   message: string;
-  data: object;
+  data: any;
   statusCode: number;
 }
 
