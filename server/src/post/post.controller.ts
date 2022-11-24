@@ -29,13 +29,13 @@ export class PostController {
   }
 
   @Get('/author/:userid')
-  getUserPosts(@Param('userid') userid: string): {
-    message: string;
-    data: { post: Promise<Post_[]> };
-  } {
+  async getUserPosts(
+    @Param('userid') userid: string,
+    @Query() followerPostDTO: FollowerPostDto,
+  ) {
     return {
       message: 'success',
-      data: { post: this.postService.getUserPosts(userid) },
+      data: await this.postService.getUserPosts(userid, followerPostDTO),
     };
   }
 

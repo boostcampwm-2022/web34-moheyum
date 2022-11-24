@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import Router from 'next/router';
-import { httpPost } from '../../utils/http';
+import { httpGet, httpPost } from '../../utils/http';
 import {
   ButtonBack,
   FieldContent,
@@ -13,6 +13,7 @@ import {
   SignupRow,
   SignupRowMessage,
   SignupSubmitContainer,
+  SignupVerifyMessage,
 } from './index.style';
 
 export default function SignupModal() {
@@ -55,12 +56,19 @@ export default function SignupModal() {
     else setErrorMessages({ ...errorMessages, password_confirm: '비밀번호가 일치하지 않습니다.' });
   }, [formValues]);
 
-  const sendEmailCode = () => {
+  const sendEmailCode = async () => {
+    if (timer > 0 || verified) return;
     if (!formValues.email.match(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]+$/i)) {
       setErrorMessages({ ...errorMessages, email: '유효하지 않은 이메일입니다.' });
       return;
     }
     // 인증 메일을 보내는 로직
+    const emailRequestResult = await httpPost('/auth/email-verification', { email: formValues.email });
+    if (emailRequestResult.statusCode !== 200) {
+      setErrorMessages({ ...errorMessages, email: emailRequestResult.message });
+      return;
+    }
+
     setStartVerify(true);
     setErrorMessages({ ...errorMessages, email: '', verify: '' });
     setTimer(180);
@@ -88,7 +96,7 @@ export default function SignupModal() {
 
   // ===========================================================
 
-  const verifyEmail = () => {
+  const verifyEmail = async () => {
     // 이메일 인증 로직
     if (timer < 0) {
       setErrorMessages({
@@ -97,13 +105,21 @@ export default function SignupModal() {
       });
       return;
     }
-    setTimer(-1);
-    setStartVerify(false);
-    setErrorMessages({
-      ...errorMessages,
-      verify: '',
-    });
-    setVerified(true);
+    const emailVerificationResponse = await httpGet(`/auth/email-verification?code=${formValues.verify}`);
+    if (emailVerificationResponse.statusCode === 200) {
+      setTimer(-1);
+      setStartVerify(false);
+      setErrorMessages({
+        ...errorMessages,
+        verify: '',
+      });
+      setVerified(true);
+    } else {
+      setErrorMessages({
+        ...errorMessages,
+        verify: emailVerificationResponse.message,
+      });
+    }
   };
 
   const submitSignup = async () => {
@@ -245,7 +261,7 @@ export default function SignupModal() {
           </FieldContent>
         </SignupRow>
         {timer > -1 && startVerify && <SignupRowMessage>{secToTime(timer)}</SignupRowMessage>}
-        {errorMessages.verify && startVerify && <SignupRowMessage>{errorMessages.verify}</SignupRowMessage>}
+        {errorMessages.verify && startVerify && <SignupVerifyMessage>{errorMessages.verify}</SignupVerifyMessage>}
       </SignupForm>
       <SignupSubmitContainer>
         <MoheyumButton type="button" onClick={submitSignup}>

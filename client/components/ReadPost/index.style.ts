@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import COLORS from '../../styles/color';
+import { markdownStyle } from '../../styles/mixin';
 
 export const PostHeader = styled.div`
   width: 100%;
@@ -82,5 +83,6 @@ export const ContentBox = styled.div`
 export const PostContent = styled.div`
   width: 100%;
   flex: 1;
-  margin: 20px;
+  margin: 0 20px;
+  ${markdownStyle}
 `;

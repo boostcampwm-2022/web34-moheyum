@@ -39,6 +39,21 @@ export class User {
   bio: string;
 
   @Prop({
+    default: 0,
+  })
+  postcount: number;
+
+  @Prop({
+    default: 0,
+  })
+  follower: number;
+
+  @Prop({
+    default: 0,
+  })
+  following: number;
+
+  @Prop({
     default: true,
   })
   state: boolean;

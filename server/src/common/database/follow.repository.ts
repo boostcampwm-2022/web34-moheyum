@@ -39,6 +39,14 @@ export class FollowRepository {
     return result.deletedCount;
   }
 
+  async check(followFilterQuery: FilterQuery<Follow>): Promise<boolean> {
+    const follow = await this.followModel.find(followFilterQuery);
+    if (follow.length) {
+      return true;
+    }
+    return false;
+  }
+
   async findFollowers({ targetid }, followListDTO: FollowListDto) {
     const { limit } = followListDTO;
     const dataList = await this.followModel.aggregate([
@@ -51,6 +59,13 @@ export class FollowRepository {
           from: 'users',
           localField: 'userid',
           foreignField: 'userid',
+          pipeline: [
+            {
+              $match: {
+                state: true,
+              },
+            },
+          ],
           as: 'followerlist',
         },
       },
@@ -89,6 +104,13 @@ export class FollowRepository {
           localField: 'userid',
           foreignField: 'userid',
           as: 'followerlist',
+          pipeline: [
+            {
+              $match: {
+                state: true,
+              },
+            },
+          ],
         },
       },
       {
@@ -123,6 +145,13 @@ export class FollowRepository {
           localField: 'targetid',
           foreignField: 'userid',
           as: 'followinglist',
+          pipeline: [
+            {
+              $match: {
+                state: true,
+              },
+            },
+          ],
         },
       },
       {
@@ -160,6 +189,13 @@ export class FollowRepository {
           from: 'users',
           localField: 'targetid',
           foreignField: 'userid',
+          pipeline: [
+            {
+              $match: {
+                state: true,
+              },
+            },
+          ],
           as: 'followinglist',
         },
       },
@@ -264,72 +300,71 @@ export class FollowRepository {
     const { limit, next } = followerPostDTO;
     const [nextdate, nextid] = next.split('_');
     const postList =
-      (await this.followModel
-        .aggregate([
-          {
-            $match: { userid: userid },
-          },
-          {
-            $lookup: {
-              from: 'posts',
-              localField: 'targetid',
-              foreignField: 'author',
-              as: 'author',
-              pipeline: [
-                {
-                  $addFields: {
-                    createdKoreaAt: {
-                      $dateToString: {
-                        format: '%Y-%m-%d %H:%M:%S',
-                        date: '$createdAt',
-                        timezone: 'Asia/Seoul',
-                      },
+      (await this.followModel.aggregate([
+        {
+          $match: { userid: userid },
+        },
+        {
+          $lookup: {
+            from: 'posts',
+            localField: 'targetid',
+            foreignField: 'author',
+            as: 'author',
+            pipeline: [
+              {
+                $addFields: {
+                  createdKoreaAt: {
+                    $dateToString: {
+                      format: '%Y-%m-%d %H:%M:%S',
+                      date: '$createdAt',
+                      timezone: 'Asia/Seoul',
                     },
                   },
                 },
-              ],
-            },
+              },
+            ],
           },
-          {
-            $unwind: '$author',
-          }, //이후 skip, limit추가
-          {
-            $match: {
-              $or: [
-                {
-                  'author.createdAt': { $lt: new Date(nextdate) },
-                },
-                {
-                  'author.createdAt': new Date(nextdate),
-                  'author._id': { $lt: new mongoose.Types.ObjectId(nextid) },
-                },
-              ],
-            },
+        },
+        {
+          $unwind: '$author',
+        }, //이후 skip, limit추가
+        {
+          $match: {
+            $or: [
+              {
+                'author.createdAt': { $lt: new Date(nextdate) },
+              },
+              {
+                'author.createdAt': new Date(nextdate),
+                'author._id': { $lt: new mongoose.Types.ObjectId(nextid) },
+              },
+            ],
           },
-          {
-            $sort: { 'author._id': -1 },
+        },
+        {
+          $sort: { 'author._id': -1 },
+        },
+        {
+          $limit: limit,
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'targetid',
+            foreignField: 'userid',
+            as: 'userinfo',
           },
-          {
-            $limit: limit,
+        },
+        {
+          $project: {
+            author: 1,
+            profileimg: '$userinfo.profileimg',
+            nickname: '$userinfo.nickname',
           },
-          {
-            $lookup: {
-              from: 'users',
-              localField: 'targetid',
-              foreignField: 'userid',
-              as: 'userinfo',
-            },
-          },
-          {
-            $project: {
-              author: 1,
-              profileimg: '$userinfo.profileimg',
-              nickname: '$userinfo.nickname',
-            },
-          },
-          // ])) ?? [];
-        ])
-        .explain()) ?? [];
+        },
+        // ])) ?? [];
+      ])) ?? [];
+    // .explain()) ?? [];
     const res = {};
     res['post'] = postList;
     if (postList.length === limit) {

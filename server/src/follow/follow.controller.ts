@@ -29,6 +29,20 @@ export class FollowController {
     };
   }
 
+  @Get('/check/:targetid')
+  @UseGuards(JwtAuthGuard)
+  async followCheck(
+    @Param('targetid') targetid: string,
+    @GetUser() user: User,
+  ) {
+    return {
+      message: 'success',
+      data: {
+        isFollow: await this.followService.followCheck(targetid, user),
+      },
+    };
+  }
+
   @HttpCode(200)
   @Delete('/following/:targetid')
   @UseGuards(JwtAuthGuard)
