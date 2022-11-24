@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post, PostDocument } from '../database/post.schema';
-import { Model, FilterQuery } from 'mongoose';
+import mongoose, { Model, FilterQuery } from 'mongoose';
 import { CreatePostDto } from '../../post/dto/create-post.dto';
 import { User } from 'src/common/database/user.schema';
 import { FollowerPostDto } from 'src/post/dto/follower-post.dto';
@@ -16,7 +16,6 @@ export class PostRepository {
 
   async findOne(postFilterQuery: FilterQuery<Post>) {
     const { _id } = postFilterQuery;
-    console.log(_id);
     const postOne = await this.postModel.aggregate([
       { $match: { $expr: { $eq: ['$_id', { $toObjectId: _id }] } } },
       {
@@ -80,15 +79,47 @@ export class PostRepository {
     return result.deletedCount;
   }
 
-  async getUserPosts(authorid: string, followerPostDTO: FollowerPostDto) {
-    const { page, limit } = followerPostDTO;
-    return this.postModel.aggregate([
-      {
-        $match: { author: authorid },
-      },
-      { $skip: page * limit },
-      { $limit: limit },
-      { $addFields: { nextpage: page + 1 } },
-    ]);
+  async getUserPostsWithNext(
+    authorid: string,
+    followerPostDTO: FollowerPostDto,
+  ): Promise<{ post: Post[]; next: string }> {
+    const { next, limit } = followerPostDTO;
+    const res = { post: [], next: '' };
+    const postList =
+      (await this.postModel.aggregate([
+        {
+          $match: {
+            $and: [
+              { author: authorid },
+              { _id: { $lt: new mongoose.Types.ObjectId(next) } },
+            ],
+          },
+        },
+        { $sort: { _id: -1 } },
+        { $limit: limit },
+      ])) ?? [];
+    res.post = postList;
+    res.next = postList.length === limit ? postList.at(-1)._id : '';
+    return res;
+  }
+  async getUserPosts(
+    authorid: string,
+    followerPostDTO: FollowerPostDto,
+  ): Promise<{ post: Post[]; next: string }> {
+    const { limit } = followerPostDTO;
+    const res = { post: [], next: '' };
+    const postList =
+      (await this.postModel.aggregate([
+        {
+          $match: {
+            $and: [{ author: authorid }],
+          },
+        },
+        { $sort: { _id: -1 } },
+        { $limit: limit },
+      ])) ?? [];
+    res.post = postList;
+    res.next = postList.length === limit ? postList.at(-1)._id : '';
+    return res;
   }
 }

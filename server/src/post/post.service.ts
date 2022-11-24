@@ -26,8 +26,10 @@ export class PostService {
   getUserPosts(
     userid: string,
     followerPostDTO: FollowerPostDto,
-  ): Promise<Post[]> {
-    return this.postRepository.getUserPosts(userid, followerPostDTO);
+  ): Promise<{ post: Post[]; next: string }> {
+    return followerPostDTO.next === ''
+      ? this.postRepository.getUserPosts(userid, followerPostDTO)
+      : this.postRepository.getUserPostsWithNext(userid, followerPostDTO);
   }
 
   createPost(createBoardDto: CreatePostDto, user: User): Promise<Post> {
