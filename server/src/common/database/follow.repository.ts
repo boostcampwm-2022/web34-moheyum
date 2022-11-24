@@ -49,38 +49,39 @@ export class FollowRepository {
 
   async findFollowers({ targetid }, followListDTO: FollowListDto) {
     const { limit } = followListDTO;
-    const dataList = await this.followModel.aggregate([
-      {
-        $match: { targetid: targetid },
-      },
-      { $limit: limit },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'userid',
-          foreignField: 'userid',
-          pipeline: [
-            {
-              $match: {
-                state: true,
+    const dataList =
+      (await this.followModel.aggregate([
+        {
+          $match: { targetid: targetid },
+        },
+        { $limit: limit },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'userid',
+            foreignField: 'userid',
+            pipeline: [
+              {
+                $match: {
+                  state: true,
+                },
               },
-            },
-          ],
-          as: 'followerlist',
+            ],
+            as: 'followerlist',
+          },
         },
-      },
-      {
-        $unwind: '$followerlist',
-      },
-      {
-        $project: {
-          userid: 1,
-          targetid: 1,
-          profileimg: '$followerlist.profileimg',
-          nickname: '$followerlist.nickname',
+        {
+          $unwind: '$followerlist',
         },
-      },
-    ]);
+        {
+          $project: {
+            userid: 1,
+            targetid: 1,
+            profileimg: '$followerlist.profileimg',
+            nickname: '$followerlist.nickname',
+          },
+        },
+      ])) ?? [];
     const res = {};
     res['post'] = dataList;
     res['next'] = dataList.length === this.limitData ? dataList.at(-1)._id : '';
@@ -88,43 +89,44 @@ export class FollowRepository {
   }
   async findFollowersWithNext({ targetid }, followListDTO: FollowListDto) {
     const { next, limit } = followListDTO;
-    const dataList = await this.followModel.aggregate([
-      {
-        $match: {
-          $and: [
-            { targetid: targetid },
-            { _id: { $gt: new mongoose.Types.ObjectId(next) } },
-          ],
+    const dataList =
+      (await this.followModel.aggregate([
+        {
+          $match: {
+            $and: [
+              { targetid: targetid },
+              { _id: { $gt: new mongoose.Types.ObjectId(next) } },
+            ],
+          },
         },
-      },
-      { $limit: limit },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'userid',
-          foreignField: 'userid',
-          as: 'followerlist',
-          pipeline: [
-            {
-              $match: {
-                state: true,
+        { $limit: limit },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'userid',
+            foreignField: 'userid',
+            as: 'followerlist',
+            pipeline: [
+              {
+                $match: {
+                  state: true,
+                },
               },
-            },
-          ],
+            ],
+          },
         },
-      },
-      {
-        $unwind: '$followerlist',
-      },
-      {
-        $project: {
-          userid: 1,
-          targetid: 1,
-          profileimg: '$followerlist.profileimg',
-          nickname: '$followerlist.nickname',
+        {
+          $unwind: '$followerlist',
         },
-      },
-    ]);
+        {
+          $project: {
+            userid: 1,
+            targetid: 1,
+            profileimg: '$followerlist.profileimg',
+            nickname: '$followerlist.nickname',
+          },
+        },
+      ])) ?? [];
     const res = {};
     res['post'] = dataList;
     res['next'] = dataList.length === this.limitData ? dataList.at(-1)._id : '';
@@ -134,39 +136,39 @@ export class FollowRepository {
   async findFollowing({ userid }, followListDTO: FollowListDto) {
     const { limit } = followListDTO;
 
-    const dataList = await this.followModel.aggregate([
-      {
-        $match: { userid: userid },
-      },
-      { $limit: limit },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'targetid',
-          foreignField: 'userid',
-          as: 'followinglist',
-          pipeline: [
-            {
-              $match: {
-                state: true,
+    const dataList =
+      (await this.followModel.aggregate([
+        {
+          $match: { userid: userid },
+        },
+        { $limit: limit },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'targetid',
+            foreignField: 'userid',
+            as: 'followinglist',
+            pipeline: [
+              {
+                $match: {
+                  state: true,
+                },
               },
-            },
-          ],
+            ],
+          },
         },
-      },
-      {
-        $unwind: '$followinglist',
-      },
-      {
-        $project: {
-          userid: 1,
-          targetid: 1,
-          profileimg: '$followinglist.profileimg',
-          nickname: '$followinglist.nickname',
+        {
+          $unwind: '$followinglist',
         },
-      },
-    ]);
-    if (dataList.length === 0) return [];
+        {
+          $project: {
+            userid: 1,
+            targetid: 1,
+            profileimg: '$followinglist.profileimg',
+            nickname: '$followinglist.nickname',
+          },
+        },
+      ])) ?? [];
     const res = {};
     res['post'] = dataList;
     res['next'] = dataList.length === this.limitData ? dataList.at(-1)._id : '';
@@ -174,48 +176,47 @@ export class FollowRepository {
   }
   async findFollowingWithNext({ userid }, followListDTO: FollowListDto) {
     const { next, limit } = followListDTO;
-    const dataList = await this.followModel.aggregate([
-      {
-        $match: {
-          $and: [
-            { userid: userid },
-            { _id: { $gt: new mongoose.Types.ObjectId(next) } },
-          ],
+    const dataList =
+      (await this.followModel.aggregate([
+        {
+          $match: {
+            $and: [
+              { userid: userid },
+              { _id: { $gt: new mongoose.Types.ObjectId(next) } },
+            ],
+          },
         },
-      },
-      { $limit: limit },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'targetid',
-          foreignField: 'userid',
-          pipeline: [
-            {
-              $match: {
-                state: true,
+        { $limit: limit },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'targetid',
+            foreignField: 'userid',
+            pipeline: [
+              {
+                $match: {
+                  state: true,
+                },
               },
-            },
-          ],
-          as: 'followinglist',
+            ],
+            as: 'followinglist',
+          },
         },
-      },
-      {
-        $unwind: '$followinglist',
-      },
-      {
-        $project: {
-          userid: 1,
-          targetid: 1,
-          profileimg: '$followinglist.profileimg',
-          nickname: '$followinglist.nickname',
+        {
+          $unwind: '$followinglist',
         },
-      },
-    ]);
-    if (dataList.length === 0) return [];
+        {
+          $project: {
+            userid: 1,
+            targetid: 1,
+            profileimg: '$followinglist.profileimg',
+            nickname: '$followinglist.nickname',
+          },
+        },
+      ])) ?? [];
     const res = {};
     res['post'] = dataList;
     res['next'] = dataList.length === this.limitData ? dataList.at(-1)._id : '';
-
     return res;
   }
 
