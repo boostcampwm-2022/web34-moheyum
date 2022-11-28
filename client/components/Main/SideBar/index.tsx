@@ -19,7 +19,6 @@ export default function SideBar() {
     setdropdownState(!dropdownState);
   };
   const authedUserInfo = useRecoilValue(authedUser);
-  // TODO: 유저 프로필은 주소가 myAccount에서 각자의 프로필 주소로 변경되어야 함, 미구현이라 myAccount로 돌려막기중
   return (
     <Wrapper>
       <Title />
@@ -30,7 +29,7 @@ export default function SideBar() {
           </Link>
         ))}
         {authedUserInfo.logined && (
-          <Link key={`/user/${authedUserInfo.userid}`} href={`/user/${authedUserInfo.userid}`}>
+          <Link key={`/${authedUserInfo.userid}`} href={`/${authedUserInfo.userid}`}>
             <Menu imgSrc={authedUserInfo.profileimg} text={authedUserInfo.nickname} avatar />
           </Link>
         )}
@@ -41,7 +40,6 @@ export default function SideBar() {
             <li>
               <Link href="/myAccount">내 계정 정보 확인</Link>
             </li>
-            <li>비밀번호 변경</li>
             <li>알림 일시중지</li>
             <li>로그아웃</li>
           </div>

@@ -2,3 +2,4 @@
 .secrets
 client/.env*
 server/.env*
+.DS_Store

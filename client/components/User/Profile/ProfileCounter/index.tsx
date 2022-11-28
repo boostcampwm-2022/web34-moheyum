@@ -3,7 +3,7 @@ import React from 'react';
 import { Counter } from './index.style';
 
 interface Props {
-  href: string;
+  url: string;
   label: string;
   counter: number;
 }
@@ -14,7 +14,7 @@ function ProfileCounter({ ...props }: Props) {
       {props.label} {props.counter}
     </>
   );
-  if (props.href !== '') JSX = <Link href={props.href}>{JSX}</Link>;
+  if (props.url !== '') JSX = <Link href={props.url}>{JSX}</Link>;
   return <Counter>{JSX}</Counter>;
 }
 
