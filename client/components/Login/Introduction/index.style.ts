@@ -17,18 +17,16 @@ export const Wrapper = styled.div`
 
 export const IntroBox = styled.div`
   width: 400px;
-  height: 400px;
+  height: 337px;
   ${displayColumn}
   align-items: left;
-  margin-bottom: 60px;
+  margin-bottom: 40px;
   user-select: none;
-  img {
-    width: 350px;
-    height: auto;
-  }
 `;
 
 export const Text = styled.div`
-  margin: 5%;
-  font-size: 25px;
+  margin: 15px;
+  margin-left: 20px;
+  font-size: 22px;
+  line-height: 40px;
 `;
