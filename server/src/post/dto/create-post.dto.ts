@@ -8,5 +8,5 @@ export class CreatePostDto {
   parentPost: string;
 
   @IsOptional()
-  childPosts: string[];
+  childPosts: [string];
 }
