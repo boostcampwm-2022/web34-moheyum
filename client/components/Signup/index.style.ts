@@ -27,7 +27,7 @@ export const ModalHeader = styled.div`
   transition: all 0.3s ease;
 `;
 
-export const SignupForm = styled.ul`
+export const SignupForm = styled.form`
   display: flex;
   flex-direction: column;
   flex: 1;
