@@ -1,11 +1,11 @@
 import Router from 'next/router';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { authedUser } from '../../atom';
-import { ResponseType, httpGet } from '../../utils/http';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers';
+import { authedUser } from '../../atom';
+import { ResponseType, httpGet } from '../../utils/http';
 import {
   ButtonBack,
   TopButtonConatiner,
@@ -42,7 +42,7 @@ const schema = yup.object().shape({
     .matches(/^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]+$/i, '영어, 숫자, 한글만 가능합니다.')
     .test({
       message: '16바이트 이내로 입력 가능합니다.',
-      test: (value, context) => getByteLength(value as string) <= 16,
+      test: (value) => getByteLength(value as string) <= 16,
     }),
   bio: yup.string(),
 });
