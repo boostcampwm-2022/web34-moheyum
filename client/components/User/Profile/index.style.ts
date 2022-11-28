@@ -49,7 +49,7 @@ export const ProfileBio = styled.div`
   margin: 20px 0;
 `;
 
-export const ProfileEditButton = styled.a`
+export const ProfileEditButton = styled.button`
   background-color: ${COLORS.PRIMARY};
   border-radius: 4px;
   border: none;

@@ -94,6 +94,7 @@ export const NicknameEditArea = styled.div`
 
 export const BioEditArea = styled.div`
   margin: 10px;
+  margin-top: 30px;
 `;
 
 export const SubmitButton = styled.button`
@@ -110,4 +111,16 @@ export const BioInput = styled.input`
   ${inputStyle}
   width: 400px;
   height: 200px;
+`;
+
+export const ErrorMessage = styled.li`
+  list-style: none;
+  width: 60%;
+  height: 0;
+  display: flex;
+  font-size: 12px;
+  margin-left: 35px;
+  margin-top: 10px;
+  color: ${COLORS.RED};
+  font-weight: 600;
 `;

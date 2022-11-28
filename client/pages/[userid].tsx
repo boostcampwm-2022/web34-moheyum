@@ -1,11 +1,11 @@
 import { GetServerSidePropsContext } from 'next';
 import React from 'react';
-import AuthGuard from '../../components/AuthGuard';
-import SideBar from '../../components/Main/SideBar';
-import UserSection from '../../components/User';
-import Frame from '../../styles/frame';
-import { PostProps } from '../../types/Post';
-import { httpGet } from '../../utils/http';
+import AuthGuard from '../components/AuthGuard';
+import SideBar from '../components/Main/SideBar';
+import UserSection from '../components/User';
+import Frame from '../styles/frame';
+import { PostProps } from '../types/Post';
+import { httpGet } from '../utils/http';
 
 export default function Post({ userData }: { userData: PostProps }) {
   return (

@@ -15,7 +15,7 @@ import { FollowMember } from './FollowMember';
 
 import Paginator, { NEXT } from '../../utils/paginator';
 
-import type { Props } from '../../pages/user/[userid]/following';
+import type { Props } from '../../pages/[userid]/following';
 
 export default function FollowingSection({ userData }: { userData: Props }) {
   const goBack = () => {
@@ -50,12 +50,12 @@ export default function FollowingSection({ userData }: { userData: Props }) {
       </TopButtonConatiner>
       <TopFollowContainer>
         <TopFollowDeactivated>
-          <Link passHref href={`/user/${userData.userid}/follower`}>
+          <Link passHref href={`/${userData.userid}/follower`}>
             팔로워
           </Link>
         </TopFollowDeactivated>
         <TopFollowActivated>
-          <Link href={`/user/${userData.userid}/following`}>팔로잉</Link>
+          <Link href={`/${userData.userid}/following`}>팔로잉</Link>
         </TopFollowActivated>
       </TopFollowContainer>
       <FollowContainer>
