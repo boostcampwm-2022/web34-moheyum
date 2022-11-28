@@ -13,6 +13,7 @@ interface Props {
       title: string;
       description: string;
       author: string;
+      createdAt: string;
     };
   };
 }

@@ -36,7 +36,7 @@ export default function PostList({ userData }: { userData: PostProps }) {
               key={item._id}
               id={item._id}
               description={item.description}
-              title={item.title}
+              date={item.createdAt}
               ref={lastFollowElementRef}
             />
           );
@@ -46,7 +46,7 @@ export default function PostList({ userData }: { userData: PostProps }) {
             key={item._id}
             id={item._id}
             description={item.description}
-            title={item.title}
+            date={item.createdAt}
           />
         );
       })}
