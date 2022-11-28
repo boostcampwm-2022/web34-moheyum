@@ -1,6 +1,7 @@
 import Image from 'next/legacy/image';
 import Link from 'next/link';
 import React from 'react';
+import { calcTime } from '../../../utils/calctime';
 import {
   ArticleContent,
   ArticleHeader,
@@ -15,13 +16,13 @@ import {
 
 interface Props {
   id: string;
-  title?: string;
   description?: string;
   author?: string;
+  date: string;
 }
 
 export const ArticleCard = React.forwardRef<HTMLInputElement, Props>(
-  ({ id, title, description, author }: Props, ref) => (
+  ({ id, description, author, date }: Props, ref) => (
     <div ref={ref}>
       <Link href={`/post/${id}`}>
         <Wrapper>
@@ -30,13 +31,12 @@ export const ArticleCard = React.forwardRef<HTMLInputElement, Props>(
               <div />
               {author || '작성자 이름'}
             </Author>
-            <div>{title || '제목 없음'}</div>
             <HeaderInfo>
               <Comments>
                 <Image src="/ico_comment.svg" width={20} height={20} />
                 <span>2</span>
               </Comments>
-              <PostedAt>2시간 전</PostedAt>
+              <PostedAt>{calcTime(date)}</PostedAt>
             </HeaderInfo>
           </ArticleHeader>
           <hr />
@@ -51,7 +51,6 @@ export const ArticleCard = React.forwardRef<HTMLInputElement, Props>(
 );
 
 ArticleCard.defaultProps = {
-  title: '',
   description: '',
   author: '',
 };
