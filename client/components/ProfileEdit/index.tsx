@@ -3,6 +3,9 @@ import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { authedUser } from '../../atom';
 import { ResponseType, httpGet } from '../../utils/http';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers';
 import {
   ButtonBack,
   TopButtonConatiner,
@@ -32,7 +35,31 @@ interface Profile extends ProfileEditable {
   email: string;
 }
 
+const schema = yup.object().shape({
+  nickname: yup
+    .string()
+    .matches(/^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]+$/i, '영어, 숫자, 한글만 가능합니다.')
+    .test({
+      message: '16바이트 이내로 입력 가능합니다.',
+      test: (value, context) => getByteLength(value as string) <= 16,
+    }),
+  bio: yup.string(),
+});
+
+const getByteLength = (s: string): number => {
+  // 문제 : UTF-8 기준 한글 한 자가 사실은 3바이트였음
+  const stringByteLength = s.replace(/[\0-\x7f]|([0-\u07ff]|(.))/g, '$&$1$2').length;
+  return stringByteLength;
+};
+
 export default function ProfileEditSection() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
   const goBack = () => {
     Router.back();
   };
@@ -102,17 +129,19 @@ export default function ProfileEditSection() {
         </ProfileArea>
       </ProfileAndImgContainer>
       <InputsContainer>
-        <div style={{ width: '500px' }}>
+        <form onSubmit={handleSubmit(handleProfileSubmit)} style={{ width: '500px' }}>
           <NicknameEditArea>
             별명:
-            <NicknameInput value={myProfile.nickname} onChange={handleNicknameChange} />
+            <NicknameInput {...register('nickname')} value={myProfile.nickname} onChange={handleNicknameChange} />
+            <p>{errors.nickname && (errors.nickname.message as string)}</p>
           </NicknameEditArea>
           <BioEditArea>
             소개:
-            <BioInput value={myProfile.bio} onChange={handleBioChange} />
+            <BioInput {...register('bio')} value={myProfile.bio} onChange={handleBioChange} />
+            <p>{errors.bio && (errors.bio.message as string)}</p>
           </BioEditArea>
-          <SubmitButton onClick={handleProfileSubmit}>저장</SubmitButton>
-        </div>
+          <SubmitButton type="submit">저장</SubmitButton>
+        </form>
       </InputsContainer>
     </Wrapper>
   );

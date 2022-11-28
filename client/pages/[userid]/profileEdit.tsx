@@ -4,7 +4,7 @@ import SideBar from '../../components/Main/SideBar';
 import AuthGuard from '../../components/AuthGuard';
 import ProfileEditSection from '../../components/ProfileEdit';
 
-export default function myAccount() {
+export default function profileEdit() {
   return (
     <AuthGuard>
       <Frame>

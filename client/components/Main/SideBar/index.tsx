@@ -19,7 +19,6 @@ export default function SideBar() {
     setdropdownState(!dropdownState);
   };
   const authedUserInfo = useRecoilValue(authedUser);
-  // TODO: 유저 프로필은 주소가 myAccount에서 각자의 프로필 주소로 변경되어야 함, 미구현이라 myAccount로 돌려막기중
   return (
     <Wrapper>
       <Title />

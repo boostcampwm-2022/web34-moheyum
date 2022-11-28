@@ -63,7 +63,7 @@ function UserProfile({ userData }: { userData: PostProps }) {
           <ProfileNickname>
             {userData.nickname}
             {authedUserInfo.logined && authedUserInfo.userid === userData.userid && (
-              <Link href={`/${userData.userid}/profile-edit`}>
+              <Link href={`/${userData.userid}/profileEdit`}>
                 <ProfileEditButton>프로필 편집</ProfileEditButton>
               </Link>
             )}
