@@ -8,7 +8,9 @@ export default function Menu({ imgSrc, text, avatar }: { imgSrc: string; text: s
       <div>
         {avatar ? (
           <>
-            <div className="avatarBox" style={{ backgroundImage: `url(${imgSrc})` }} />
+            <div className="imageBox">
+              <div className="avatarBox" style={{ backgroundImage: `url(${imgSrc})` }} />
+            </div>
             <div className="text">{text}</div>
           </>
         ) : (

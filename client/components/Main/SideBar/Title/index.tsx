@@ -8,7 +8,7 @@ export default function Title() {
     <Wrapper>
       <Link href="/">
         <Icon>
-          <Image src="/logo_purple.svg" alt="Logo" width={175} height={75} priority />
+          <Image src="/logo_purple.svg" alt="Logo" width={175} height={61} priority />
         </Icon>
         <SmallIcon>
           <Image src="/small_logo.svg" alt="Logo" width={43} height={43} priority />
