@@ -1,6 +1,6 @@
 import Image from 'next/legacy/image';
 import Router from 'next/router';
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, RefObject, useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
@@ -80,7 +80,7 @@ export default function ProfileEditSection() {
   });
   const [profileImg, setProfileImg] = useState<File>();
   const [previewImg, setPreviewImg] = useState<string>();
-  const selectFile = useRef('');
+  const selectFile: RefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
 
   const handleImg = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -146,7 +146,7 @@ export default function ProfileEditSection() {
           <UpdateIcon>
             <div>&nbsp;</div>
             <ProfileImageInput type="file" ref={selectFile} onChange={handleImg} accept="image/*" />
-            <ChangeImageButton onClick={() => selectFile.current.click()}>
+            <ChangeImageButton onClick={() => selectFile.current!.click()}>
               <Image src="/profile_img.svg" alt="Profile" width={50} height={60} priority />
             </ChangeImageButton>
           </UpdateIcon>
