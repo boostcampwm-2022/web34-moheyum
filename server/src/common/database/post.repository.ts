@@ -108,17 +108,6 @@ export class PostRepository {
             ],
           },
         },
-        {
-          $addFields: {
-            createdKoreaAt: {
-              $dateToString: {
-                format: '%Y-%m-%d %H:%M:%S',
-                date: '$createdAt',
-                timezone: 'Asia/Seoul',
-              },
-            },
-          },
-        },
         { $sort: { _id: -1 } },
         { $limit: limit },
       ])) ?? [];
@@ -139,17 +128,6 @@ export class PostRepository {
             $and: [{ author: authorid }],
           },
         },
-        {
-          $addFields: {
-            createdKoreaAt: {
-              $dateToString: {
-                format: '%Y-%m-%d %H:%M:%S',
-                date: '$createdAt',
-                timezone: 'Asia/Seoul',
-              },
-            },
-          },
-        },
         { $sort: { _id: -1 } },
         { $limit: limit },
       ])) ?? [];
@@ -162,10 +140,50 @@ export class PostRepository {
     const { limit, next } = followerPostDTO;
     const res = { post: [], next: '' };
     const comments =
-      (await this.postModel.find({ parentPost: id, _id: { $gt: next } }, null, {
-        limit: limit,
-        sort: { _id: 1 }, // 필요한가?
-      })) ?? [];
+      (await this.postModel.aggregate([
+        {
+          $match: {
+            $expr: {
+              $and: [
+                { $gt: ['$_id', { $toObjectId: next }] },
+                { $eq: ['$parentPost', id] },
+              ],
+            },
+          },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'author',
+            foreignField: 'userid',
+            as: 'user',
+          },
+        },
+        { $unwind: '$user' },
+        {
+          $project: {
+            author: '$author',
+            title: '$title',
+            description: '$description',
+            createdAt: '$createdAt',
+            updatedAt: '$updateAt',
+            parentPost: '$parentPost',
+            childPosts: '$childPosts',
+            authorDetail: {
+              nickname: '$user.nickname',
+              email: '$user.email',
+              profileimg: '$user.profileimg',
+              bio: '$user.bio',
+              userState: '$user.state',
+              following: '$user.following',
+              postcount: '$user.postcount',
+              follower: '$user.follower',
+            },
+          },
+        },
+        { $sort: { _id: 1 } },
+        { $limit: limit },
+      ])) ?? [];
     res.post = comments;
     res.next = comments.length === limit ? comments.at(-1)._id.toString() : '';
     return res;
@@ -174,10 +192,45 @@ export class PostRepository {
     const { limit } = followerPostDTO;
     const res = { post: [], next: '' };
     const comments =
-      (await this.postModel.find({ parentPost: id }, null, {
-        limit: limit,
-        sort: { _id: 1 },
-      })) ?? [];
+      (await this.postModel.aggregate([
+        {
+          $match: {
+            $expr: { $eq: ['$parentPost', id] },
+          },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'author',
+            foreignField: 'userid',
+            as: 'user',
+          },
+        },
+        { $unwind: '$user' },
+        {
+          $project: {
+            author: '$author',
+            title: '$title',
+            description: '$description',
+            createdAt: '$createdAt',
+            updatedAt: '$updateAt',
+            parentPost: '$parentPost',
+            childPosts: '$childPosts',
+            authorDetail: {
+              nickname: '$user.nickname',
+              email: '$user.email',
+              profileimg: '$user.profileimg',
+              bio: '$user.bio',
+              userState: '$user.state',
+              following: '$user.following',
+              postcount: '$user.postcount',
+              follower: '$user.follower',
+            },
+          },
+        },
+        { $sort: { _id: 1 } },
+        { $limit: limit },
+      ])) ?? [];
     res.post = comments;
     res.next = comments.length === limit ? comments.at(-1)._id.toString() : '';
     return res;
