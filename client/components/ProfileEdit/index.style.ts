@@ -10,41 +10,6 @@ export const Wrapper = styled.div`
   flex-direction: column;
 `;
 
-export const TopButtonConatiner = styled.div`
-  width: 100%;
-  border-bottom: 2px solid ${COLORS.GRAY3};
-  padding: 15px;
-  display: flex;
-  flex-direction: row;
-  & > h1 {
-    flex: 1;
-    font-size: 24px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    margin: 0;
-    padding-left: 15px;
-  }
-  & > div {
-    width: 30px;
-    height: 30px;
-  }
-`;
-
-export const ButtonBack = styled.button`
-  border: none;
-  background-color: transparent;
-  align-self: flex-start;
-  width: 15px;
-  height: 15px;
-  margin: 15px 15px;
-  background-image: url('/ico_chveron_left.svg');
-  background-size: contain;
-  background-repeat: no-repeat;
-  cursor: pointer;
-`;
-
 export const ProfileAndImgContainer = styled.div`
   display: flex;
   margin: 20px;

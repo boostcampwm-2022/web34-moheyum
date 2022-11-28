@@ -2,17 +2,15 @@ import Router from 'next/router';
 import React, { useCallback, useRef, useState } from 'react';
 import Link from 'next/link';
 import {
-  ButtonBack,
   FollowContainer,
   NoFollowersMessage,
-  TopButtonConatiner,
   TopFollowActivated,
   TopFollowContainer,
   TopFollowDeactivated,
   Wrapper,
 } from './index.style';
 import { FollowMember } from './FollowMember';
-
+import { ButtonBack, TopBar } from '../../styles/common';
 import Paginator, { NEXT } from '../../utils/paginator';
 
 import type { Props } from '../../pages/[userid]/following';
@@ -43,11 +41,14 @@ export default function FollowingSection({ userData }: { userData: Props }) {
 
   return (
     <Wrapper>
-      <TopButtonConatiner>
-        <ButtonBack type="button" onClick={goBack} />
-        <h1>{userData.nickname || '유저 닉네임'}</h1>
-        <div>&nbsp;</div>
-      </TopButtonConatiner>
+      <TopBar>
+        <div>
+          <div>
+            <ButtonBack type="button" onClick={goBack} />
+          </div>
+          <h1>{userData.nickname || '유저 닉네임'}</h1>
+        </div>
+      </TopBar>
       <TopFollowContainer>
         <TopFollowDeactivated>
           <Link passHref href={`/${userData.userid}/follower`}>

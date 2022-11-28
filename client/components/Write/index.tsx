@@ -4,7 +4,6 @@ import { httpPost } from '../../utils/http';
 import renderMarkdown from '../../utils/markdown';
 import {
   BottomButtonConatiner,
-  ButtonBack,
   EditorContainer,
   EditorTabItem,
   EditorTabs,
@@ -12,9 +11,10 @@ import {
   EditorTextBox,
   PreviewTextBox,
   ToolbarContainer,
-  TopButtonConatiner,
   Wrapper,
 } from './index.style';
+
+import { ButtonBack, TopBar } from '../../styles/common';
 
 export default function Editor() {
   const contentRef = useRef<HTMLDivElement>(null);
@@ -149,11 +149,14 @@ export default function Editor() {
 
   return (
     <Wrapper>
-      <TopButtonConatiner>
-        <ButtonBack onClick={goBack} />
-        <h1>글쓰기</h1>
-        <div>&nbsp;</div>
-      </TopButtonConatiner>
+      <TopBar>
+        <div>
+          <div>
+            <ButtonBack onClick={goBack} />
+          </div>
+          <h1>글쓰기</h1>
+        </div>
+      </TopBar>
       <ToolbarContainer>
         <EditorTabs>
           <EditorTabItem selected={tabIndex === 0} onClick={() => selectTab(0)}>

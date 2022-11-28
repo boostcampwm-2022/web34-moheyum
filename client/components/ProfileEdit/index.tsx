@@ -7,8 +7,6 @@ import { yupResolver } from '@hookform/resolvers';
 import { authedUser } from '../../atom';
 import { ResponseType, httpGet } from '../../utils/http';
 import {
-  ButtonBack,
-  TopButtonConatiner,
   ProfileAndImgContainer,
   Wrapper,
   Avatar,
@@ -24,6 +22,7 @@ import {
   BioInput,
   ErrorMessage,
 } from './index.style';
+import { ButtonBack, TopBar } from '../../styles/common';
 
 interface ProfileEditable {
   nickname: string;
@@ -116,11 +115,14 @@ export default function ProfileEditSection() {
 
   return (
     <Wrapper>
-      <TopButtonConatiner>
-        <ButtonBack type="button" onClick={goBack} />
-        <h1>프로필 편집</h1>
-        <div>&nbsp;</div>
-      </TopButtonConatiner>
+      <TopBar>
+        <div>
+          <div>
+            <ButtonBack type="button" onClick={goBack} />
+          </div>
+          <h1>프로필 편집</h1>
+        </div>
+      </TopBar>
       <ProfileAndImgContainer>
         <Avatar src={myProfile.profileimg} />
         <ProfileArea>
