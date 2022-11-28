@@ -50,7 +50,50 @@ export class PostRepository {
         },
       },
     ]);
-    return postOne.at(0);
+    const data = postOne.at(0);
+    if (data.parentPost !== '') {
+      // const parent = await this.postModel.findById(data.parentPost);
+      const parent = await this.postModel.aggregate([
+        {
+          $match: {
+            $expr: { $eq: ['$_id', { $toObjectId: data.parentPost }] },
+          },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'author',
+            foreignField: 'userid',
+            as: 'user',
+          },
+        },
+        {
+          $unwind: '$user',
+        },
+        {
+          $project: {
+            author: '$author',
+            descrisption: '$description',
+            parentPost: '$parentPost',
+            childPosts: '$childPosts',
+            createdAt: '$createdAt',
+            updatedAt: '$updateAt',
+            authorDetail: {
+              nickname: '$user.nickname',
+              email: '$user.email',
+              profileimg: '$user.profileimg',
+              bio: '$user.bio',
+              userState: '$user.state',
+              following: '$user.following',
+              postcount: '$user.postcount',
+              follower: '$user.follower',
+            },
+          },
+        },
+      ]);
+      data.parent = parent;
+    }
+    return data;
   }
 
   async create(createPostDto: CreatePostDto, user: User): Promise<Post> {
