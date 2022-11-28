@@ -34,7 +34,7 @@ export class PostRepository {
           author: '$author',
           descrisption: '$description',
           parentPost: '$parentPost',
-          childPost: '$childPosts',
+          childPosts: '$childPosts',
           authorDetail: {
             nickname: '$user.nickname',
             email: '$user.email',
