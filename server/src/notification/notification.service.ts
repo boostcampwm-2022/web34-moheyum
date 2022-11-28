@@ -8,20 +8,27 @@ const pageSize = 2;
 export class NotificationService {
   constructor(
     private readonly notificationRepository: NotificationRepository,
-  ){}
+  ) {}
 
   async findListByUserid(user: User, next: string) {
     let result;
-    if (next) 
-      result = await this.notificationRepository.findManyWithNext(user.userid, pageSize, next);
+    if (next)
+      result = await this.notificationRepository.findManyWithNext(
+        user.userid,
+        pageSize,
+        next,
+      );
     else
-      result = await this.notificationRepository.findMany(user.userid, pageSize);
+      result = await this.notificationRepository.findMany(
+        user.userid,
+        pageSize,
+      );
     return {
       post: result,
-      next: result.length < pageSize ? '' : result.at(-1)._id
+      next: result.length < pageSize ? '' : result.at(-1)._id,
     };
   }
-  
+
   findNumberByUserid(user: User) {
     return this.notificationRepository.findCount(user.userid);
   }
@@ -33,7 +40,7 @@ export class NotificationService {
   deleteMany(user: User) {
     return this.notificationRepository.deleteMany(user.userid);
   }
-  
+
   // _create(userid: string) {
   //   return this.notificationRepository.create(userid, "TEST NOTIFICATION", '/');
   // }

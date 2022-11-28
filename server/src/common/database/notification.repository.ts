@@ -2,23 +2,23 @@ import {
   Injectable,
   ConflictException,
   InternalServerErrorException,
-  NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Notification, NotificationDocument } from './notification.schema'
-import mongoose, { Model, FilterQuery } from 'mongoose';
+import { Notification, NotificationDocument } from './notification.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class NotificationRepository {
   constructor(
-    @InjectModel(Notification.name) private notificationModel: Model<NotificationDocument>,
+    @InjectModel(Notification.name)
+    private notificationModel: Model<NotificationDocument>,
   ) {}
 
   async create(userid: string, message: string, url: string) {
     const newNotif = new this.notificationModel({
       userid,
       message,
-      url
+      url,
     });
     try {
       return await newNotif.save();
@@ -26,7 +26,7 @@ export class NotificationRepository {
       if (error.code === 11000) throw new ConflictException();
       else {
         console.error(error);
-        throw new InternalServerErrorException;
+        throw new InternalServerErrorException();
       }
     }
   }
@@ -38,26 +38,32 @@ export class NotificationRepository {
   //     console.error(e);
   //   }
   // }
-  
+
   findMany(userid: string, pageSize: number) {
     //TODO: 페이지네이션
-    return this.notificationModel.find({userid}).sort({_id: -1}).limit(pageSize);
+    return this.notificationModel
+      .find({ userid })
+      .sort({ _id: -1 })
+      .limit(pageSize);
   }
 
-  findManyWithNext(userid: string, pageSize:number, next: string) {
+  findManyWithNext(userid: string, pageSize: number, next: string) {
     //TODO: 페이지네이션
-    return this.notificationModel.find({ userid, _id: { $lt: next }}).sort({_id: -1}).limit(pageSize);
+    return this.notificationModel
+      .find({ userid, _id: { $lt: next } })
+      .sort({ _id: -1 })
+      .limit(pageSize);
   }
 
   findCount(userid: string) {
-    return this.notificationModel.count({userid});
+    return this.notificationModel.count({ userid });
   }
 
-  deleteOne(userid:string, _id: string) {
-    return this.notificationModel.deleteOne({userid, _id});
+  deleteOne(userid: string, _id: string) {
+    return this.notificationModel.deleteOne({ userid, _id });
   }
-  
-  deleteMany(userid: string){
-    return this.notificationModel.deleteMany({userid});
+
+  deleteMany(userid: string) {
+    return this.notificationModel.deleteMany({ userid });
   }
 }

@@ -3,7 +3,10 @@ import { HydratedDocument } from 'mongoose';
 
 export type NotificationDocument = HydratedDocument<Notification>;
 
-@Schema({ versionKey: false, timestamps: {createdAt: true, updatedAt: false} })
+@Schema({
+  versionKey: false,
+  timestamps: { createdAt: true, updatedAt: false },
+})
 export class Notification {
   @Prop({
     required: true,
@@ -15,7 +18,7 @@ export class Notification {
     required: true,
   })
   url: string;
-  
+
   @Prop({
     required: true,
   })

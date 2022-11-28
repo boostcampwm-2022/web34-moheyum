@@ -31,7 +31,11 @@ export class FollowService {
       .then((res) => {
         this.userRepository.updateFollowingCount({ userid: user.userid }, 1);
         this.userRepository.updateFollowerCount({ userid: targetid }, 1);
-        this.notificationRepository.create(targetid, `${user.nickname}(${user.userid})님이 팔로우하였습니다.`, `/user/${user.userid}`);
+        this.notificationRepository.create(
+          targetid,
+          `${user.nickname}(${user.userid})님이 팔로우하였습니다.`,
+          `/user/${user.userid}`,
+        );
         return res;
       })
       .catch((err) => {
