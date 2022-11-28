@@ -22,6 +22,7 @@ import {
   SubmitButton,
   NicknameInput,
   BioInput,
+  ErrorMessage,
 } from './index.style';
 
 interface ProfileEditable {
@@ -133,12 +134,12 @@ export default function ProfileEditSection() {
           <NicknameEditArea>
             별명:
             <NicknameInput {...register('nickname')} value={myProfile.nickname} onChange={handleNicknameChange} />
-            <p>{errors.nickname && (errors.nickname.message as string)}</p>
+            <ErrorMessage>{errors.nickname && (errors.nickname.message as string)}</ErrorMessage>
           </NicknameEditArea>
           <BioEditArea>
             소개:
             <BioInput {...register('bio')} value={myProfile.bio} onChange={handleBioChange} />
-            <p>{errors.bio && (errors.bio.message as string)}</p>
+            <ErrorMessage>{errors.bio && (errors.bio.message as string)}</ErrorMessage>
           </BioEditArea>
           <SubmitButton type="submit">저장</SubmitButton>
         </form>
