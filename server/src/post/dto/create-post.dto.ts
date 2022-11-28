@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+import { Allow, IsNotEmpty, MinLength } from 'class-validator';
 
 export class CreatePostDto {
   @IsNotEmpty()
@@ -6,4 +6,8 @@ export class CreatePostDto {
 
   @IsNotEmpty()
   description: string;
+
+  parentPost?: string = '';
+
+  childPost?: string[] = [] as string[];
 }
