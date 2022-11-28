@@ -62,6 +62,9 @@ export const Avatar = styled('div')(({ src }: { src: string }) => ({
   backgroundSize: 'cover',
   margin: '10px',
   aspectRatio: '1/1',
+  display: 'flex',
+  justifyContent: 'space-between',
+  flexDirection: 'column',
 }));
 
 export const ProfileArea = styled.div`
@@ -86,6 +89,10 @@ export const ChangeAvatarButton = styled.button`
 export const InputsContainer = styled.div`
   display: flex;
   justify-content: center;
+`;
+
+export const ProfileImageInput = styled.input`
+  display: none;
 `;
 
 export const NicknameEditArea = styled.div`
@@ -123,4 +130,27 @@ export const ErrorMessage = styled.li`
   margin-top: 10px;
   color: ${COLORS.RED};
   font-weight: 600;
+`;
+
+export const ChangeImageButton = styled.button`
+  border: 0px solid;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  cursor: pointer;
+  &:focus {
+    outline: none;
+  }
+  &:active {
+    filter: brightness(0.7);
+  }
+`;
+
+export const UpdateIcon = styled.div`
+  position: relative;
+  display: 'flex';
+  justify-content: 'space-between';
+  align-items: 'right';
 `;
