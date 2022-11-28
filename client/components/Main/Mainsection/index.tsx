@@ -2,6 +2,7 @@ import React, { useCallback, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArticleCard } from '../Articlecard';
 import { ArticlesSection, FakeButton, NewArticleSection, Placeholder, Wrapper } from './index.style';
+import { TopBar } from '../../../styles/common';
 
 import Paginator, { NEXT } from '../../../utils/paginator';
 
@@ -26,6 +27,9 @@ export default function MainSection() {
 
   return (
     <Wrapper>
+      <TopBar>
+        <div>홈</div>
+      </TopBar>
       <Link href="/write">
         <NewArticleSection>
           <Placeholder>무슨 생각 하세요?</Placeholder>
