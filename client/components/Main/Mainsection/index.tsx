@@ -42,7 +42,7 @@ export default function MainSection() {
                 key={item.author._id}
                 id={item.author._id}
                 description={item.author.description}
-                title={item.author.title}
+                date={item.author.createdAt}
                 ref={lastFollowElementRef}
               />
             );
@@ -52,7 +52,7 @@ export default function MainSection() {
               key={item.author._id}
               id={item.author._id}
               description={item.author.description}
-              title={item.author.title}
+              date={item.author.createdAt}
             />
           );
         })}

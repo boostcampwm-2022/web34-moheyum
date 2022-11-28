@@ -63,7 +63,7 @@ function UserProfile({ userData }: { userData: PostProps }) {
           <ProfileNickname>
             {userData.nickname}
             {authedUserInfo.logined && authedUserInfo.userid === userData.userid && (
-              <Link href="/myAccount">
+              <Link href={`/${userData.userid}/profileEdit`}>
                 <ProfileEditButton>프로필 편집</ProfileEditButton>
               </Link>
             )}
@@ -79,9 +79,9 @@ function UserProfile({ userData }: { userData: PostProps }) {
           <ProfileUserid>{userData.userid}</ProfileUserid>
         </ProfileNames>
         <ProfileCounters>
-          <ProfileCounter href="" label="게시글" counter={userData.postcount} />
-          <ProfileCounter href={`/user/${userData.userid}/follower`} label="팔로워" counter={userData.follower} />
-          <ProfileCounter href={`/user/${userData.userid}/following`} label="팔로잉" counter={userData.following} />
+          <ProfileCounter url="" label="게시글" counter={userData.postcount} />
+          <ProfileCounter url={`/${userData.userid}/follower`} label="팔로워" counter={userData.follower} />
+          <ProfileCounter url={`/${userData.userid}/following`} label="팔로잉" counter={userData.following} />
         </ProfileCounters>
         <ProfileBio>{userData.bio}</ProfileBio>
       </ProfileDetail>

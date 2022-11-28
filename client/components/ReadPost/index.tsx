@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Router from 'next/router';
 import React, { useEffect, useRef } from 'react';
+import { calcTime } from '../../utils/calctime';
 import renderMarkdown from '../../utils/markdown';
 import {
   Author,
@@ -20,6 +21,7 @@ interface Props {
     title: string;
     description: string;
     author: string;
+    createdAt: string;
   };
 }
 
@@ -47,7 +49,7 @@ export default function ReadPost({ postData }: Props) {
               {postData.author || '작성자 이름'}
             </Author>
           </Link>
-          <PostedAt>2시간 전</PostedAt>
+          <PostedAt>{calcTime(postData.createdAt)}</PostedAt>
         </PostHeader>
         <PostContent ref={contentRef}>{postData.description || '글 내용'}</PostContent>
       </ContentBox>
