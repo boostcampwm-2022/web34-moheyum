@@ -54,11 +54,24 @@ export class PostRepository {
   }
 
   async create(createPostDto: CreatePostDto, user: User): Promise<Post> {
-    const { description } = createPostDto;
+    const { description, parentPost } = createPostDto;
+    let parent: Post | null;
+    if (parentPost !== '') {
+      parent = await this.postModel.findById(parentPost);
+    }
     const newPost = new this.postModel({
       description: description,
+      parentPost: parentPost,
       author: user.userid,
     });
+
+    if (parent) {
+      parent.childPosts.push(newPost._id.toString());
+      await this.postModel.updateOne(
+        { _id: parentPost },
+        { $set: { childPosts: parent.childPosts } },
+      );
+    }
 
     return newPost.save();
   }
@@ -143,5 +156,19 @@ export class PostRepository {
     res.post = postList;
     res.next = postList.length === limit ? postList.at(-1)._id : '';
     return res;
+  }
+
+  // async getComments(postFilterQuery: FilterQuery<Post>) {
+  async getCommentsWithoutNext(id: string, followerPostDTO: FollowerPostDto) {
+    const limit = 2; // pagination test
+    // const parentPost = await this.postModel.find(postFilterQuery);
+    const comments = await this.postModel.find({ parentPost: id });
+    return comments;
+  }
+  async getComments(id: string, followerPostDTO: FollowerPostDto) {
+    const limit = 2; // pagination test
+    // const parentPost = await this.postModel.find(postFilterQuery);
+    const comments = await this.postModel.find({ parentPost: id });
+    return comments;
   }
 }

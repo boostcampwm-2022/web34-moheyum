@@ -72,4 +72,12 @@ export class PostService {
     //   followerPostDTO,
     // );
   }
+
+  getCommentsOfPost(id: string, followerPostDTO: FollowerPostDto) {
+    // const posts = await this.postRepository.getComments(id);
+    return followerPostDTO.next === ''
+      ? this.postRepository.getCommentsWithoutNext(id, followerPostDTO)
+      : this.postRepository.getComments(id, followerPostDTO);
+    // return posts;
+  }
 }
