@@ -7,11 +7,6 @@ export class Post {
   @Prop({
     required: true,
   })
-  title: string;
-
-  @Prop({
-    required: true,
-  })
   description: string;
 
   // @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User'})

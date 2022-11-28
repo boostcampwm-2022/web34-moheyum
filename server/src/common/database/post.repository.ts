@@ -32,7 +32,6 @@ export class PostRepository {
       {
         $project: {
           author: '$author',
-          title: '$title',
           descrisption: '$description',
           parentPost: '$parentPost',
           childPost: '$childPosts',
@@ -55,9 +54,8 @@ export class PostRepository {
   }
 
   async create(createPostDto: CreatePostDto, user: User): Promise<Post> {
-    const { title, description } = createPostDto;
+    const { description } = createPostDto;
     const newPost = new this.postModel({
-      title,
       description: description,
       author: user.userid,
     });
