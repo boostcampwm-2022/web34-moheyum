@@ -30,10 +30,23 @@ export class NotificationRepository {
       }
     }
   }
+
+  // async createMass(docs) {
+  //   try {
+  //     this.notificationModel.insertMany(docs);
+  //   } catch(e) {
+  //     console.error(e);
+  //   }
+  // }
   
-  findMany(userid: string) {
+  findMany(userid: string, pageSize: number) {
     //TODO: 페이지네이션
-    return this.notificationModel.find({userid});
+    return this.notificationModel.find({userid}).sort({_id: -1}).limit(pageSize);
+  }
+
+  findManyWithNext(userid: string, pageSize:number, next: string) {
+    //TODO: 페이지네이션
+    return this.notificationModel.find({ userid, _id: { $lt: next }}).sort({_id: -1}).limit(pageSize);
   }
 
   findCount(userid: string) {
