@@ -1,5 +1,6 @@
+import Image from 'next/legacy/image';
 import Router from 'next/router';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, RefObject, useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
@@ -21,6 +22,9 @@ import {
   NicknameInput,
   BioInput,
   ErrorMessage,
+  ProfileImageInput,
+  UpdateIcon,
+  ChangeImageButton,
 } from './index.style';
 import { ButtonBack, TopBar } from '../../styles/common';
 
@@ -60,6 +64,7 @@ export default function ProfileEditSection() {
   } = useForm({
     resolver: yupResolver(schema),
   });
+
   const goBack = () => {
     Router.back();
   };
@@ -72,7 +77,21 @@ export default function ProfileEditSection() {
     bio: '',
     profileimg: authedUserInfo.profileimg,
   });
+  const [profileImg, setProfileImg] = useState<File>();
+  const [previewImg, setPreviewImg] = useState<string>();
+  const selectFile: RefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
 
+  const handleImg = (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    if (!e.target.files) return;
+    const image = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setProfileImg(image);
+      if (reader.result !== null && reader.result !== undefined) setPreviewImg(reader.result as string);
+    };
+    if (image) reader.readAsDataURL(image);
+  };
   useEffect(() => {
     httpGet(`/user/${authedUserInfo.userid}`).then((res: ResponseType) => {
       if (res.message === 'success') {
@@ -100,7 +119,7 @@ export default function ProfileEditSection() {
       body: JSON.stringify({
         nickname: myProfile.nickname,
         bio: myProfile.bio,
-        profileimg: myProfile.profileimg,
+        profileimg: profileImg ?? myProfile.profileimg,
       }),
     })
       .catch((e) => {
@@ -124,7 +143,17 @@ export default function ProfileEditSection() {
         </div>
       </TopBar>
       <ProfileAndImgContainer>
-        <Avatar src={myProfile.profileimg} />
+        <Avatar src={previewImg ?? myProfile.profileimg}>
+          <div>&nbsp;</div>
+          <UpdateIcon>
+            <div>&nbsp;</div>
+            <ProfileImageInput type="file" ref={selectFile} onChange={handleImg} accept="image/*" />
+            <ChangeImageButton onClick={() => selectFile.current!.click()}>
+              <Image src="/profile_img.svg" alt="Profile" width={50} height={60} priority />
+            </ChangeImageButton>
+          </UpdateIcon>
+        </Avatar>
+
         <ProfileArea>
           <ProfileUserid>{myProfile.userid}</ProfileUserid>
           <ProfileEmail>{myProfile.email}</ProfileEmail>
