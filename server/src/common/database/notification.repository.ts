@@ -40,7 +40,6 @@ export class NotificationRepository {
   // }
 
   findMany(userid: string, pageSize: number) {
-    //TODO: 페이지네이션
     return this.notificationModel
       .find({ userid })
       .sort({ _id: -1 })
@@ -48,7 +47,6 @@ export class NotificationRepository {
   }
 
   findManyWithNext(userid: string, pageSize: number, next: string) {
-    //TODO: 페이지네이션
     return this.notificationModel
       .find({ userid, _id: { $lt: next } })
       .sort({ _id: -1 })
