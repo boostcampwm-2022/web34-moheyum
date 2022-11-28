@@ -32,7 +32,7 @@ interface Profile extends ProfileEditable {
   email: string;
 }
 
-export default function MyAccountSection() {
+export default function ProfileEditSection() {
   const goBack = () => {
     Router.back();
   };

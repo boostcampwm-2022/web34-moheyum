@@ -30,7 +30,7 @@ export default function SideBar() {
           </Link>
         ))}
         {authedUserInfo.logined && (
-          <Link key={`/user/${authedUserInfo.userid}`} href={`/user/${authedUserInfo.userid}`}>
+          <Link key={`/${authedUserInfo.userid}`} href={`/${authedUserInfo.userid}`}>
             <Menu imgSrc={authedUserInfo.profileimg} text={authedUserInfo.nickname} avatar />
           </Link>
         )}
@@ -41,7 +41,6 @@ export default function SideBar() {
             <li>
               <Link href="/myAccount">내 계정 정보 확인</Link>
             </li>
-            <li>비밀번호 변경</li>
             <li>알림 일시중지</li>
             <li>로그아웃</li>
           </div>
