@@ -28,7 +28,7 @@ export class Post {
   @Prop({
     default: [],
   })
-  childPosts: [string];
+  childPosts: string[];
 }
 const PostSchema = SchemaFactory.createForClass(Post);
 PostSchema.index({
