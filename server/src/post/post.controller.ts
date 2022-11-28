@@ -113,11 +113,11 @@ export class PostController {
   async getCommentsByPostId(
     @Param('id', PostIdValidationPipe) id: string,
     @Query() followerPostDTO: FollowerPostDto,
-  ): Promise<{ message: string; data: { posts: Post_[] } }> {
+  ): Promise<{ message: string; data: { post: Post_[]; next: string } }> {
     const data = await this.postService.getCommentsOfPost(id, followerPostDTO);
     return {
       message: 'success',
-      data: { posts: data },
+      data: data,
     };
   }
 }

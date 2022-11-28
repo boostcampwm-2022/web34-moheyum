@@ -158,17 +158,28 @@ export class PostRepository {
     return res;
   }
 
-  // async getComments(postFilterQuery: FilterQuery<Post>) {
-  async getCommentsWithoutNext(id: string, followerPostDTO: FollowerPostDto) {
-    const limit = 2; // pagination test
-    // const parentPost = await this.postModel.find(postFilterQuery);
-    const comments = await this.postModel.find({ parentPost: id });
-    return comments;
+  async getCommentsWithNext(id: string, followerPostDTO: FollowerPostDto) {
+    const { limit, next } = followerPostDTO;
+    const res = { post: [], next: '' };
+    const comments =
+      (await this.postModel.find({ parentPost: id, _id: { $gt: next } }, null, {
+        limit: limit,
+        sort: { _id: 1 }, // 필요한가?
+      })) ?? [];
+    res.post = comments;
+    res.next = comments.length === limit ? comments.at(-1)._id.toString() : '';
+    return res;
   }
   async getComments(id: string, followerPostDTO: FollowerPostDto) {
-    const limit = 2; // pagination test
-    // const parentPost = await this.postModel.find(postFilterQuery);
-    const comments = await this.postModel.find({ parentPost: id });
-    return comments;
+    const { limit } = followerPostDTO;
+    const res = { post: [], next: '' };
+    const comments =
+      (await this.postModel.find({ parentPost: id }, null, {
+        limit: limit,
+        sort: { _id: 1 },
+      })) ?? [];
+    res.post = comments;
+    res.next = comments.length === limit ? comments.at(-1)._id.toString() : '';
+    return res;
   }
 }

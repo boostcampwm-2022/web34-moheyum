@@ -76,8 +76,8 @@ export class PostService {
   getCommentsOfPost(id: string, followerPostDTO: FollowerPostDto) {
     // const posts = await this.postRepository.getComments(id);
     return followerPostDTO.next === ''
-      ? this.postRepository.getCommentsWithoutNext(id, followerPostDTO)
-      : this.postRepository.getComments(id, followerPostDTO);
+      ? this.postRepository.getComments(id, followerPostDTO)
+      : this.postRepository.getCommentsWithNext(id, followerPostDTO);
     // return posts;
   }
 }
