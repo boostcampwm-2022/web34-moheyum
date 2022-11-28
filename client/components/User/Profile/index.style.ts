@@ -14,6 +14,7 @@ export const ProfileAvatar = styled('div')(({ src }: { src: string }) => ({
   width: '190px',
   height: '190px',
   borderRadius: '190px',
+  border: `3px solid ${COLORS.PRIMARY}`,
   backgroundColor: `${COLORS.GRAY3}`,
   backgroundPosition: 'center center',
   backgroundRepeat: 'no-repeat',

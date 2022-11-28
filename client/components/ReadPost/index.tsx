@@ -2,17 +2,8 @@ import Link from 'next/link';
 import Router from 'next/router';
 import React, { useEffect, useRef } from 'react';
 import renderMarkdown from '../../utils/markdown';
-import {
-  Author,
-  ButtonBack,
-  ContentBox,
-  PostContent,
-  PostedAt,
-  PostHeader,
-  Profile,
-  TopButtonConatiner,
-  Wrapper,
-} from './index.style';
+import { Author, ContentBox, PostContent, PostedAt, PostHeader, Profile, Wrapper } from './index.style';
+import { ButtonBack, TopBar } from '../../styles/common';
 
 interface Props {
   postData: {
@@ -34,11 +25,14 @@ export default function ReadPost({ postData }: Props) {
   };
   return (
     <Wrapper>
-      <TopButtonConatiner>
-        <ButtonBack type="button" onClick={goBack} />
-        <h1>{postData.title || '글 제목'}</h1>
-        <div>&nbsp;</div>
-      </TopButtonConatiner>
+      <TopBar>
+        <div>
+          <div>
+            <ButtonBack type="button" onClick={goBack} />
+          </div>
+          <h1>{postData.title || '글 제목'}</h1>
+        </div>
+      </TopBar>
       <ContentBox>
         <PostHeader>
           <Link href={`/user/${postData.author}`}>

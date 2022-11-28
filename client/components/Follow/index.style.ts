@@ -9,44 +9,10 @@ export const Wrapper = styled.div`
   flex-direction: column;
 `;
 
-export const TopButtonConatiner = styled.div`
-  width: 100%;
-  // border-bottom: 2px solid ${COLORS.GRAY1};
-  padding: 15px;
-  display: flex;
-  flex-direction: row;
-  & > h1 {
-    flex: 1;
-    font-size: 24px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    margin: 0;
-    padding-left: 15px;
-  }
-  & > div {
-    width: 30px;
-    height: 30px;
-  }
-`;
-
-export const ButtonBack = styled.button`
-  border: none;
-  background-color: transparent;
-  align-self: flex-start;
-  width: 15px;
-  height: 15px;
-  margin: 15px 15px;
-  background-image: url('/ico_chveron_left.svg');
-  background-size: contain;
-  background-repeat: no-repeat;
-  cursor: pointer;
-`;
-
 export const TopFollowContainer = styled.div`
   width: 100%;
-  border-bottom: 2px solid ${COLORS.GRAY3};
+  height: 51px;
+  border-bottom: 1px solid ${COLORS.GRAY4};
   padding: 15px;
   display: flex;
   flex-direction: row;
@@ -54,20 +20,22 @@ export const TopFollowContainer = styled.div`
 `;
 
 export const TopFollowActivated = styled.div`
+  width: 50%;
   text-align: center;
   font-weight: 700;
-  font-size: 24px;
+  font-size: 18px;
   & > a {
-    padding: 8px 15px;
+    padding: 10px 15px;
     height: 100%;
-    border-bottom: 3px solid ${COLORS.PRIMARY_DARK};
+    border-bottom: 3px solid ${COLORS.PRIMARY};
   }
 `;
 
 export const TopFollowDeactivated = styled.div`
+  width: 50%;
   text-align: center;
   color: ${COLORS.GRAY2};
-  font-size: 24px;
+  font-size: 18px;
 `;
 
 export const TopFollowUnderline = styled.div`
@@ -77,7 +45,7 @@ export const TopFollowUnderline = styled.div`
 
 export const FollowContainer = styled.div`
   overflow-y: scroll;
-  height: 100%;
+  flex: 1;
 `;
 
 export const NoFollowersMessage = styled.div`
