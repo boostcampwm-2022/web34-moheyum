@@ -4,6 +4,7 @@ import { FollowRepository } from 'src/common/database/follow.repository';
 import { User } from 'src/common/database/user.schema';
 import { FollowListDto } from './dto/follow-list.dto';
 import { UserService } from 'src/user/user.service';
+import { NotificationRepository } from 'src/common/database/notification.repository';
 
 @Injectable()
 export class FollowService {
@@ -11,6 +12,7 @@ export class FollowService {
     private readonly followRepository: FollowRepository,
     private readonly userRepository: UserRepository,
     private readonly userService: UserService,
+    private readonly notificationRepository: NotificationRepository,
   ) {}
 
   async followUser(targetid: string, user: User) {
@@ -29,6 +31,7 @@ export class FollowService {
       .then((res) => {
         this.userRepository.updateFollowingCount({ userid: user.userid }, 1);
         this.userRepository.updateFollowerCount({ userid: targetid }, 1);
+        this.notificationRepository.create(targetid, `${user.nickname}(${user.userid})님이 팔로우하였습니다.`, `/user/${user.userid}`);
         return res;
       })
       .catch((err) => {
