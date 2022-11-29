@@ -31,4 +31,12 @@ export class UserService {
       profileImg: data.profileimg,
     });
   }
+
+  updateUserAvatar(userid: string, url: string) {
+    return this.userRepository.findOneAndUpdate(
+      {userid},
+      {profileimg: url}
+    )
+    
+  }
 }
