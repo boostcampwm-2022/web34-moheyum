@@ -110,4 +110,31 @@ export class UserRepository {
     if (!result) throw new NotFoundException();
     return result;
   }
+
+  searchUserWithNext(keyword: string, next: string) {
+    return this.userModel.find({
+      state: true,
+      _id: {$gt: next},
+      $or: [
+        {userid: {$regex: `^${keyword}`}},
+        {nickname: {$regex: `^${keyword}`}}
+    ]},
+      {userid: 1, nickname: 1, profileimg: 1})
+    .sort({ _id: 1 })
+    .limit(2);
+  }
+
+  searchUser(keyword: string) {
+    return this.userModel.find({
+      state: true,
+      $or: [
+        {userid: {$regex: `^${keyword}`}},
+        {nickname: {$regex: `^${keyword}`}}
+    ]},
+      {userid: 1, nickname: 1, profileimg: 1})
+    .sort({ _id: 1 })
+    .limit(2);
+  }
 }
+
+

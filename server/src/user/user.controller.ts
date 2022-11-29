@@ -3,9 +3,11 @@ import {
   Controller,
   Get,
   Param,
+  Query,
   Put,
   HttpCode,
   UseGuards,
+  BadRequestException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserUpdateDto } from './dto/user-Update-dto';
@@ -15,6 +17,18 @@ import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
+
+  @Get('/search')
+  async searchUser(@Query('keyword') keyword: string, @Query('next') next:string) {
+    if (!(/^[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣\d_]{1,16}$/.test(keyword)))
+      throw new BadRequestException();
+    console.log(keyword);
+    return {
+      message: 'success',
+      data: await this.userService.searchUser(keyword, next)
+    }
+  }
+
   @Get('/:userid')
   async getUserProfile(@Param('userid') userid: string) {
     return {
@@ -35,4 +49,6 @@ export class UserController {
       data: await this.userService.updateUserProfile(userid, userUpdateDto),
     };
   }
+
+
 }
