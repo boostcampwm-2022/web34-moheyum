@@ -47,6 +47,7 @@ export default function MainSection() {
                 id={item.author._id}
                 description={item.author.description}
                 date={item.author.createdAt}
+                comments={item.author.childPosts}
                 ref={lastFollowElementRef}
               />
             );
@@ -57,6 +58,7 @@ export default function MainSection() {
               id={item.author._id}
               description={item.author.description}
               date={item.author.createdAt}
+              comments={item.author.childPosts}
             />
           );
         })}
