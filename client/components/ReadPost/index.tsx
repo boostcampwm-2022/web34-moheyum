@@ -9,14 +9,14 @@ import { ButtonBack, TopBar } from '../../styles/common';
 interface Props {
   postData: {
     _id: string;
-    title: string;
     description: string;
     author: string;
     createdAt: string;
   };
+  title: string;
 }
 
-export default function ReadPost({ postData }: Props) {
+export default function ReadPost({ postData, title }: Props) {
   const contentRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!contentRef.current) return;
@@ -32,7 +32,7 @@ export default function ReadPost({ postData }: Props) {
           <div>
             <ButtonBack type="button" onClick={goBack} />
           </div>
-          <h1>{postData.title || '글 제목'}</h1>
+          <h1>{title || '글 제목'}</h1>
         </div>
       </TopBar>
       <ContentBox>
