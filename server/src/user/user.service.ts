@@ -2,10 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { UserProfileDto } from './dto/user-profile-dto';
 import { UserUpdateDto } from './dto/user-Update-dto';
 import { UserRepository } from 'src/common/database/user.repository';
+import { FollowRepository } from 'src/common/database/follow.repository';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly followRepository: FollowRepository,
+  ) {}
 
   async getUserData(userid: string): Promise<UserProfileDto> {
     return this.userRepository.findOneProfile({ userid });
@@ -31,6 +35,18 @@ export class UserService {
       profileImg: data.profileimg,
     });
   }
+
+  async getMentionList(userid: string): Promise<
+    {
+      userid: string;
+      nickname: string;
+      profileimg: string;
+    }[]
+  > {
+    const data = await this.followRepository.findUserToMention(userid);
+    return data;
+  }
+  
 
   async searchUser(keyword: string, next: string) {
     let result;
