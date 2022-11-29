@@ -14,11 +14,12 @@ interface Props {
 }
 
 export default function Post({ response }: { response: Props }) {
+  const title = '게시글';
   return (
     <AuthGuard noRedirect>
       <Frame>
         <SideBar />
-        <ReadPost postData={response.data.post} />
+        <ReadPost postData={response.data.post} title={title} />
       </Frame>
     </AuthGuard>
   );

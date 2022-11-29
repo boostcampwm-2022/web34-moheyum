@@ -66,7 +66,7 @@ export const CommentBox = styled.div`
       padding-left: 0px;
       margin-bottom: 15px;
       > a {
-        width: 22%;
+        width: 230px;
         height: 80px;
         display: flex;
         flex-direction: row;

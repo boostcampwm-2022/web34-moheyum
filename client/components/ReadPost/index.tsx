@@ -18,9 +18,10 @@ import { ContentBox, PostContent, HeaderBox, Wrapper, CommentBox, Loader } from 
 
 interface PostData {
   postData: PostProps;
+  title: string;
 }
 
-export default function ReadPost({ postData }: PostData) {
+export default function ReadPost({ postData, title }: PostData) {
   const authedUserInfo = useRecoilValue(authedUser);
   const contentRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -64,7 +65,7 @@ export default function ReadPost({ postData }: PostData) {
           <div>
             <ButtonBack type="button" onClick={goBack} />
           </div>
-          <h1>게시글</h1>
+          <h1>{title}</h1>
         </div>
       </TopBar>
       <PostContent>
