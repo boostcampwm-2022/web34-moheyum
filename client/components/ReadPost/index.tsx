@@ -43,7 +43,7 @@ export default function ReadPost({ postData }: Props) {
               {postData.author || '작성자 이름'}
             </Author>
           </Link>
-          <PostedAt>{calcTime(postData.createdAt)}</PostedAt>
+          <PostedAt>{calcTime(postData.createdAt, true)}</PostedAt>
         </PostHeader>
         <PostContent ref={contentRef}>{postData.description || '글 내용'}</PostContent>
       </ContentBox>

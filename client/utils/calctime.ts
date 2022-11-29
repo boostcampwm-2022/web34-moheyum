@@ -1,4 +1,4 @@
-export const calcTime = (date: string): string => {
+export const calcTime = (date: string, type: boolean = false): string => {
   const now: Date = new Date();
   const createdAt: Date = new Date(date);
   let res: string = '';
@@ -16,6 +16,7 @@ export const calcTime = (date: string): string => {
       milliseconds: 1000 * 60,
     },
   ];
+  if (type) return createdAt.toLocaleString();
   try {
     times.forEach((ms) => {
       const diff = Math.floor((Number(now) - Number(createdAt)) / ms.milliseconds); // 몇 분, 시간 전 계산
