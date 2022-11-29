@@ -24,7 +24,7 @@ export default function Paginator(fetchUrl: string, nextCursor: string) {
     setLoading(true);
     setError(false);
     let fetchUrlwithNext = fetchUrl;
-    if (next !== NEXT.START && next !== NEXT.END) fetchUrlwithNext += `?next=${next}&limit=5`;
+    if (next !== NEXT.START && next !== NEXT.END) fetchUrlwithNext += `?next=${next}`;
     fetch(`${fetchUrlwithNext}`, {
       signal: abortController.signal,
       method: 'GET',
