@@ -10,10 +10,6 @@ import {
 export class UserUpdateDto {
   @IsString()
   @IsOptional()
-  profileimg: string;
-
-  @IsString()
-  @IsOptional()
   @MaxLength(500)
   bio: string;
 

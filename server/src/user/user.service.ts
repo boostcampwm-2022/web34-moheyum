@@ -46,4 +46,11 @@ export class UserService {
     const data = await this.followRepository.findUserToMention(userid);
     return data;
   }
+  
+  updateUserAvatar(userid: string, url: string) {
+    return this.userRepository.findOneAndUpdate(
+      {userid},
+      {profileimg: url}
+    )
+  }
 }

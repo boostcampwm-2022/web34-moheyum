@@ -1,6 +1,10 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import Router from 'next/router';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers';
 import { httpGet, httpPost } from '../../utils/http';
+import getByteLength from '../../utils/getByteLength';
 import {
   ButtonBack,
   FieldContent,
@@ -16,12 +20,49 @@ import {
   SignupVerifyMessage,
 } from './index.style';
 
+// 페이지 변경되거나 추가되면 여기도 업데이트 필요.
+const urlList = ['signup', 'post', 'announce', 'login', 'myAccount', 'search', 'write'];
+
+const schema = yup.object().shape({
+  id: yup
+    .string()
+    .required('아이디를 입력하세요.')
+    .matches(/^[a-z|A-Z|0-9|]+$/i, '영어, 숫자만 가능합니다.')
+    .max(16, '16자 이내로 입력하세요.')
+    .min(4, '4 글자 이상 입력하세요.')
+    .test({
+      message: '사용할 수 없는 아이디 입니다.',
+      test: (value) => urlList.filter((x) => x === value).length === 0,
+    }),
+  password: yup
+    .string()
+    .required('비밀번호를 입력하세요.')
+    .min(6, '6글자 이상 입력하세요.')
+    .max(16, '16자 이내로 입력하세요.'),
+  password_confirm: yup
+    .string()
+    .required('비밀번호 확인을 입력하세요.')
+    .oneOf([yup.ref('password'), null], '비밀번호가 일치하지 않습니다.'),
+
+  name: yup
+    .string()
+    .required('닉네임을 입력하세요.')
+    .matches(/^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]+$/i, '영어, 숫자, 한글만 가능합니다.')
+    .test({
+      message: '16바이트 이내로 입력 가능합니다.',
+      test: (value) => getByteLength(value as string) <= 16,
+    }),
+});
+
 export default function SignupModal() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
   const [errorMessages, setErrorMessages] = useState({
-    id: '',
-    password: '',
-    password_confirm: '',
-    name: '',
     email: '',
     verify: '',
   });
@@ -50,12 +91,6 @@ export default function SignupModal() {
     });
   };
 
-  useEffect(() => {
-    if (formValues.passwordConfirm === formValues.password)
-      setErrorMessages({ ...errorMessages, password_confirm: '' });
-    else setErrorMessages({ ...errorMessages, password_confirm: '비밀번호가 일치하지 않습니다.' });
-  }, [formValues]);
-
   const sendEmailCode = async () => {
     if (timer > 0 || verified) return;
     if (!formValues.email.match(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]+$/i)) {
@@ -68,7 +103,6 @@ export default function SignupModal() {
       setErrorMessages({ ...errorMessages, email: emailRequestResult.message });
       return;
     }
-
     setStartVerify(true);
     setErrorMessages({ ...errorMessages, email: '', verify: '' });
     setTimer(180);
@@ -124,7 +158,7 @@ export default function SignupModal() {
 
   const submitSignup = async () => {
     if (!validateForm()) return;
-    setErrorMessages({ id: '', password: '', password_confirm: '', name: '', email: '', verify: '' });
+    setErrorMessages({ email: '', verify: '' });
     // do Signup
     const response = await httpPost('/auth/signup', {
       userid: formValues.id,
@@ -150,29 +184,8 @@ export default function SignupModal() {
   };
 
   const validateForm = (): boolean => {
-    const newErrorMessage = { id: '', password: '', password_confirm: '', name: '', email: '' };
+    const newErrorMessage = { email: '' };
     let flag = true;
-    if (formValues.id === '') {
-      newErrorMessage.id = '아이디를 입력해주세요.';
-      flag = false;
-    } else if (formValues.id.match(/[^a-z_0-9]/i) || formValues.id.length < 4) {
-      newErrorMessage.id = '4~16글자의 영어, 숫자와 _만 가능합니다.';
-      flag = false;
-    }
-    if (formValues.password === '') {
-      newErrorMessage.password = '비밀번호를 입력해주세요.';
-      flag = false;
-    } else if (formValues.password !== formValues.passwordConfirm) {
-      newErrorMessage.password_confirm = '비밀번호가 일치하지 않습니다.';
-      flag = false;
-    }
-    if (formValues.name === '') {
-      newErrorMessage.name = '닉네임을 입력해주세요.';
-      flag = false;
-    }
-    if (formValues.name.match(/[^a-z_0-9가-힣ㄱ-ㅎㅏ-ㅣ]/i) || getByteLength(formValues.name) > 16) {
-      newErrorMessage.name = '16바이트 이내의 영어, 숫자, 한글만 가능합니다.';
-    }
     if (formValues.email === '') {
       newErrorMessage.email = '이메일을 입력해주세요.';
       flag = false;
@@ -184,57 +197,63 @@ export default function SignupModal() {
     return flag;
   };
 
-  const getByteLength = (s: string): number => {
-    // 문제 : UTF-8 기준 한글 한 자가 사실은 3바이트였음
-    const stringByteLength = s.replace(/[\0-\x7f]|([0-\u07ff]|(.))/g, '$&$1$2').length;
-    return stringByteLength;
-  };
-
   return (
     <ModalWrapper>
       <ButtonBack onClick={goBack} />
       <ModalHeader>회원가입</ModalHeader>
-      <SignupForm>
+      <SignupForm onSubmit={handleSubmit(submitSignup)}>
         <SignupRow>
           <FieldName>아이디: </FieldName>
           <FieldContent>
-            <MoheyumInputText type="text" name="id" placeholder="아이디" onChange={onChangeFields} maxLength={16} />
+            <MoheyumInputText
+              type="text"
+              {...register('id')}
+              placeholder="아이디"
+              onChange={onChangeFields}
+              maxLength={16}
+            />
           </FieldContent>
         </SignupRow>
-        {errorMessages.id && <SignupRowMessage>{errorMessages.id}</SignupRowMessage>}
+        {errors.id && <SignupRowMessage>{errors.id.message as string}</SignupRowMessage>}
         <SignupRow>
           <FieldName>비밀번호: </FieldName>
           <FieldContent>
             <MoheyumInputText
               type="password"
-              name="password"
+              {...register('password')}
               placeholder="비밀번호"
               onChange={onChangeFields}
               maxLength={16}
             />
           </FieldContent>
         </SignupRow>
-        {errorMessages.password && <SignupRowMessage>{errorMessages.password}</SignupRowMessage>}
+        {errors.password && <SignupRowMessage>{errors.password.message as string}</SignupRowMessage>}
         <SignupRow>
           <FieldName>비밀번호 확인: </FieldName>
           <FieldContent>
             <MoheyumInputText
               type="password"
-              name="passwordConfirm"
+              {...register('password_confirm')}
               placeholder="비밀번호 다시 입력"
               onChange={onChangeFields}
               maxLength={16}
             />
           </FieldContent>
         </SignupRow>
-        {errorMessages.password_confirm && <SignupRowMessage>{errorMessages.password_confirm}</SignupRowMessage>}
+        {errors.password_confirm && <SignupRowMessage>{errors.password_confirm.message as string}</SignupRowMessage>}
         <SignupRow>
           <FieldName>닉네임: </FieldName>
           <FieldContent>
-            <MoheyumInputText type="text" name="name" placeholder="닉네임" onChange={onChangeFields} maxLength={16} />
+            <MoheyumInputText
+              type="text"
+              {...register('name')}
+              placeholder="닉네임"
+              onChange={onChangeFields}
+              maxLength={16}
+            />
           </FieldContent>
         </SignupRow>
-        {errorMessages.name && <SignupRowMessage>{errorMessages.name}</SignupRowMessage>}
+        {errors.name && <SignupRowMessage>{errors.name.message as string}</SignupRowMessage>}
         <SignupRow>
           <FieldName>이메일: </FieldName>
           <FieldContent>
@@ -262,12 +281,10 @@ export default function SignupModal() {
         </SignupRow>
         {timer > -1 && startVerify && <SignupRowMessage>{secToTime(timer)}</SignupRowMessage>}
         {errorMessages.verify && startVerify && <SignupVerifyMessage>{errorMessages.verify}</SignupVerifyMessage>}
+        <SignupSubmitContainer>
+          <MoheyumButton type="submit">회원가입</MoheyumButton>
+        </SignupSubmitContainer>
       </SignupForm>
-      <SignupSubmitContainer>
-        <MoheyumButton type="button" onClick={submitSignup}>
-          회원가입
-        </MoheyumButton>
-      </SignupSubmitContainer>
     </ModalWrapper>
   );
 }

@@ -14,6 +14,7 @@ export const ProfileAvatar = styled('div')(({ src }: { src: string }) => ({
   width: '190px',
   height: '190px',
   borderRadius: '190px',
+  border: `3px solid ${COLORS.PRIMARY}`,
   backgroundColor: `${COLORS.GRAY3}`,
   backgroundPosition: 'center center',
   backgroundRepeat: 'no-repeat',
@@ -49,7 +50,7 @@ export const ProfileBio = styled.div`
   margin: 20px 0;
 `;
 
-export const ProfileEditButton = styled.a`
+export const ProfileEditButton = styled.button`
   background-color: ${COLORS.PRIMARY};
   border-radius: 4px;
   border: none;
@@ -57,6 +58,7 @@ export const ProfileEditButton = styled.a`
   padding: 4px 8px;
   color: ${COLORS.WHITE};
   text-decoration: none;
+  cursor: pointer;
   &:hover {
     color: white;
     text-decoration: none;

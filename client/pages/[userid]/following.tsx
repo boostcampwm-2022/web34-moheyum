@@ -1,10 +1,10 @@
 import React from 'react';
 import { GetServerSidePropsContext } from 'next';
-import Frame from '../../../styles/frame';
-import SideBar from '../../../components/Main/SideBar';
-import AuthGuard from '../../../components/AuthGuard';
-import FollowingSection from '../../../components/Follow/Following';
-import { httpGet } from '../../../utils/http';
+import Frame from '../../styles/frame';
+import SideBar from '../../components/Main/SideBar';
+import AuthGuard from '../../components/AuthGuard';
+import FollowingSection from '../../components/Follow/Following';
+import { httpGet } from '../../utils/http';
 
 export interface Props {
   userid: string;

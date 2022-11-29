@@ -95,7 +95,9 @@ export default function Login() {
       </Box>
       <SignUp>
         <div>계정이 없으신가요?</div>
-        <Link href="/signup">회원가입</Link>
+        <div>
+          <Link href="/signup">회원가입</Link>
+        </div>
       </SignUp>
     </Wrapper>
   );

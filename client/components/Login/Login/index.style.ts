@@ -20,10 +20,12 @@ export const Box = styled.div`
   input {
     margin-bottom: 15px;
     width: 75%;
+    height: 33px;
   }
   button {
     margin-bottom: 15px;
     width: 75%;
+    height: 33px;
   }
 `;
 
@@ -34,8 +36,9 @@ export const Title = styled.div`
 
 export const FindAccount = styled.div`
   ${displayCenter}
+  font-size: 14px;
   a {
-    margin: 5px;
+    margin: 10px;
     text-decoration: none;
     color: ${COLORS.BLACK};
     &:focus-within {
@@ -45,10 +48,13 @@ export const FindAccount = styled.div`
 `;
 
 export const SignUp = styled.div`
-  width: 80%;
-  margin: 5%;
+  width: 400px;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
+  font-size: 12px;
+  div {
+    margin: 10px;
+  }
   a {
     text-decoration: none;
     color: ${COLORS.BLACK};

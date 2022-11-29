@@ -20,7 +20,7 @@ export const Wrapper = styled.div`
     width: 100%;
     flex-direction: row;
     justify-content: space-around;
-    align-items: center;
+    align-items: left;
     margin-bottom: 10px;
   }
   & > span {
@@ -50,8 +50,8 @@ export const Wrapper = styled.div`
     }
   }
   .avatarBox {
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
     border-radius: 40px;
     border: 2px solid ${COLORS.GRAY2};
     background-color: ${COLORS.GRAY3};
@@ -60,12 +60,12 @@ export const Wrapper = styled.div`
     background-size: cover;
   }
   .text {
-    margin-right: 5px;
     width: 65%;
-    text-align: center;
+    text-align: left;
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: left;
     @media only screen and (max-width: ${({ theme }) => theme.smallWindow}) {
       display: none;
     }

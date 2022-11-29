@@ -6,7 +6,7 @@ export default function Introduction() {
   return (
     <Wrapper>
       <IntroBox>
-        <Image src="/logo_white.svg" alt="Logo" width={450} height={150} />
+        <Image src="/logo_white.svg" alt="Logo" width={310} height={90} />
         <Text>
           헤윰은 <Highlight>생각</Highlight>을 의미하는
           <br />순 우리말입니다.

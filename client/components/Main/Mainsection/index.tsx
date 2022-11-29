@@ -2,6 +2,7 @@ import React, { useCallback, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArticleCard } from '../Articlecard';
 import { ArticlesSection, FakeButton, NewArticleSection, Placeholder, Wrapper } from './index.style';
+import { MainTopBar } from '../../../styles/common';
 
 import Paginator, { NEXT } from '../../../utils/paginator';
 
@@ -26,6 +27,9 @@ export default function MainSection() {
 
   return (
     <Wrapper>
+      <MainTopBar>
+        <div>홈</div>
+      </MainTopBar>
       <Link href="/write">
         <NewArticleSection>
           <Placeholder>무슨 생각 하세요?</Placeholder>
@@ -42,7 +46,7 @@ export default function MainSection() {
                 key={item.author._id}
                 id={item.author._id}
                 description={item.author.description}
-                title={item.author.title}
+                date={item.author.createdAt}
                 ref={lastFollowElementRef}
               />
             );
@@ -52,7 +56,7 @@ export default function MainSection() {
               key={item.author._id}
               id={item.author._id}
               description={item.author.description}
-              title={item.author.title}
+              date={item.author.createdAt}
             />
           );
         })}

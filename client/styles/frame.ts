@@ -8,7 +8,8 @@ const Frame = styled.div`
   width: ${maxFrameSize}px;
   height: 100%;
   ${displayCenter}
-  @media only screen and (max-width:${({ theme }) => theme.wideWindow}) {
+  border-right: 1px solid ${COLORS.GRAY3};
+  @media only screen and (max-width: ${({ theme }) => theme.wideWindow}) {
     width: 100vw;
   }
 `;
