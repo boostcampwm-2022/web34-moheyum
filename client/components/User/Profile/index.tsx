@@ -15,9 +15,9 @@ import {
 import ProfileCounter from './ProfileCounter';
 import { authedUser } from '../../../atom';
 import { httpGet } from '../../../utils/http';
-import { PostProps } from '../../../types/Post';
+import { UserPostProps } from '../../../types/Post';
 
-function UserProfile({ userData }: { userData: PostProps }) {
+function UserProfile({ userData }: { userData: UserPostProps }) {
   const authedUserInfo = useRecoilValue(authedUser);
   const [imFollowing, setImFollowing] = useState(false);
   const [imfLoading, setImfLoading] = useState(true);

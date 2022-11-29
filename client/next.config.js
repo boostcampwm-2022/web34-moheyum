@@ -8,6 +8,9 @@ const nextConfig = {
       destination: `${process.env.BE_URL}/api/:path*`,
     },
   ],
+  images: {
+    domains: ['kr.object.ncloudstorage.com', 'localhost'],
+  },
 };
 
 module.exports = nextConfig;

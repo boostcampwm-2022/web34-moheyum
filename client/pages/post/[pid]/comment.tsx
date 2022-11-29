@@ -7,15 +7,11 @@ import ReadPost from '../../../components/ReadPost';
 import CommentEditor from '../../../components/WriteComment';
 import Frame from '../../../styles/frame';
 import { httpGet } from '../../../utils/http';
+import type PostProps from '../../../types/Post';
 
 interface Props {
   data: {
-    post: {
-      _id: string;
-      description: string;
-      author: string;
-      createdAt: string;
-    };
+    post: PostProps;
   };
 }
 

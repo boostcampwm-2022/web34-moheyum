@@ -2,9 +2,9 @@ import React, { useCallback, useRef, useState } from 'react';
 import { ArticleCard } from '../../Main/Articlecard';
 import { PostLabel, SectionDivider } from './index.style';
 import Paginator, { NEXT } from '../../../utils/paginator';
-import { PostProps } from '../../../types/Post';
+import { UserPostProps } from '../../../types/Post';
 
-export default function PostList({ userData }: { userData: PostProps }) {
+export default function PostList({ userData }: { userData: UserPostProps }) {
   const [nextCursor, setNextCursor] = useState('START');
 
   const { loading, pages, next } = Paginator(`/api/post/author/${userData.userid}`, nextCursor);
@@ -32,21 +32,23 @@ export default function PostList({ userData }: { userData: PostProps }) {
         if (pages.length === index + 1)
           return (
             <ArticleCard
-              author={item.author}
-              key={item._id}
-              id={item._id}
-              description={item.description}
-              date={item.createdAt}
+              author={item.author.author}
+              key={item.author._id}
+              id={item.author._id}
+              description={item.author.description}
+              date={item.author.createdAt}
+              comments={item.author.childPosts}
               ref={lastFollowElementRef}
             />
           );
         return (
           <ArticleCard
-            author={item.author}
-            key={item._id}
-            id={item._id}
-            description={item.description}
-            date={item.createdAt}
+            author={item.author.author}
+            key={item.author._id}
+            id={item.author._id}
+            description={item.author.description}
+            date={item.author.createdAt}
+            comments={item.author.childPosts}
           />
         );
       })}

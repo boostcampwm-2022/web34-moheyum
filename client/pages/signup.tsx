@@ -1,11 +1,11 @@
 import React from 'react';
 import SignupModal from '../components/Signup';
-import Frame from '../styles/frame';
+import { SignFrame } from '../styles/frame';
 
 export default function Signup() {
   return (
-    <Frame>
+    <SignFrame>
       <SignupModal />
-    </Frame>
+    </SignFrame>
   );
 }

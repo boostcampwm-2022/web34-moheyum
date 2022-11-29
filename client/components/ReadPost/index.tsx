@@ -1,22 +1,28 @@
+import React, { useEffect, useRef, useCallback, useState } from 'react';
 import Link from 'next/link';
 import Router from 'next/router';
-import React, { useEffect, useRef } from 'react';
-import { calcTime } from '../../utils/calctime';
+import { useRecoilValue } from 'recoil';
+import ReactLoading from 'react-loading';
 import renderMarkdown from '../../utils/markdown';
-import { Author, ContentBox, PostContent, PostedAt, PostHeader, Profile, Wrapper } from './index.style';
+import { authedUser } from '../../atom';
+import COLORS from '../../styles/color';
 import { ButtonBack, TopBar } from '../../styles/common';
+import Paginator, { NEXT } from '../../utils/paginator';
+import type PostProps from '../../types/Post';
+import Comment, { commentItem } from './Comment';
+import UserProfile from './UserProfile';
+import ProfileImg from './UserProfile/ProfileImg';
+import ParentPost from './ParentPost';
+import type { Parent } from '../../types/Post';
+import { ContentBox, PostContent, HeaderBox, Wrapper, CommentBox, Loader } from './index.style';
 
-interface Props {
-  postData: {
-    _id: string;
-    description: string;
-    author: string;
-    createdAt: string;
-  };
+interface PostData {
+  postData: PostProps;
   title: string;
 }
 
-export default function ReadPost({ postData, title }: Props) {
+export default function ReadPost({ postData, title }: PostData) {
+  const authedUserInfo = useRecoilValue(authedUser);
   const contentRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!contentRef.current) return;
@@ -25,6 +31,33 @@ export default function ReadPost({ postData, title }: Props) {
   const goBack = () => {
     Router.back();
   };
+  let commentCount = 0;
+  if (postData.childPosts) {
+    commentCount = postData.childPosts.length;
+  }
+  const [nextCursor, setNextCursor] = useState(NEXT.START);
+  const { loading, error, pages, next } = Paginator(`/api/post/comments/${postData._id}`, nextCursor);
+
+  const observer = useRef<any>();
+  const lastFollowElementRef = useCallback(
+    (node: any) => {
+      if (loading) return;
+      if (error) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting && next !== NEXT.END) {
+            setNextCursor(next);
+          }
+        },
+        {
+          threshold: 0.4,
+        }
+      );
+      if (node) observer.current.observe(node);
+    },
+    [loading, next !== NEXT.END]
+  );
   return (
     <Wrapper>
       <TopBar>
@@ -32,21 +65,40 @@ export default function ReadPost({ postData, title }: Props) {
           <div>
             <ButtonBack type="button" onClick={goBack} />
           </div>
-          <h1>{title || '글 제목'}</h1>
+          <h1>{title}</h1>
         </div>
       </TopBar>
-      <ContentBox>
-        <PostHeader>
-          <Link href={`/user/${postData.author}`}>
-            <Author>
-              <Profile />
-              {postData.author || '작성자 이름'}
-            </Author>
+      <PostContent>
+        {postData.parentPost ? <ParentPost post={postData.parent.at(0) as Parent} /> : <div />}
+        <HeaderBox>
+          <Link href={`/${postData.author}`}>
+            <UserProfile
+              profileimg={postData.authorDetail.profileimg}
+              nickname={postData.authorDetail.nickname}
+              author={postData.author}
+              createdAt={postData.createdAt}
+            />
           </Link>
-          <PostedAt>{calcTime(postData.createdAt, true)}</PostedAt>
-        </PostHeader>
-        <PostContent ref={contentRef}>{postData.description || '글 내용'}</PostContent>
-      </ContentBox>
+        </HeaderBox>
+        <ContentBox ref={contentRef}>{postData.description || '글 내용'}</ContentBox>
+        <CommentBox>
+          <div id="title">답글: {commentCount}개</div>
+          <div id="comment">
+            <Link href={`/post/${postData._id}/comment`}>
+              <ProfileImg imgUrl={authedUserInfo.profileimg} />
+              <div id="text">답글 쓰기</div>
+            </Link>
+          </div>
+          <div id="list">
+            {pages.map((item: commentItem, index: number) => {
+              if (pages.length === index + 1)
+                return <Comment key={item._id} postData={item} ref={lastFollowElementRef} />;
+              return <Comment key={item._id} postData={item} />;
+            })}
+          </div>
+          <Loader>{loading && <ReactLoading type="spin" color={COLORS.PRIMARY} />}</Loader>
+        </CommentBox>
+      </PostContent>
     </Wrapper>
   );
 }

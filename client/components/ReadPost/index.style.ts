@@ -1,57 +1,100 @@
 import styled from '@emotion/styled';
 import COLORS from '../../styles/color';
-import { markdownStyle } from '../../styles/mixin';
+import { markdownStyle, mainSectionStyle, displayCenter } from '../../styles/mixin';
 
-export const PostHeader = styled.div`
-  width: 100%;
+export const HeaderBox = styled.div`
+  width: 95%;
   display: flex;
   justify-content: space-between;
-`;
-
-export const Author = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  font-weight: 500;
-  font-size: 18px;
-`;
-
-export const Profile = styled.div`
-  width: 40px;
-  height: 40px;
-  border-radius: 40px;
-  border: 2px solid ${COLORS.GRAY2};
-  background-color: ${COLORS.GRAY3};
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  margin: 15px;
-`;
-
-export const PostedAt = styled.div`
-  color: ${COLORS.GRAY3};
-  display: flex;
-  align-items: center;
-  margin: 15px;
+  border-bottom: 1px solid ${COLORS.GRAY4};
 `;
 
 export const Wrapper = styled.div`
-  width: ${({ theme }) => theme.mainSection.width};
-  height: 100%;
-  background-color: white;
-  display: flex;
-  flex-direction: column;
-`;
-
-export const ContentBox = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  ${mainSectionStyle}
 `;
 
 export const PostContent = styled.div`
-  width: 100%;
-  flex: 1;
-  margin: 0 20px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+export const ContentBox = styled.div`
+  width: 92%;
+  margin-top: 20px;
   ${markdownStyle}
+  font-size: 18px;
+`;
+
+export const CommentBox = styled.div`
+  width: 95%;
+  margin-top: 40px;
+  border-top: 1px solid ${COLORS.GRAY4};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  #title {
+    width: 100%;
+    height: 60px;
+    padding: 20px;
+    font-size: 16px;
+    font-weight: 500;
+    border-bottom: 1px solid ${COLORS.GRAY4};
+  }
+  #comment {
+    width: 100%;
+    a {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+    #text {
+      color: ${COLORS.GRAY2};
+    }
+  }
+  #list {
+    width: 100%;
+    li {
+      list-style: none;
+      padding-left: 0px;
+      margin-bottom: 15px;
+      > a {
+        width: 230px;
+        height: 80px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+      > div {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        a {
+          width: 100%;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+          #text-box {
+            width: 84%;
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const Loader = styled.div`
+  margin-top: 40px;
+  width: 20px;
+  height: 20px;
+  ${displayCenter}
 `;

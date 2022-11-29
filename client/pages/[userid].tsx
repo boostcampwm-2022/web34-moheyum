@@ -4,10 +4,10 @@ import AuthGuard from '../components/AuthGuard';
 import SideBar from '../components/Main/SideBar';
 import UserSection from '../components/User';
 import Frame from '../styles/frame';
-import { PostProps } from '../types/Post';
+import { UserPostProps } from '../types/Post';
 import { httpGet } from '../utils/http';
 
-export default function Post({ userData }: { userData: PostProps }) {
+export default function Post({ userData }: { userData: UserPostProps }) {
   return (
     <AuthGuard noRedirect>
       <Frame>

@@ -32,6 +32,7 @@ const COLORS = {
   BLUE: '#6468FF',
   LIGHT_BLACK: '#464646',
   POINT_COLOR: '#C75DE0',
+  BACKGROUND: '#f8f9f9',
 };
 
 export default COLORS;
