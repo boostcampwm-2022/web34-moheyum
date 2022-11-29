@@ -19,10 +19,11 @@ interface Props {
   description?: string;
   author?: string;
   date: string;
+  comments: number;
 }
 
 export const ArticleCard = React.forwardRef<HTMLInputElement, Props>(
-  ({ id, description, author, date }: Props, ref) => (
+  ({ id, description, author, date, comments }: Props, ref) => (
     <div ref={ref}>
       <Link href={`/post/${id}`}>
         <Wrapper>
@@ -34,7 +35,7 @@ export const ArticleCard = React.forwardRef<HTMLInputElement, Props>(
             <HeaderInfo>
               <Comments>
                 <Image src="/ico_comment.svg" width={20} height={20} />
-                <span>2</span>
+                <span>{comments}</span>
               </Comments>
               <PostedAt>{calcTime(date)}</PostedAt>
             </HeaderInfo>

@@ -236,19 +236,6 @@ export class FollowRepository {
             localField: 'targetid',
             foreignField: 'author',
             as: 'author',
-            pipeline: [
-              {
-                $addFields: {
-                  createdKoreaAt: {
-                    $dateToString: {
-                      format: '%Y-%m-%d %H:%M:%S',
-                      date: '$createdAt',
-                      timezone: 'Asia/Seoul',
-                    },
-                  },
-                },
-              },
-            ],
           },
         },
         {
@@ -270,7 +257,15 @@ export class FollowRepository {
         },
         {
           $project: {
-            author: 1,
+            author: {
+              author: '$author.author',
+              childPosts: { $size: '$author.childPosts' },
+              createdAt: '$author.createdAt',
+              description: '$author.description',
+              title: '$author.title',
+              updatedAt: '$author.updatedAt',
+              _id: '$author._id',
+            },
             profileimg: '$userinfo.profileimg',
             nickname: '$userinfo.nickname',
             cc: {
@@ -311,19 +306,6 @@ export class FollowRepository {
             localField: 'targetid',
             foreignField: 'author',
             as: 'author',
-            pipeline: [
-              {
-                $addFields: {
-                  createdKoreaAt: {
-                    $dateToString: {
-                      format: '%Y-%m-%d %H:%M:%S',
-                      date: '$createdAt',
-                      timezone: 'Asia/Seoul',
-                    },
-                  },
-                },
-              },
-            ],
           },
         },
         {
@@ -358,7 +340,15 @@ export class FollowRepository {
         },
         {
           $project: {
-            author: 1,
+            author: {
+              author: '$author.author',
+              childPosts: { $size: '$author.childPosts' },
+              createdAt: '$author.createdAt',
+              description: '$author.description',
+              title: '$author.title',
+              updatedAt: '$author.updatedAt',
+              _id: '$author._id',
+            },
             profileimg: '$userinfo.profileimg',
             nickname: '$userinfo.nickname',
           },
@@ -378,5 +368,69 @@ export class FollowRepository {
       res['next'] = '';
     }
     return res;
+  }
+
+  async findUserToMention(userid: string) {
+    const followingList = await this.followModel.aggregate([
+      {
+        $match: {
+          $and: [{ userid: userid }, { targetid: { $ne: userid } }],
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'targetid',
+          foreignField: 'userid',
+          as: 'user',
+        },
+      },
+      {
+        $unwind: '$user',
+      },
+      {
+        $project: {
+          _id: false,
+          userid: '$user.userid',
+          nickname: '$user.nickname',
+          profileimg: '$user.profileimg',
+        },
+      },
+    ]);
+
+    const followerList = await this.followModel.aggregate([
+      {
+        $match: {
+          $and: [{ targetid: userid }, { userid: { $ne: userid } }],
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userid',
+          foreignField: 'userid',
+          as: 'user',
+        },
+      },
+      {
+        $unwind: '$user',
+      },
+      {
+        $project: {
+          _id: false,
+          userid: '$user.userid',
+          nickname: '$user.nickname',
+          profileimg: '$user.profileimg',
+        },
+      },
+    ]);
+
+    const finalList = [...followingList, ...followerList].reduce((acc, cur) => {
+      if (acc.findIndex(({ userid }) => userid === cur.userid) === -1) {
+        acc.push(cur);
+      }
+      return acc;
+    }, []);
+    return finalList;
   }
 }
