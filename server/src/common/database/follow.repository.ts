@@ -369,4 +369,68 @@ export class FollowRepository {
     }
     return res;
   }
+
+  async findUserToMention(userid: string) {
+    const followingList = await this.followModel.aggregate([
+      {
+        $match: {
+          $and: [{ userid: userid }, { targetid: { $ne: userid } }],
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'targetid',
+          foreignField: 'userid',
+          as: 'user',
+        },
+      },
+      {
+        $unwind: '$user',
+      },
+      {
+        $project: {
+          _id: false,
+          userid: '$user.userid',
+          nickname: '$user.nickname',
+          profileimg: '$user.profileimg',
+        },
+      },
+    ]);
+
+    const followerList = await this.followModel.aggregate([
+      {
+        $match: {
+          $and: [{ targetid: userid }, { userid: { $ne: userid } }],
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userid',
+          foreignField: 'userid',
+          as: 'user',
+        },
+      },
+      {
+        $unwind: '$user',
+      },
+      {
+        $project: {
+          _id: false,
+          userid: '$user.userid',
+          nickname: '$user.nickname',
+          profileimg: '$user.profileimg',
+        },
+      },
+    ]);
+
+    const finalList = [...followingList, ...followerList].reduce((acc, cur) => {
+      if (acc.findIndex(({ userid }) => userid === cur.userid) === -1) {
+        acc.push(cur);
+      }
+      return acc;
+    }, []);
+    return finalList;
+  }
 }
