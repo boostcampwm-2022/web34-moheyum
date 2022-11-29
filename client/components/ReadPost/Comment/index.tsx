@@ -25,22 +25,19 @@ interface CommentData {
   postData: commentItem;
 }
 
-const Comment = React.forwardRef<HTMLLIElement, CommentData>(({ postData }: CommentData, ref) => {
-  return (
-    <li ref={ref}>
-      <Link href={`/${postData.author}`}>
-        <UserProfile
-          profileimg={postData.authorDetail.profileimg}
-          nickname={postData.authorDetail.nickname}
-          author={postData.author}
-          createdAt={postData.createdAt}
-        />
-      </Link>
-      <div id="text-box">
-        <div id="content">{postData.description}</div>
-      </div>
-    </li>
-  );
-});
-
+const Comment = React.forwardRef<HTMLLIElement, CommentData>(({ postData }: CommentData, ref) => (
+  <li ref={ref}>
+    <Link href={`/${postData.author}`}>
+      <UserProfile
+        profileimg={postData.authorDetail.profileimg}
+        nickname={postData.authorDetail.nickname}
+        author={postData.author}
+        createdAt={postData.createdAt}
+      />
+    </Link>
+    <div id="text-box">
+      <div id="content">{postData.description}</div>
+    </div>
+  </li>
+));
 export default Comment;

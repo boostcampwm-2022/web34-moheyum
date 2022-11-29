@@ -1,8 +1,6 @@
 import styled from '@emotion/styled';
 import COLORS from '../../styles/color';
-import { markdownStyle } from '../../styles/mixin';
-import { mainSectionStyle } from '../../styles/mixin';
-import { displayCenter } from '../../styles/mixin';
+import { markdownStyle, mainSectionStyle, displayCenter } from '../../styles/mixin';
 
 export const HeaderBox = styled.div`
   width: 95%;

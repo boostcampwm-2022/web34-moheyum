@@ -69,7 +69,7 @@ export default function ReadPost({ postData }: PostData) {
         </div>
       </TopBar>
       <PostContent>
-        {postData.parentPost ? <ParentPost post={postData.parent.at(0) as Parent} /> : <></>}
+        {postData.parentPost ? <ParentPost post={postData.parent.at(0) as Parent} /> : <div />}
         <HeaderBox>
           <Link href={`/${postData.author}`}>
             <UserProfile
@@ -85,15 +85,15 @@ export default function ReadPost({ postData }: PostData) {
           <div id="title">답글: {commentCount}개</div>
           <div id="comment">
             <Link href={`/post/${postData._id}/comment`}>
-              <ProfileImg imgUrl={authedUserInfo.profileimg}></ProfileImg>
+              <ProfileImg imgUrl={authedUserInfo.profileimg} />
               <div id="text">답글 쓰기</div>
             </Link>
           </div>
           <div id="list">
             {pages.map((item: commentItem, index: number) => {
               if (pages.length === index + 1)
-                return <Comment key={item._id} postData={item} ref={lastFollowElementRef}></Comment>;
-              return <Comment key={item._id} postData={item}></Comment>;
+                return <Comment key={item._id} postData={item} ref={lastFollowElementRef} />;
+              return <Comment key={item._id} postData={item} />;
             })}
           </div>
           <Loader>{loading && <ReactLoading type="spin" color={COLORS.PRIMARY} />}</Loader>

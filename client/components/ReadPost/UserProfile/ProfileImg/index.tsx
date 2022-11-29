@@ -1,7 +1,7 @@
 import React from 'react';
-import COLORS from '../../../../styles/color';
 import Image from 'next/legacy/image';
 import styled from '@emotion/styled';
+import COLORS from '../../../../styles/color';
 
 export default function ProfileImg({ imgUrl }: { imgUrl: string }) {
   return (

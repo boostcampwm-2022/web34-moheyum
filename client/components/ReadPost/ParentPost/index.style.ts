@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import COLORS from '../../../styles/color';
-import { displayCenter } from '../../../styles/mixin';
-import { markdownStyle } from '../../../styles/mixin';
+import { displayCenter, markdownStyle } from '../../../styles/mixin';
 
 export const Wrapper = styled.div`
   width: 100%;

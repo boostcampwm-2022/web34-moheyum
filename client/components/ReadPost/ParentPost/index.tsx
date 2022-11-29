@@ -17,7 +17,7 @@ export default function ParentPost({ post }: { post: Parent }) {
       <HeaderBox>
         <Link href={`/${post.author}`}>
           <Author>
-            <ProfileImg imgUrl={post.authorDetail.profileimg}></ProfileImg>
+            <ProfileImg imgUrl={post.authorDetail.profileimg} />
             <AuthorDetail>
               <div id="name">{post.authorDetail.nickname || '작성자 이름'}</div>
               <div id="user-id">@{post.author || '작성자 아이디'}</div>
@@ -26,7 +26,13 @@ export default function ParentPost({ post }: { post: Parent }) {
           </Author>
         </Link>
       </HeaderBox>
-      <ContentBox ref={contentRef}>{post.description || '글 내용'}</ContentBox>
+      <ContentBox>
+        <Link href={`/post/${post._id}`}>
+          <div id="content" ref={contentRef}>
+            {post.description}
+          </div>
+        </Link>
+      </ContentBox>
     </Wrapper>
   );
 }

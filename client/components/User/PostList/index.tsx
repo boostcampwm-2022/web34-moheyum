@@ -2,9 +2,9 @@ import React, { useCallback, useRef, useState } from 'react';
 import { ArticleCard } from '../../Main/Articlecard';
 import { PostLabel, SectionDivider } from './index.style';
 import Paginator, { NEXT } from '../../../utils/paginator';
-import { PostProps } from '../../../types/Post';
+import { UserPostProps } from '../../../types/Post';
 
-export default function PostList({ userData }: { userData: PostProps }) {
+export default function PostList({ userData }: { userData: UserPostProps }) {
   const [nextCursor, setNextCursor] = useState('START');
 
   const { loading, pages, next } = Paginator(`/api/post/author/${userData.userid}`, nextCursor);
