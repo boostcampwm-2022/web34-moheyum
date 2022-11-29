@@ -40,10 +40,11 @@ export class UserController {
       data: await this.userService.updateUserProfile(userid, userUpdateDto),
     };
   }
-
+  
+  @HttpCode(200)
   @UseGuards(JwtAuthGuard, UpdateAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
-  @Post('/:userid/avatar')
+  @Put('/:userid/avatar')
   async uploadAvatar(@Param('userid') userid: string, @UploadedFile() file: Express.Multer.File) {
     const url = await this.ncloudServie.upload(file);
     await this.userService.updateUserAvatar(userid, url.imageLink);
