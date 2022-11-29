@@ -1,10 +1,8 @@
+import React, { useEffect, useRef, useCallback, useState } from 'react';
 import Link from 'next/link';
 import Router from 'next/router';
 import { useRecoilValue } from 'recoil';
-import React, { useEffect, useRef, useCallback, useState } from 'react';
-import Image from 'next/legacy/image';
 import ReactLoading from 'react-loading';
-import { calcTime } from '../../utils/calctime';
 import renderMarkdown from '../../utils/markdown';
 import { authedUser } from '../../atom';
 import COLORS from '../../styles/color';
@@ -12,18 +10,9 @@ import { ButtonBack, TopBar } from '../../styles/common';
 import Paginator, { NEXT } from '../../utils/paginator';
 import type PostProps from '../../types/Post';
 import Comment, { commentItem } from './Comment';
-import {
-  Author,
-  ContentBox,
-  PostContent,
-  PostedAt,
-  HeaderBox,
-  ProfileImg,
-  Wrapper,
-  AuthorDetail,
-  CommentBox,
-  Loader,
-} from './index.style';
+import UserProfile from './UserProfile';
+import ProfileImg from './UserProfile/ProfileImg';
+import { ContentBox, PostContent, HeaderBox, Wrapper, CommentBox, Loader } from './index.style';
 
 interface PostData {
   postData: PostProps;
@@ -66,7 +55,6 @@ export default function ReadPost({ postData }: PostData) {
     },
     [loading, next !== NEXT.END]
   );
-  console.log(pages);
   return (
     <Wrapper>
       <TopBar>
@@ -80,23 +68,12 @@ export default function ReadPost({ postData }: PostData) {
       <PostContent>
         <HeaderBox>
           <Link href={`/${postData.author}`}>
-            <Author>
-              <ProfileImg>
-                {postData.authorDetail.profileimg ? (
-                  <Image src={postData.authorDetail.profileimg} alt="Logo" layout="fill" priority />
-                ) : (
-                  <Image src="/favicon.svg" alt="Logo" layout="fill" priority />
-                )}
-              </ProfileImg>
-              <AuthorDetail>
-                <div id="name">{postData.authorDetail.nickname || '작성자 이름'}</div>
-                <div id="user-id">@{postData.author || '작성자 아이디'}</div>
-              </AuthorDetail>
-              <PostedAt>
-                <div id="time">{calcTime(postData.createdAt)}</div>
-                <div>&nbsp;</div>
-              </PostedAt>
-            </Author>
+            <UserProfile
+              profileimg={postData.authorDetail.profileimg}
+              nickname={postData.authorDetail.nickname}
+              author={postData.author}
+              createdAt={postData.createdAt}
+            />
           </Link>
         </HeaderBox>
         <ContentBox ref={contentRef}>{postData.description || '글 내용'}</ContentBox>
@@ -104,13 +81,7 @@ export default function ReadPost({ postData }: PostData) {
           <div id="title">답글: {commentCount}개</div>
           <div id="comment">
             <Link href={`/post/${postData._id}/comment`}>
-              <ProfileImg>
-                {postData.authorDetail.profileimg ? (
-                  <Image src={postData.authorDetail.profileimg} alt="Logo" layout="fill" priority />
-                ) : (
-                  <Image src="/favicon.svg" alt="Logo" layout="fill" priority />
-                )}
-              </ProfileImg>
+              <ProfileImg imgUrl={authedUserInfo.profileimg}></ProfileImg>
               <div id="text">답글 쓰기</div>
             </Link>
           </div>

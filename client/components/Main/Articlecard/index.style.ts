@@ -79,7 +79,8 @@ export const ArticleContent = styled.div`
 `;
 
 export const Content = styled.div`
-  flex: 1;
+  width: 100%;
+  overflow-x: hidden;
 `;
 
 export const ArticleImage = styled.div`
