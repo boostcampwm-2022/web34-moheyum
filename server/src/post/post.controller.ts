@@ -120,5 +120,15 @@ export class PostController {
     };
   }
 
-  
+  @Get('comments/:id')
+  async getCommentsByPostId(
+    @Param('id', PostIdValidationPipe) id: string,
+    @Query() followerPostDTO: FollowerPostDto,
+  ): Promise<{ message: string; data: { post: Post_[]; next: string } }> {
+    const data = await this.postService.getCommentsOfPost(id, followerPostDTO);
+    return {
+      message: 'success',
+      data: data,
+    };
+  }
 }

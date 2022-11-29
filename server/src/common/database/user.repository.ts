@@ -38,12 +38,12 @@ export class UserRepository {
 
   async findOneAndUpdate(
     userFilterQuery: FilterQuery<User>,
-    userUpdateDto: UserUpdateDto,
+    user: Partial<User>,
   ) {
     const result = this.userModel.findOneAndUpdate(
       userFilterQuery,
       {
-        $set: userUpdateDto,
+        $set: user,
       },
       { new: true },
     );

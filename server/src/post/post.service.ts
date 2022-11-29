@@ -84,4 +84,9 @@ export class PostService {
       next: result.length < 10 ? '' : result.at(-1)._id,
     };
   }
+  getCommentsOfPost(id: string, followerPostDTO: FollowerPostDto) {
+    return followerPostDTO.next === ''
+      ? this.postRepository.getComments(id, followerPostDTO)
+      : this.postRepository.getCommentsWithNext(id, followerPostDTO);
+  }
 }

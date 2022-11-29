@@ -7,6 +7,8 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers';
 import { authedUser } from '../../atom';
 import { ResponseType, httpGet } from '../../utils/http';
+import { ButtonBack, TopBar } from '../../styles/common';
+import getByteLength from '../../utils/getByteLength';
 import {
   ProfileAndImgContainer,
   Wrapper,
@@ -26,7 +28,6 @@ import {
   UpdateIcon,
   ChangeImageButton,
 } from './index.style';
-import { ButtonBack, TopBar } from '../../styles/common';
 
 interface ProfileEditable {
   nickname: string;
@@ -49,12 +50,6 @@ const schema = yup.object().shape({
     }),
   bio: yup.string(),
 });
-
-const getByteLength = (s: string): number => {
-  // 문제 : UTF-8 기준 한글 한 자가 사실은 3바이트였음
-  const stringByteLength = s.replace(/[\0-\x7f]|([0-\u07ff]|(.))/g, '$&$1$2').length;
-  return stringByteLength;
-};
 
 export default function ProfileEditSection() {
   const {
@@ -92,6 +87,7 @@ export default function ProfileEditSection() {
     };
     if (image) reader.readAsDataURL(image);
   };
+
   useEffect(() => {
     httpGet(`/user/${authedUserInfo.userid}`).then((res: ResponseType) => {
       if (res.message === 'success') {
@@ -108,6 +104,22 @@ export default function ProfileEditSection() {
     setMyProfile((prevProfile) => ({ ...prevProfile, bio: e.target.value }));
   };
 
+  const handleProfileImgSubmit = async () => {
+    // fetch('/api/user/')
+    const formData = new FormData();
+    formData.append('file', profileImg!);
+    fetch(`/api/user/${myProfile.userid}/avatar`, {
+      method: 'PUT',
+      credentials: 'include',
+      body: formData,
+    })
+      .catch((e) => {
+        alert(e);
+        console.error(e);
+      })
+      .finally(() => {});
+  };
+
   const handleProfileSubmit = () => {
     // TODO : 별명, 소개로 밀어넣을 수 있는 값이 유효한지 확인해야 함..
     fetch(`/api/user/${myProfile.userid}`, {
@@ -119,7 +131,6 @@ export default function ProfileEditSection() {
       body: JSON.stringify({
         nickname: myProfile.nickname,
         bio: myProfile.bio,
-        profileimg: profileImg ?? myProfile.profileimg,
       }),
     })
       .catch((e) => {
@@ -142,24 +153,26 @@ export default function ProfileEditSection() {
           <h1>프로필 편집</h1>
         </div>
       </TopBar>
-      <ProfileAndImgContainer>
-        <Avatar src={previewImg ?? myProfile.profileimg}>
-          <div>&nbsp;</div>
-          <UpdateIcon>
+      <form onSubmit={handleSubmit(handleProfileImgSubmit)} style={{ width: '500px' }} encType="multipart/form-data">
+        <ProfileAndImgContainer>
+          <Avatar src={previewImg ?? myProfile.profileimg}>
             <div>&nbsp;</div>
-            <ProfileImageInput type="file" ref={selectFile} onChange={handleImg} accept="image/*" />
-            <ChangeImageButton onClick={() => selectFile.current!.click()}>
-              <Image src="/profile_img.svg" alt="Profile" width={50} height={60} priority />
-            </ChangeImageButton>
-          </UpdateIcon>
-        </Avatar>
+            <UpdateIcon>
+              <div>&nbsp;</div>
+              <ProfileImageInput type="file" ref={selectFile} onChange={handleImg} accept="image/*" />
+              <ChangeImageButton type="button" onClick={() => selectFile.current!.click()}>
+                <Image src="/profile_img.svg" alt="Profile" width={50} height={60} priority />
+              </ChangeImageButton>
+            </UpdateIcon>
+          </Avatar>
 
-        <ProfileArea>
-          <ProfileUserid>{myProfile.userid}</ProfileUserid>
-          <ProfileEmail>{myProfile.email}</ProfileEmail>
-          <ChangeAvatarButton>프로필 사진 바꾸기</ChangeAvatarButton>
-        </ProfileArea>
-      </ProfileAndImgContainer>
+          <ProfileArea>
+            <ProfileUserid>{myProfile.userid}</ProfileUserid>
+            <ProfileEmail>{myProfile.email}</ProfileEmail>
+            <ChangeAvatarButton type="submit">프로필 사진 바꾸기</ChangeAvatarButton>
+          </ProfileArea>
+        </ProfileAndImgContainer>
+      </form>
       <InputsContainer>
         <form onSubmit={handleSubmit(handleProfileSubmit)} style={{ width: '500px' }}>
           <NicknameEditArea>

@@ -58,6 +58,7 @@ export const ProfileEditButton = styled.button`
   padding: 4px 8px;
   color: ${COLORS.WHITE};
   text-decoration: none;
+  cursor: pointer;
   &:hover {
     color: white;
     text-decoration: none;

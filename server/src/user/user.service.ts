@@ -43,4 +43,10 @@ export class UserService {
       next: result.length < 2 ? '' : result.at(-1)._id,
     }
   }
+  updateUserAvatar(userid: string, url: string) {
+    return this.userRepository.findOneAndUpdate(
+      {userid},
+      {profileimg: url}
+    )
+  }
 }

@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from '../common/database/user.schema';
 import { UserRepository } from 'src/common/database/user.repository';
 import { DatabaseModule } from 'src/common/database/database.module';
+import { NcloudService } from 'src/ncloud/ncloud.service';
 
 @Module({
   imports: [
@@ -12,6 +13,6 @@ import { DatabaseModule } from 'src/common/database/database.module';
     DatabaseModule,
   ],
   controllers: [UserController],
-  providers: [UserService, UserRepository],
+  providers: [UserService, UserRepository, NcloudService],
 })
 export class UserModule {}
