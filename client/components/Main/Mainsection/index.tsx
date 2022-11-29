@@ -30,27 +30,16 @@ export default function MainSection() {
       <MainTopBar>
         <div>홈</div>
       </MainTopBar>
-      <Newsfeed>
-        <Link href="/write">
-          <NewArticleSection>
-            <Placeholder>무슨 생각 하세요?</Placeholder>
-            <hr />
-            <FakeButton type="button">글쓰기</FakeButton>
-          </NewArticleSection>
-        </Link>
-        <ArticlesSection>
-          {pages.map((item: any, index: number) => {
-            if (pages.length === index + 1)
-              return (
-                <ArticleCard
-                  author={item.author.author}
-                  key={item.author._id}
-                  id={item.author._id}
-                  description={item.author.description}
-                  date={item.author.createdAt}
-                  ref={lastFollowElementRef}
-                />
-              );
+      <Link href="/write">
+        <NewArticleSection>
+          <Placeholder>무슨 생각 하세요?</Placeholder>
+          <hr />
+          <FakeButton type="button">글쓰기</FakeButton>
+        </NewArticleSection>
+      </Link>
+      <ArticlesSection>
+        {pages.map((item: any, index: number) => {
+          if (pages.length === index + 1)
             return (
               <ArticleCard
                 author={item.author.author}

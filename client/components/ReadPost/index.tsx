@@ -16,6 +16,10 @@ import ParentPost from './ParentPost';
 import type { Parent } from '../../types/Post';
 import { ContentBox, PostContent, HeaderBox, Wrapper, CommentBox, Loader } from './index.style';
 
+interface PostData {
+  postData: PostProps;
+}
+
 export default function ReadPost({ postData }: PostData) {
   const authedUserInfo = useRecoilValue(authedUser);
   const contentRef = useRef<HTMLDivElement>(null);
