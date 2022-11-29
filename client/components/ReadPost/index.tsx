@@ -12,6 +12,8 @@ import type PostProps from '../../types/Post';
 import Comment, { commentItem } from './Comment';
 import UserProfile from './UserProfile';
 import ProfileImg from './UserProfile/ProfileImg';
+import ParentPost from './ParentPost';
+import type { Parent } from '../../types/Post';
 import { ContentBox, PostContent, HeaderBox, Wrapper, CommentBox, Loader } from './index.style';
 
 interface PostData {
@@ -55,6 +57,7 @@ export default function ReadPost({ postData }: PostData) {
     },
     [loading, next !== NEXT.END]
   );
+  console.log(postData);
   return (
     <Wrapper>
       <TopBar>
@@ -66,6 +69,7 @@ export default function ReadPost({ postData }: PostData) {
         </div>
       </TopBar>
       <PostContent>
+        {postData.parentPost ? <ParentPost post={postData.parent.at(0) as Parent} /> : <></>}
         <HeaderBox>
           <Link href={`/${postData.author}`}>
             <UserProfile

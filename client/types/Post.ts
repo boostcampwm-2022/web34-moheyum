@@ -2,7 +2,7 @@ interface AuthorDetail {
   nickname: string;
   profileimg: string;
 }
-interface Parent {
+export interface Parent {
   _id: string;
   description: string;
   author: string;
@@ -18,7 +18,7 @@ export default interface PostProps {
   parentPost: string;
   childPosts: [];
   authorDetail: AuthorDetail;
-  parent: Parent;
+  parent: Parent[];
 }
 
 export interface UserPostProps {

@@ -31,6 +31,7 @@ export const ContentBox = styled.div`
   width: 92%;
   margin-top: 20px;
   ${markdownStyle}
+  font-size: 18px;
 `;
 
 export const CommentBox = styled.div`
