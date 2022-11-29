@@ -7,6 +7,9 @@ export const mainSectionStyle = css`
   display: flex;
   flex-direction: column;
   background-color: ${COLORS.WHITE};
+  & > div {
+    margin-top: 61px;
+  }
 `;
 
 export const displayCenter = css`

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import COLORS from '../../styles/color';
-import { buttonStyle, markdownStyle } from '../../styles/mixin';
+import COLORS from '../../../styles/color';
+import { buttonStyle, markdownStyle } from '../../../styles/mixin';
 
 export const Wrapper = styled.div`
   height: 100%;

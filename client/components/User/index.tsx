@@ -2,9 +2,9 @@ import React from 'react';
 import { Wrapper } from './index.style';
 import UserProfile from './Profile';
 import PostList from './PostList';
-import { PostProps } from '../../types/Post';
+import { UserPostProps } from '../../types/Post';
 
-export default function UserSection({ userData }: { userData: PostProps | null }) {
+export default function UserSection({ userData }: { userData: UserPostProps | null }) {
   if (userData === null) return <Wrapper>존재하지 않는 계정입니다.</Wrapper>;
   // TODO : API 최신화
   if (userData?.state === true)

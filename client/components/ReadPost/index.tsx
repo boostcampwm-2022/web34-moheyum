@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import Router from 'next/router';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback, useState } from 'react';
 import Image from 'next/legacy/image';
+import ReactLoading from 'react-loading';
 import { calcTime } from '../../utils/calctime';
 import renderMarkdown from '../../utils/markdown';
 import {
@@ -16,6 +17,7 @@ import {
   CommentBox,
 } from './index.style';
 import { ButtonBack, TopBar } from '../../styles/common';
+import Paginator, { NEXT } from '../../utils/paginator';
 import type PostProps from '../../types/Post';
 
 interface PostData {
@@ -31,7 +33,34 @@ export default function ReadPost({ postData }: PostData) {
   const goBack = () => {
     Router.back();
   };
-  console.log('sid', postData);
+  let commentCount = 0;
+  if (postData.childPosts) {
+    commentCount = postData.childPosts.length;
+  }
+  const [nextCursor, setNextCursor] = useState(NEXT.START);
+  const { loading, error, pages, next } = Paginator(`/api/post/comments/${postData._id}`, nextCursor);
+
+  const observer = useRef<any>();
+  const lastFollowElementRef = useCallback(
+    (node: any) => {
+      if (loading) return;
+      if (error) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting && next !== NEXT.END) {
+            setNextCursor(next);
+          }
+        },
+        {
+          threshold: 0.4,
+        }
+      );
+      if (node) observer.current.observe(node);
+    },
+    [loading, next !== NEXT.END]
+  );
+  console.log(pages);
   return (
     <Wrapper>
       <TopBar>
@@ -62,7 +91,15 @@ export default function ReadPost({ postData }: PostData) {
         </HeaderBox>
         <ContentBox ref={contentRef}>{postData.description || '글 내용'}</ContentBox>
         <CommentBox>
-          <div id="title">답글: 개</div>
+          <div id="title">답글: {commentCount}개</div>
+          <div id="list">
+            {pages.map((item: any, index: number) => {
+              if (pages.length === index + 1) return <li ref={lastFollowElementRef}>{item.description}</li>;
+              return <li>{item.description}</li>;
+            })}
+            {loading && <ReactLoading type="spin" color="#A593E0" />}
+          </div>
+          <div>끝</div>
         </CommentBox>
       </PostContent>
     </Wrapper>

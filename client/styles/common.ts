@@ -1,12 +1,14 @@
 import styled from '@emotion/styled';
 import COLORS from './color';
 import { displayColumn } from './mixin';
+import { mainSectionSize } from './theme';
 
-export const MainTopBar = styled.div`
+export const MainTopBar = styled.header`
+  position: fixed;
   background-color: ${COLORS.WHITE};
   height: 61px;
   border-bottom: 2px solid ${COLORS.GRAY3};
-  width: 100%;
+  width: ${mainSectionSize}px;
   color: ${COLORS.BLACK};
   font-size: 22px;
   text-align: left;
@@ -17,10 +19,11 @@ export const MainTopBar = styled.div`
   }
 `;
 
-export const TopBar = styled.div`
+export const TopBar = styled.header`
+  position: fixed;
   background-color: ${COLORS.WHITE};
   height: 61px;
-  width: 100%;
+  width: ${mainSectionSize}px;
   border-bottom: 2px solid ${COLORS.GRAY3};
   ${displayColumn}
   div {

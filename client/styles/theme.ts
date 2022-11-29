@@ -3,6 +3,7 @@ import COLORS from './color';
 
 export const sidebarSize = 256;
 export const maxFrameSize: number = 1295;
+export const mainSectionSize = maxFrameSize - sidebarSize - 1;
 
 const theme: Theme = {
   sidebar: {

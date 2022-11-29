@@ -20,3 +20,15 @@ export default interface PostProps {
   authorDetail: AuthorDetail;
   parent: Parent;
 }
+
+export interface UserPostProps {
+  userid: string;
+  nickname: string;
+  email: string;
+  bio: string;
+  profileimg: string;
+  state: boolean;
+  following: number;
+  follower: number;
+  postcount: number;
+}
