@@ -1,29 +1,12 @@
-export const calcTime = (date: string): string => {
+export const calcTime = (date: string, type: boolean = false): string => {
   const now: Date = new Date();
   const createdAt: Date = new Date(date);
-  let res: string = '';
-  const times = [
-    {
-      time: '시간',
-      milliseconds: 1000 * 60 * 60,
-    },
-    {
-      time: '분',
-      milliseconds: 1000 * 60,
-    },
-  ];
-  try {
-    times.forEach((ms) => {
-      const diff = Math.floor((Number(now) - Number(createdAt)) / ms.milliseconds); // 몇 분, 시간 전 계산
-      if (diff > 0) {
-        res = `${diff}${ms.time} 전`;
-        throw Error();
-      }
-      return false;
-    });
-  } catch (e) {
-    return res;
-  }
+  if (type) return createdAt.toLocaleString();
+  const diff = Number(now) - Number(createdAt);
+  let counter = Math.floor(diff / (1000 * 60 * 60 * 24)); // 몇 분, 시간 전 계산
+  if (counter > 0) return createdAt.toLocaleDateString();
+  counter = Math.floor(diff / (1000 * 60 * 60));
+  if (counter > 0) return `${counter}시간 전`;
 
-  return res ?? createdAt.toLocaleString();
+  return `${Math.floor(diff / (1000 * 60))}분 전`;
 };
