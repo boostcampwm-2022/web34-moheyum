@@ -26,7 +26,7 @@ interface Props {
   };
 }
 
-export default function Editor({ postData }: Props) {
+export default function CommentEditor({ postData }: Props) {
   const authedUserInfo = useRecoilValue(authedUser);
   const contentRef = useRef<HTMLDivElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);

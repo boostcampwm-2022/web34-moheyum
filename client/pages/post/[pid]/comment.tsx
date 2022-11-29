@@ -4,7 +4,7 @@ import React from 'react';
 import AuthGuard from '../../../components/AuthGuard';
 import SideBar from '../../../components/Main/SideBar';
 import ReadPost from '../../../components/ReadPost';
-import Editor from '../../../components/WriteComment';
+import CommentEditor from '../../../components/WriteComment';
 import Frame from '../../../styles/frame';
 import { httpGet } from '../../../utils/http';
 
@@ -29,7 +29,7 @@ export default function Post({ response }: { response: Props }) {
           <PostWrapper>
             <ReadPost postData={response.data.post} title={title} />
           </PostWrapper>
-          <Editor postData={response.data.post} />
+          <CommentEditor postData={response.data.post} />
         </ContentWrapper>
       </Frame>
     </AuthGuard>
