@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers';
 import { httpGet, httpPost } from '../../utils/http';
+import getByteLength from '../../utils/getByteLength';
 import {
   ButtonBack,
   FieldContent,
@@ -19,11 +20,8 @@ import {
   SignupVerifyMessage,
 } from './index.style';
 
-const getByteLength = (s: string): number => {
-  // 문제 : UTF-8 기준 한글 한 자가 사실은 3바이트였음
-  const stringByteLength = s.replace(/[\0-\x7f]|([0-\u07ff]|(.))/g, '$&$1$2').length;
-  return stringByteLength;
-};
+// 페이지 변경되거나 추가되면 여기도 업데이트 필요.
+const urlList = ['signup', 'post', 'announce', 'login', 'myAccount', 'search', 'write'];
 
 const schema = yup.object().shape({
   id: yup
@@ -31,7 +29,11 @@ const schema = yup.object().shape({
     .required('아이디를 입력하세요.')
     .matches(/^[a-z|A-Z|0-9|]+$/i, '영어, 숫자만 가능합니다.')
     .max(16, '16자 이내로 입력하세요.')
-    .min(4, '4 글자 이상 입력하세요.'),
+    .min(4, '4 글자 이상 입력하세요.')
+    .test({
+      message: '사용할 수 없는 아이디 입니다.',
+      test: (value) => urlList.filter((x) => x === value).length === 0,
+    }),
   password: yup
     .string()
     .required('비밀번호를 입력하세요.')
@@ -41,6 +43,7 @@ const schema = yup.object().shape({
     .string()
     .required('비밀번호 확인을 입력하세요.')
     .oneOf([yup.ref('password'), null], '비밀번호가 일치하지 않습니다.'),
+
   name: yup
     .string()
     .required('닉네임을 입력하세요.')

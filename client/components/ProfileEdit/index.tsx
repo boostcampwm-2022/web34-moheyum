@@ -7,6 +7,8 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers';
 import { authedUser } from '../../atom';
 import { ResponseType, httpGet } from '../../utils/http';
+import { ButtonBack, TopBar } from '../../styles/common';
+import getByteLength from '../../utils/getByteLength';
 import {
   ProfileAndImgContainer,
   Wrapper,
@@ -26,7 +28,6 @@ import {
   UpdateIcon,
   ChangeImageButton,
 } from './index.style';
-import { ButtonBack, TopBar } from '../../styles/common';
 
 interface ProfileEditable {
   nickname: string;
@@ -49,12 +50,6 @@ const schema = yup.object().shape({
     }),
   bio: yup.string(),
 });
-
-const getByteLength = (s: string): number => {
-  // 문제 : UTF-8 기준 한글 한 자가 사실은 3바이트였음
-  const stringByteLength = s.replace(/[\0-\x7f]|([0-\u07ff]|(.))/g, '$&$1$2').length;
-  return stringByteLength;
-};
 
 export default function ProfileEditSection() {
   const {
