@@ -3,9 +3,11 @@ import {
   Controller,
   Get,
   Param,
+  Query,
   Put,
   HttpCode,
   UseGuards,
+  BadRequestException,
   Post,
   UploadedFile,
   UseInterceptors,
@@ -32,6 +34,18 @@ export class UserController {
       message: 'success',
       data: data,
     };
+  }
+
+
+  @Get('/search')
+  async searchUser(@Query('keyword') keyword: string, @Query('next') next:string) {
+    if (!(/^[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣\d_]{1,16}$/.test(keyword)))
+      throw new BadRequestException();
+    console.log(keyword);
+    return {
+      message: 'success',
+      data: await this.userService.searchUser(keyword, next)
+    }
   }
 
   @Get('/:userid')

@@ -65,6 +65,17 @@ export class PostController {
     };
   }
 
+
+  @HttpCode(200)
+  @Get('/search')
+  async searchPost(@Query('next') next: string, @Query('keyword') keyword: string){
+    return {
+      message: 'success',
+      data: await this.postService.searchPost(keyword, next),
+    }
+  }
+    
+
   @Get('/:id')
   async getPostById(@Param('id', PostIdValidationPipe) id: string): Promise<{
     message: string;

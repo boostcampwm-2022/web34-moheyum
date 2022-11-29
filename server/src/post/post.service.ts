@@ -73,6 +73,17 @@ export class PostService {
     // );
   }
 
+  async searchPost(keyword: string, next: string) {
+    let result;
+    if (next) 
+      result = await this.postRepository.searchPostWithNext(keyword, next);
+    else 
+      result = await this.postRepository.searchPost(keyword);
+    return {
+      post: result,
+      next: result.length < 10 ? '' : result.at(-1)._id,
+    };
+  }
   getCommentsOfPost(id: string, followerPostDTO: FollowerPostDto) {
     return followerPostDTO.next === ''
       ? this.postRepository.getComments(id, followerPostDTO)

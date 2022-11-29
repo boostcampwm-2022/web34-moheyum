@@ -47,6 +47,18 @@ export class UserService {
     return data;
   }
   
+
+  async searchUser(keyword: string, next: string) {
+    let result;
+    if (next)
+      result = await this.userRepository.searchUserWithNext(keyword, next);
+    else
+      result = await this.userRepository.searchUser(keyword);
+    return {
+      post: result,
+      next: result.length < 2 ? '' : result.at(-1)._id,
+    }
+  }
   updateUserAvatar(userid: string, url: string) {
     return this.userRepository.findOneAndUpdate(
       {userid},

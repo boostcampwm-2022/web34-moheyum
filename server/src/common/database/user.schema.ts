@@ -60,3 +60,14 @@ export class User {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+UserSchema.index({
+  state: 1,
+  _id: 1,
+  userid: 1
+});
+UserSchema.index({
+  state: 1,
+  _id: 1,
+  nickname: 1
+});
