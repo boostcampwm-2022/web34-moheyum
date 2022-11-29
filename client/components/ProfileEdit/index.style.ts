@@ -1,13 +1,10 @@
 import styled from '@emotion/styled';
 import COLORS from '../../styles/color';
 import { buttonStyle, inputStyle } from '../../styles/mixin';
+import { mainSectionStyle } from '../../styles/mixin';
 
 export const Wrapper = styled.div`
-  width: ${({ theme }) => theme.mainSection.width};
-  height: 100%;
-  background-color: white;
-  display: flex;
-  flex-direction: column;
+  ${mainSectionStyle}
 `;
 
 export const ProfileAndImgContainer = styled.div`

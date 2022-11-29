@@ -1,6 +1,14 @@
 import { css } from '@emotion/react';
 import COLORS from './color';
 
+export const mainSectionStyle = css`
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: ${COLORS.WHITE};
+`;
+
 export const displayCenter = css`
   display: flex;
   justify-content: center;

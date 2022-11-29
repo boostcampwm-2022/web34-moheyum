@@ -1,11 +1,8 @@
 import styled from '@emotion/styled';
+import { mainSectionStyle } from '../../styles/mixin';
 
 export const Wrapper = styled.div`
-  width: ${({ theme }) => theme.mainSection.width};
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  background-color: ${({ theme }) => theme.mainSection.backgroundColor};
+  ${mainSectionStyle}
   @media only screen and (max-width: ${({ theme }) => theme.wideWindow}) {
     width: calc(100% - ${({ theme }) => theme.sidebar.maxWidth});
   }

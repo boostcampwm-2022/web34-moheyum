@@ -3,7 +3,8 @@ import React from 'react';
 import AuthGuard from '../components/AuthGuard';
 import SideBar from '../components/Main/SideBar';
 import Editor from '../components/Write';
-import COLORS from '../styles/color';
+import Frame from '../styles/frame';
+import { mainSectionStyle } from '../styles/mixin';
 
 export default function write() {
   return (
@@ -18,19 +19,6 @@ export default function write() {
   );
 }
 
-// dev 브랜치에 Frame 올라오면 지울것
-const Frame = styled.div`
-  background-color: ${COLORS.OFF_WHITE};
-  width: 1280px;
-  max-width: 1280px;
-  height: 100%;
-  display: flex;
-  flex-direction: row;
-`;
-
 const ContentWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  max-width: 1090px;
+  ${mainSectionStyle}
 `;

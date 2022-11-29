@@ -2,16 +2,16 @@ import React from 'react';
 import styled from '@emotion/styled';
 import Introduction from '../components/Login/Introduction';
 import Login from '../components/Login/Login';
-import Frame from '../styles/frame';
+import { SignFrame } from '../styles/frame';
 
 export default function login() {
   return (
-    <Frame>
+    <SignFrame>
       <Wrapper>
         <Introduction />
         <Login />
       </Wrapper>
-    </Frame>
+    </SignFrame>
   );
 }
 const Wrapper = styled.div`

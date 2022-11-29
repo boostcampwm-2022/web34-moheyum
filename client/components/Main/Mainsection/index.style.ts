@@ -1,13 +1,10 @@
 import styled from '@emotion/styled';
 import COLORS from '../../../styles/color';
 import { buttonStyle } from '../../../styles/mixin';
+import { mainSectionStyle } from '../../../styles/mixin';
 
 export const Wrapper = styled.section`
-  width: ${({ theme }) => theme.mainSection.width};
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  background-color: ${({ theme }) => theme.mainSection.backgroundColor};
+  ${mainSectionStyle}
   @media only screen and (max-width: ${({ theme }) => theme.wideWindow}) {
     width: calc(100% - ${({ theme }) => theme.sidebar.maxWidth});
   }

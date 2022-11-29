@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import COLORS from '../../styles/color';
 import { markdownStyle } from '../../styles/mixin';
+import { mainSectionStyle } from '../../styles/mixin';
 
 export const PostHeader = styled.div`
   width: 100%;
@@ -36,11 +37,7 @@ export const PostedAt = styled.div`
 `;
 
 export const Wrapper = styled.div`
-  width: ${({ theme }) => theme.mainSection.width};
-  height: 100%;
-  background-color: white;
-  display: flex;
-  flex-direction: column;
+  ${mainSectionStyle}
 `;
 
 export const ContentBox = styled.div`
