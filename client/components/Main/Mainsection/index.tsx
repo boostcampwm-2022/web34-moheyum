@@ -58,11 +58,22 @@ export default function MainSection() {
                 id={item.author._id}
                 description={item.author.description}
                 date={item.author.createdAt}
+                comments={item.author.childPosts}
+                ref={lastFollowElementRef}
               />
             );
-          })}
-        </ArticlesSection>
-      </Newsfeed>
+          return (
+            <ArticleCard
+              author={item.author.author}
+              key={item.author._id}
+              id={item.author._id}
+              description={item.author.description}
+              date={item.author.createdAt}
+              comments={item.author.childPosts}
+            />
+          );
+        })}
+      </ArticlesSection>
     </Wrapper>
   );
 }
