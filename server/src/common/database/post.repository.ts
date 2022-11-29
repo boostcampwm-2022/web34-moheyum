@@ -32,7 +32,7 @@ export class PostRepository {
       {
         $project: {
           author: '$author',
-          descrisption: '$description',
+          description: '$description',
           parentPost: '$parentPost',
           childPosts: '$childPosts',
           createdAt: '$createdAt',
@@ -67,7 +67,7 @@ export class PostRepository {
         {
           $project: {
             author: '$author',
-            descrisption: '$description',
+            description: '$description',
             childPosts: { $size: '$childPosts' },
             createdAt: '$createdAt',
             updatedAt: '$updateAt',
