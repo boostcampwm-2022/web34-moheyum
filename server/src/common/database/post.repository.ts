@@ -144,4 +144,46 @@ export class PostRepository {
     res.next = postList.length === limit ? postList.at(-1)._id : '';
     return res;
   }
+
+  searchPost(keyword: string){
+    return this.postModel.aggregate([
+      {$match: { $text: {$search: keyword}}},
+      {$limit: 10},
+      {$sort: {_id: -1}},
+      {$lookup: {
+        from: 'users',
+        localField: 'author',
+        foreignField: 'userid',
+        as: 'user'
+      }},
+      {$unwind: {path: '$user'}},
+      {$set: {authorDetail: {
+        nickname: '$user.nickname',
+        profileimg: '$user.profileimg',
+        state: '$user.state'
+      }}},
+      {$unset: "user"}
+    ])
+  }
+
+  searchPostWithNext(keyword: string, next: string) {
+    return this.postModel.aggregate([
+      {$match: { _id: {$lt: next}, $text: {$search: keyword}}},
+      {$limit: 10},
+      {$sort: {_id: -1}},
+      {$lookup: {
+        from: 'users',
+        localField: 'author',
+        foreignField: 'userid',
+        as: 'user'
+      }},
+      {$unwind: {path: '$user'}},
+      {$set: {authorDetail: {
+        nickname: '$user.nickname',
+        profileimg: '$user.profileimg',
+        state: '$user.state'
+      }}},
+      {$unset: "user"}
+    ])
+  }
 }
