@@ -236,19 +236,6 @@ export class FollowRepository {
             localField: 'targetid',
             foreignField: 'author',
             as: 'author',
-            pipeline: [
-              {
-                $addFields: {
-                  createdKoreaAt: {
-                    $dateToString: {
-                      format: '%Y-%m-%d %H:%M:%S',
-                      date: '$createdAt',
-                      timezone: 'Asia/Seoul',
-                    },
-                  },
-                },
-              },
-            ],
           },
         },
         {
@@ -270,7 +257,15 @@ export class FollowRepository {
         },
         {
           $project: {
-            author: 1,
+            author: {
+              author: '$author.author',
+              childPosts: { $size: '$author.childPosts' },
+              createdAt: '$author.createdAt',
+              description: '$author.description',
+              title: '$author.title',
+              updatedAt: '$author.updatedAt',
+              _id: '$author._id',
+            },
             profileimg: '$userinfo.profileimg',
             nickname: '$userinfo.nickname',
             cc: {
@@ -311,19 +306,6 @@ export class FollowRepository {
             localField: 'targetid',
             foreignField: 'author',
             as: 'author',
-            pipeline: [
-              {
-                $addFields: {
-                  createdKoreaAt: {
-                    $dateToString: {
-                      format: '%Y-%m-%d %H:%M:%S',
-                      date: '$createdAt',
-                      timezone: 'Asia/Seoul',
-                    },
-                  },
-                },
-              },
-            ],
           },
         },
         {
@@ -358,7 +340,15 @@ export class FollowRepository {
         },
         {
           $project: {
-            author: 1,
+            author: {
+              author: '$author.author',
+              childPosts: { $size: '$author.childPosts' },
+              createdAt: '$author.createdAt',
+              description: '$author.description',
+              title: '$author.title',
+              updatedAt: '$author.updatedAt',
+              _id: '$author._id',
+            },
             profileimg: '$userinfo.profileimg',
             nickname: '$userinfo.nickname',
           },
