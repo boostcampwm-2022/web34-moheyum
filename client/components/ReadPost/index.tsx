@@ -1,22 +1,28 @@
 import Link from 'next/link';
 import Router from 'next/router';
 import React, { useEffect, useRef } from 'react';
+import Image from 'next/legacy/image';
 import { calcTime } from '../../utils/calctime';
 import renderMarkdown from '../../utils/markdown';
-import { Author, ContentBox, PostContent, PostedAt, PostHeader, Profile, Wrapper } from './index.style';
+import {
+  Author,
+  ContentBox,
+  PostContent,
+  PostedAt,
+  HeaderBox,
+  ProfileImg,
+  Wrapper,
+  AuthorDetail,
+  CommentBox,
+} from './index.style';
 import { ButtonBack, TopBar } from '../../styles/common';
+import type PostProps from '../../types/Post';
 
-interface Props {
-  postData: {
-    _id: string;
-    title: string;
-    description: string;
-    author: string;
-    createdAt: string;
-  };
+interface PostData {
+  postData: PostProps;
 }
 
-export default function ReadPost({ postData }: Props) {
+export default function ReadPost({ postData }: PostData) {
   const contentRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!contentRef.current) return;
@@ -25,6 +31,7 @@ export default function ReadPost({ postData }: Props) {
   const goBack = () => {
     Router.back();
   };
+  console.log('sid', postData);
   return (
     <Wrapper>
       <TopBar>
@@ -32,21 +39,32 @@ export default function ReadPost({ postData }: Props) {
           <div>
             <ButtonBack type="button" onClick={goBack} />
           </div>
-          <h1>{postData.title || '글 제목'}</h1>
+          <h1>게시글</h1>
         </div>
       </TopBar>
-      <ContentBox>
-        <PostHeader>
-          <Link href={`/user/${postData.author}`}>
+      <PostContent>
+        <HeaderBox>
+          <Link href={`/${postData.author}`}>
             <Author>
-              <Profile />
-              {postData.author || '작성자 이름'}
+              <ProfileImg>
+                <Image src={postData.authorDetail.profileimg} alt="Logo" layout="fill" priority />
+              </ProfileImg>
+              <AuthorDetail>
+                <div id="name">{postData.authorDetail.nickname || '작성자 이름'}</div>
+                <div id="user-id">@{postData.author || '작성자 아이디'}</div>
+              </AuthorDetail>
+              <PostedAt>
+                <div id="time">{calcTime(postData.createdAt)}</div>
+                <div>&nbsp;</div>
+              </PostedAt>
             </Author>
           </Link>
-          <PostedAt>{calcTime(postData.createdAt)}</PostedAt>
-        </PostHeader>
-        <PostContent ref={contentRef}>{postData.description || '글 내용'}</PostContent>
-      </ContentBox>
+        </HeaderBox>
+        <ContentBox ref={contentRef}>{postData.description || '글 내용'}</ContentBox>
+        <CommentBox>
+          <div id="title">답글: {postData.childPosts}개</div>
+        </CommentBox>
+      </PostContent>
     </Wrapper>
   );
 }

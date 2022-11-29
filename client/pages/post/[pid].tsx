@@ -5,16 +5,11 @@ import SideBar from '../../components/Main/SideBar';
 import ReadPost from '../../components/ReadPost';
 import Frame from '../../styles/frame';
 import { httpGet } from '../../utils/http';
+import type PostProps from '../../types/Post';
 
 interface Props {
   data: {
-    post: {
-      _id: string;
-      title: string;
-      description: string;
-      author: string;
-      createdAt: string;
-    };
+    post: PostProps;
   };
 }
 
