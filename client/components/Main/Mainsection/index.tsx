@@ -30,16 +30,28 @@ export default function MainSection() {
       <MainTopBar>
         <div>홈</div>
       </MainTopBar>
-      <Link href="/write">
-        <NewArticleSection>
-          <Placeholder>무슨 생각 하세요?</Placeholder>
-          <hr />
-          <FakeButton type="button">글쓰기</FakeButton>
-        </NewArticleSection>
-      </Link>
-      <ArticlesSection>
-        {pages.map((item: any, index: number) => {
-          if (pages.length === index + 1)
+      <Newsfeed>
+        <Link href="/write">
+          <NewArticleSection>
+            <Placeholder>무슨 생각 하세요?</Placeholder>
+            <hr />
+            <FakeButton type="button">글쓰기</FakeButton>
+          </NewArticleSection>
+        </Link>
+        <ArticlesSection>
+          {pages.map((item: any, index: number) => {
+            if (pages.length === index + 1)
+              return (
+                <ArticleCard
+                  author={item.author.author}
+                  key={item.author._id}
+                  id={item.author._id}
+                  description={item.author.description}
+                  date={item.author.createdAt}
+                  comments={item.author.childPosts}
+                  ref={lastFollowElementRef}
+                />
+              );
             return (
               <ArticleCard
                 author={item.author.author}
@@ -48,21 +60,11 @@ export default function MainSection() {
                 description={item.author.description}
                 date={item.author.createdAt}
                 comments={item.author.childPosts}
-                ref={lastFollowElementRef}
               />
             );
-          return (
-            <ArticleCard
-              author={item.author.author}
-              key={item.author._id}
-              id={item.author._id}
-              description={item.author.description}
-              date={item.author.createdAt}
-              comments={item.author.childPosts}
-            />
-          );
-        })}
-      </ArticlesSection>
+          })}
+        </ArticlesSection>
+      </Newsfeed>
     </Wrapper>
   );
 }

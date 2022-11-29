@@ -57,7 +57,6 @@ export default function ReadPost({ postData }: PostData) {
     },
     [loading, next !== NEXT.END]
   );
-  console.log(postData);
   return (
     <Wrapper>
       <TopBar>
