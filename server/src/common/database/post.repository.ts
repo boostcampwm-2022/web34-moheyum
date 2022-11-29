@@ -39,13 +39,7 @@ export class PostRepository {
           updatedAt: '$updateAt',
           authorDetail: {
             nickname: '$user.nickname',
-            email: '$user.email',
             profileimg: '$user.profileimg',
-            bio: '$user.bio',
-            userState: '$user.state',
-            following: '$user.following',
-            postcount: '$user.postcount',
-            follower: '$user.follower',
           },
         },
       },
@@ -74,19 +68,12 @@ export class PostRepository {
           $project: {
             author: '$author',
             descrisption: '$description',
-            parentPost: '$parentPost',
-            childPosts: '$childPosts',
+            childPosts: { $size: '$childPosts' },
             createdAt: '$createdAt',
             updatedAt: '$updateAt',
             authorDetail: {
               nickname: '$user.nickname',
-              email: '$user.email',
               profileimg: '$user.profileimg',
-              bio: '$user.bio',
-              userState: '$user.state',
-              following: '$user.following',
-              postcount: '$user.postcount',
-              follower: '$user.follower',
             },
           },
         },
@@ -184,6 +171,7 @@ export class PostRepository {
     const res = { post: [], next: '' };
     const comments =
       (await this.postModel.aggregate([
+        { $sort: { _id: 1 } },
         {
           $match: {
             $expr: {
@@ -194,6 +182,7 @@ export class PostRepository {
             },
           },
         },
+        { $limit: limit },
         {
           $lookup: {
             from: 'users',
@@ -211,7 +200,7 @@ export class PostRepository {
             createdAt: '$createdAt',
             updatedAt: '$updateAt',
             parentPost: '$parentPost',
-            childPosts: '$childPosts',
+            childPosts: { $size: '$childPosts' },
             authorDetail: {
               nickname: '$user.nickname',
               email: '$user.email',
@@ -224,8 +213,6 @@ export class PostRepository {
             },
           },
         },
-        { $sort: { _id: 1 } },
-        { $limit: limit },
       ])) ?? [];
     res.post = comments;
     res.next = comments.length === limit ? comments.at(-1)._id.toString() : '';
@@ -236,11 +223,13 @@ export class PostRepository {
     const res = { post: [], next: '' };
     const comments =
       (await this.postModel.aggregate([
+        { $sort: { _id: 1 } },
         {
           $match: {
             $expr: { $eq: ['$parentPost', id] },
           },
         },
+        { $limit: limit },
         {
           $lookup: {
             from: 'users',
@@ -258,7 +247,7 @@ export class PostRepository {
             createdAt: '$createdAt',
             updatedAt: '$updateAt',
             parentPost: '$parentPost',
-            childPosts: '$childPosts',
+            childPosts: { $size: '$childPosts' },
             authorDetail: {
               nickname: '$user.nickname',
               email: '$user.email',
@@ -271,8 +260,6 @@ export class PostRepository {
             },
           },
         },
-        { $sort: { _id: 1 } },
-        { $limit: limit },
       ])) ?? [];
     res.post = comments;
     res.next = comments.length === limit ? comments.at(-1)._id.toString() : '';
