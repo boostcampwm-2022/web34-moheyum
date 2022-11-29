@@ -62,7 +62,7 @@ export default function ReadPost({ postData }: PostData) {
         </HeaderBox>
         <ContentBox ref={contentRef}>{postData.description || '글 내용'}</ContentBox>
         <CommentBox>
-          <div id="title">답글: {postData.childPosts}개</div>
+          <div id="title">답글: 개</div>
         </CommentBox>
       </PostContent>
     </Wrapper>
