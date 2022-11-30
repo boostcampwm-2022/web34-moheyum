@@ -153,41 +153,43 @@ export default function ProfileEditSection() {
           <h1>프로필 편집</h1>
         </div>
       </TopBar>
-      <form onSubmit={handleSubmit(handleProfileImgSubmit)} style={{ width: '500px' }} encType="multipart/form-data">
-        <ProfileAndImgContainer>
-          <Avatar src={previewImg ?? myProfile.profileimg}>
-            <div>&nbsp;</div>
-            <UpdateIcon>
+      <div>
+        <form onSubmit={handleSubmit(handleProfileImgSubmit)} style={{ width: '500px' }} encType="multipart/form-data">
+          <ProfileAndImgContainer>
+            <Avatar src={previewImg ?? myProfile.profileimg}>
               <div>&nbsp;</div>
-              <ProfileImageInput type="file" ref={selectFile} onChange={handleImg} accept="image/*" />
-              <ChangeImageButton type="button" onClick={() => selectFile.current!.click()}>
-                <Image src="/profile_img.svg" alt="Profile" width={50} height={60} priority />
-              </ChangeImageButton>
-            </UpdateIcon>
-          </Avatar>
+              <UpdateIcon>
+                <div>&nbsp;</div>
+                <ProfileImageInput type="file" ref={selectFile} onChange={handleImg} accept="image/*" />
+                <ChangeImageButton type="button" onClick={() => selectFile.current!.click()}>
+                  <Image src="/profile_img.svg" alt="Profile" width={50} height={60} priority />
+                </ChangeImageButton>
+              </UpdateIcon>
+            </Avatar>
 
-          <ProfileArea>
-            <ProfileUserid>{myProfile.userid}</ProfileUserid>
-            <ProfileEmail>{myProfile.email}</ProfileEmail>
-            <ChangeAvatarButton type="submit">프로필 사진 바꾸기</ChangeAvatarButton>
-          </ProfileArea>
-        </ProfileAndImgContainer>
-      </form>
-      <InputsContainer>
-        <form onSubmit={handleSubmit(handleProfileSubmit)} style={{ width: '500px' }}>
-          <NicknameEditArea>
-            별명:
-            <NicknameInput {...register('nickname')} value={myProfile.nickname} onChange={handleNicknameChange} />
-            <ErrorMessage>{errors.nickname && (errors.nickname.message as string)}</ErrorMessage>
-          </NicknameEditArea>
-          <BioEditArea>
-            소개:
-            <BioInput {...register('bio')} value={myProfile.bio} onChange={handleBioChange} />
-            <ErrorMessage>{errors.bio && (errors.bio.message as string)}</ErrorMessage>
-          </BioEditArea>
-          <SubmitButton type="submit">저장</SubmitButton>
+            <ProfileArea>
+              <ProfileUserid>{myProfile.userid}</ProfileUserid>
+              <ProfileEmail>{myProfile.email}</ProfileEmail>
+              <ChangeAvatarButton type="submit">프로필 사진 바꾸기</ChangeAvatarButton>
+            </ProfileArea>
+          </ProfileAndImgContainer>
         </form>
-      </InputsContainer>
+        <InputsContainer>
+          <form onSubmit={handleSubmit(handleProfileSubmit)} style={{ width: '500px' }}>
+            <NicknameEditArea>
+              별명:
+              <NicknameInput {...register('nickname')} value={myProfile.nickname} onChange={handleNicknameChange} />
+              <ErrorMessage>{errors.nickname && (errors.nickname.message as string)}</ErrorMessage>
+            </NicknameEditArea>
+            <BioEditArea>
+              소개:
+              <BioInput {...register('bio')} value={myProfile.bio} onChange={handleBioChange} />
+              <ErrorMessage>{errors.bio && (errors.bio.message as string)}</ErrorMessage>
+            </BioEditArea>
+            <SubmitButton type="submit">저장</SubmitButton>
+          </form>
+        </InputsContainer>
+      </div>
     </Wrapper>
   );
 }
