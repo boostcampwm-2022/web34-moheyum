@@ -3,11 +3,11 @@ import { GetServerSidePropsContext } from 'next';
 import React from 'react';
 import AuthGuard from '../../../components/AuthGuard';
 import SideBar from '../../../components/Main/SideBar';
-import ReadPost from '../../../components/ReadPost';
-import CommentEditor from '../../../components/WriteComment';
+import ReadPost from '../../../components/ReadParentPost';
 import Frame from '../../../styles/frame';
 import { httpGet } from '../../../utils/http';
 import type PostProps from '../../../types/Post';
+import Editor from '../../../components/Write';
 
 interface Props {
   data: {
@@ -16,16 +16,15 @@ interface Props {
 }
 
 export default function Post({ response }: { response: Props }) {
-  const title = '답글 작성';
   return (
     <AuthGuard noRedirect>
       <Frame>
         <SideBar />
         <ContentWrapper>
           <PostWrapper>
-            <ReadPost postData={response.data.post} title={title} />
+            <ReadPost postData={response.data.post} />
           </PostWrapper>
-          <CommentEditor postData={response.data.post} />
+          <Editor postData={response.data.post} />
         </ContentWrapper>
       </Frame>
     </AuthGuard>
