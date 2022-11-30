@@ -6,13 +6,26 @@ import {
   IsByteLength,
   IsEmail,
   IsOptional,
+  IsNotIn,
 } from 'class-validator';
+
+// 페이지 변경되거나 추가되면 여기도 업데이트 필요.
+const urlList = [
+  'signup',
+  'post',
+  'notification',
+  'login',
+  'myAccount',
+  'search',
+  'write',
+];
 
 export class UserCreateDto {
   @IsNotEmpty()
   @IsString()
   @Matches(/^[a-zA-Z\d_]{4,16}$/)
   @IsByteLength(4, 16)
+  @IsNotIn(urlList)
   userid: string;
 
   @IsNotEmpty()
