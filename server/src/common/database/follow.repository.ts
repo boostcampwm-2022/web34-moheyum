@@ -226,66 +226,32 @@ export class FollowRepository {
   }
 
   async findUserToMention(userid: string) {
-    const followingList = await this.followModel.aggregate([
-      {
-        $match: {
-          $and: [{ userid: userid }, { targetid: { $ne: userid } }],
-        },
-      },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'targetid',
-          foreignField: 'userid',
-          as: 'user',
-        },
-      },
-      {
-        $unwind: '$user',
-      },
-      {
-        $project: {
-          _id: false,
-          userid: '$user.userid',
-          nickname: '$user.nickname',
-          profileimg: '$user.profileimg',
-        },
-      },
-    ]);
+    const userSet = new Set<string>();
+    const followingProms = this.followModel
+      .find({ userid: userid })
+      .lean()
+      .then(
+        (list) =>
+          new Promise<void>((resolve) => {
+            list.map((v) => v.targetid).forEach((v) => userSet.add(v));
+            resolve();
+          }),
+      );
 
-    const followerList = await this.followModel.aggregate([
-      {
-        $match: {
-          $and: [{ targetid: userid }, { userid: { $ne: userid } }],
-        },
-      },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'userid',
-          foreignField: 'userid',
-          as: 'user',
-        },
-      },
-      {
-        $unwind: '$user',
-      },
-      {
-        $project: {
-          _id: false,
-          userid: '$user.userid',
-          nickname: '$user.nickname',
-          profileimg: '$user.profileimg',
-        },
-      },
-    ]);
+    const followerProms = this.followModel
+      .find({ targetid: userid })
+      .lean()
+      .then(
+        (list) =>
+          new Promise<void>((resolve) => {
+            list.map((v) => v.userid).forEach((v) => userSet.add(v));
+            resolve();
+          }),
+      );
 
-    const finalList = [...followingList, ...followerList].reduce((acc, cur) => {
-      if (acc.findIndex(({ userid }) => userid === cur.userid) === -1) {
-        acc.push(cur);
-      }
-      return acc;
-    }, []);
+    await Promise.all([followingProms, followerProms]);
+
+    const finalList = [...userSet];
     return finalList;
   }
 }

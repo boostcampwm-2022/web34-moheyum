@@ -24,10 +24,10 @@ import { PostGuard } from 'src/common/guard/post.guard';
 export class PostController {
   constructor(private postService: PostService) {}
 
-  @Get()
-  getAllPosts(): Promise<Post_[]> {
-    return this.postService.getAllPosts();
-  }
+  // @Get()
+  // getAllPosts(): Promise<Post_[]> {
+  //   return this.postService.getAllPosts();
+  // }
 
   @Get('/author/:userid')
   async getUserPosts(
@@ -88,6 +88,7 @@ export class PostController {
       data: { post: postData },
     };
   }
+
   @HttpCode(200)
   @UseGuards(JwtAuthGuard, PostGuard)
   @Delete('/:id')

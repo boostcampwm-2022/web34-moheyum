@@ -61,8 +61,12 @@ export const ArticleContent = styled.div`
 `;
 
 export const Content = styled.div`
-  width: 100%;
   overflow-x: hidden;
+  overflow-y: hidden;
+  height: 120px;
+  display: block;
+  word-break: break-all;
+  padding-right: 10px;
 `;
 
 export const ArticleImage = styled.div`

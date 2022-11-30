@@ -34,7 +34,7 @@ export class FollowService {
         this.notificationRepository.create(
           targetid,
           `${user.nickname}(${user.userid})님이 팔로우하였습니다.`,
-          `/user/${user.userid}`,
+          `/${user.userid}`,
         );
         return res;
       })

@@ -16,16 +16,15 @@ export const FollowMember = React.forwardRef<HTMLInputElement, UserData>(
     const [following, setFollowing] = useState(false);
     const authedUserInfo = useRecoilValue(authedUser);
 
-    
     useEffect(() => {
       if (authedUserInfo.logined)
-      fetch(`/api/follow/check/${userid}`, {
-        credentials: 'include',
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setFollowing(data.data.isFollow);
-        });
+        fetch(`/api/follow/check/${userid}`, {
+          credentials: 'include',
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            setFollowing(data.data.isFollow);
+          });
     }, []);
 
     const ToggleFollowing = () => {
@@ -49,7 +48,7 @@ export const FollowMember = React.forwardRef<HTMLInputElement, UserData>(
           <Avatar src={profileimg} />
           <Information>
             <UserNickname>
-              <Link href={`/user/${userid}`}>{nickname}</Link>
+              <Link href={`/${userid}`}>{nickname}</Link>
             </UserNickname>
             <UserId>{userid}</UserId>
             {/* <UserBio>
