@@ -44,7 +44,7 @@ export class UserService {
     }[]
   > {
     const data = await this.followRepository.findUserToMention(userid);
-    return data;
+    return await this.userRepository.searchUsersForSuggestion(data);
   }
 
   async searchUser(keyword: string, next: string) {

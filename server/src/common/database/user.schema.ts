@@ -61,6 +61,7 @@ export class User {
 
 export const UserSchema = SchemaFactory.createForClass(User);
 
+//for searchUser
 UserSchema.index({
   state: 1,
   _id: 1,
