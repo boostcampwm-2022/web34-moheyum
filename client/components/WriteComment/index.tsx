@@ -148,7 +148,6 @@ export default function CommentEditor({ postData }: Props) {
       contentRef.current.innerHTML = contentHTML;
     }
   }, [tabIndex]);
-
   return (
     <Wrapper>
       <CommentTopBar>

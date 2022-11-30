@@ -8,18 +8,25 @@ import { TopBar, ButtonBack } from '../../styles/common';
 const goBack = () => {
   Router.back();
 };
-export default function EditorWrapper() {
+interface Props {
+  postData: {
+    _id: string;
+  };
+}
+export default function EditorWrapper({ postData }: Props) {
   return (
     <Wrapper>
-      <TopBar>
-        <div>
+      {postData === undefined && (
+        <TopBar>
           <div>
-            <ButtonBack type="button" onClick={goBack} />
+            <div>
+              <ButtonBack type="button" onClick={goBack} />
+            </div>
+            <h1>새 글 작성</h1>
           </div>
-          <h1>게시글</h1>
-        </div>
-      </TopBar>
-      <Editor />
+        </TopBar>
+      )}
+      <Editor postData={postData} />
     </Wrapper>
   );
 }

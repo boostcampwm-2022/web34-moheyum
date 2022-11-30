@@ -14,17 +14,18 @@ import {
   Wrapper,
 } from './index.style';
 
-export default function Editor() {
+interface Props {
+  postData: {
+    _id?: string;
+  };
+}
+
+export default function Editor({ postData }: Props) {
   const contentRef = useRef<HTMLDivElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const [tabIndex, setTabIndex] = useState(0); // 0 Editor, 1 Preview
   const [content, setContent] = useState<string>('');
   const [contentHTML, setContentHTML] = useState<string>('<div><br></div>'); // 탭 전환용
-
-  // useEffect(() => { // test function
-  //   if (!previewRef.current) return;
-  //   previewRef.current.innerHTML = renderMarkdown(content);
-  // }, [content]);
 
   const handlePaste = (e: ClipboardEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -112,12 +113,13 @@ export default function Editor() {
       author: 1,
       title: 'title',
       description: contentRef.current.innerText,
+      parentPost: postData === undefined ? null : postData._id,
     });
     if (result.statusCode !== 200) {
       alert(`글 작성에 실패했습니다.\nERROR statusCode: ${result.statusCode}\nERROR message: ${result.message}`);
       return;
     }
-    Router.push('/');
+    Router.back();
   };
 
   const selectTab = (index: number) => {
@@ -140,7 +142,6 @@ export default function Editor() {
       contentRef.current.innerHTML = contentHTML;
     }
   }, [tabIndex]);
-
   return (
     <Wrapper>
       <ToolbarContainer>

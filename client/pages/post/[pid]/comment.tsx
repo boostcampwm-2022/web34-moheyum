@@ -4,10 +4,10 @@ import React from 'react';
 import AuthGuard from '../../../components/AuthGuard';
 import SideBar from '../../../components/Main/SideBar';
 import ReadPost from '../../../components/ReadPost';
-import CommentEditor from '../../../components/WriteComment';
 import Frame from '../../../styles/frame';
 import { httpGet } from '../../../utils/http';
 import type PostProps from '../../../types/Post';
+import Editor from '../../../components/Write';
 
 interface Props {
   data: {
@@ -25,7 +25,7 @@ export default function Post({ response }: { response: Props }) {
           <PostWrapper>
             <ReadPost postData={response.data.post} title={title} />
           </PostWrapper>
-          <CommentEditor postData={response.data.post} />
+          <Editor postData={response.data.post} />
         </ContentWrapper>
       </Frame>
     </AuthGuard>
