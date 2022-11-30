@@ -1,15 +1,22 @@
+import Image from 'next/image';
 import Router from 'next/router';
 import React, { ClipboardEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { authedUser } from '../../../atom';
 import { httpPost } from '../../../utils/http';
 import renderMarkdown from '../../../utils/markdown';
 import {
+  Author,
   BottomButtonConatiner,
+  CommentTopBar,
   EditorContainer,
   EditorTabItem,
   EditorTabs,
   EditorTabTool,
   EditorTextBox,
+  PostHeader,
   PreviewTextBox,
+  Profile,
   ToolbarContainer,
   Wrapper,
 } from './index.style';
@@ -26,7 +33,7 @@ export default function Editor({ postData }: Props) {
   const [tabIndex, setTabIndex] = useState(0); // 0 Editor, 1 Preview
   const [content, setContent] = useState<string>('');
   const [contentHTML, setContentHTML] = useState<string>('<div><br></div>'); // 탭 전환용
-
+  const authedUserInfo = useRecoilValue(authedUser);
   const handlePaste = (e: ClipboardEvent<HTMLDivElement>) => {
     e.preventDefault();
     const data = e.clipboardData?.getData('Text');
@@ -144,6 +151,20 @@ export default function Editor({ postData }: Props) {
   }, [tabIndex]);
   return (
     <Wrapper>
+      <CommentTopBar>
+        <PostHeader>
+          <Author>
+            <Profile>
+              {authedUserInfo.profileimg ? (
+                <Image src={authedUserInfo.profileimg} alt="" layout="fill" priority />
+              ) : (
+                <Image src="/favicon.svg" alt="Logo" layout="fill" priority />
+              )}
+            </Profile>
+            {authedUserInfo.nickname || 'ananymous'}
+          </Author>
+        </PostHeader>
+      </CommentTopBar>
       <ToolbarContainer>
         <EditorTabs>
           <EditorTabItem selected={tabIndex === 0} onClick={() => selectTab(0)}>
