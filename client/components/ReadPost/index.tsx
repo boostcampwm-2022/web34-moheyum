@@ -27,7 +27,8 @@ export default function ReadPost({ postData, title }: PostData) {
   useEffect(() => {
     if (!contentRef.current) return;
     contentRef.current.innerHTML = renderMarkdown(postData.description);
-  }, []);
+  }, [contentRef.current?.textContent]);
+
   const goBack = () => {
     Router.back();
   };
