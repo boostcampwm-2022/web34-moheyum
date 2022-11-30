@@ -3,7 +3,7 @@ import { GetServerSidePropsContext } from 'next';
 import React from 'react';
 import AuthGuard from '../../../components/AuthGuard';
 import SideBar from '../../../components/Main/SideBar';
-import ReadPost from '../../../components/ReadPost';
+import ReadPost from '../../../components/ReadParentPost';
 import Frame from '../../../styles/frame';
 import { httpGet } from '../../../utils/http';
 import type PostProps from '../../../types/Post';
@@ -16,14 +16,13 @@ interface Props {
 }
 
 export default function Post({ response }: { response: Props }) {
-  const title = '답글 작성';
   return (
     <AuthGuard noRedirect>
       <Frame>
         <SideBar />
         <ContentWrapper>
           <PostWrapper>
-            <ReadPost postData={response.data.post} title={title} />
+            <ReadPost postData={response.data.post} />
           </PostWrapper>
           <Editor postData={response.data.post} />
         </ContentWrapper>
