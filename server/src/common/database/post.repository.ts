@@ -17,7 +17,7 @@ export class PostRepository {
   async findOne(postFilterQuery: FilterQuery<Post>) {
     const { _id } = postFilterQuery;
     const postOne = await this.postModel.aggregate([
-      { $match: { $expr: { $eq: ['$_id', { $toObjectId: _id }] } } },
+      { $match: { _id: new mongoose.Types.ObjectId(_id) } },
       {
         $lookup: {
           from: 'users',
@@ -30,27 +30,27 @@ export class PostRepository {
         $unwind: '$user',
       },
       {
-        $project: {
-          author: '$author',
-          description: '$description',
-          parentPost: '$parentPost',
-          childPosts: '$childPosts',
-          createdAt: '$createdAt',
-          updatedAt: '$updateAt',
+        $set: {
           authorDetail: {
             nickname: '$user.nickname',
             profileimg: '$user.profileimg',
+            userid: '$user.userid',
           },
         },
       },
+      {
+        $unset: 'user',
+      },
     ]);
+    if (postOne.length === 0) throw new NotFoundException();
+
     const data = postOne.at(0);
     if (data.parentPost !== '') {
       // const parent = await this.postModel.findById(data.parentPost);
       const parent = await this.postModel.aggregate([
         {
           $match: {
-            $expr: { $eq: ['$_id', { $toObjectId: data.parentPost }] },
+            _id: new mongoose.Types.ObjectId(data.parentPost),
           },
         },
         {
@@ -65,17 +65,17 @@ export class PostRepository {
           $unwind: '$user',
         },
         {
-          $project: {
-            author: '$author',
-            description: '$description',
+          $set: {
             childPosts: { $size: '$childPosts' },
-            createdAt: '$createdAt',
-            updatedAt: '$updateAt',
             authorDetail: {
               nickname: '$user.nickname',
               profileimg: '$user.profileimg',
+              userid: '$user.userid',
             },
           },
+        },
+        {
+          $unset: 'user',
         },
       ]);
       data.parent = parent;
