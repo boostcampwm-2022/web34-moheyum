@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 
 export const Wrapper = styled.div`
-  width: ${({ theme }) => theme.mainSection.width};
   height: 100%;
   background-color: white;
   display: flex;
