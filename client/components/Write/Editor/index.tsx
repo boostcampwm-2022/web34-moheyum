@@ -19,6 +19,9 @@ export default function Editor() {
   const previewRef = useRef<HTMLDivElement>(null);
   const [tabIndex, setTabIndex] = useState(0); // 0 Editor, 1 Preview
   const [content, setContent] = useState<string>('');
+  const [dropDownDisplay, setDropDownDisplay] = useState<string>('none');
+  const [dropDownPosition, setDropDownPosition] = useState<{ x: string; y: string }>({ x: '0px', y: '0px' });
+  const [checkMentionKey, setCheckMentionKey] = useState<boolean>(false);
   const [contentHTML, setContentHTML] = useState<string>('<div><br></div>'); // 탭 전환용
   // 프리뷰 전환했다가 마크다운 돌아올 때 쓰는거
 
@@ -68,6 +71,15 @@ export default function Editor() {
         contentRef.current.innerHTML = '<div><br/></div>';
       }
     }
+    if (checkMentionKey && (key === '@' || key === 'Shift')) {
+      const cursor = window.getSelection();
+      const range = cursor?.getRangeAt(0);
+      if (range) {
+        const bounds = range.getBoundingClientRect();
+        setDropDownPosition({ x: `${bounds.x + 10}px`, y: `${bounds.y + 5}px` });
+        setDropDownDisplay('block');
+      }
+    }
     setContent(contentRef.current.innerText.replace(/\n\n/g, '\n'));
   };
 
@@ -77,8 +89,11 @@ export default function Editor() {
     const cursor = window.getSelection();
     if (!cursor) return;
     const collapseNode = cursor.anchorNode;
-
     if (key === 'Backspace' || key === 'Delete') {
+      if (dropDownDisplay === 'block') {
+        setDropDownDisplay('none');
+        setCheckMentionKey(false);
+      }
       if (contentRef.current.innerHTML === '<div><br></div>') {
         e.preventDefault();
         return;
@@ -105,6 +120,24 @@ export default function Editor() {
           cursor.anchorOffset
         )}\xa0\xa0${cursor.anchorNode?.textContent?.slice(cursor.anchorOffset)}`;
         window.getSelection()?.collapse(cursor.anchorNode, position);
+      }
+    }
+    if (key === '@') {
+      setCheckMentionKey(true);
+    }
+    if (key === ' ') {
+      if (dropDownDisplay === 'block') {
+        setDropDownDisplay('none');
+        setCheckMentionKey(false);
+      }
+    }
+    if (checkMentionKey) {
+      console.log(checkMentionKey);
+      const cursor = window.getSelection();
+      const range = cursor?.getRangeAt(0);
+      if (range) {
+        const bounds = range.getBoundingClientRect();
+        setDropDownPosition({ x: `${bounds.x + 10}px`, y: `${bounds.y + 5}px` });
       }
     }
   };
@@ -224,6 +257,16 @@ export default function Editor() {
         ) : (
           <PreviewTextBox ref={previewRef} />
         )}
+        <div
+          style={{
+            position: 'absolute',
+            display: dropDownDisplay,
+            left: dropDownPosition.x,
+            top: dropDownPosition.y,
+          }}
+        >
+          드롭다운
+        </div>
         <input type="file" id="fileUpload" style={{ display: 'none' }} />
       </EditorContainer>
       <BottomButtonConatiner>
