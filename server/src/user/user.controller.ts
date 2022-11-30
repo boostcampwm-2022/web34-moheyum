@@ -8,7 +8,6 @@ import {
   HttpCode,
   UseGuards,
   BadRequestException,
-  Post,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -23,7 +22,10 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('user')
 export class UserController {
-  constructor(private userService: UserService, private ncloudServie: NcloudService) {}
+  constructor(
+    private userService: UserService,
+    private ncloudServie: NcloudService,
+  ) {}
 
   @HttpCode(200)
   @UseGuards(JwtAuthGuard)
@@ -36,16 +38,17 @@ export class UserController {
     };
   }
 
-
   @Get('/search')
-  async searchUser(@Query('keyword') keyword: string, @Query('next') next:string) {
-    if (!(/^[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣\d_]{1,16}$/.test(keyword)))
+  async searchUser(
+    @Query('keyword') keyword: string,
+    @Query('next') next: string,
+  ) {
+    if (!/^[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣\d_]{1,16}$/.test(keyword))
       throw new BadRequestException();
-    console.log(keyword);
     return {
       message: 'success',
-      data: await this.userService.searchUser(keyword, next)
-    }
+      data: await this.userService.searchUser(keyword, next),
+    };
   }
 
   @Get('/:userid')
@@ -68,19 +71,22 @@ export class UserController {
       data: await this.userService.updateUserProfile(userid, userUpdateDto),
     };
   }
-  
+
   @HttpCode(200)
   @UseGuards(JwtAuthGuard, UpdateAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
   @Put('/:userid/avatar')
-  async uploadAvatar(@Param('userid') userid: string, @UploadedFile() file: Express.Multer.File) {
+  async uploadAvatar(
+    @Param('userid') userid: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
     const url = await this.ncloudServie.upload(file);
     await this.userService.updateUserAvatar(userid, url.imageLink);
     return {
       message: 'success',
       data: {
-        profileimg: url.imageLink
-      }
-    }
+        profileimg: url.imageLink,
+      },
+    };
   }
 }

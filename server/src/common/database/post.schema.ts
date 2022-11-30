@@ -36,6 +36,6 @@ PostSchema.index({
 });
 
 //Full Text Search를 위한 text index
-PostSchema.index({description: "text"});
+PostSchema.index({ description: 'text' });
 
 export { PostSchema };

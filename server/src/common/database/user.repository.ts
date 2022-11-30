@@ -8,7 +8,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from '../database/user.schema';
 import { Model, FilterQuery } from 'mongoose';
 import { UserCreateDto } from '../../auth/dto/user-create.dto';
-import { UserUpdateDto } from 'src/user/dto/user-Update-dto';
 
 @Injectable()
 export class UserRepository {
@@ -112,29 +111,35 @@ export class UserRepository {
   }
 
   searchUserWithNext(keyword: string, next: string) {
-    return this.userModel.find({
-      state: true,
-      _id: {$gt: next},
-      $or: [
-        {userid: {$regex: `^${keyword}`}},
-        {nickname: {$regex: `^${keyword}`}}
-    ]},
-      {userid: 1, nickname: 1, profileimg: 1})
-    .sort({ _id: 1 })
-    .limit(2);
+    return this.userModel
+      .find(
+        {
+          state: true,
+          _id: { $gt: next },
+          $or: [
+            { userid: { $regex: `^${keyword}` } },
+            { nickname: { $regex: `^${keyword}` } },
+          ],
+        },
+        { userid: 1, nickname: 1, profileimg: 1 },
+      )
+      .sort({ _id: 1 })
+      .limit(2);
   }
 
   searchUser(keyword: string) {
-    return this.userModel.find({
-      state: true,
-      $or: [
-        {userid: {$regex: `^${keyword}`}},
-        {nickname: {$regex: `^${keyword}`}}
-    ]},
-      {userid: 1, nickname: 1, profileimg: 1})
-    .sort({ _id: 1 })
-    .limit(2);
+    return this.userModel
+      .find(
+        {
+          state: true,
+          $or: [
+            { userid: { $regex: `^${keyword}` } },
+            { nickname: { $regex: `^${keyword}` } },
+          ],
+        },
+        { userid: 1, nickname: 1, profileimg: 1 },
+      )
+      .sort({ _id: 1 })
+      .limit(2);
   }
 }
-
-
