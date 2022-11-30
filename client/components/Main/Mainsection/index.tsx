@@ -40,7 +40,6 @@ export default function MainSection() {
         </Link>
         <ArticlesSection>
           {pages.map((item: any, index: number) => {
-            console.log(item);
             if (pages.length === index + 1)
               return (
                 <ArticleCard
