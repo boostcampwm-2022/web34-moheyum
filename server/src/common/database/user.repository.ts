@@ -147,7 +147,7 @@ export class UserRepository {
     return this.userModel
       .find(
         { userid: { $in: userList }, state: true },
-        { userid: 1, nickname: 1, profileimg: 1 },
+        { _id: 0, userid: 1, nickname: 1, profileimg: 1 },
       )
       .lean();
   }
