@@ -50,7 +50,7 @@ export default function MainSection() {
                   date={item.createdAt}
                   comments={item.childPosts}
                   nickname={item.authorDetail.nickname}
-                  key={item.authorDetail._id}
+                  key={item._id}
                   ref={lastFollowElementRef}
                 />
               );
@@ -63,7 +63,7 @@ export default function MainSection() {
                 date={item.createdAt}
                 comments={item.childPosts}
                 nickname={item.authorDetail.nickname}
-                key={item.authorDetail._id}
+                key={item._id}
               />
             );
           })}
