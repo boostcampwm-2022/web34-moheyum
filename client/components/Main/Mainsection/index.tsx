@@ -43,23 +43,21 @@ export default function MainSection() {
             if (pages.length === index + 1)
               return (
                 <ArticleCard
-                  author={item.author.author}
-                  key={item.author._id}
-                  id={item.author._id}
-                  description={item.author.description}
-                  date={item.author.createdAt}
-                  comments={item.author.childPosts}
+                  author={item.authorDetail.nickname}
+                  id={item._id}
+                  description={item.description}
+                  date={item.createdAt}
+                  comments={item.childPosts}
                   ref={lastFollowElementRef}
                 />
               );
             return (
               <ArticleCard
-                author={item.author.author}
-                key={item.author._id}
-                id={item.author._id}
-                description={item.author.description}
-                date={item.author.createdAt}
-                comments={item.author.childPosts}
+                author={item.authorDetail.nickname}
+                id={item._id}
+                description={item.description}
+                date={item.createdAt}
+                comments={item.childPosts}
               />
             );
           })}
