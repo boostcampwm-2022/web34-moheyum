@@ -1,14 +1,5 @@
 import Router from 'next/router';
-import React, {
-  ClipboardEvent,
-  KeyboardEvent,
-  useEffect,
-  useRef,
-  useState,
-  useCallback,
-  ChangeEvent,
-  DragEvent,
-} from 'react';
+import React, { ClipboardEvent, KeyboardEvent, useEffect, useRef, useState, useCallback, DragEvent } from 'react';
 import { httpPost } from '../../../utils/http';
 import renderMarkdown from '../../../utils/markdown';
 import {
@@ -185,14 +176,12 @@ export default function Editor() {
           .catch((e) => alert(`이미지 업로드에 실패하였습니다. Error Message: ${e}`));
       } else {
         alert(`이미지 포맷을 확인해주세요.업로드 된 파일 이름 ${files[0].name} / 포맷 ${format}`);
-        return;
       }
     }
   };
 
   const handleDrop = useCallback((e: DragEvent<HTMLDivElement>): void => {
     e.preventDefault();
-    setTabIndex(0);
     handleFiles(e.dataTransfer.files);
   }, []);
 
@@ -235,11 +224,7 @@ export default function Editor() {
         ) : (
           <PreviewTextBox ref={previewRef} />
         )}
-        <input
-          type="file"
-          id="fileUpload"
-          style={{ display: 'none' }} // label을 이용하여 구현하기에 없애줌
-        />
+        <input type="file" id="fileUpload" style={{ display: 'none' }} />
       </EditorContainer>
       <BottomButtonConatiner>
         <button type="button" onClick={submitHandler}>
