@@ -8,13 +8,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Follow, FollowDocument } from './follow.schema';
 import mongoose, { Model, FilterQuery } from 'mongoose';
 import { User } from './user.schema';
-import { FollowerPostDto } from 'src/post/dto/follower-post.dto';
 import { FollowListDto } from 'src/follow/dto/follow-list.dto';
 @Injectable()
 export class FollowRepository {
   limitData = 2;
   constructor(
-    @InjectModel(Follow.name) private followModel: Model<FollowDocument>,
+    @InjectModel(Follow.name) private followModel: Model<FollowDocument>, // @InjectModel(Post.name) private PostModel: Model<PostDocument>,
   ) {}
   async create(targetid: string, user: User) {
     const newFollow = await this.followModel.updateOne(
@@ -220,154 +219,10 @@ export class FollowRepository {
     return res;
   }
 
-  async getFollowingPostListWithoutNext(
-    userid: string,
-    followerPostDTO: FollowerPostDto,
-  ) {
-    const { limit } = followerPostDTO;
-    const postList =
-      (await this.followModel.aggregate([
-        {
-          $match: { userid: userid },
-        },
-        {
-          $lookup: {
-            from: 'posts',
-            localField: 'targetid',
-            foreignField: 'author',
-            as: 'author',
-          },
-        },
-        {
-          $unwind: '$author',
-        }, //이후 skip, limit추가
-        {
-          $sort: { 'author.createdAt': -1, 'author._id': -1 },
-        },
-        {
-          $limit: limit,
-        },
-        {
-          $lookup: {
-            from: 'users',
-            localField: 'targetid',
-            foreignField: 'userid',
-            as: 'userinfo',
-          },
-        },
-        {
-          $project: {
-            author: {
-              author: '$author.author',
-              childPosts: { $size: '$author.childPosts' },
-              createdAt: '$author.createdAt',
-              description: '$author.description',
-              title: '$author.title',
-              updatedAt: '$author.updatedAt',
-              _id: '$author._id',
-            },
-            profileimg: '$userinfo.profileimg',
-            nickname: '$userinfo.nickname',
-            cc: {
-              $dateToString: {
-                format: '%Y-%m-%d %H:%M:%S',
-                date: '$author.createdAt',
-                timezone: 'Asia/Seoul',
-              },
-            },
-          },
-        },
-      ])) ?? [];
-    const res = {};
-    res['post'] = postList;
-    if (postList.length === limit) {
-      const lastItem = postList.at(-1);
-      const next = `${lastItem.author.createdAt.toISOString()}_${
-        lastItem.author._id
-      }`;
-      res['next'] = next;
-    } else {
-      res['next'] = '';
-    }
-    return res;
-  }
-
-  async getFollowingPostList(userid: string, followerPostDTO: FollowerPostDto) {
-    const { limit, next } = followerPostDTO;
-    const [nextdate, nextid] = next.split('_');
-    const postList =
-      (await this.followModel.aggregate([
-        {
-          $match: { userid: userid },
-        },
-        {
-          $lookup: {
-            from: 'posts',
-            localField: 'targetid',
-            foreignField: 'author',
-            as: 'author',
-          },
-        },
-        {
-          $unwind: '$author',
-        }, //이후 skip, limit추가
-        {
-          $match: {
-            $or: [
-              {
-                'author.createdAt': { $lt: new Date(nextdate) },
-              },
-              {
-                'author.createdAt': new Date(nextdate),
-                'author._id': { $lt: new mongoose.Types.ObjectId(nextid) },
-              },
-            ],
-          },
-        },
-        {
-          $sort: { 'author._id': -1 },
-        },
-        {
-          $limit: limit,
-        },
-        {
-          $lookup: {
-            from: 'users',
-            localField: 'targetid',
-            foreignField: 'userid',
-            as: 'userinfo',
-          },
-        },
-        {
-          $project: {
-            author: {
-              author: '$author.author',
-              childPosts: { $size: '$author.childPosts' },
-              createdAt: '$author.createdAt',
-              description: '$author.description',
-              title: '$author.title',
-              updatedAt: '$author.updatedAt',
-              _id: '$author._id',
-            },
-            profileimg: '$userinfo.profileimg',
-            nickname: '$userinfo.nickname',
-          },
-        },
-        // ])) ?? [];
-      ])) ?? [];
-    // .explain()) ?? [];
-    const res = {};
-    res['post'] = postList;
-    if (postList.length === limit) {
-      const lastItem = postList.at(-1);
-      const next = `${lastItem.author.createdAt.toISOString()}_${
-        lastItem.author._id
-      }`;
-      res['next'] = next;
-    } else {
-      res['next'] = '';
-    }
-    return res;
+  async getFollowingUsersList(userid: string) {
+    return (
+      await this.followModel.find({ userid }, { targetid: 1 }).lean()
+    ).map((v) => v.targetid);
   }
 
   async findUserToMention(userid: string) {

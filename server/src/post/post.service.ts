@@ -57,20 +57,25 @@ export class PostService {
     return this.postRepository.findOneAndUpdate({ _id: id }, createPostDto);
   }
 
-  getFollowingPost(user: User, followerPostDTO: FollowerPostDto) {
-    return followerPostDTO.next === ''
-      ? this.followRepository.getFollowingPostListWithoutNext(
-          user.userid,
-          followerPostDTO,
-        )
-      : this.followRepository.getFollowingPostList(
-          user.userid,
-          followerPostDTO,
-        );
-    // return this.followRepository.getFollowingPostList(
-    //   user.userid,
-    //   followerPostDTO,
-    // );
+  async getFollowingPost(user: User, followerPostDTO: FollowerPostDto) {
+    const list = await this.followRepository.getFollowingUsersList(user.userid);
+    list.push(user.userid);
+
+    let result;
+    if (followerPostDTO.next)
+      result = await this.postRepository.getPostsWithIDListAndNext(
+        list,
+        followerPostDTO,
+      );
+    else
+      result = await this.postRepository.getPostsWithIDList(
+        list,
+        followerPostDTO,
+      );
+    return {
+      post: result,
+      next: result.length < followerPostDTO.limit ? '' : result.at(-1)._id,
+    };
   }
 
   async searchPost(keyword: string, next: string) {
