@@ -35,6 +35,7 @@ export class PostRepository {
             nickname: '$user.nickname',
             profileimg: '$user.profileimg',
             userid: '$user.userid',
+            state: '$user.state',
           },
         },
       },
@@ -71,6 +72,7 @@ export class PostRepository {
               nickname: '$user.nickname',
               profileimg: '$user.profileimg',
               userid: '$user.userid',
+              state: '$user.state',
             },
           },
         },
@@ -153,6 +155,7 @@ export class PostRepository {
             authorDetail: {
               nickname: '$user.nickname',
               profileimg: '$user.profileimg',
+              userid: '$user.userid',
               state: '$user.state',
             },
           },
@@ -195,6 +198,7 @@ export class PostRepository {
             authorDetail: {
               nickname: '$user.nickname',
               profileimg: '$user.profileimg',
+              userid: '$user.userid',
               state: '$user.state',
             },
           },
@@ -317,6 +321,7 @@ export class PostRepository {
           authorDetail: {
             nickname: '$user.nickname',
             profileimg: '$user.profileimg',
+            userid: '$user.userid',
             state: '$user.state',
           },
         },
@@ -344,6 +349,7 @@ export class PostRepository {
           authorDetail: {
             nickname: '$user.nickname',
             profileimg: '$user.profileimg',
+            userid: '$user.userid',
             state: '$user.state',
           },
         },
@@ -375,6 +381,7 @@ export class PostRepository {
           authorDetail: {
             nickname: '$user.nickname',
             profileimg: '$user.profileimg',
+            userid: '$user.userid',
             state: '$user.state',
           },
           childPosts: { $size: '$childPosts' },
@@ -411,6 +418,7 @@ export class PostRepository {
           authorDetail: {
             nickname: '$user.nickname',
             profileimg: '$user.profileimg',
+            userid: '$user.userid',
             state: '$user.state',
           },
           childPosts: { $size: '$childPosts' },
