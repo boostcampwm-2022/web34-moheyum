@@ -142,4 +142,13 @@ export class UserRepository {
       .sort({ _id: 1 })
       .limit(2);
   }
+
+  searchUsersForSuggestion(userList: string[]) {
+    return this.userModel
+      .find(
+        { userid: { $in: userList }, state: true },
+        { userid: 1, nickname: 1, profileimg: 1 },
+      )
+      .lean();
+  }
 }
