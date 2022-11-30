@@ -88,6 +88,7 @@ export class PostController {
       data: { post: postData },
     };
   }
+
   @HttpCode(200)
   @UseGuards(JwtAuthGuard, PostGuard)
   @Delete('/:id')
