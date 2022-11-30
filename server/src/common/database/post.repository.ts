@@ -319,4 +319,71 @@ export class PostRepository {
       { $unset: 'user' },
     ]);
   }
+
+  getPostsWithIDList(useridList: string[], followerPostDTO: FollowerPostDto) {
+    return this.postModel.aggregate([
+      {
+        $match: {
+          author: { $in: useridList },
+        },
+      },
+      { $sort: { _id: -1 } },
+      { $limit: followerPostDTO.limit },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'author',
+          foreignField: 'userid',
+          as: 'user',
+        },
+      },
+      { $unwind: { path: '$user' } },
+      {
+        $set: {
+          authorDetail: {
+            nickname: '$user.nickname',
+            profileimg: '$user.profileimg',
+            state: '$user.state',
+          },
+          childPosts: { $size: '$childPosts' },
+        },
+      },
+      { $unset: 'user' },
+    ]);
+  }
+
+  getPostsWithIDListAndNext(
+    useridList: string[],
+    followerPostDTO: FollowerPostDto,
+  ) {
+    return this.postModel.aggregate([
+      {
+        $match: {
+          author: { $in: useridList },
+          _id: { $lt: new mongoose.Types.ObjectId(followerPostDTO.next) },
+        },
+      },
+      { $sort: { _id: -1 } },
+      { $limit: followerPostDTO.limit },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'author',
+          foreignField: 'userid',
+          as: 'user',
+        },
+      },
+      { $unwind: { path: '$user' } },
+      {
+        $set: {
+          authorDetail: {
+            nickname: '$user.nickname',
+            profileimg: '$user.profileimg',
+            state: '$user.state',
+          },
+        },
+      },
+      { $unset: 'user' },
+    ]);
+  }
 }
