@@ -26,8 +26,9 @@ export const Profile = styled.div`
   height: 50px;
   border-radius: 50px;
   border: 2px solid ${COLORS.PRIMARY};
-  margin: 15px;
+  /* margin: 15px; */
   padding-right: 45px;
+  margin: 15px 15px 15px 0px;
   img {
     width: 50px;
     height: 50px;
