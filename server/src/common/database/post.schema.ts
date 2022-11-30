@@ -38,4 +38,6 @@ PostSchema.index({
 //Full Text Search를 위한 text index
 PostSchema.index({ description: 'text' });
 
+//작성자 기준 검색을 위한 compound index
+PostSchema.index({ author: 1, _id: 1 });
 export { PostSchema };

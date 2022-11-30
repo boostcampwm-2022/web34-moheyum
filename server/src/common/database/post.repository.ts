@@ -211,98 +211,88 @@ export class PostRepository {
   async getCommentsWithNext(id: string, followerPostDTO: FollowerPostDto) {
     const { limit, next } = followerPostDTO;
     const res = { post: [], next: '' };
-    const comments =
-      (await this.postModel.aggregate([
-        { $sort: { _id: 1 } },
-        {
-          $match: {
-            $expr: {
-              $and: [
-                { $gt: ['$_id', { $toObjectId: next }] },
-                { $eq: ['$parentPost', id] },
-              ],
-            },
+    const commentIds = [];
+    let idx = -1;
+
+    (await this.postModel.findById(id)).childPosts.map((v) => {
+      if (idx !== -1 && idx < limit) {
+        idx += 1;
+        commentIds.push(new mongoose.Types.ObjectId(v));
+      }
+      if (v === next) idx = 0;
+    });
+
+    const comments = await this.postModel.aggregate([
+      {
+        $match: {
+          _id: { $in: commentIds, $gt: new mongoose.Types.ObjectId(next) },
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'author',
+          foreignField: 'userid',
+          as: 'user',
+        },
+      },
+      { $unwind: '$user' },
+      {
+        $set: {
+          childPosts: { $size: '$childPosts' },
+          authorDetail: {
+            nickname: '$user.nickname',
+            profileimg: '$user.profileimg',
+            userid: '$user.userid',
+            state: '$user.state',
           },
         },
-        { $limit: limit },
-        {
-          $lookup: {
-            from: 'users',
-            localField: 'author',
-            foreignField: 'userid',
-            as: 'user',
-          },
-        },
-        { $unwind: '$user' },
-        {
-          $project: {
-            author: '$author',
-            title: '$title',
-            description: '$description',
-            createdAt: '$createdAt',
-            updatedAt: '$updateAt',
-            parentPost: '$parentPost',
-            childPosts: { $size: '$childPosts' },
-            authorDetail: {
-              nickname: '$user.nickname',
-              email: '$user.email',
-              profileimg: '$user.profileimg',
-              bio: '$user.bio',
-              userState: '$user.state',
-              following: '$user.following',
-              postcount: '$user.postcount',
-              follower: '$user.follower',
-            },
-          },
-        },
-      ])) ?? [];
+      },
+      { $unset: 'user' },
+    ]);
+
     res.post = comments;
     res.next = comments.length === limit ? comments.at(-1)._id.toString() : '';
     return res;
   }
+
   async getComments(id: string, followerPostDTO: FollowerPostDto) {
     const { limit } = followerPostDTO;
     const res = { post: [], next: '' };
-    const comments =
-      (await this.postModel.aggregate([
-        { $sort: { _id: 1 } },
-        {
-          $match: {
-            $expr: { $eq: ['$parentPost', id] },
+    const commentIds = [];
+    let idx = 0;
+    (await this.postModel.findById(id)).childPosts.map((v) => {
+      if (idx < limit) {
+        idx += 1;
+        commentIds.push(new mongoose.Types.ObjectId(v));
+      }
+    });
+
+    const comments = await this.postModel.aggregate([
+      { $match: { _id: { $in: commentIds } } },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'author',
+          foreignField: 'userid',
+          as: 'user',
+        },
+      },
+      { $unwind: '$user' },
+      {
+        $set: {
+          childPosts: { $size: '$childPosts' },
+          authorDetail: {
+            nickname: '$user.nickname',
+            profileimg: '$user.profileimg',
+            userid: '$user.userid',
+            state: '$user.state',
           },
         },
-        { $limit: limit },
-        {
-          $lookup: {
-            from: 'users',
-            localField: 'author',
-            foreignField: 'userid',
-            as: 'user',
-          },
-        },
-        { $unwind: '$user' },
-        {
-          $project: {
-            author: '$author',
-            title: '$title',
-            description: '$description',
-            createdAt: '$createdAt',
-            updatedAt: '$updateAt',
-            parentPost: '$parentPost',
-            childPosts: { $size: '$childPosts' },
-            authorDetail: {
-              nickname: '$user.nickname',
-              email: '$user.email',
-              profileimg: '$user.profileimg',
-              bio: '$user.bio',
-              userState: '$user.state',
-              following: '$user.following',
-              postcount: '$user.postcount',
-              follower: '$user.follower',
-            },
-          },
-        },
-      ])) ?? [];
+      },
+      { $unset: 'user' },
+    ]);
+
     res.post = comments;
     res.next = comments.length === limit ? comments.at(-1)._id.toString() : '';
     return res;
