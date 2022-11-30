@@ -269,8 +269,8 @@ export class PostRepository {
   searchPost(keyword: string){
     return this.postModel.aggregate([
       {$match: { $text: {$search: keyword}}},
-      {$limit: 10},
       {$sort: {_id: -1}},
+      {$limit: 10},
       {$lookup: {
         from: 'users',
         localField: 'author',
