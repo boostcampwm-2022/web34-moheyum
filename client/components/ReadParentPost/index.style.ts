@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import COLORS from '../../styles/color';
-import { mainSectionStyle, markdownStyle } from '../../styles/mixin';
+import { displayCenter, mainSectionStyle, markdownStyle } from '../../styles/mixin';
 
 export const PostHeader = styled.div`
   width: 100%;
@@ -9,13 +9,27 @@ export const PostHeader = styled.div`
 `;
 
 export const Author = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  font-weight: 500;
-  font-size: 18px;
+  ${displayCenter}
 `;
-
+export const AuthorDetail = styled.div`
+  display: flex;
+  margin-bottom: 20px;
+  #name {
+    font-weight: 500;
+    font-size: 18px;
+  }
+  #user-id {
+    margin: 3px 3px;
+    color: ${COLORS.GRAY1};
+    font-size: 14px;
+  }
+  #time {
+    margin: 3px 1px;
+    margin-left: 2px;
+    color: ${COLORS.GRAY1};
+    font-size: 14px;
+  }
+`;
 export const Profile = styled.div`
   width: 40px;
   height: 40px;

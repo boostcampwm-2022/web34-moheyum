@@ -167,18 +167,18 @@ export default function Editor({ postData }: Props) {
       </CommentTopBar>
       <ToolbarContainer>
         <EditorTabs>
-          <EditorTabItem selected={tabIndex === 0} onClick={() => selectTab(0)}>
-            MD
-          </EditorTabItem>
-          <EditorTabItem selected={tabIndex === 1} onClick={() => selectTab(1)}>
-            Preview
-          </EditorTabItem>
-        </EditorTabs>
-        <EditorTabs>
-          &nbsp;
+          {/* &nbsp; */}
           <EditorTabTool style={{ fontWeight: 'bold' }}>B</EditorTabTool>
           <EditorTabTool style={{ fontStyle: 'italic' }}>I</EditorTabTool>
           <EditorTabTool style={{ textDecorationLine: 'underline' }}>U</EditorTabTool>
+        </EditorTabs>
+        <EditorTabs>
+          <EditorTabItem selected={tabIndex === 0} onClick={() => selectTab(0)}>
+            마크다운
+          </EditorTabItem>
+          <EditorTabItem selected={tabIndex === 1} onClick={() => selectTab(1)}>
+            미리보기
+          </EditorTabItem>
         </EditorTabs>
       </ToolbarContainer>
       <EditorContainer>

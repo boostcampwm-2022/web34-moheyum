@@ -3,9 +3,10 @@ import Router from 'next/router';
 import React, { useEffect, useRef } from 'react';
 import { ButtonBack, TopBar } from '../../styles/common';
 import PostProps from '../../types/Post';
+import { calcTime } from '../../utils/calctime';
 import renderMarkdown from '../../utils/markdown';
-import UserProfile from '../ReadPost/UserProfile';
-import { ContentBox, HeaderBox, PostContent, Wrapper } from './index.style';
+import ProfileImg from '../ReadPost/UserProfile/ProfileImg';
+import { Author, AuthorDetail, ContentBox, HeaderBox, PostContent, Wrapper } from './index.style';
 
 interface Props {
   postData: PostProps;
@@ -33,14 +34,15 @@ export default function ReadPost({ postData }: Props) {
       <ContentBox>
         <HeaderBox>
           <Link href={`/${postData.author}`}>
-            <UserProfile
-              profileimg={postData.authorDetail.profileimg}
-              nickname={postData.authorDetail.nickname}
-              author={postData.author}
-              createdAt={postData.createdAt}
-            />
+            <Author>
+              <ProfileImg imgUrl={postData.authorDetail.profileimg} />
+              <AuthorDetail>
+                <div id="name">{postData.authorDetail.nickname || '작성자 이름'}</div>
+                <div id="user-id">@{postData.author || '작성자 아이디'}</div>
+                <div id="time">· {calcTime(postData.createdAt)}</div>
+              </AuthorDetail>
+            </Author>
           </Link>
-          {console.log(postData)}
         </HeaderBox>
         <PostContent ref={contentRef}>{postData.description || '글 내용'}</PostContent>
       </ContentBox>

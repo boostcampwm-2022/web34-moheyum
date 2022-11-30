@@ -15,8 +15,8 @@ export const ToolbarContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
-  background-color: ${COLORS.GRAY3};
+  justify-content: end;
+  /* background-color: ${COLORS.GRAY3}; */
   border-bottom: 1px solid ${COLORS.PRIMARY};
 `;
 
@@ -27,7 +27,7 @@ export const EditorTabs = styled.ul`
   flex-direction: row;
   align-items: center;
   padding: 0;
-  margin: 0 20px;
+  margin: 0 10px;
   user-select: none;
 `;
 
@@ -38,7 +38,7 @@ interface CanBeSelected {
 export const EditorTabItem = styled.li<CanBeSelected>`
   /* box-sizing: border-box; */
   height: 100%;
-  width: 50px;
+  width: 80px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -110,7 +110,7 @@ export const CommentTopBar = styled.div`
   background-color: ${COLORS.WHITE};
   height: 70px;
   width: 100%;
-  border-bottom: 2px solid ${COLORS.GRAY3};
+  /* border-bottom: 2px solid ${COLORS.GRAY3}; */
   ${displayColumn}
 `;
 export const PostHeader = styled.div`
@@ -143,5 +143,3 @@ export const Profile = styled.div`
     border-radius: 40px;
   }
 `;
-
-  
