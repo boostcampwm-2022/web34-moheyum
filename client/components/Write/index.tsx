@@ -16,7 +16,7 @@ interface Props {
 export default function EditorWrapper({ postData }: Props) {
   return (
     <Wrapper>
-      {postData === undefined && (
+      {postData._id === '' && (
         <TopBar>
           <div>
             <div>

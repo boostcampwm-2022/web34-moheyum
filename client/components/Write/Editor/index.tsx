@@ -120,7 +120,7 @@ export default function Editor({ postData }: Props) {
       author: 1,
       title: 'title',
       description: contentRef.current.innerText,
-      parentPost: postData === undefined ? null : postData._id,
+      parentPost: postData._id === '' ? null : postData._id,
     });
     if (result.statusCode !== 200) {
       alert(`글 작성에 실패했습니다.\nERROR statusCode: ${result.statusCode}\nERROR message: ${result.message}`);
