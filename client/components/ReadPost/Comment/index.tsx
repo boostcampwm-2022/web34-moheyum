@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import UserProfile from '../UserProfile';
 import renderMarkdown from '../../../utils/markdown';
+import { CommentItem, CommentContentBox } from './index.style';
 
 export interface commentItem {
   _id: string;
@@ -33,7 +34,7 @@ const Comment = React.forwardRef<HTMLLIElement, CommentData>(({ postData }: Comm
     contentRef.current.innerHTML = renderMarkdown(postData.description);
   }, []);
   return (
-    <li ref={ref}>
+    <CommentItem ref={ref}>
       <Link href={`/${postData.author}`}>
         <UserProfile
           profileimg={postData.authorDetail.profileimg}
@@ -42,14 +43,14 @@ const Comment = React.forwardRef<HTMLLIElement, CommentData>(({ postData }: Comm
           createdAt={postData.createdAt}
         />
       </Link>
-      <div id="content">
+      <CommentContentBox>
         <Link href={`/post/${postData._id}`}>
           <div id="text-box" ref={contentRef}>
             {postData.description}
           </div>
         </Link>
-      </div>
-    </li>
+      </CommentContentBox>
+    </CommentItem>
   );
 });
 export default Comment;

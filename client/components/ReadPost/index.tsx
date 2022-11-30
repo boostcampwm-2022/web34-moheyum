@@ -14,7 +14,7 @@ import UserProfile from './UserProfile';
 import ProfileImg from './UserProfile/ProfileImg';
 import ParentPost from './ParentPost';
 import type { Parent } from '../../types/Post';
-import { ContentBox, PostContent, HeaderBox, Wrapper, CommentBox, Loader } from './index.style';
+import { ContentBox, PostContent, HeaderBox, Wrapper, CommentBox, Loader, MainContentBox } from './index.style';
 
 interface PostData {
   postData: PostProps;
@@ -27,7 +27,8 @@ export default function ReadPost({ postData, title }: PostData) {
   useEffect(() => {
     if (!contentRef.current) return;
     contentRef.current.innerHTML = renderMarkdown(postData.description);
-  }, []);
+  }, [contentRef.current?.textContent]);
+
   const goBack = () => {
     Router.back();
   };
@@ -70,17 +71,19 @@ export default function ReadPost({ postData, title }: PostData) {
       </TopBar>
       <PostContent>
         {postData.parentPost ? <ParentPost post={postData.parent.at(0) as Parent} /> : <div />}
-        <HeaderBox>
-          <Link href={`/${postData.author}`}>
-            <UserProfile
-              profileimg={postData.authorDetail.profileimg}
-              nickname={postData.authorDetail.nickname}
-              author={postData.author}
-              createdAt={postData.createdAt}
-            />
-          </Link>
-        </HeaderBox>
-        <ContentBox ref={contentRef}>{postData.description || '글 내용'}</ContentBox>
+        <MainContentBox>
+          <HeaderBox>
+            <Link href={`/${postData.author}`}>
+              <UserProfile
+                profileimg={postData.authorDetail.profileimg}
+                nickname={postData.authorDetail.nickname}
+                author={postData.author}
+                createdAt={postData.createdAt}
+              />
+            </Link>
+          </HeaderBox>
+          <ContentBox ref={contentRef}>{postData.description || '글 내용'}</ContentBox>
+        </MainContentBox>
         <CommentBox>
           <div id="title">답글: {commentCount}개</div>
           <div id="comment">
