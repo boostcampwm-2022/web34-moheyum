@@ -1,8 +1,8 @@
+import React, { ClipboardEvent, KeyboardEvent, useEffect, useRef, useState, useCallback, DragEvent } from 'react';
 import Image from 'next/image';
 import Router from 'next/router';
 import { useRecoilValue } from 'recoil';
 import { authedUser } from '../../../atom';
-import React, { ClipboardEvent, KeyboardEvent, useEffect, useRef, useState, useCallback, DragEvent } from 'react';
 import { httpPost } from '../../../utils/http';
 import renderMarkdown from '../../../utils/markdown';
 import {
@@ -154,7 +154,6 @@ export default function Editor({ postData }: Props) {
       contentRef.current.innerHTML = contentHTML;
     }
   }, [tabIndex]);
-
 
   // ---------------------------------------------------------------------------------------------------------
 
