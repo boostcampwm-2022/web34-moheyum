@@ -360,7 +360,7 @@ export class PostRepository {
       {
         $match: {
           author: { $in: useridList },
-          _id: { $lt: followerPostDTO.next },
+          _id: { $lt: new mongoose.Types.ObjectId(followerPostDTO.next) },
         },
       },
       { $sort: { _id: -1 } },
