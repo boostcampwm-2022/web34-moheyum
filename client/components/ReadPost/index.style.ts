@@ -25,6 +25,14 @@ export const PostContent = styled.div`
   }
 `;
 
+export const MainContentBox = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+`;
+
 export const ContentBox = styled.div`
   width: 92%;
   margin-top: 20px;
@@ -61,34 +69,6 @@ export const CommentBox = styled.div`
   }
   #list {
     width: 100%;
-    li {
-      list-style: none;
-      padding-left: 0px;
-      margin-bottom: 15px;
-      > a {
-        width: 230px;
-        height: 80px;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-      }
-      > div {
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        a {
-          width: 100%;
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-          justify-content: center;
-          #text-box {
-            width: 84%;
-          }
-        }
-      }
-    }
   }
 `;
 
