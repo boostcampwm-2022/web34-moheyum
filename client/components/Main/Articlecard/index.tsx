@@ -6,32 +6,31 @@ import {
   ArticleContent,
   ArticleHeader,
   ArticleImage,
-  Author,
   Comments,
   Content,
   HeaderInfo,
   PostedAt,
   Wrapper,
 } from './index.style';
+import UserProfile from './UserProfile/index';
 
 interface Props {
   id: string;
   description?: string;
-  author?: string;
   date: string;
   comments: number;
+  profileimg: string;
+  nickname: string;
+  author?: string;
 }
 
 export const ArticleCard = React.forwardRef<HTMLInputElement, Props>(
-  ({ id, description, author, date, comments }: Props, ref) => (
+  ({ id, description, author, nickname, date, comments, profileimg }: Props, ref) => (
     <div ref={ref}>
       <Link href={`/post/${id}`}>
         <Wrapper>
           <ArticleHeader>
-            <Author>
-              <div />
-              {author || '작성자 이름'}
-            </Author>
+            <UserProfile profileimg={profileimg} nickname={nickname} author={author!} />
             <HeaderInfo>
               <Comments>
                 <Image src="/ico_comment.svg" width={20} height={20} />

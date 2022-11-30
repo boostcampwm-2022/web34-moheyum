@@ -32,21 +32,27 @@ export default function PostList({ userData }: { userData: UserPostProps }) {
         if (pages.length === index + 1)
           return (
             <ArticleCard
-              author={item.authorDetail.nickname}
+              author={item.authorDetail.userid}
+              profileimg={item.authorDetail.profileimg}
               id={item._id}
               description={item.description}
               date={item.createdAt}
               comments={item.childPosts}
+              nickname={item.authorDetail.nickname}
+              key={item.authorDetail._id}
               ref={lastFollowElementRef}
             />
           );
         return (
           <ArticleCard
-            author={item.authorDetail.nickname}
+            author={item.authorDetail.userid}
+            profileimg={item.authorDetail.profileimg}
             id={item._id}
             description={item.description}
             date={item.createdAt}
             comments={item.childPosts}
+            nickname={item.authorDetail.nickname}
+            key={item.authorDetail._id}
           />
         );
       })}
