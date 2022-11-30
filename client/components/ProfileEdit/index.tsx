@@ -108,6 +108,7 @@ export default function ProfileEditSection() {
 
   const handleProfileImgSubmit = async () => {
     // fetch('/api/user/')
+    if (!profileImg) return;
     const formData = new FormData();
     formData.append('file', profileImg!);
     fetch(`/api/user/${myProfile.userid}/avatar`, {
@@ -123,6 +124,7 @@ export default function ProfileEditSection() {
           const profileimg = url;
           return { ...userInfo, profileimg };
         });
+        setProfileImg(undefined);
       })
       .catch((e) => {
         alert(e);
