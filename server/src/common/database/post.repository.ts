@@ -17,7 +17,7 @@ export class PostRepository {
   async findOne(postFilterQuery: FilterQuery<Post>) {
     const { _id } = postFilterQuery;
     const postOne = await this.postModel.aggregate([
-      { $match: { $expr: { $eq: ['$_id', { $toObjectId: _id }] } } },
+      { $match: { _id: new mongoose.Types.ObjectId(_id) } },
       {
         $lookup: {
           from: 'users',
@@ -30,27 +30,28 @@ export class PostRepository {
         $unwind: '$user',
       },
       {
-        $project: {
-          author: '$author',
-          description: '$description',
-          parentPost: '$parentPost',
-          childPosts: '$childPosts',
-          createdAt: '$createdAt',
-          updatedAt: '$updateAt',
+        $set: {
           authorDetail: {
             nickname: '$user.nickname',
             profileimg: '$user.profileimg',
+            userid: '$user.userid',
+            state: '$user.state',
           },
         },
       },
+      {
+        $unset: 'user',
+      },
     ]);
+    if (postOne.length === 0) throw new NotFoundException();
+
     const data = postOne.at(0);
     if (data.parentPost !== '') {
       // const parent = await this.postModel.findById(data.parentPost);
       const parent = await this.postModel.aggregate([
         {
           $match: {
-            $expr: { $eq: ['$_id', { $toObjectId: data.parentPost }] },
+            _id: new mongoose.Types.ObjectId(data.parentPost),
           },
         },
         {
@@ -65,17 +66,18 @@ export class PostRepository {
           $unwind: '$user',
         },
         {
-          $project: {
-            author: '$author',
-            description: '$description',
+          $set: {
             childPosts: { $size: '$childPosts' },
-            createdAt: '$createdAt',
-            updatedAt: '$updateAt',
             authorDetail: {
               nickname: '$user.nickname',
               profileimg: '$user.profileimg',
+              userid: '$user.userid',
+              state: '$user.state',
             },
           },
+        },
+        {
+          $unset: 'user',
         },
       ]);
       data.parent = parent;
@@ -132,14 +134,35 @@ export class PostRepository {
       (await this.postModel.aggregate([
         {
           $match: {
-            $and: [
-              { author: authorid },
-              { _id: { $lt: new mongoose.Types.ObjectId(next) } },
-            ],
+            author: authorid,
+            _id: { $lt: new mongoose.Types.ObjectId(next) },
           },
         },
         { $sort: { _id: -1 } },
         { $limit: limit },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'author',
+            foreignField: 'userid',
+            as: 'user',
+          },
+        },
+        { $unwind: '$user' },
+        {
+          $set: {
+            childPosts: { $size: '$childPosts' },
+            authorDetail: {
+              nickname: '$user.nickname',
+              profileimg: '$user.profileimg',
+              userid: '$user.userid',
+              state: '$user.state',
+            },
+          },
+        },
+        {
+          $unset: 'user',
+        },
       ])) ?? [];
     res.post = postList;
     res.next = postList.length === limit ? postList.at(-1)._id : '';
@@ -155,11 +178,34 @@ export class PostRepository {
       (await this.postModel.aggregate([
         {
           $match: {
-            $and: [{ author: authorid }],
+            author: authorid,
           },
         },
         { $sort: { _id: -1 } },
         { $limit: limit },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'author',
+            foreignField: 'userid',
+            as: 'user',
+          },
+        },
+        { $unwind: '$user' },
+        {
+          $set: {
+            childPosts: { $size: '$childPosts' },
+            authorDetail: {
+              nickname: '$user.nickname',
+              profileimg: '$user.profileimg',
+              userid: '$user.userid',
+              state: '$user.state',
+            },
+          },
+        },
+        {
+          $unset: 'user',
+        },
       ])) ?? [];
     res.post = postList;
     res.next = postList.length === limit ? postList.at(-1)._id : '';
@@ -169,98 +215,88 @@ export class PostRepository {
   async getCommentsWithNext(id: string, followerPostDTO: FollowerPostDto) {
     const { limit, next } = followerPostDTO;
     const res = { post: [], next: '' };
-    const comments =
-      (await this.postModel.aggregate([
-        { $sort: { _id: 1 } },
-        {
-          $match: {
-            $expr: {
-              $and: [
-                { $gt: ['$_id', { $toObjectId: next }] },
-                { $eq: ['$parentPost', id] },
-              ],
-            },
+    const commentIds = [];
+    let idx = -1;
+
+    (await this.postModel.findById(id)).childPosts.map((v) => {
+      if (idx !== -1 && idx < limit) {
+        idx += 1;
+        commentIds.push(new mongoose.Types.ObjectId(v));
+      }
+      if (v === next) idx = 0;
+    });
+
+    const comments = await this.postModel.aggregate([
+      {
+        $match: {
+          _id: { $in: commentIds, $gt: new mongoose.Types.ObjectId(next) },
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'author',
+          foreignField: 'userid',
+          as: 'user',
+        },
+      },
+      { $unwind: '$user' },
+      {
+        $set: {
+          childPosts: { $size: '$childPosts' },
+          authorDetail: {
+            nickname: '$user.nickname',
+            profileimg: '$user.profileimg',
+            userid: '$user.userid',
+            state: '$user.state',
           },
         },
-        { $limit: limit },
-        {
-          $lookup: {
-            from: 'users',
-            localField: 'author',
-            foreignField: 'userid',
-            as: 'user',
-          },
-        },
-        { $unwind: '$user' },
-        {
-          $project: {
-            author: '$author',
-            title: '$title',
-            description: '$description',
-            createdAt: '$createdAt',
-            updatedAt: '$updateAt',
-            parentPost: '$parentPost',
-            childPosts: { $size: '$childPosts' },
-            authorDetail: {
-              nickname: '$user.nickname',
-              email: '$user.email',
-              profileimg: '$user.profileimg',
-              bio: '$user.bio',
-              userState: '$user.state',
-              following: '$user.following',
-              postcount: '$user.postcount',
-              follower: '$user.follower',
-            },
-          },
-        },
-      ])) ?? [];
+      },
+      { $unset: 'user' },
+    ]);
+
     res.post = comments;
     res.next = comments.length === limit ? comments.at(-1)._id.toString() : '';
     return res;
   }
+
   async getComments(id: string, followerPostDTO: FollowerPostDto) {
     const { limit } = followerPostDTO;
     const res = { post: [], next: '' };
-    const comments =
-      (await this.postModel.aggregate([
-        { $sort: { _id: 1 } },
-        {
-          $match: {
-            $expr: { $eq: ['$parentPost', id] },
+    const commentIds = [];
+    let idx = 0;
+    (await this.postModel.findById(id)).childPosts.map((v) => {
+      if (idx < limit) {
+        idx += 1;
+        commentIds.push(new mongoose.Types.ObjectId(v));
+      }
+    });
+
+    const comments = await this.postModel.aggregate([
+      { $match: { _id: { $in: commentIds } } },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'author',
+          foreignField: 'userid',
+          as: 'user',
+        },
+      },
+      { $unwind: '$user' },
+      {
+        $set: {
+          childPosts: { $size: '$childPosts' },
+          authorDetail: {
+            nickname: '$user.nickname',
+            profileimg: '$user.profileimg',
+            userid: '$user.userid',
+            state: '$user.state',
           },
         },
-        { $limit: limit },
-        {
-          $lookup: {
-            from: 'users',
-            localField: 'author',
-            foreignField: 'userid',
-            as: 'user',
-          },
-        },
-        { $unwind: '$user' },
-        {
-          $project: {
-            author: '$author',
-            title: '$title',
-            description: '$description',
-            createdAt: '$createdAt',
-            updatedAt: '$updateAt',
-            parentPost: '$parentPost',
-            childPosts: { $size: '$childPosts' },
-            authorDetail: {
-              nickname: '$user.nickname',
-              email: '$user.email',
-              profileimg: '$user.profileimg',
-              bio: '$user.bio',
-              userState: '$user.state',
-              following: '$user.following',
-              postcount: '$user.postcount',
-              follower: '$user.follower',
-            },
-          },
-        },
-      ])) ?? [];
+      },
+      { $unset: 'user' },
+    ]);
+
     res.post = comments;
     res.next = comments.length === limit ? comments.at(-1)._id.toString() : '';
     return res;
@@ -285,6 +321,7 @@ export class PostRepository {
           authorDetail: {
             nickname: '$user.nickname',
             profileimg: '$user.profileimg',
+            userid: '$user.userid',
             state: '$user.state',
           },
         },
@@ -312,6 +349,7 @@ export class PostRepository {
           authorDetail: {
             nickname: '$user.nickname',
             profileimg: '$user.profileimg',
+            userid: '$user.userid',
             state: '$user.state',
           },
         },
@@ -343,6 +381,7 @@ export class PostRepository {
           authorDetail: {
             nickname: '$user.nickname',
             profileimg: '$user.profileimg',
+            userid: '$user.userid',
             state: '$user.state',
           },
           childPosts: { $size: '$childPosts' },
@@ -379,8 +418,10 @@ export class PostRepository {
           authorDetail: {
             nickname: '$user.nickname',
             profileimg: '$user.profileimg',
+            userid: '$user.userid',
             state: '$user.state',
           },
+          childPosts: { $size: '$childPosts' },
         },
       },
       { $unset: 'user' },
