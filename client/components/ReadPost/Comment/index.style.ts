@@ -1,6 +1,4 @@
 import styled from '@emotion/styled';
-import COLORS from '../../../styles/color';
-import { displayCenter, displayColumn } from '../../../styles/mixin';
 
 export const CommentItem = styled.li`
   list-style: none;
