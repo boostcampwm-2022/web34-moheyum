@@ -140,6 +140,17 @@ export class PostRepository {
         },
         { $sort: { _id: -1 } },
         { $limit: limit },
+        {
+          $project: {
+            author: '$author',
+            title: '$title',
+            description: '$description',
+            createdAt: '$createdAt',
+            updatedAt: '$updateAt',
+            parentPost: '$parentPost',
+            childPosts: { $size: '$childPosts' },
+          },
+        },
       ])) ?? [];
     res.post = postList;
     res.next = postList.length === limit ? postList.at(-1)._id : '';
@@ -160,6 +171,17 @@ export class PostRepository {
         },
         { $sort: { _id: -1 } },
         { $limit: limit },
+        {
+          $project: {
+            author: '$author',
+            title: '$title',
+            description: '$description',
+            createdAt: '$createdAt',
+            updatedAt: '$updateAt',
+            parentPost: '$parentPost',
+            childPosts: { $size: '$childPosts' },
+          },
+        },
       ])) ?? [];
     res.post = postList;
     res.next = postList.length === limit ? postList.at(-1)._id : '';
