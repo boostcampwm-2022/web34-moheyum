@@ -1,5 +1,14 @@
 import Router from 'next/router';
-import React, { ClipboardEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
+import React, {
+  ClipboardEvent,
+  KeyboardEvent,
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+  ChangeEvent,
+  DragEvent,
+} from 'react';
 import { httpPost } from '../../../utils/http';
 import renderMarkdown from '../../../utils/markdown';
 import {
@@ -20,15 +29,13 @@ export default function Editor() {
   const [tabIndex, setTabIndex] = useState(0); // 0 Editor, 1 Preview
   const [content, setContent] = useState<string>('');
   const [contentHTML, setContentHTML] = useState<string>('<div><br></div>'); // 탭 전환용
+  // 프리뷰 전환했다가 마크다운 돌아올 때 쓰는거
 
   // useEffect(() => { // test function
   //   if (!previewRef.current) return;
   //   previewRef.current.innerHTML = renderMarkdown(content);
   // }, [content]);
-
-  const handlePaste = (e: ClipboardEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    const data = e.clipboardData?.getData('Text');
+  const pasteAction = (data: string) => {
     // console.log(JSON.stringify(data));
     const cursor = window.getSelection();
     if (!cursor) return;
@@ -54,6 +61,12 @@ export default function Editor() {
       )}${data}${cursor.anchorNode?.textContent?.slice(cursor.anchorOffset)}`;
       window.getSelection()?.collapse(collapseNode, position);
     }
+  };
+
+  const handlePaste = (e: ClipboardEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const data = e.clipboardData?.getData('Text');
+    pasteAction(data);
   };
 
   const handleKeyUp = (e: KeyboardEvent<HTMLDivElement>) => {
@@ -141,6 +154,50 @@ export default function Editor() {
     }
   }, [tabIndex]);
 
+  // ---------------------------------------------------------------------------------------------------------
+
+  const dragOver = useCallback((e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  }, []);
+
+  const handleFiles = (files: FileList) => {
+    const fetchImage = async () => {
+      const response = await fetch(`/api/image`, {
+        method: 'POST',
+        credentials: 'include',
+        body: formData,
+      });
+      return response.json();
+    };
+
+    const formData = new FormData();
+    formData.append('file', files[0]);
+
+    if (contentRef.current) {
+      const format: string = `${files[0].name.split('.').slice(-1)}`.toUpperCase();
+      if (format === 'JPG' || format === 'JPEG' || format === 'PNG') {
+        fetchImage()
+          .then((imageData) => {
+            const data = `![${files[0].name as string}](${imageData.imageLink})`;
+            pasteAction(data);
+            setContent(data); // setContent를 안하면 프리뷰에 반영이 안됩니다..
+          })
+          .catch((e) => alert(`이미지 업로드에 실패하였습니다. Error Message: ${e}`));
+      } else {
+        alert(`이미지 포맷을 확인해주세요.업로드 된 파일 이름 ${files[0].name} / 포맷 ${format}`);
+        return;
+      }
+    }
+  };
+
+  const handleDrop = useCallback((e: DragEvent<HTMLDivElement>): void => {
+    e.preventDefault();
+    setTabIndex(0);
+    handleFiles(e.dataTransfer.files);
+  }, []);
+
+  // ---------------------------------------------------------------------------------------------------------
+
   return (
     <Wrapper>
       <ToolbarContainer>
@@ -167,6 +224,8 @@ export default function Editor() {
             onKeyUp={handleKeyUp}
             onKeyDown={handleKeyDown}
             onPaste={handlePaste}
+            onDrop={handleDrop}
+            onDragOver={dragOver}
             suppressContentEditableWarning
           >
             <div>
@@ -176,6 +235,11 @@ export default function Editor() {
         ) : (
           <PreviewTextBox ref={previewRef} />
         )}
+        <input
+          type="file"
+          id="fileUpload"
+          style={{ display: 'none' }} // label을 이용하여 구현하기에 없애줌
+        />
       </EditorContainer>
       <BottomButtonConatiner>
         <button type="button" onClick={submitHandler}>
