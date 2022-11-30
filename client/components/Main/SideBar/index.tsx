@@ -8,7 +8,7 @@ import { authedUser } from '../../../atom';
 
 const menuList = [
   { routeSrc: '/', imgSrc: '/home.svg', text: '홈', avatar: false },
-  { routeSrc: '/announce', imgSrc: '/announce.svg', text: '알림', avatar: false },
+  { routeSrc: '/notification', imgSrc: '/announce.svg', text: '알림', avatar: false },
   { routeSrc: '/search', imgSrc: '/search.svg', text: '검색', avatar: false },
 ];
 
