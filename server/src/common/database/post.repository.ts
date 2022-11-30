@@ -381,6 +381,7 @@ export class PostRepository {
             profileimg: '$user.profileimg',
             state: '$user.state',
           },
+          childPosts: { $size: '$childPosts' },
         },
       },
       { $unset: 'user' },
