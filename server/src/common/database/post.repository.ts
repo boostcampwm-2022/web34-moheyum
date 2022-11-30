@@ -132,24 +132,33 @@ export class PostRepository {
       (await this.postModel.aggregate([
         {
           $match: {
-            $and: [
-              { author: authorid },
-              { _id: { $lt: new mongoose.Types.ObjectId(next) } },
-            ],
+            author: authorid,
+            _id: { $lt: new mongoose.Types.ObjectId(next) },
           },
         },
         { $sort: { _id: -1 } },
         { $limit: limit },
         {
-          $project: {
-            author: '$author',
-            title: '$title',
-            description: '$description',
-            createdAt: '$createdAt',
-            updatedAt: '$updateAt',
-            parentPost: '$parentPost',
-            childPosts: { $size: '$childPosts' },
+          $lookup: {
+            from: 'users',
+            localField: 'author',
+            foreignField: 'userid',
+            as: 'user',
           },
+        },
+        { $unwind: '$user' },
+        {
+          $set: {
+            childPosts: { $size: '$childPosts' },
+            authorDetail: {
+              nickname: '$user.nickname',
+              profileimg: '$user.profileimg',
+              state: '$user.state',
+            },
+          },
+        },
+        {
+          $unset: 'user',
         },
       ])) ?? [];
     res.post = postList;
@@ -166,21 +175,32 @@ export class PostRepository {
       (await this.postModel.aggregate([
         {
           $match: {
-            $and: [{ author: authorid }],
+            author: authorid,
           },
         },
         { $sort: { _id: -1 } },
         { $limit: limit },
         {
-          $project: {
-            author: '$author',
-            title: '$title',
-            description: '$description',
-            createdAt: '$createdAt',
-            updatedAt: '$updateAt',
-            parentPost: '$parentPost',
-            childPosts: { $size: '$childPosts' },
+          $lookup: {
+            from: 'users',
+            localField: 'author',
+            foreignField: 'userid',
+            as: 'user',
           },
+        },
+        { $unwind: '$user' },
+        {
+          $set: {
+            childPosts: { $size: '$childPosts' },
+            authorDetail: {
+              nickname: '$user.nickname',
+              profileimg: '$user.profileimg',
+              state: '$user.state',
+            },
+          },
+        },
+        {
+          $unset: 'user',
         },
       ])) ?? [];
     res.post = postList;
