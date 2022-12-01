@@ -29,13 +29,13 @@ interface Props {
   };
 }
 
-interface mentionUser {
+interface followUser {
   userid: string;
   nickname: string;
   profileimg: string;
 }
 
-let allMentionList: mentionUser[] = [];
+let allMentionList: followUser[] = [];
 
 export default function Editor({ postData }: Props) {
   const contentRef = useRef<HTMLDivElement>(null);
@@ -48,8 +48,9 @@ export default function Editor({ postData }: Props) {
     y: '177.5px',
   });
   const [checkMentionActive, setCheckMentionActive] = useState<boolean>(false);
-  const [mentionList, setMentionList] = useState<mentionUser[]>([]);
-  const [mentionWord, setMentionWord] = useState<string>('');
+  const [mentionList, setMentionList] = useState<string[]>([]);
+  const [followList, setFollowList] = useState<followUser[]>([]);
+  const [inputUserId, setInputUserId] = useState<string>('');
   const [contentHTML, setContentHTML] = useState<string>('<div><br></div>'); // 탭 전환용
   const [selectUser, setSelectUser] = useState<number>(0);
   const authedUserInfo = useRecoilValue(authedUser);
@@ -152,35 +153,37 @@ export default function Editor({ postData }: Props) {
     // 멘션 리스트 모달창 선택 대상 이동
     if (checkMentionActive && key === 'ArrowDown') {
       e.preventDefault();
-      setSelectUser((prevState) => (prevState + 1 > mentionList.length - 1 ? 0 : prevState + 1));
+      setSelectUser((prevState) => (prevState + 1 > followList.length - 1 ? 0 : prevState + 1));
       return;
     }
     if (checkMentionActive && key === 'ArrowUp') {
       e.preventDefault();
-      setSelectUser((prevState) => (prevState - 1 < 0 ? mentionList.length - 1 : prevState - 1));
+      setSelectUser((prevState) => (prevState - 1 < 0 ? followList.length - 1 : prevState - 1));
       return;
     }
 
     // 멘션 입력 완료, 멘션 active 종료
     if (checkMentionActive && key === 'Enter') {
       e.preventDefault();
-      let word;
-      if (mentionList.at(selectUser)) {
-        const userId = mentionList.at(selectUser)?.userid;
-        word = userId?.slice(mentionWord.length);
+      let word: string = '';
+      if (followList.at(selectUser)) {
+        const userId = followList.at(selectUser)?.userid;
+        if (userId?.slice(inputUserId.length)) word = userId?.slice(inputUserId.length);
       }
-      pasteAction(word ? word + ' ' : '');
+      pasteAction(word + ' ');
       setCheckMentionActive(false);
+      if (word) {
+        setMentionList((prevState) => prevState.concat(word));
+      }
       return;
     }
 
     // 멘션 키 active 상태일 때, 단어 입력하는 동안 발생하는 이벤트
     if (checkMentionActive && key.match(/^\w$/i)) {
-      console.log('in');
-      setMentionWord((prevState) => prevState + key);
+      setInputUserId((prevState) => prevState + key);
       setSelectUser(0);
     } else if (key !== 'CapsLock' && key !== 'Shift') {
-      setMentionList([]);
+      setFollowList([]);
     }
 
     if (key !== 'CapsLock' && key !== 'Shift') {
@@ -190,6 +193,7 @@ export default function Editor({ postData }: Props) {
   };
 
   const submitHandler = async () => {
+    const removeDup = new Set(mentionList);
     const target = contentRef.current;
     if (!target) return;
     const result = await httpPost('/post', {
@@ -197,6 +201,7 @@ export default function Editor({ postData }: Props) {
       title: 'title',
       description: contentRef.current.innerText,
       parentPost: postData._id === '' ? null : postData._id,
+      mentions: Array.from(removeDup),
     });
     if (result.statusCode !== 200) {
       alert(`글 작성에 실패했습니다.\nERROR statusCode: ${result.statusCode}\nERROR message: ${result.message}`);
@@ -240,30 +245,30 @@ export default function Editor({ postData }: Props) {
 
   // 사용자가 입력한 검색할 문자, 전체 mentionList에서 필터링
   useEffect(() => {
-    if (mentionWord === '') {
-      setMentionList([]);
+    if (inputUserId === '') {
+      setFollowList([]);
       return;
     }
-    const regex = new RegExp(`^${mentionWord}`, 'g');
-    setMentionList(
+    const regex = new RegExp(`^${inputUserId}`, 'g');
+    setFollowList(
       allMentionList
         .filter((user) => {
           if (regex.test(user.userid)) return user;
         })
         .slice(0, 5)
     );
-  }, [mentionWord]);
+  }, [inputUserId]);
 
   // 멘션 입력 시작,종료되었을 경우 (@키 누르면 멘션 시작, 종료: 엔터키로 입력 완료했거나, backspace 혹은 space 키로 취소했거나)
   useEffect(() => {
     if (!checkMentionActive) {
-      setMentionWord('');
+      setInputUserId('');
       setDropDownDisplay('none');
       setSelectUser(0);
     } else {
-      setMentionWord('');
+      setInputUserId('');
       moveModal();
-      setMentionList(allMentionList.slice(0, 5));
+      setFollowList(allMentionList.slice(0, 5));
       setDropDownDisplay('block');
       setSelectUser(0);
     }
@@ -372,11 +377,11 @@ export default function Editor({ postData }: Props) {
           <PreviewTextBox ref={previewRef} />
         )}
         <input type="file" id="fileUpload" style={{ display: 'none' }} />
-        {mentionList.length !== 0 && (
+        {followList.length !== 0 && (
           <UserDropDown
             dropDownDisplay={dropDownDisplay}
             dropDownPosition={dropDownPosition}
-            userList={mentionList}
+            userList={followList}
             selectUser={selectUser}
           />
         )}
