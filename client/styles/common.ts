@@ -4,7 +4,7 @@ import { displayColumn } from './mixin';
 import { mainSectionSize } from './theme';
 
 export const MainTopBar = styled.header`
-  position: fixed;
+  /* position: fixed; */
   background-color: ${COLORS.WHITE};
   height: 61px;
   border-bottom: 2px solid ${COLORS.GRAY3};
@@ -20,7 +20,7 @@ export const MainTopBar = styled.header`
 `;
 
 export const TopBar = styled.header`
-  position: fixed;
+  /* position: fixed; */
   background-color: ${COLORS.WHITE};
   height: 61px;
   width: ${mainSectionSize}px;

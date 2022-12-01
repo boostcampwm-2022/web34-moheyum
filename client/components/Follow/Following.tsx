@@ -43,11 +43,9 @@ export default function FollowingSection({ userData }: { userData: Props }) {
     <Wrapper>
       <TopBar>
         <div>
-          <div>
-            <ButtonBack type="button" onClick={goBack} />
-          </div>
-          <h1>{userData.nickname || '유저 닉네임'}</h1>
+          <ButtonBack type="button" onClick={goBack} />
         </div>
+        <h1>{userData.nickname || '유저 닉네임'}</h1>
       </TopBar>
       <TopFollowContainer>
         <TopFollowDeactivated>
