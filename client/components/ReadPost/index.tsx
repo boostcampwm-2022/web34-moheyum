@@ -14,7 +14,17 @@ import UserProfile from './UserProfile';
 import ProfileImg from '../ProfileImg';
 import ParentPost from './ParentPost';
 import type { Parent } from '../../types/Post';
-import { ContentBox, PostContent, HeaderBox, Wrapper, CommentBox, Loader, MainContentBox } from './index.style';
+import { httpDelete } from '../../utils/http';
+import {
+  ContentBox,
+  PostContent,
+  HeaderBox,
+  Wrapper,
+  CommentBox,
+  Loader,
+  MainContentBox,
+  DeleteButton,
+} from './index.style';
 
 interface PostData {
   postData: PostProps;
@@ -24,11 +34,7 @@ interface PostData {
 export default function ReadPost({ postData, title }: PostData) {
   const authedUserInfo = useRecoilValue(authedUser);
   const contentRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (!contentRef.current) return;
-    contentRef.current.innerHTML = renderMarkdown(postData.description);
-  }, [contentRef.current?.textContent]);
-
+  const [checkPostAuthor, setCheckPostAuthor] = useState<boolean>(false);
   const goBack = () => {
     Router.back();
   };
@@ -59,6 +65,23 @@ export default function ReadPost({ postData, title }: PostData) {
     },
     [loading, next !== NEXT.END]
   );
+  const deleteHandler = async () => {
+    const response = await httpDelete(`/post/${postData._id}`);
+    if (response.statusCode !== 200) {
+      alert(`게시글 삭제에 실패하였습니다. ${response.message}`);
+    } else {
+      Router.push('/');
+    }
+  };
+  useEffect(() => {
+    if (authedUserInfo.userid === postData.author) {
+      setCheckPostAuthor(true);
+    }
+  }, []);
+  useEffect(() => {
+    if (!contentRef.current) return;
+    contentRef.current.innerHTML = renderMarkdown(postData.description);
+  }, [contentRef.current?.textContent]);
   return (
     <Wrapper>
       <TopBar>
@@ -79,6 +102,9 @@ export default function ReadPost({ postData, title }: PostData) {
                 createdAt={postData.createdAt}
               />
             </Link>
+            <DeleteButton style={{ display: checkPostAuthor ? 'block' : 'none' }} onClick={deleteHandler}>
+              삭제
+            </DeleteButton>
           </HeaderBox>
           <ContentBox ref={contentRef}>{postData.description || '글 내용'}</ContentBox>
         </MainContentBox>
