@@ -3,8 +3,10 @@ import Image from 'next/image';
 import Router from 'next/router';
 import { useRecoilValue } from 'recoil';
 import { authedUser } from '../../../atom';
-import { httpPost } from '../../../utils/http';
+import { httpPost, httpGet } from '../../../utils/http';
 import renderMarkdown from '../../../utils/markdown';
+import UserDropDown from './UserDropDown';
+import { getLeftWidth } from '../../../styles/theme';
 import {
   Author,
   BottomButtonConatiner,
@@ -27,17 +29,29 @@ interface Props {
   };
 }
 
+interface mentionUser {
+  userid: string;
+  nickname: string;
+  profileimg: string;
+}
+
+let allMentionList: mentionUser[] = [];
+
 export default function Editor({ postData }: Props) {
   const contentRef = useRef<HTMLDivElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const [tabIndex, setTabIndex] = useState(0); // 0 Editor, 1 Preview
   const [content, setContent] = useState<string>('');
   const [dropDownDisplay, setDropDownDisplay] = useState<string>('none');
-  const [dropDownPosition, setDropDownPosition] = useState<{ x: string; y: string }>({ x: '0px', y: '0px' });
-  const [checkMentionKey, setCheckMentionKey] = useState<boolean>(false);
+  const [dropDownPosition, setDropDownPosition] = useState<{ x: string; y: string }>({
+    x: `${getLeftWidth(window.innerWidth) + 40}px`,
+    y: '177.5px',
+  });
+  const [checkMentionActive, setCheckMentionActive] = useState<boolean>(false);
+  const [mentionList, setMentionList] = useState<mentionUser[]>([]);
+  const [mentionWord, setMentionWord] = useState<string>('');
   const [contentHTML, setContentHTML] = useState<string>('<div><br></div>'); // 탭 전환용
   const authedUserInfo = useRecoilValue(authedUser);
-  // 프리뷰 전환했다가 마크다운 돌아올 때 쓰는거
   const pasteAction = (data: string) => {
     // console.log(JSON.stringify(data));
     const cursor = window.getSelection();
@@ -80,15 +94,6 @@ export default function Editor({ postData }: Props) {
         contentRef.current.innerHTML = '<div><br/></div>';
       }
     }
-    if (checkMentionKey && (key === '@' || key === 'Shift')) {
-      const cursor = window.getSelection();
-      const range = cursor?.getRangeAt(0);
-      if (range) {
-        const bounds = range.getBoundingClientRect();
-        setDropDownPosition({ x: `${bounds.x + 10}px`, y: `${bounds.y + 5}px` });
-        setDropDownDisplay('block');
-      }
-    }
     setContent(contentRef.current.innerText.replace(/\n\n/g, '\n'));
   };
 
@@ -99,10 +104,6 @@ export default function Editor({ postData }: Props) {
     if (!cursor) return;
     const collapseNode = cursor.anchorNode;
     if (key === 'Backspace' || key === 'Delete') {
-      if (dropDownDisplay === 'block') {
-        setDropDownDisplay('none');
-        setCheckMentionKey(false);
-      }
       if (contentRef.current.innerHTML === '<div><br></div>') {
         e.preventDefault();
         return;
@@ -132,21 +133,29 @@ export default function Editor({ postData }: Props) {
       }
     }
     if (key === '@') {
-      setCheckMentionKey(true);
+      setMentionWord('');
+      moveModal();
+      setCheckMentionActive(true);
+      setMentionList(allMentionList.slice(0, 5));
+      setDropDownDisplay('block');
     }
-    if (key === ' ') {
-      if (dropDownDisplay === 'block') {
+
+    // 멘션 모달 창 닫는 조건
+    if (key === ' ' || key === 'Backspace') {
+      if (checkMentionActive) {
         setDropDownDisplay('none');
-        setCheckMentionKey(false);
+        setCheckMentionActive(false);
+        setMentionWord('');
+        return;
       }
     }
-    if (checkMentionKey) {
-      console.log(checkMentionKey);
-      const cursor = window.getSelection();
-      const range = cursor?.getRangeAt(0);
-      if (range) {
-        const bounds = range.getBoundingClientRect();
-        setDropDownPosition({ x: `${bounds.x + 10}px`, y: `${bounds.y + 5}px` });
+    // 멘션 키 active 상태일 때, 단어 입력하는 동안 발생하는 이벤트
+    if (key !== '@' && key !== 'Shift') {
+      moveModal();
+      if (key.match(/^[a-z|A-Z|0-9|_]+$/i)) {
+        setMentionWord((prevState) => prevState + key);
+      } else {
+        setMentionWord('');
       }
     }
   };
@@ -178,6 +187,44 @@ export default function Editor({ postData }: Props) {
       setTabIndex(1);
     }
   };
+
+  // 모달 위치 갱신
+  const moveModal = useCallback(() => {
+    const cursor = window.getSelection();
+    console.log(cursor?.anchorNode?.nodeName);
+    if (cursor?.anchorNode?.nodeName !== '#text') return;
+    const range = cursor?.getRangeAt(0);
+    if (range) {
+      const bounds = range.getBoundingClientRect();
+      setDropDownPosition({ x: `${bounds.x + 20}px`, y: `${bounds.y + 5}px` });
+    }
+  }, []);
+
+  const fetchMentionList = async () => {
+    const response = await httpGet('/user/mentionlist');
+    allMentionList = [...response.data];
+  };
+
+  // 처음 렌더 될때만 전체 멘션 리스트 가져옴
+  useEffect(() => {
+    fetchMentionList();
+  }, []);
+
+  useEffect(() => {
+    console.log(mentionWord);
+    if (mentionWord === '') {
+      setMentionList([]);
+      return;
+    }
+    const regex = new RegExp(`^${mentionWord}`, 'g');
+    setMentionList(
+      allMentionList
+        .filter((user) => {
+          if (regex.test(user.userid)) return user;
+        })
+        .slice(0, 5)
+    );
+  }, [mentionWord]);
 
   useEffect(() => {
     if (!contentRef.current) {
@@ -281,17 +328,8 @@ export default function Editor({ postData }: Props) {
         ) : (
           <PreviewTextBox ref={previewRef} />
         )}
-        <div
-          style={{
-            position: 'absolute',
-            display: dropDownDisplay,
-            left: dropDownPosition.x,
-            top: dropDownPosition.y,
-          }}
-        >
-          드롭다운
-        </div>
         <input type="file" id="fileUpload" style={{ display: 'none' }} />
+        <UserDropDown dropDownDisplay={dropDownDisplay} dropDownPosition={dropDownPosition} userList={mentionList} />
       </EditorContainer>
       <BottomButtonConatiner>
         <button type="button" onClick={submitHandler}>
