@@ -34,8 +34,8 @@ export class PostService {
       : this.postRepository.getUserPostsWithNext(userid, followerPostDTO);
   }
 
-  async createPost(createBoardDto: CreatePostDto, user: User): Promise<Post> {
-    const post = await this.postRepository.create(createBoardDto, user);
+  async createPost(createPostDto: CreatePostDto, user: User): Promise<Post> {
+    const post = await this.postRepository.create(createPostDto, user);
     if (post?.parentPost !== '') {
       const parentPost = await this.postRepository.findOne({
         _id: post.parentPost,
@@ -45,6 +45,16 @@ export class PostService {
         `${user.nickname}(${user.userid})님이 답글을 작성하셨습니다.`,
         `/post/${post._id}`,
       );
+    }
+    if (createPostDto.mentions && createPostDto.mentions.length >= 1) {
+      createPostDto.mentions.forEach((v) => {
+        if (v !== user.userid)
+          this.notificationRepository.create(
+            v,
+            `${user.nickname}(${user.userid})님이 회원님을 언급하였습니다.`,
+            `/post/${post._id}`,
+          );
+      });
     }
     await this.userRepository.updatePostCount({ userid: user.userid }, 1);
     return post;
