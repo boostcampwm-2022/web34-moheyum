@@ -1,5 +1,5 @@
 import React, { ClipboardEvent, KeyboardEvent, useEffect, useRef, useState, useCallback, DragEvent } from 'react';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import Router from 'next/router';
 import { useRecoilValue } from 'recoil';
 import { authedUser } from '../../../atom';
@@ -104,6 +104,7 @@ export default function Editor({ postData }: Props) {
     const cursor = window.getSelection();
     if (!cursor) return;
     const collapseNode = cursor.anchorNode;
+
     if (key === 'Backspace' || key === 'Delete') {
       if (contentRef.current.innerHTML === '<div><br></div>') {
         e.preventDefault();
@@ -133,38 +134,34 @@ export default function Editor({ postData }: Props) {
         window.getSelection()?.collapse(cursor.anchorNode, position);
       }
     }
+
+    // 멘션 시작
     if (key === '@') {
-      setMentionWord('');
-      moveModal();
       setCheckMentionActive(true);
-      setMentionList(allMentionList.slice(0, 5));
-      setDropDownDisplay('block');
-      setSelectUser(0);
+      return;
     }
 
     // 멘션 모달 창 닫는 조건
     if (key === ' ' || key === 'Backspace') {
       if (checkMentionActive) {
-        setDropDownDisplay('none');
         setCheckMentionActive(false);
-        setMentionWord('');
-        setSelectUser(0);
         return;
       }
     }
 
+    // 멘션 리스트 모달창 선택 대상 이동
     if (checkMentionActive && key === 'ArrowDown') {
       e.preventDefault();
       setSelectUser((prevState) => (prevState + 1 > mentionList.length - 1 ? 0 : prevState + 1));
       return;
     }
-
     if (checkMentionActive && key === 'ArrowUp') {
       e.preventDefault();
       setSelectUser((prevState) => (prevState - 1 < 0 ? mentionList.length - 1 : prevState - 1));
       return;
     }
 
+    // 멘션 입력 완료, 멘션 active 종료
     if (checkMentionActive && key === 'Enter') {
       e.preventDefault();
       let word;
@@ -173,21 +170,20 @@ export default function Editor({ postData }: Props) {
         word = userId?.slice(mentionWord.length);
       }
       pasteAction(word ? word : '');
-      setMentionWord('');
-      setDropDownDisplay('none');
       setCheckMentionActive(false);
-      setSelectUser(0);
       return;
     }
 
     // 멘션 키 active 상태일 때, 단어 입력하는 동안 발생하는 이벤트
-    if (key !== '@' && key !== 'Shift') {
-      moveModal();
-      if (key.match(/^[a-z|A-Z|0-9|_]+$/i)) {
-        setMentionWord((prevState) => prevState + key);
-      } else {
-        setMentionWord('');
-      }
+    if (checkMentionActive && key.match(/^[a-z|A-Z|0-9|_]+$/i)) {
+      setMentionWord((prevState) => prevState + key);
+    } else {
+      setMentionWord('');
+    }
+
+    if (key !== 'Shift') {
+      // 기능키 입력시 모달 이동 안함 (다른키 예외처리도 필요할 듯)
+      moveModal(); // 키 입력마다 모달창 위치 계속 갱신해줘야함
     }
   };
 
@@ -222,7 +218,6 @@ export default function Editor({ postData }: Props) {
   // 모달 위치 갱신
   const moveModal = useCallback(() => {
     const cursor = window.getSelection();
-    console.log(cursor?.anchorNode?.nodeName);
     if (cursor?.anchorNode?.nodeName !== '#text') return;
     const range = cursor?.getRangeAt(0);
     if (range) {
@@ -241,8 +236,8 @@ export default function Editor({ postData }: Props) {
     fetchMentionList();
   }, []);
 
+  // 사용자가 입력한 검색할 문자, 전체 mentionList에서 필터링
   useEffect(() => {
-    console.log(mentionWord);
     if (mentionWord === '') {
       setMentionList([]);
       return;
@@ -256,6 +251,21 @@ export default function Editor({ postData }: Props) {
         .slice(0, 5)
     );
   }, [mentionWord]);
+
+  // 멘션 입력 시작,종료되었을 경우 (@키 누르면 멘션 시작, 종료: 엔터키로 입력 완료했거나, backspace 혹은 space 키로 취소했거나)
+  useEffect(() => {
+    if (!checkMentionActive) {
+      setMentionWord('');
+      setDropDownDisplay('none');
+      setSelectUser(0);
+    } else {
+      setMentionWord('');
+      moveModal();
+      setMentionList(allMentionList.slice(0, 5));
+      setDropDownDisplay('block');
+      setSelectUser(0);
+    }
+  }, [checkMentionActive]);
 
   useEffect(() => {
     if (!contentRef.current) {
@@ -360,12 +370,14 @@ export default function Editor({ postData }: Props) {
           <PreviewTextBox ref={previewRef} />
         )}
         <input type="file" id="fileUpload" style={{ display: 'none' }} />
-        <UserDropDown
-          dropDownDisplay={dropDownDisplay}
-          dropDownPosition={dropDownPosition}
-          userList={mentionList}
-          selectUser={selectUser}
-        />
+        {mentionList.length !== 0 && (
+          <UserDropDown
+            dropDownDisplay={dropDownDisplay}
+            dropDownPosition={dropDownPosition}
+            userList={mentionList}
+            selectUser={selectUser}
+          />
+        )}
       </EditorContainer>
       <BottomButtonConatiner>
         <button type="button" onClick={submitHandler}>

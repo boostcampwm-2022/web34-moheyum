@@ -22,7 +22,7 @@ export const User = styled.li`
   &:last-of-type {
     border-radius: 0px 0px 9px 9px;
   }
-  &:first-child:nth-last-child(1) {
+  &:first-of-type:nth-last-of-type(1) {
     border-radius: 9px;
   }
 `;
