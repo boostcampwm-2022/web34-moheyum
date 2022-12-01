@@ -7,6 +7,7 @@ import { HttpStatus, ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './common/filter/httpexecption.filter';
 import { BadRequestExceptionFilter } from './common/filter/badrequest.filter';
 import { ConfigService } from '@nestjs/config';
+import { winstonLogger } from './common/utils/winston.util';
 
 // TODO : config 모듈로 변경해야함
 // if (!process.env.NODE_ENV) throw new Error('No NODE_ENV');
@@ -15,7 +16,9 @@ import { ConfigService } from '@nestjs/config';
 // });
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: winstonLogger,
+  });
   const configService = app.get<ConfigService>(ConfigService);
   app.use(cookieParser());
   app.useGlobalFilters(

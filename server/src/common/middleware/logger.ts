@@ -8,7 +8,11 @@ export class LoggerMiddleware implements NestMiddleware {
     const { method, originalUrl } = req;
     res.on('finish', () => {
       const { statusCode } = res;
-      this.logger.log(`${originalUrl} [ ${method} ${statusCode} ] `);
+      this.logger.log(
+        `${req.ip}/${originalUrl} ${req.get(
+          'user-agent',
+        )} [ ${method} ${statusCode} ] `,
+      );
     });
     next();
   }
