@@ -2,11 +2,11 @@ import styled from '@emotion/styled';
 import React, { useCallback, useRef, useState } from 'react';
 import COLORS from '../../../styles/color';
 import Paginator, { NEXT } from '../../../utils/paginator';
-import { ArticleCard } from '../../Main/Articlecard';
+import { FollowMember } from '../../Follow/FollowMember';
 
-export default function PostResult({ keyword }: { keyword: string }) {
+export default function UserResult({ keyword }: { keyword: string }) {
   const [nextCursor, setNextCursor] = useState('START');
-  const { loading, error, pages, next } = Paginator(`/api/post/search?keyword=${keyword}`, nextCursor);
+  const { loading, error, pages, next } = Paginator(`/api/user/search?keyword=${keyword}`, nextCursor);
 
   const observer = useRef<any>();
   const lastFollowElementRef = useCallback(
@@ -28,27 +28,21 @@ export default function PostResult({ keyword }: { keyword: string }) {
       {pages.map((item: any, index: number) => {
         if (pages.length === index + 1)
           return (
-            <ArticleCard
-              author={item.authorDetail.userid}
-              profileimg={item.authorDetail.profileimg}
-              id={item._id}
-              description={item.description}
-              date={item.createdAt}
-              comments={item.childPosts}
-              nickname={item.authorDetail.nickname}
+            <FollowMember
+              userid={item.userid}
+              nickname={item.nickname}
+              profileimg={item.profileimg}
+              displayButton
               key={item._id}
               ref={lastFollowElementRef}
             />
           );
         return (
-          <ArticleCard
-            author={item.authorDetail.userid}
-            profileimg={item.authorDetail.profileimg}
-            id={item._id}
-            description={item.description}
-            date={item.createdAt}
-            comments={item.childPosts}
-            nickname={item.authorDetail.nickname}
+          <FollowMember
+            userid={item.userid}
+            nickname={item.nickname}
+            profileimg={item.profileimg}
+            displayButton
             key={item._id}
           />
         );

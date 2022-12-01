@@ -6,12 +6,14 @@ import COLORS from '../../styles/color';
 import { TopBar } from '../../styles/common';
 import { mainSectionStyle } from '../../styles/mixin';
 import PostResult from './PostResult';
+import UserResult from './UserResult';
 
 export default function SearchSection() {
   const router = useRouter();
   const initKeyword = router.query.keyword;
   const [keyword, setKeyword] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
+  const [tabIndex, setTabIndex] = useState(0); // 0 게시글, 1 사용자
 
   const handleEnter = (e: KeyboardEvent<HTMLInputElement>) => {
     const { key } = e;
@@ -29,15 +31,28 @@ export default function SearchSection() {
     }
   }, []);
 
+  const changeTab = (idx: number) => {
+    setTabIndex(idx);
+  };
+
   return (
     <Wrapper>
       <TopBar>
         <TopBarContainer>
-          <SearchInputBar type="text" placeholder="검색어를 입력하세요." onKeyDown={handleEnter} ref={inputRef} />
           <Image alt="search button" width={30} height={30} src="/search.svg" />
+          <SearchInputBar type="text" placeholder="검색어를 입력하세요." onKeyDown={handleEnter} ref={inputRef} />
         </TopBarContainer>
       </TopBar>
-      <PostResult keyword={keyword} />
+      <TabContainer>
+        <button type="button" className={tabIndex === 0 ? 'selected' : ''} onClick={() => changeTab(0)}>
+          게시글 검색
+        </button>
+        <button type="button" className={tabIndex === 1 ? 'selected' : ''} onClick={() => changeTab(1)}>
+          사용자 검색
+        </button>
+      </TabContainer>
+      {tabIndex === 0 && <PostResult keyword={keyword} />}
+      {tabIndex === 1 && <UserResult keyword={keyword} />}
     </Wrapper>
   );
 }
@@ -62,7 +77,7 @@ export const TopBarContainer = styled.div`
   & > img {
     user-select: none;
     cursor: pointer;
-    margin-right: 30px;
+    margin-left: 20px;
   }
 `;
 
@@ -70,7 +85,7 @@ export const SearchInputBar = styled.input`
   border: none;
   height: 100%;
   flex: 1;
-  padding: 5px 30px;
+  padding: 10px;
   font-size: 20px;
   color: ${COLORS.BLACK};
   font-weight: 500;
@@ -80,6 +95,33 @@ export const SearchInputBar = styled.input`
   }
 
   &:placeholder-shown {
-    color: ${COLORS.GRAY3};
+    color: ${COLORS.GRAY4};
+  }
+`;
+
+export const TabContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  & > button {
+    flex: 1;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 10px;
+    background-color: ${COLORS.PRIMARY};
+    color: ${COLORS.WHITE};
+    font-size: 18px;
+    border: none;
+
+    &.selected {
+      background-color: ${COLORS.WHITE};
+      color: ${COLORS.BLACK};
+      font-weight: 700;
+    }
   }
 `;
