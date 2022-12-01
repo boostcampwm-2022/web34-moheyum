@@ -1,24 +1,24 @@
 import styled from '@emotion/styled';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import React, { KeyboardEvent, useEffect, useState } from 'react';
+import React, { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import COLORS from '../../styles/color';
 import { TopBar } from '../../styles/common';
 import { mainSectionStyle } from '../../styles/mixin';
+import PostResult from './PostResult';
 
 export default function SearchSection() {
   const router = useRouter();
   const initKeyword = router.query.keyword;
   const [keyword, setKeyword] = useState('');
-  //   const [userResult, setUserResult] = useState();
-  //   const [postResult, setPostResult] = useState();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleEnter = (e: KeyboardEvent<HTMLInputElement>) => {
     const { key } = e;
     if (key === 'Enter') {
       e.preventDefault();
-      // to search
-      doSearch();
+      if (!inputRef.current) return;
+      setKeyword(inputRef.current.value);
     }
   };
 
@@ -26,29 +26,18 @@ export default function SearchSection() {
     if (initKeyword) {
       if (Array.isArray(initKeyword)) setKeyword(initKeyword[0]);
       else setKeyword(initKeyword);
-      doSearch();
     }
   }, []);
-
-  const doSearch = () => {
-    console.log(`searching ${keyword}`);
-  };
 
   return (
     <Wrapper>
       <TopBar>
         <TopBarContainer>
-          <SearchInputBar
-            type="text"
-            placeholder="검색어를 입력하세요."
-            value={keyword}
-            onInput={(e) => setKeyword(e.currentTarget.value)}
-            onKeyDown={handleEnter}
-          />
+          <SearchInputBar type="text" placeholder="검색어를 입력하세요." onKeyDown={handleEnter} ref={inputRef} />
           <Image alt="search button" width={30} height={30} src="/search.svg" />
         </TopBarContainer>
       </TopBar>
-      <div>내용</div>
+      <PostResult keyword={keyword} />
     </Wrapper>
   );
 }
