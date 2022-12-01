@@ -16,7 +16,7 @@ import type { Props } from '../../pages/[userid]/following';
 
 export default function FollowerSection({ userData }: { userData: Props }) {
   const goBack = () => {
-    Router.back();
+    Router.push(`/${userData.userid}`);
   };
 
   const [nextCursor, setNextCursor] = useState('START');

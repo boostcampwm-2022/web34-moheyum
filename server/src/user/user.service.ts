@@ -1,14 +1,18 @@
-import { Injectable } from '@nestjs/common';
-import { UserProfileDto } from './dto/user-profile-dto';
-import { UserUpdateDto } from './dto/user-Update-dto';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { UserProfileDto } from './dto/user-profile.dto';
+import { UserUpdateDto } from './dto/user-update.dto';
 import { UserRepository } from 'src/common/database/user.repository';
 import { FollowRepository } from 'src/common/database/follow.repository';
+import * as bcrypt from 'bcrypt';
+import { ConfigService } from '@nestjs/config';
+import { GetUserUpdatePasswordDto } from './dto/get-update-password.dto';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly followRepository: FollowRepository,
+    private readonly configService: ConfigService,
   ) {}
 
   async getUserData(userid: string): Promise<UserProfileDto> {
@@ -61,6 +65,39 @@ export class UserService {
     return this.userRepository.findOneAndUpdate(
       { userid },
       { profileimg: url },
+    );
+  }
+
+  private hashPw(pw: string): Promise<string> {
+    return bcrypt.hash(pw, +this.configService.get('saltOrRounds'));
+  }
+
+  private async checkPw(userid: string, password: string): Promise<boolean> {
+    const user = await this.userRepository.findOne({ userid });
+    if (user && (await bcrypt.compare(password, user.password))) {
+      return true;
+    }
+    throw new BadRequestException({
+      message: '패스워드 오류',
+    });
+  }
+
+  async changePassword(
+    userid: string,
+    getUserUpdatePasswordDto: GetUserUpdatePasswordDto,
+  ) {
+    await this.checkPw(userid, getUserUpdatePasswordDto.prevPassword);
+    const hashPw = await this.hashPw(getUserUpdatePasswordDto.newPassword);
+    return this.userRepository.findOneAndUpdatePW(
+      { userid: userid },
+      { password: hashPw },
+    );
+  }
+
+  deleteUserWithState(userid: string) {
+    return this.userRepository.findOneAndUpdate(
+      { userid: userid },
+      { state: false },
     );
   }
 }

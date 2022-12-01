@@ -7,13 +7,11 @@ import {
   Get,
   HttpCode,
   Query,
+  Delete,
 } from '@nestjs/common';
-// import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { AuthCredentialsDto } from './dto/auth-credential.dto';
 import { UserCreateDto } from './dto/user-create.dto';
-// import { GetUser } from '../common/decorator/get-user.decorator';
-// import { User } from '../common/database/user.schema';
 import { Response } from 'express';
 import { JwtRefreshGuard } from 'src/common/guard/jwt-refresh.guard';
 import { GetPayload } from 'src/common/decorator/get-jwt-data.decorator';
@@ -21,10 +19,32 @@ import { EmailDto } from './dto/email.dto';
 import { EmailCheckDto } from './dto/email-check.dto';
 import { Cookies } from 'src/common/decorator/cookie.decorator';
 import { FindPwDto } from './dto/find-pw-dto';
+import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
+import { GetUser } from 'src/common/decorator/get-user.decorator';
+import { User } from 'src/common/database/user.schema';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
+
+  /**
+   * @description 회원 탈퇴
+   */
+  @HttpCode(200)
+  @UseGuards(JwtAuthGuard)
+  @Delete()
+  async deleteUser(@GetUser() user: User, @Res() res: Response) {
+    await this.authService.deleteUserWithState(user.userid);
+    //logout절차
+    await this.authService.removeRefeshTokenfromRedis(user.userid);
+    res.cookie('a_t', '', this.authService.deleteCookieOption());
+    res.cookie('r_t', '', this.authService.deleteCookieOption());
+    return res.send({
+      message: 'success',
+      data: {},
+    });
+  }
+
   @HttpCode(200)
   @Post('/signup')
   async signUp(@Body() userCreateDto: UserCreateDto) {
@@ -86,7 +106,7 @@ export class AuthController {
     @Res() res: Response,
   ) {
     await this.authService.checkEmailCode(emailCheckDto, authNum);
-    res.cookie('authNum', '', this.authService.deleteCookie());
+    res.cookie('authNum', '', this.authService.deleteCookieOption());
     return res.send({
       message: 'success',
       data: {},
@@ -114,5 +134,19 @@ export class AuthController {
         data: {},
       };
     }
+  }
+
+  @HttpCode(200)
+  @UseGuards(JwtAuthGuard)
+  @Post('logout')
+  async logout(@GetUser() user: User, @Res() res: Response) {
+    await this.authService.removeRefeshTokenfromRedis(user.userid);
+    res.cookie('a_t', '', this.authService.deleteCookieOption());
+    res.cookie('r_t', '', this.authService.deleteCookieOption());
+
+    return res.send({
+      message: 'success',
+      data: {},
+    });
   }
 }
