@@ -7,6 +7,7 @@ import {
   Get,
   HttpCode,
   Query,
+  Delete,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthCredentialsDto } from './dto/auth-credential.dto';
@@ -25,6 +26,25 @@ import { User } from 'src/common/database/user.schema';
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
+
+  /**
+   * @description 회원 탈퇴
+   */
+  @HttpCode(200)
+  @UseGuards(JwtAuthGuard)
+  @Delete()
+  async deleteUser(@GetUser() user: User, @Res() res: Response) {
+    await this.authService.deleteUserWithState(user.userid);
+    //logout절차
+    await this.authService.removeRefeshTokenfromRedis(user.userid);
+    res.cookie('a_t', '', this.authService.deleteCookieOption());
+    res.cookie('r_t', '', this.authService.deleteCookieOption());
+    return res.send({
+      message: 'success',
+      data: {},
+    });
+  }
+
   @HttpCode(200)
   @Post('/signup')
   async signUp(@Body() userCreateDto: UserCreateDto) {

@@ -313,4 +313,10 @@ export class AuthService {
     });
     return { userid, nickname, profileimg };
   }
+  deleteUserWithState(userid: string) {
+    return this.userRepository.findOneAndUpdate(
+      { userid: userid },
+      { state: false },
+    );
+  }
 }
