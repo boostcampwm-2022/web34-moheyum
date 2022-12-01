@@ -1,4 +1,7 @@
 import styled from '@emotion/styled';
+import COLORS from '../../styles/color';
+import { displayColumn } from '../../styles/mixin';
+import { mainSectionSize } from '../../styles/theme';
 
 export const Wrapper = styled.div`
   height: 100%;
@@ -6,10 +9,32 @@ export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
+export const TopBar = styled.header`
+  /* position: fixed; */
+  background-color: ${COLORS.WHITE};
+  height: 61px;
+  width: ${mainSectionSize}px;
+  border-bottom: 2px solid ${COLORS.GRAY3};
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  h1 {
+    flex: 1;
+    font-size: 22px;
+    font-weight: 500;
+    text-align: left;
+    color: ${COLORS.BLACK};
+    margin-left: 6px;
+    ${displayColumn}
+    margin-left: 33px;
+  }
+`;
+
 export const NotificationContainer = styled.div`
   overflow-y: scroll;
   flex: 1;
-  padding: 10px 40px 0px 40px;
+  padding: 0px 20px;
 `;
 
 export const ExceptionPage = styled.div`
