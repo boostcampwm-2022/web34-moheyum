@@ -169,21 +169,23 @@ export default function Editor({ postData }: Props) {
         const userId = mentionList.at(selectUser)?.userid;
         word = userId?.slice(mentionWord.length);
       }
-      pasteAction(word ? word : '');
+      pasteAction(word ? word + ' ' : '');
       setCheckMentionActive(false);
       return;
     }
 
     // 멘션 키 active 상태일 때, 단어 입력하는 동안 발생하는 이벤트
-    if (checkMentionActive && key.match(/^[a-z|A-Z|0-9|_]+$/i)) {
+    if (checkMentionActive && key.match(/^\w$/i)) {
+      console.log('in');
       setMentionWord((prevState) => prevState + key);
-    } else {
-      setMentionWord('');
+      setSelectUser(0);
+    } else if (key !== 'CapsLock' && key !== 'Shift') {
+      setMentionList([]);
     }
 
-    if (key !== 'Shift') {
+    if (key !== 'CapsLock' && key !== 'Shift') {
       // 기능키 입력시 모달 이동 안함 (다른키 예외처리도 필요할 듯)
-      moveModal(); // 키 입력마다 모달창 위치 계속 갱신해줘야함
+      moveModal(); // 기능키 제외 문자키 입력마다 모달창 위치 계속 갱신해줘야함
     }
   };
 
