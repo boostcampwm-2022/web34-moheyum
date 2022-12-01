@@ -8,14 +8,12 @@ import { DatabaseModule } from 'src/common/database/database.module';
 import { Follow, FollowSchema } from 'src/common/database/follow.schema';
 import { FollowRepository } from 'src/common/database/follow.repository';
 import { NcloudService } from 'src/ncloud/ncloud.service';
-import { CacheModule } from 'src/redis/redis.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     MongooseModule.forFeature([{ name: Follow.name, schema: FollowSchema }]),
     DatabaseModule,
-    CacheModule,
   ],
   controllers: [UserController],
   providers: [UserService, UserRepository, FollowRepository, NcloudService],
