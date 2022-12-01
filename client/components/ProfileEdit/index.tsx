@@ -159,11 +159,9 @@ export default function ProfileEditSection() {
     <Wrapper>
       <TopBar>
         <div>
-          <div>
-            <ButtonBack type="button" onClick={goBack} />
-          </div>
-          <h1>프로필 편집</h1>
+          <ButtonBack type="button" onClick={goBack} />
         </div>
+        <h1>프로필 편집</h1>
       </TopBar>
       <div>
         <form onSubmit={handleSubmit(handleProfileImgSubmit)} style={{ width: '500px' }} encType="multipart/form-data">

@@ -63,11 +63,9 @@ export default function ReadPost({ postData, title }: PostData) {
     <Wrapper>
       <TopBar>
         <div>
-          <div>
-            <ButtonBack type="button" onClick={goBack} />
-          </div>
-          <h1>{title}</h1>
+          <ButtonBack type="button" onClick={goBack} />
         </div>
+        <h1>{title}</h1>
       </TopBar>
       <PostContent>
         {postData.parentPost ? <ParentPost post={postData.parent.at(0) as Parent} /> : <div />}
