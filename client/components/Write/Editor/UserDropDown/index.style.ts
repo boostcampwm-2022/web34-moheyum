@@ -17,7 +17,12 @@ export const User = styled.li`
     border-bottom: 1px solid ${COLORS.GRAY3};
   }
   &:first-of-type {
-    background-color: ${COLORS.PRIMARY_LIGHT};
     border-radius: 9px 9px 0px 0px;
+  }
+  &:last-of-type {
+    border-radius: 0px 0px 9px 9px;
+  }
+  &:first-child:nth-last-child(1) {
+    border-radius: 9px;
   }
 `;

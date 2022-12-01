@@ -51,6 +51,7 @@ export default function Editor({ postData }: Props) {
   const [mentionList, setMentionList] = useState<mentionUser[]>([]);
   const [mentionWord, setMentionWord] = useState<string>('');
   const [contentHTML, setContentHTML] = useState<string>('<div><br></div>'); // 탭 전환용
+  const [selectUser, setSelectUser] = useState<number>(0);
   const authedUserInfo = useRecoilValue(authedUser);
   const pasteAction = (data: string) => {
     // console.log(JSON.stringify(data));
@@ -138,6 +139,7 @@ export default function Editor({ postData }: Props) {
       setCheckMentionActive(true);
       setMentionList(allMentionList.slice(0, 5));
       setDropDownDisplay('block');
+      setSelectUser(0);
     }
 
     // 멘션 모달 창 닫는 조건
@@ -146,9 +148,38 @@ export default function Editor({ postData }: Props) {
         setDropDownDisplay('none');
         setCheckMentionActive(false);
         setMentionWord('');
+        setSelectUser(0);
         return;
       }
     }
+
+    if (checkMentionActive && key === 'ArrowDown') {
+      e.preventDefault();
+      setSelectUser((prevState) => (prevState + 1 > mentionList.length - 1 ? 0 : prevState + 1));
+      return;
+    }
+
+    if (checkMentionActive && key === 'ArrowUp') {
+      e.preventDefault();
+      setSelectUser((prevState) => (prevState - 1 < 0 ? mentionList.length - 1 : prevState - 1));
+      return;
+    }
+
+    if (checkMentionActive && key === 'Enter') {
+      e.preventDefault();
+      let word;
+      if (mentionList.at(selectUser)) {
+        const userId = mentionList.at(selectUser)?.userid;
+        word = userId?.slice(mentionWord.length);
+      }
+      pasteAction(word ? word : '');
+      setMentionWord('');
+      setDropDownDisplay('none');
+      setCheckMentionActive(false);
+      setSelectUser(0);
+      return;
+    }
+
     // 멘션 키 active 상태일 때, 단어 입력하는 동안 발생하는 이벤트
     if (key !== '@' && key !== 'Shift') {
       moveModal();
@@ -329,7 +360,12 @@ export default function Editor({ postData }: Props) {
           <PreviewTextBox ref={previewRef} />
         )}
         <input type="file" id="fileUpload" style={{ display: 'none' }} />
-        <UserDropDown dropDownDisplay={dropDownDisplay} dropDownPosition={dropDownPosition} userList={mentionList} />
+        <UserDropDown
+          dropDownDisplay={dropDownDisplay}
+          dropDownPosition={dropDownPosition}
+          userList={mentionList}
+          selectUser={selectUser}
+        />
       </EditorContainer>
       <BottomButtonConatiner>
         <button type="button" onClick={submitHandler}>

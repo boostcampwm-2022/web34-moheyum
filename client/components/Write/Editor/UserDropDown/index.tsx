@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { KeyboardEvent, useState } from 'react';
 import { DropDown, User } from './index.style';
+import COLORS from '../../../../styles/color';
 interface Props {
   dropDownDisplay: string;
   dropDownPosition: {
@@ -7,9 +8,10 @@ interface Props {
     y: string;
   };
   userList: { userid: string; nickname: string; profileimg: string }[];
+  selectUser: number;
 }
 
-export default function UserDropDown({ dropDownDisplay, dropDownPosition, userList }: Props) {
+export default function UserDropDown({ dropDownDisplay, dropDownPosition, userList, selectUser }: Props) {
   return (
     <DropDown
       style={{
@@ -19,9 +21,17 @@ export default function UserDropDown({ dropDownDisplay, dropDownPosition, userLi
         top: dropDownPosition.y,
       }}
     >
-      {userList.map((user) => (
-        <User key={user.userid}>{user.userid}</User>
-      ))}
+      {userList.map((user, index) =>
+        index === selectUser ? (
+          <User key={user.userid} style={{ backgroundColor: COLORS.PRIMARY_LIGHT }}>
+            {user.userid}
+          </User>
+        ) : (
+          <User key={user.userid} style={{ backgroundColor: COLORS.WHITE }}>
+            {user.userid}
+          </User>
+        )
+      )}
     </DropDown>
   );
 }
