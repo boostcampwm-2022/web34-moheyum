@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import COLORS from '../../../../styles/color';
-import { buttonStyle, displayColumn, markdownStyle } from '../../../../styles/mixin';
 
 export const DropDown = styled.div`
   width: min-content;

@@ -1,6 +1,7 @@
-import React, { KeyboardEvent, useState } from 'react';
+import React from 'react';
 import { DropDown, User } from './index.style';
 import COLORS from '../../../../styles/color';
+
 interface Props {
   dropDownDisplay: string;
   dropDownPosition: {

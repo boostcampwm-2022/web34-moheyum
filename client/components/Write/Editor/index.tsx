@@ -170,7 +170,7 @@ export default function Editor({ postData }: Props) {
         const userId = followList.at(selectUser)?.userid;
         if (userId?.slice(inputUserId.length)) word = userId?.slice(inputUserId.length);
       }
-      pasteAction(word + ' ');
+      pasteAction(`${word} `);
       setCheckMentionActive(false);
       if (word) {
         setMentionList((prevState) => prevState.concat(word));
@@ -250,13 +250,8 @@ export default function Editor({ postData }: Props) {
       return;
     }
     const regex = new RegExp(`^${inputUserId}`, 'g');
-    setFollowList(
-      allMentionList
-        .filter((user) => {
-          if (regex.test(user.userid)) return user;
-        })
-        .slice(0, 5)
-    );
+    const filteredList = allMentionList.filter((user) => regex.test(user.userid) && user);
+    setFollowList(filteredList.slice(0, 5));
   }, [inputUserId]);
 
   // 멘션 입력 시작,종료되었을 경우 (@키 누르면 멘션 시작, 종료: 엔터키로 입력 완료했거나, backspace 혹은 space 키로 취소했거나)
