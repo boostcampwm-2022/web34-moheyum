@@ -1,5 +1,4 @@
 import React, { ClipboardEvent, KeyboardEvent, useEffect, useRef, useState, useCallback, DragEvent } from 'react';
-import Image from 'next/legacy/image';
 import Router from 'next/router';
 import { useRecoilValue } from 'recoil';
 import { authedUser } from '../../../atom';
@@ -19,7 +18,6 @@ import {
   EditorTextBox,
   PostHeader,
   PreviewTextBox,
-  Profile,
   ToolbarContainer,
   Wrapper,
 } from './index.style';
@@ -326,7 +324,7 @@ export default function Editor({ postData }: Props) {
       <CommentTopBar>
         <PostHeader>
           <Author>
-            <ProfileImg imgUrl={authedUserInfo.profileimg}></ProfileImg>
+            <ProfileImg imgUrl={authedUserInfo.profileimg} />
             {authedUserInfo.nickname || 'ananymous'}
           </Author>
         </PostHeader>
