@@ -22,8 +22,8 @@ export default function UserProfile({
       </Profile>
       {/* <ProfileImg imgUrl={profileimg} /> */}
       <AuthorDetail>
-        <div id="name">{nickname || '작성자 이름'}</div>
-        <div id="user-id">@{author || '작성자 아이디'}</div>
+        <div className="name">{nickname || '작성자 이름'}</div>
+        <div className="user-id">@{author || '작성자 아이디'}</div>
       </AuthorDetail>
     </Author>
   );

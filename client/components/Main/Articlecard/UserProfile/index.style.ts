@@ -26,9 +26,8 @@ export const Profile = styled.div`
   height: 50px;
   border-radius: 50px;
   border: 2px solid ${COLORS.PRIMARY};
-  /* margin: 15px; */
+  margin: 5px;
   padding-right: 45px;
-  margin: 15px 15px 15px 0px;
   img {
     width: 50px;
     height: 50px;
@@ -36,12 +35,13 @@ export const Profile = styled.div`
   }
 `;
 export const AuthorDetail = styled.div`
-  #name {
+  margin-left: 5px;
+  .name {
     white-space: nowrap;
     font-weight: 500;
     font-size: 18px;
   }
-  #user-id {
+  .user-id {
     white-space: nowrap;
     margin: 3px 1px;
     color: ${COLORS.GRAY1};
