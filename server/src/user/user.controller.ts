@@ -10,15 +10,18 @@ import {
   BadRequestException,
   UploadedFile,
   UseInterceptors,
+  Delete,
+  Res,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from 'src/common/database/user.schema';
-import { UserUpdateDto } from './dto/user-Update-dto';
+import { UserUpdateDto } from './dto/user-update.dto';
 import { UpdateAuthGuard } from 'src/common/guard/update-user.guard';
 import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
 import { GetUser } from 'src/common/decorator/get-user.decorator';
 import { NcloudService } from 'src/ncloud/ncloud.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { GetUserUpdatePasswordDto } from './dto/get-update-password.dto';
 
 @Controller('user')
 export class UserController {
@@ -50,7 +53,22 @@ export class UserController {
       data: await this.userService.searchUser(keyword, next),
     };
   }
-
+  @HttpCode(200)
+  @UseGuards(JwtAuthGuard)
+  @Put('password')
+  async changePassword(
+    @GetUser() user: User,
+    @Body() getUserUpdatePasswordDTO: GetUserUpdatePasswordDto,
+  ) {
+    await this.userService.changePassword(
+      user.userid,
+      getUserUpdatePasswordDTO,
+    );
+    return {
+      message: 'success',
+      data: {},
+    };
+  }
   @Get('/:userid')
   async getUserProfile(@Param('userid') userid: string) {
     return {
