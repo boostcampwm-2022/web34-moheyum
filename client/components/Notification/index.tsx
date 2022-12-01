@@ -28,12 +28,8 @@ export default function Notification() {
   return (
     <Wrapper>
       <TopBar>
-        <div>
-          <div>
-            <ButtonBack type="button" onClick={goBack} />
-          </div>
-          <h1>알림</h1>
-        </div>
+        <ButtonBack type="button" onClick={goBack} />
+        <h1>알림</h1>
       </TopBar>
       <NotificationContainer>
         {pages.map((item: any, index: number) => {
