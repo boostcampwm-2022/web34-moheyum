@@ -34,7 +34,6 @@ interface PostData {
 export default function ReadPost({ postData, title }: PostData) {
   const authedUserInfo = useRecoilValue(authedUser);
   const contentRef = useRef<HTMLDivElement>(null);
-  const [checkPostAuthor, setCheckPostAuthor] = useState<boolean>(false);
   const goBack = () => {
     Router.back();
   };
@@ -74,11 +73,6 @@ export default function ReadPost({ postData, title }: PostData) {
     }
   };
   useEffect(() => {
-    if (authedUserInfo.userid === postData.author) {
-      setCheckPostAuthor(true);
-    }
-  }, []);
-  useEffect(() => {
     if (!contentRef.current) return;
     contentRef.current.innerHTML = renderMarkdown(postData.description);
   }, [contentRef.current?.textContent]);
@@ -102,7 +96,10 @@ export default function ReadPost({ postData, title }: PostData) {
                 createdAt={postData.createdAt}
               />
             </Link>
-            <DeleteButton style={{ display: checkPostAuthor ? 'block' : 'none' }} onClick={deleteHandler}>
+            <DeleteButton
+              style={{ display: authedUserInfo.userid === postData.author ? 'block' : 'none' }}
+              onClick={deleteHandler}
+            >
               삭제
             </DeleteButton>
           </HeaderBox>

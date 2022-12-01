@@ -7,6 +7,7 @@ import { httpPost, httpGet } from '../../../utils/http';
 import renderMarkdown from '../../../utils/markdown';
 import UserDropDown from './UserDropDown';
 import { getLeftWidth } from '../../../styles/theme';
+import ProfileImg from '../../ProfileImg';
 import {
   Author,
   BottomButtonConatiner,
@@ -325,13 +326,7 @@ export default function Editor({ postData }: Props) {
       <CommentTopBar>
         <PostHeader>
           <Author>
-            <Profile>
-              {authedUserInfo.profileimg ? (
-                <Image src={authedUserInfo.profileimg} alt="" layout="fill" priority />
-              ) : (
-                <Image src="/favicon.svg" alt="Logo" layout="fill" priority />
-              )}
-            </Profile>
+            <ProfileImg imgUrl={authedUserInfo.profileimg}></ProfileImg>
             {authedUserInfo.nickname || 'ananymous'}
           </Author>
         </PostHeader>
