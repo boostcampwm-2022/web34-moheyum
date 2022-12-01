@@ -1,4 +1,3 @@
-import Image from 'next/legacy/image';
 import React from 'react';
 import { Author, AuthorDetail } from './index.style';
 import ProfileImg from '../../../ProfileImg';
