@@ -10,6 +10,7 @@ import {
   BadRequestException,
   UploadedFile,
   UseInterceptors,
+  Delete,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from 'src/common/database/user.schema';
@@ -71,6 +72,18 @@ export class UserController {
       data: await this.userService.updateUserProfile(userid, userUpdateDto),
     };
   }
+
+  @HttpCode(200)
+  @UseGuards(JwtAuthGuard)
+  @Delete('/:userid')
+  async deleteUser() {}
+
+  @HttpCode(200)
+  @UseGuards(JwtAuthGuard)
+  @Put('/:userid/password')
+  async changePassword() {}
+
+  
 
   @HttpCode(200)
   @UseGuards(JwtAuthGuard, UpdateAuthGuard)
