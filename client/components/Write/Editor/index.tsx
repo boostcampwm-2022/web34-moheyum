@@ -1,20 +1,33 @@
-import Router from 'next/router';
 import React, { ClipboardEvent, KeyboardEvent, useEffect, useRef, useState, useCallback, DragEvent } from 'react';
+import Image from 'next/image';
+import Router from 'next/router';
+import { useRecoilValue } from 'recoil';
+import { authedUser } from '../../../atom';
 import { httpPost } from '../../../utils/http';
 import renderMarkdown from '../../../utils/markdown';
 import {
+  Author,
   BottomButtonConatiner,
+  CommentTopBar,
   EditorContainer,
   EditorTabItem,
   EditorTabs,
   EditorTabTool,
   EditorTextBox,
+  PostHeader,
   PreviewTextBox,
+  Profile,
   ToolbarContainer,
   Wrapper,
 } from './index.style';
 
-export default function Editor() {
+interface Props {
+  postData: {
+    _id?: string;
+  };
+}
+
+export default function Editor({ postData }: Props) {
   const contentRef = useRef<HTMLDivElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const [tabIndex, setTabIndex] = useState(0); // 0 Editor, 1 Preview
@@ -23,12 +36,8 @@ export default function Editor() {
   const [dropDownPosition, setDropDownPosition] = useState<{ x: string; y: string }>({ x: '0px', y: '0px' });
   const [checkMentionKey, setCheckMentionKey] = useState<boolean>(false);
   const [contentHTML, setContentHTML] = useState<string>('<div><br></div>'); // 탭 전환용
+  const authedUserInfo = useRecoilValue(authedUser);
   // 프리뷰 전환했다가 마크다운 돌아올 때 쓰는거
-
-  // useEffect(() => { // test function
-  //   if (!previewRef.current) return;
-  //   previewRef.current.innerHTML = renderMarkdown(content);
-  // }, [content]);
   const pasteAction = (data: string) => {
     // console.log(JSON.stringify(data));
     const cursor = window.getSelection();
@@ -149,12 +158,13 @@ export default function Editor() {
       author: 1,
       title: 'title',
       description: contentRef.current.innerText,
+      parentPost: postData._id === '' ? null : postData._id,
     });
     if (result.statusCode !== 200) {
       alert(`글 작성에 실패했습니다.\nERROR statusCode: ${result.statusCode}\nERROR message: ${result.message}`);
       return;
     }
-    Router.push('/');
+    Router.back();
   };
 
   const selectTab = (index: number) => {
@@ -222,20 +232,34 @@ export default function Editor() {
 
   return (
     <Wrapper>
+      <CommentTopBar>
+        <PostHeader>
+          <Author>
+            <Profile>
+              {authedUserInfo.profileimg ? (
+                <Image src={authedUserInfo.profileimg} alt="" layout="fill" priority />
+              ) : (
+                <Image src="/favicon.svg" alt="Logo" layout="fill" priority />
+              )}
+            </Profile>
+            {authedUserInfo.nickname || 'ananymous'}
+          </Author>
+        </PostHeader>
+      </CommentTopBar>
       <ToolbarContainer>
         <EditorTabs>
-          <EditorTabItem selected={tabIndex === 0} onClick={() => selectTab(0)}>
-            MD
-          </EditorTabItem>
-          <EditorTabItem selected={tabIndex === 1} onClick={() => selectTab(1)}>
-            Preview
-          </EditorTabItem>
-        </EditorTabs>
-        <EditorTabs>
-          &nbsp;
+          {/* &nbsp; */}
           <EditorTabTool style={{ fontWeight: 'bold' }}>B</EditorTabTool>
           <EditorTabTool style={{ fontStyle: 'italic' }}>I</EditorTabTool>
           <EditorTabTool style={{ textDecorationLine: 'underline' }}>U</EditorTabTool>
+        </EditorTabs>
+        <EditorTabs>
+          <EditorTabItem selected={tabIndex === 0} onClick={() => selectTab(0)}>
+            마크다운
+          </EditorTabItem>
+          <EditorTabItem selected={tabIndex === 1} onClick={() => selectTab(1)}>
+            미리보기
+          </EditorTabItem>
         </EditorTabs>
       </ToolbarContainer>
       <EditorContainer>

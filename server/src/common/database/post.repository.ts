@@ -85,7 +85,10 @@ export class PostRepository {
     return data;
   }
 
-  async create(createPostDto: CreatePostDto, user: User): Promise<Post> {
+  async create(
+    createPostDto: CreatePostDto,
+    user: User,
+  ): Promise<PostDocument> {
     const { description, parentPost } = createPostDto;
     let parent: Post | null;
     if (parentPost !== '') {
@@ -93,7 +96,7 @@ export class PostRepository {
     }
     const newPost = new this.postModel({
       description: description,
-      parentPost: parentPost,
+      parentPost: parent ? parentPost : '',
       author: user.userid,
     });
 

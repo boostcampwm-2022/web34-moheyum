@@ -10,6 +10,7 @@ import { User } from 'src/common/database/user.schema';
 import { FollowRepository } from 'src/common/database/follow.repository';
 import { FollowerPostDto } from './dto/follower-post.dto';
 import { UserRepository } from 'src/common/database/user.repository';
+import { NotificationRepository } from 'src/common/database/notification.repository';
 
 @Injectable()
 export class PostService {
@@ -17,6 +18,7 @@ export class PostService {
     private readonly postRepository: PostRepository,
     private readonly followRepository: FollowRepository,
     private readonly userRepository: UserRepository,
+    private readonly notificationRepository: NotificationRepository,
   ) {}
 
   getAllPosts(): Promise<Post[]> {
@@ -32,9 +34,19 @@ export class PostService {
       : this.postRepository.getUserPostsWithNext(userid, followerPostDTO);
   }
 
-  createPost(createBoardDto: CreatePostDto, user: User): Promise<Post> {
-    const post = this.postRepository.create(createBoardDto, user);
-    this.userRepository.updatePostCount({ userid: user.userid }, 1);
+  async createPost(createBoardDto: CreatePostDto, user: User): Promise<Post> {
+    const post = await this.postRepository.create(createBoardDto, user);
+    if (post?.parentPost !== '') {
+      const parentPost = await this.postRepository.findOne({
+        _id: post.parentPost,
+      });
+      this.notificationRepository.create(
+        parentPost.author,
+        `${user.nickname}(${user.userid})님이 답글을 작성하셨습니다.`,
+        `/post/${post._id}`,
+      );
+    }
+    await this.userRepository.updatePostCount({ userid: user.userid }, 1);
     return post;
   }
 

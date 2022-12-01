@@ -233,7 +233,7 @@ export class FollowRepository {
       .then(
         (list) =>
           new Promise<void>((resolve) => {
-            list.map((v) => v.targetid).forEach((v) => userSet.add(v));
+            list.forEach((v) => userSet.add(v.targetid));
             resolve();
           }),
       );
@@ -244,7 +244,7 @@ export class FollowRepository {
       .then(
         (list) =>
           new Promise<void>((resolve) => {
-            list.map((v) => v.userid).forEach((v) => userSet.add(v));
+            list.forEach((v) => userSet.add(v.userid));
             resolve();
           }),
       );
