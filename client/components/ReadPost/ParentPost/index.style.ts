@@ -56,9 +56,16 @@ export const HeaderBox = styled.div`
   flex-direction: row;
 `;
 
+export const ParentTreeContainer = styled.div`
+  width: 66px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 export const ParentTree = styled.div`
   width: 1px;
-  margin: 0px 39px;
+  margin: 0px 33px;
   border: 1px solid ${COLORS.GRAY3};
   height: calc(100% + 15px);
 `;
