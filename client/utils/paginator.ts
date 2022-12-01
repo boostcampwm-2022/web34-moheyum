@@ -24,7 +24,7 @@ export default function Paginator(fetchUrl: string, nextCursor: string) {
     setLoading(true);
     setError(false);
     let fetchUrlwithNext = fetchUrl;
-    if (next !== NEXT.START && next !== NEXT.END) {
+    if (next !== NEXT.START && next !== NEXT.END && nextCursor !== 'START') {
       if (fetchUrlwithNext.includes('?')) fetchUrlwithNext += `&next=${next}`;
       else fetchUrlwithNext += `?next=${next}`;
     }

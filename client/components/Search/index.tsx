@@ -25,11 +25,17 @@ export default function SearchSection() {
   };
 
   useEffect(() => {
+    if (!inputRef.current) return;
     if (initKeyword) {
-      if (Array.isArray(initKeyword)) setKeyword(initKeyword[0]);
-      else setKeyword(initKeyword);
+      if (Array.isArray(initKeyword)) {
+        setKeyword(initKeyword[0]);
+        [inputRef.current.value] = initKeyword;
+      } else {
+        setKeyword(initKeyword);
+        inputRef.current.value = initKeyword;
+      }
     }
-  }, []);
+  }, [inputRef.current]);
 
   const changeTab = (idx: number) => {
     setTabIndex(idx);
