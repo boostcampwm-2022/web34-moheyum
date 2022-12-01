@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/legacy/image';
 import styled from '@emotion/styled';
-import COLORS from '../../../../styles/color';
+import COLORS from '../../styles/color';
 
 export default function ProfileImg({ imgUrl }: { imgUrl: string }) {
   return (
@@ -21,7 +21,7 @@ export const Profile = styled.div`
   height: 50px;
   border-radius: 50px;
   border: 2px solid ${COLORS.PRIMARY};
-  margin: 15px;
+  margin: 8px;
   padding-right: 45px;
   img {
     width: 50px;

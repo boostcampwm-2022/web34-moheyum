@@ -11,7 +11,7 @@ import Paginator, { NEXT } from '../../utils/paginator';
 import type PostProps from '../../types/Post';
 import Comment, { commentItem } from './Comment';
 import UserProfile from './UserProfile';
-import ProfileImg from './UserProfile/ProfileImg';
+import ProfileImg from '../ProfileImg';
 import ParentPost from './ParentPost';
 import type { Parent } from '../../types/Post';
 import { ContentBox, PostContent, HeaderBox, Wrapper, CommentBox, Loader, MainContentBox } from './index.style';

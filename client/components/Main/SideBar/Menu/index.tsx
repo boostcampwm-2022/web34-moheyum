@@ -9,7 +9,7 @@ export default function Menu({ imgSrc, text, avatar }: { imgSrc: string; text: s
         {avatar ? (
           <>
             <div className="imageBox">
-              <div className="avatarBox" style={{ backgroundImage: `url(${imgSrc})` }} />
+              <Image src="/favicon.svg" alt="item" width={25} height={25} priority />
             </div>
             <div className="text">{text}</div>
           </>
