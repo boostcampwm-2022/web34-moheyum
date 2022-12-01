@@ -1,5 +1,4 @@
 import React, { ClipboardEvent, KeyboardEvent, useEffect, useRef, useState, useCallback, DragEvent } from 'react';
-import Image from 'next/legacy/image';
 import Router from 'next/router';
 import { useRecoilValue } from 'recoil';
 import { authedUser } from '../../../atom';
@@ -7,6 +6,7 @@ import { httpPost, httpGet } from '../../../utils/http';
 import renderMarkdown from '../../../utils/markdown';
 import UserDropDown from './UserDropDown';
 import { getLeftWidth } from '../../../styles/theme';
+import ProfileImg from '../../ProfileImg';
 import {
   Author,
   BottomButtonConatiner,
@@ -18,7 +18,6 @@ import {
   EditorTextBox,
   PostHeader,
   PreviewTextBox,
-  Profile,
   ToolbarContainer,
   Wrapper,
 } from './index.style';
@@ -325,13 +324,7 @@ export default function Editor({ postData }: Props) {
       <CommentTopBar>
         <PostHeader>
           <Author>
-            <Profile>
-              {authedUserInfo.profileimg ? (
-                <Image src={authedUserInfo.profileimg} alt="" layout="fill" priority />
-              ) : (
-                <Image src="/favicon.svg" alt="Logo" layout="fill" priority />
-              )}
-            </Profile>
+            <ProfileImg imgUrl={authedUserInfo.profileimg} />
             {authedUserInfo.nickname || 'ananymous'}
           </Author>
         </PostHeader>

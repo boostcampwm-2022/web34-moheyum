@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import COLORS from '../../styles/color';
-import { markdownStyle, mainSectionStyle, displayCenter } from '../../styles/mixin';
+import { markdownStyle, mainSectionStyle, displayCenter, buttonStyle } from '../../styles/mixin';
 
 export const HeaderBox = styled.div`
   width: 100%;
@@ -79,4 +79,11 @@ export const Loader = styled.div`
   width: 20px;
   height: 20px;
   ${displayCenter}
+`;
+
+export const DeleteButton = styled.button`
+  ${buttonStyle}
+  width: 50px;
+  height: 28px;
+  margin: 20px;
 `;

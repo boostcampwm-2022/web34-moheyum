@@ -5,7 +5,7 @@ import { ButtonBack, TopBar } from '../../styles/common';
 import PostProps from '../../types/Post';
 import { calcTime } from '../../utils/calctime';
 import renderMarkdown from '../../utils/markdown';
-import ProfileImg from '../ReadPost/UserProfile/ProfileImg';
+import ProfileImg from '../ProfileImg';
 import { Author, AuthorDetail, ContentBox, HeaderBox, PostContent, Wrapper } from './index.style';
 
 interface Props {
