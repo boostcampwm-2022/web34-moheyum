@@ -1,4 +1,3 @@
-import Image from 'next/legacy/image';
 import Router from 'next/router';
 import React, { ChangeEvent, RefObject, useEffect, useRef, useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
@@ -25,8 +24,8 @@ import {
   BioInput,
   ErrorMessage,
   ProfileImageInput,
-  UpdateIcon,
-  ChangeImageButton,
+  EditSection,
+  ProfileImgForm,
 } from './index.style';
 
 interface ProfileEditable {
@@ -102,11 +101,11 @@ export default function ProfileEditSection() {
     setMyProfile((prevProfile) => ({ ...prevProfile, nickname: e.target.value }));
   };
 
-  const handleBioChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleBioChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setMyProfile((prevProfile) => ({ ...prevProfile, bio: e.target.value }));
   };
 
-  const handleProfileImgSubmit = async () => {
+  const handleProfileImgSubmit = () => {
     // fetch('/api/user/')
     if (!profileImg) return;
     const formData = new FormData();
@@ -163,43 +162,33 @@ export default function ProfileEditSection() {
         </div>
         <h1>프로필 편집</h1>
       </TopBar>
-      <div>
-        <form onSubmit={handleSubmit(handleProfileImgSubmit)} style={{ width: '500px' }} encType="multipart/form-data">
+      <EditSection>
+        <ProfileImgForm onSubmit={handleSubmit(handleProfileImgSubmit)} encType="multipart/form-data">
           <ProfileAndImgContainer>
-            <Avatar src={previewImg ?? myProfile.profileimg}>
-              <div>&nbsp;</div>
-              <UpdateIcon>
-                <div>&nbsp;</div>
-                <ProfileImageInput type="file" ref={selectFile} onChange={handleImg} accept="image/*" />
-                <ChangeImageButton type="button" onClick={() => selectFile.current!.click()}>
-                  <Image src="/profile_img.svg" alt="Profile" width={50} height={60} priority />
-                </ChangeImageButton>
-              </UpdateIcon>
-            </Avatar>
-
+            <ProfileImageInput type="file" ref={selectFile} onChange={handleImg} accept="image/*" />
+            <Avatar src={previewImg ?? myProfile.profileimg} onClick={() => selectFile.current!.click()} />
             <ProfileArea>
               <ProfileUserid>{myProfile.userid}</ProfileUserid>
               <ProfileEmail>{myProfile.email}</ProfileEmail>
-              <ChangeAvatarButton type="submit">프로필 사진 바꾸기</ChangeAvatarButton>
+              {previewImg && <ChangeAvatarButton type="submit">프로필 사진 저장</ChangeAvatarButton>}
             </ProfileArea>
           </ProfileAndImgContainer>
-        </form>
-        <InputsContainer>
-          <form onSubmit={handleSubmit(handleProfileSubmit)} style={{ width: '500px' }}>
-            <NicknameEditArea>
-              별명:
-              <NicknameInput {...register('nickname')} value={myProfile.nickname} onChange={handleNicknameChange} />
-              <ErrorMessage>{errors.nickname && (errors.nickname.message as string)}</ErrorMessage>
-            </NicknameEditArea>
-            <BioEditArea>
-              소개:
-              <BioInput {...register('bio')} value={myProfile.bio} onChange={handleBioChange} />
-              <ErrorMessage>{errors.bio && (errors.bio.message as string)}</ErrorMessage>
-            </BioEditArea>
-            <SubmitButton type="submit">저장</SubmitButton>
-          </form>
+        </ProfileImgForm>
+        <InputsContainer onSubmit={handleSubmit(handleProfileSubmit)}>
+          <NicknameEditArea>
+            <span>별명:</span>
+            <NicknameInput {...register('nickname')} value={myProfile.nickname} onChange={handleNicknameChange} />
+          </NicknameEditArea>
+          <ErrorMessage>{errors.nickname && (errors.nickname.message as string)}</ErrorMessage>
+          <BioEditArea>
+            <span>소개:</span>
+            <BioInput {...register('bio')} value={myProfile.bio} onChange={handleBioChange} />
+          </BioEditArea>
+          <ErrorMessage>{errors.bio && (errors.bio.message as string)}</ErrorMessage>
+          <SubmitButton type="submit">저장</SubmitButton>
         </InputsContainer>
-      </div>
+      </EditSection>
     </Wrapper>
   );
+  f;
 }

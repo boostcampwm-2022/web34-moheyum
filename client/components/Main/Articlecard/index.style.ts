@@ -50,6 +50,10 @@ export const Comments = styled.div`
   & > span {
     margin: 0 8px;
   }
+
+  & img {
+    padding-top: 2px !important;
+  }
 `;
 
 export const PostedAt = styled.div`

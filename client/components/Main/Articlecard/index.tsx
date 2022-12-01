@@ -32,7 +32,7 @@ export const ArticleCard = React.forwardRef<HTMLInputElement, Props>(
           <UserProfile profileimg={profileimg} nickname={nickname} author={author!} />
           <HeaderInfo>
             <Comments>
-              <Image src="/ico_comment.svg" width={20} height={20} />
+              <Image src="/ico_comment.svg" width={18} height={18} />
               <span>{comments}</span>
             </Comments>
             <PostedAt>{calcTime(date)}</PostedAt>
