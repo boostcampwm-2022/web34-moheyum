@@ -41,7 +41,7 @@ export const FakeButton = styled.button`
 `;
 
 export const ArticlesSection = styled.div`
-  background-color: ${COLORS.OFF_WHITE};
+  background-color: ${COLORS.WHITE};
   flex: 1;
 `;
 

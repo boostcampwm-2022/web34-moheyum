@@ -3,23 +3,25 @@ import COLORS from '../../../styles/color';
 
 export const Wrapper = styled.div`
   width: inherit;
-  margin: 10px 20px;
   background-color: ${COLORS.WHITE};
-  border-radius: 10px;
-  border: 2px solid ${COLORS.GRAY3};
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: 13px 20px;
+  padding: 0px 36px;
   cursor: pointer;
+
+  &:hover {
+    filter: brightness(0.95);
+  }
 
   & > hr {
     width: 100%;
-    margin: 20px 0;
-    background-color: ${COLORS.GRAY4};
+    margin-top: 16px;
+    background-color: ${COLORS.GRAY3};
     height: 1px;
     border: none;
+    margin-block-end: 0;
   }
 `;
 
@@ -28,9 +30,9 @@ export const ArticleHeader = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  margin-top: 15px;
+  margin-bottom: 10px;
 `;
-
-
 
 export const HeaderInfo = styled.div`
   display: flex;
@@ -48,10 +50,16 @@ export const Comments = styled.div`
   & > span {
     margin: 0 8px;
   }
+
+  & img {
+    padding-top: 2px !important;
+  }
 `;
 
 export const PostedAt = styled.div`
   color: ${COLORS.GRAY2};
+  font-weight: 400;
+  font-size: 16px;
 `;
 
 export const ArticleContent = styled.div`
@@ -64,6 +72,7 @@ export const Content = styled.div`
   overflow-x: hidden;
   overflow-y: hidden;
   height: 120px;
+  flex: 1;
   display: block;
   word-break: break-all;
   padding-right: 10px;
