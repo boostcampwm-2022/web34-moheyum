@@ -30,25 +30,7 @@ export const ArticleHeader = styled.div`
   justify-content: space-between;
 `;
 
-export const Author = styled.div`
-  color: ${COLORS.BLACK};
-  font-weight: 600;
-  font-size: 22px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  & > div {
-    width: 40px;
-    height: 40px;
-    border-radius: 20px;
-    background-color: ${COLORS.GRAY4};
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    border: 1px solid ${COLORS.GRAY3};
-    margin-right: 10px;
-  }
-`;
+
 
 export const HeaderInfo = styled.div`
   display: flex;

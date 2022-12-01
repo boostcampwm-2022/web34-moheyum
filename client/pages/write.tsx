@@ -9,7 +9,7 @@ export default function write() {
     <AuthGuard>
       <Frame>
         <SideBar />
-        <EditorWrapper />
+        <EditorWrapper postData={{ _id: '' }} />
       </Frame>
     </AuthGuard>
   );
