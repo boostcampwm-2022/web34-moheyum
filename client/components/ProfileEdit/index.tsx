@@ -1,7 +1,7 @@
 import Image from 'next/legacy/image';
 import Router from 'next/router';
 import React, { ChangeEvent, RefObject, useEffect, useRef, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers';
@@ -65,6 +65,8 @@ export default function ProfileEditSection() {
   };
 
   const authedUserInfo = useRecoilValue(authedUser);
+  const setAuthedUserInfo = useSetRecoilState(authedUser);
+
   const [myProfile, setMyProfile] = useState<Profile>({
     userid: authedUserInfo.userid,
     email: '',
@@ -106,6 +108,7 @@ export default function ProfileEditSection() {
 
   const handleProfileImgSubmit = async () => {
     // fetch('/api/user/')
+    if (!profileImg) return;
     const formData = new FormData();
     formData.append('file', profileImg!);
     fetch(`/api/user/${myProfile.userid}/avatar`, {
@@ -113,11 +116,20 @@ export default function ProfileEditSection() {
       credentials: 'include',
       body: formData,
     })
+      .then(async (e) => {
+        const res = await e.json();
+        const url = res.data.profileimg;
+        // profileImg수정
+        setAuthedUserInfo((userInfo) => {
+          const profileimg = url;
+          return { ...userInfo, profileimg };
+        });
+        setProfileImg(undefined);
+      })
       .catch((e) => {
         alert(e);
         console.error(e);
-      })
-      .finally(() => {});
+      });
   };
 
   const handleProfileSubmit = () => {
