@@ -190,5 +190,4 @@ export default function ProfileEditSection() {
       </EditSection>
     </Wrapper>
   );
-  f;
 }
