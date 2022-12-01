@@ -10,13 +10,11 @@ interface NotificationData {
 }
 export const NotificationCard = React.forwardRef<HTMLInputElement, NotificationData>(
   ({ url, message, createdAt }: NotificationData, ref) => (
-    <div ref={ref}>
-      <Link href={url}>
-        <Container>
-          <Message>{message}</Message>
-          <NotificationAt>{calcTime(createdAt)}</NotificationAt>
-        </Container>
-      </Link>
-    </div>
+    <Link href={url}>
+      <Container ref={ref}>
+        <Message>{message}</Message>
+        <NotificationAt>{calcTime(createdAt)}</NotificationAt>
+      </Container>
+    </Link>
   )
 );
