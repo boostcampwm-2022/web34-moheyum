@@ -9,4 +9,7 @@ export class CreatePostDto {
 
   @IsOptional()
   childPosts: string[];
+
+  @IsOptional()
+  mentions?: string[];
 }

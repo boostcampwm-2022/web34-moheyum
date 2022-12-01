@@ -17,6 +17,7 @@ export const PostContent = styled.div`
   overflow-x: hidden;
   overflow-y: scroll;
   display: flex;
+  flex: 1;
   flex-direction: column;
   align-items: center;
   -ms-overflow-style: none;

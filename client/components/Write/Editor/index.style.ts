@@ -4,6 +4,7 @@ import { buttonStyle, displayColumn, markdownStyle } from '../../../styles/mixin
 
 export const Wrapper = styled.div`
   height: 100%;
+  flex: 1;
   background-color: white;
   display: flex;
   flex-direction: column;
@@ -106,7 +107,6 @@ export const PreviewTextBox = styled.div`
 `;
 
 export const CommentTopBar = styled.div`
-  border-top: 2px solid #d7d7d7;
   background-color: ${COLORS.WHITE};
   height: 70px;
   width: 100%;

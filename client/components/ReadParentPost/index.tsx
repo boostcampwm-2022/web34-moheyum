@@ -25,11 +25,9 @@ export default function ReadPost({ postData }: Props) {
     <Wrapper>
       <TopBar>
         <div>
-          <div>
-            <ButtonBack type="button" onClick={goBack} />
-          </div>
-          <h1>답글 작성</h1>
+          <ButtonBack type="button" onClick={goBack} />
         </div>
+        <h1>답글 작성</h1>
       </TopBar>
       <ContentBox>
         <HeaderBox>
