@@ -335,9 +335,14 @@ export class PostRepository {
 
   searchPostWithNext(keyword: string, next: string) {
     return this.postModel.aggregate([
-      { $match: { _id: { $lt: next }, $text: { $search: keyword } } },
-      { $limit: 10 },
+      {
+        $match: {
+          _id: { $lt: new mongoose.Types.ObjectId(next) },
+          $text: { $search: keyword },
+        },
+      },
       { $sort: { _id: -1 } },
+      { $limit: 10 },
       {
         $lookup: {
           from: 'users',
