@@ -1,6 +1,9 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
+  Logger,
+  LoggerService,
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthCredentialsDto } from './dto/auth-credential.dto';
@@ -20,6 +23,7 @@ import * as generator from 'generate-password';
 @Injectable()
 export class AuthService {
   constructor(
+    @Inject(Logger) private readonly logger: LoggerService,
     private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
@@ -64,6 +68,7 @@ export class AuthService {
       refreshToken,
       +this.configService.get('saltOrRounds'),
     );
+
     await this.redisService.set(
       userid,
       hashedToken,
@@ -169,7 +174,8 @@ export class AuthService {
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const { userid, password } = authCredentialsDto;
     const user = await this.userRepository.findOne({ userid });
-
+    throw new BadRequestException();
+    this.logger.error('error');
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload = { userid };
       const accessToken = await this.createAccessToken(payload);

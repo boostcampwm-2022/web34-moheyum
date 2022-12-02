@@ -12,7 +12,6 @@ import { UserModule } from './user/user.module';
 import { FollowModule } from './follow/follow.module';
 import { NcloudModule } from './ncloud/ncloud.module';
 import { NotificationModule } from './notification/notification.module';
-
 @Module({
   imports: [
     ConfigModule.forRoot({
