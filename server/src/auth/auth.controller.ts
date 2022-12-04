@@ -39,22 +39,22 @@ export class AuthController {
   @Post('/signin')
   async signIn(
     @Body() authCredentialsDto: AuthCredentialsDto,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
   ) {
     const { accessToken, refreshToken } = await this.authService.signIn(
       authCredentialsDto,
     );
     res.cookie('a_t', accessToken, this.authService.getAccessOptions());
     res.cookie('r_t', refreshToken, this.authService.getRefreshOptions());
-    res.json({
-      message: 'success',
-      data: {},
-    });
+    return {};
   }
 
   @UseGuards(JwtRefreshGuard)
   @Get('refresh')
-  async refresh(@GetPayload() userid: string, @Res() res: Response) {
+  async refresh(
+    @GetPayload() userid: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     // TODO db상에서 가져와야함
     const payload = { userid };
     const data = await this.authService.checkUserAuthData(userid);
@@ -62,10 +62,7 @@ export class AuthController {
     const refreshToken = await this.authService.createRefreshToken(payload);
     res.cookie('a_t', accessToken, this.authService.getAccessOptions());
     res.cookie('r_t', refreshToken, this.authService.getRefreshOptions());
-    res.json({
-      message: 'success',
-      data: data,
-    });
+    return data;
   }
 
   @HttpCode(200)

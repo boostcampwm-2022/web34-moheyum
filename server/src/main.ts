@@ -4,16 +4,9 @@ import * as cookieParser from 'cookie-parser';
 // import * as dotenv from 'dotenv';
 // import * as path from 'path';
 import { HttpStatus, ValidationPipe } from '@nestjs/common';
-import { HttpExceptionFilter } from './common/filter/httpexecption.filter';
-import { BadRequestExceptionFilter } from './common/filter/badrequest.filter';
 import { ConfigService } from '@nestjs/config';
 import { winstonLogger } from './common/utils/winston.util';
-
-// TODO : config 모듈로 변경해야함
-// if (!process.env.NODE_ENV) throw new Error('No NODE_ENV');
-// dotenv.config({
-//   path: path.resolve(`.env.${process.env.NODE_ENV}`),
-// });
+import { ResponseInterceptor } from './common/interceptor/response.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -21,11 +14,8 @@ async function bootstrap() {
   });
   const configService = app.get<ConfigService>(ConfigService);
   app.use(cookieParser());
-  app.useGlobalFilters(
-    new HttpExceptionFilter(),
-    new BadRequestExceptionFilter(),
-  );
   app.setGlobalPrefix('api');
+  app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

@@ -1,4 +1,4 @@
-import { Module, MiddlewareConsumer } from '@nestjs/common';
+import { Module, MiddlewareConsumer, Logger } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PostModule } from './post/post.module';
 import { AuthModule } from './auth/auth.module';
@@ -12,6 +12,8 @@ import { UserModule } from './user/user.module';
 import { FollowModule } from './follow/follow.module';
 import { NcloudModule } from './ncloud/ncloud.module';
 import { NotificationModule } from './notification/notification.module';
+import { APP_FILTER } from '@nestjs/core';
+import { HttpExceptionFilter } from './common/filter/http-execption.filter';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -26,6 +28,13 @@ import { NotificationModule } from './notification/notification.module';
     FollowModule,
     NcloudModule,
     NotificationModule,
+  ],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
+    Logger,
   ],
 })
 export class AppModule {
