@@ -29,10 +29,7 @@ export class AuthController {
   @Post('/signup')
   async signUp(@Body() userCreateDto: UserCreateDto) {
     await this.authService.signUp(userCreateDto);
-    return {
-      message: 'success',
-      data: {},
-    };
+    return {};
   }
 
   @HttpCode(200)
@@ -67,49 +64,38 @@ export class AuthController {
 
   @HttpCode(200)
   @Post('email-verification')
-  async sendEmailCode(@Body() emailCheckDto: EmailDto, @Res() res: Response) {
+  async sendEmailCode(
+    @Body() emailCheckDto: EmailDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const authNum: string = await this.authService.sendEmailCode(emailCheckDto);
     res.cookie('authNum', authNum, this.authService.getEmailOptions());
-    return res.send({
-      message: 'success',
-      data: {},
-    });
+    return {};
   }
 
   @Get('email-verification')
   async checkEmailCode(
     @Query() emailCheckDto: EmailCheckDto,
     @Cookies('authNum') authNum: string,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
   ) {
     await this.authService.checkEmailCode(emailCheckDto, authNum);
     res.cookie('authNum', '', this.authService.deleteCookie());
-    return res.send({
-      message: 'success',
-      data: {},
-    });
+    return {};
   }
 
   @HttpCode(200)
   @Post('id-inquiry')
   async findId(@Body() emailDTO: EmailDto) {
     const userid = await this.authService.findId(emailDTO);
-    return {
-      message: 'success',
-      data: {
-        userid,
-      },
-    };
+    return userid;
   }
 
   @HttpCode(200)
   @Post('password-inquiry')
   async findPw(@Body() findPwDTO: FindPwDto) {
     if (await this.authService.findPw(findPwDTO)) {
-      return {
-        message: 'success',
-        data: {},
-      };
+      return {};
     }
   }
 }
