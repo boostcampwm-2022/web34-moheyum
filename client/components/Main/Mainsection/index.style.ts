@@ -49,3 +49,7 @@ export const Newsfeed = styled.div`
   overflow-y: scroll;
   flex: 1;
 `;
+
+export const NewFeed = styled.div`
+  width: 100%;
+`;
