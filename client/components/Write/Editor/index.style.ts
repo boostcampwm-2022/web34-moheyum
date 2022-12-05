@@ -18,7 +18,7 @@ export const ToolbarContainer = styled.div`
   align-items: center;
   justify-content: end;
   /* background-color: ${COLORS.GRAY3}; */
-  border-bottom: 1px solid ${COLORS.PRIMARY};
+  border-bottom: 1px solid ${COLORS.GRAY3};
 `;
 
 export const EditorTabs = styled.ul`
@@ -38,24 +38,23 @@ interface CanBeSelected {
 
 export const EditorTabItem = styled.li<CanBeSelected>`
   /* box-sizing: border-box; */
-  height: 100%;
+  height: ${(props) => (props.selected ? `calc(100% + 2px)` : `100%`)};
   width: 80px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  border: 1px solid ${COLORS.PRIMARY};
+  border: 1px solid ${COLORS.GRAY3};
   ${(props) =>
     props.selected &&
     `border-bottom: 1px solid white;
 margin-bottom: -1px;`}
-  border-radius: 5px 5px 0 0;
   background-color: ${(props) => (props.selected ? `${COLORS.WHITE}` : `${COLORS.GRAY3}`)};
   cursor: pointer;
 `;
 
 export const EditorTabTool = styled.li`
-  border: 2px solid ${COLORS.PRIMARY};
+  border: 1px solid ${COLORS.PRIMARY};
   border-radius: 5px;
   background-color: ${COLORS.WHITE};
   width: 25px;
@@ -65,13 +64,16 @@ export const EditorTabTool = styled.li`
   align-items: center;
   margin: 0 3px;
   cursor: pointer;
+  &:hover {
+    outline: 1px solid ${COLORS.PRIMARY};
+  }
 `;
 
 export const BottomButtonConatiner = styled.div`
   width: 100%;
   display: flex;
   justify-content: flex-end;
-  border-top: 1px solid ${COLORS.PRIMARY};
+  border-top: 1px solid ${COLORS.GRAY3};
   & > button {
     ${buttonStyle}
     margin: 10px 20px;
@@ -108,7 +110,7 @@ export const PreviewTextBox = styled.div`
 
 export const CommentTopBar = styled.div`
   background-color: ${COLORS.WHITE};
-  height: 70px;
+
   width: 100%;
   /* border-bottom: 2px solid ${COLORS.GRAY3}; */
   ${displayColumn}
@@ -124,22 +126,9 @@ export const Author = styled.div`
   align-items: center;
   font-weight: 500;
   font-size: 18px;
-`;
-
-export const Profile = styled.div`
-  position: relative;
-  width: 40px;
-  height: 40px;
-  border-radius: 40px;
-  border: 2px solid ${COLORS.GRAY2};
-  background-color: ${COLORS.GRAY3};
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  margin: 15px;
-  img {
-    width: 40px;
-    height: 40px;
-    border-radius: 40px;
+  margin: 20px 20px 0px 20px;
+  & span {
+    margin: 0 10px;
+    font-size: 22px;
   }
 `;

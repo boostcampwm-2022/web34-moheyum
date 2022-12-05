@@ -53,6 +53,7 @@ export default function Editor({ postData }: Props) {
   const [contentHTML, setContentHTML] = useState<string>('<div><br></div>'); // 탭 전환용
   const [selectUser, setSelectUser] = useState<number>(0);
   const authedUserInfo = useRecoilValue(authedUser);
+
   const pasteAction = (data: string) => {
     // console.log(JSON.stringify(data));
     const cursor = window.getSelection();
@@ -195,10 +196,11 @@ export default function Editor({ postData }: Props) {
     const removeDup = new Set(mentionList);
     const target = contentRef.current;
     if (!target) return;
+    const postContent = target.innerHTML.replace(/<div>([\s\S]*?)<\/div>/g, '$1\n');
     const result = await httpPost('/post', {
       author: 1,
       title: 'title',
-      description: contentRef.current.innerText,
+      description: postContent,
       parentPost: postData._id === '' ? null : postData._id,
       mentions: Array.from(removeDup),
     });
@@ -269,8 +271,8 @@ export default function Editor({ postData }: Props) {
   }, [checkMentionActive]);
 
   useEffect(() => {
-    if (!contentRef.current) {
-      if (!previewRef.current) return;
+    if (!previewRef.current || !contentRef.current) return;
+    if (tabIndex === 1) {
       previewRef.current.innerHTML = renderMarkdown(content);
     } else {
       contentRef.current.innerHTML = contentHTML;
@@ -325,13 +327,12 @@ export default function Editor({ postData }: Props) {
         <PostHeader>
           <Author>
             <ProfileImg imgUrl={authedUserInfo.profileimg} />
-            {authedUserInfo.nickname || 'ananymous'}
+            <span>{authedUserInfo.nickname || 'ananymous'}</span>
           </Author>
         </PostHeader>
       </CommentTopBar>
       <ToolbarContainer>
         <EditorTabs>
-          {/* &nbsp; */}
           <EditorTabTool style={{ fontWeight: 'bold' }}>B</EditorTabTool>
           <EditorTabTool style={{ fontStyle: 'italic' }}>I</EditorTabTool>
           <EditorTabTool style={{ textDecorationLine: 'underline' }}>U</EditorTabTool>
@@ -346,24 +347,22 @@ export default function Editor({ postData }: Props) {
         </EditorTabs>
       </ToolbarContainer>
       <EditorContainer>
-        {tabIndex === 0 ? (
-          <EditorTextBox
-            contentEditable={tabIndex === 0}
-            ref={contentRef}
-            onKeyUp={handleKeyUp}
-            onKeyDown={handleKeyDown}
-            onPaste={handlePaste}
-            onDrop={handleDrop}
-            onDragOver={dragOver}
-            suppressContentEditableWarning
-          >
-            <div>
-              <br />
-            </div>
-          </EditorTextBox>
-        ) : (
-          <PreviewTextBox ref={previewRef} />
-        )}
+        <EditorTextBox
+          contentEditable={tabIndex === 0}
+          ref={contentRef}
+          onKeyUp={handleKeyUp}
+          onKeyDown={handleKeyDown}
+          onPaste={handlePaste}
+          onDrop={handleDrop}
+          onDragOver={dragOver}
+          style={{ display: `${tabIndex === 0 ? 'block' : 'none'}` }}
+          suppressContentEditableWarning
+        >
+          <div>
+            <br />
+          </div>
+        </EditorTextBox>
+        <PreviewTextBox ref={previewRef} style={{ display: `${tabIndex === 1 ? 'block' : 'none'}` }} />
         <input type="file" id="fileUpload" style={{ display: 'none' }} />
         {followList.length !== 0 && (
           <UserDropDown
