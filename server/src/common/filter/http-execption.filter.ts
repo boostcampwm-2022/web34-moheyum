@@ -14,19 +14,24 @@ export class HttpExceptionFilter implements ExceptionFilter {
   constructor(@Inject(Logger) private readonly logger: LoggerService) {}
   async catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
-    const response = ctx.getResponse();
-    const request = ctx.getRequest();
+    const res = ctx.getResponse();
+    const req = ctx.getRequest();
     const status =
       exception instanceof HttpException
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
-    if (status >= 500)
-      this.logger.error(
-        `message: ${exception.message} stack: ${exception.stack}`,
-      );
-    else this.logger.warn(exception.message);
-    response.status(status).json({
-      path: request.url,
+    const log = {
+      timestamp: new Date().toLocaleDateString(),
+      url: req.url,
+      ip: req.ip,
+      agent: req.get('user-agent'),
+      message: exception.message,
+      stack: exception.stack,
+    };
+    if (status >= 500) this.logger.error(log);
+    else this.logger.warn(log);
+    res.status(status).json({
+      path: req.url,
       message: exception.message,
     });
   }

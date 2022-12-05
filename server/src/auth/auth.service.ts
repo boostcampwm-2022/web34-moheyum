@@ -20,6 +20,8 @@ import { EmailDto } from './dto/email.dto';
 import { EmailCheckDto } from './dto/email-check.dto';
 import { FindPwDto } from './dto/find-pw-dto';
 import * as generator from 'generate-password';
+import { UserException } from 'src/common/exeception/user.exception';
+import { CommonException } from 'src/common/exeception/common.exception';
 @Injectable()
 export class AuthService {
   constructor(
@@ -179,7 +181,7 @@ export class AuthService {
       const accessToken = await this.createAccessToken(payload);
       const refreshToken = await this.createRefreshToken(payload);
       return { accessToken, refreshToken };
-    } else throw new UnauthorizedException('login failed');
+    } else throw UserException.userUnAuthorized();
   }
 
   /**
@@ -201,9 +203,7 @@ export class AuthService {
       });
       return true;
     } catch (e) {
-      throw new BadRequestException({
-        message: '메시지 전송 실패',
-      });
+      throw CommonException.commonMailerFail();
     }
   }
 
@@ -224,9 +224,7 @@ export class AuthService {
       );
       return authNum;
     } catch (e) {
-      throw new BadRequestException({
-        message: 'Message 인증 코드 생성 에러 발생',
-      });
+      throw CommonException.commonCreateCodeError();
     }
   }
 
@@ -245,12 +243,10 @@ export class AuthService {
       if (rightNum) {
         return true;
       } else {
-        throw new BadRequestException({
-          message: '인증코드가 일치하지 않습니다',
-        });
+        throw CommonException.commonCheckCodeFail();
       }
     } catch (e) {
-      throw new BadRequestException({ message: '다시 요청해 주시기 바랍니다' });
+      throw CommonException.commonReCheck();
     }
   }
   /**
@@ -268,9 +264,7 @@ export class AuthService {
       const userid = `${user.userid.slice(0, -3)}***`;
       return userid;
     }
-    throw new BadRequestException({
-      message: '해당 이메일과 닉네임으로 가입되어 있지 않습니다',
-    });
+    throw UserException.userNotFound();
   }
 
   async findPw(findPwDTO: FindPwDto) {
@@ -303,9 +297,7 @@ export class AuthService {
       );
       return true;
     }
-    throw new BadRequestException({
-      message: '해당 이메일과 아이디로 가입되어 있지 않습니다',
-    });
+    throw UserException.userNotFound();
   }
 
   async checkUserAuthData(userid: string) {

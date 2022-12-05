@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
 import { UnauthorizedException } from '@nestjs/common';
 import { AuthService } from '../auth.service';
+import { UserException } from 'src/common/exeception/user.exception';
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(
   Strategy,
@@ -33,7 +34,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
     );
     // const user: User = await this.userRepository.findOne({ userid });
     if (!isValidate) {
-      throw new UnauthorizedException();
+      throw UserException.userUnAuthorizedToken();
     }
 
     return userid;

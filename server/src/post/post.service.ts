@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Post } from '../common/database/post.schema';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PostRepository } from '../common/database/post.repository';
@@ -11,6 +7,7 @@ import { FollowRepository } from 'src/common/database/follow.repository';
 import { FollowerPostDto } from './dto/follower-post.dto';
 import { UserRepository } from 'src/common/database/user.repository';
 import { NotificationRepository } from 'src/common/database/notification.repository';
+import { PostException } from 'src/common/exeception/post.exception';
 
 @Injectable()
 export class PostService {
@@ -52,14 +49,14 @@ export class PostService {
 
   async getPostById(id: string) {
     const found = await this.postRepository.findOne({ _id: id });
-    if (!found) throw new NotFoundException(`Can't find Board with ${id}`);
+    if (!found) throw PostException.postNotFound();
     return found;
   }
 
   async deletePost(id: string, user: User): Promise<void> {
     const post = await this.postRepository.findOne({ _id: id });
-    if (!post) throw new NotFoundException();
-    if (post.author !== user.userid) throw new UnauthorizedException();
+    if (!post) throw PostException.postNotFound();
+    if (post.author !== user.userid) throw PostException.postUnAuthorized();
     this.postRepository.deleteOne({ _id: id });
     this.userRepository.updatePostCount({ userid: user.userid }, -1);
     return;
