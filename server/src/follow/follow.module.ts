@@ -11,6 +11,7 @@ import {
   Notification,
   NotificationSchema,
 } from 'src/common/database/notification.schema';
+import { AlarmModule } from 'src/alarm/alarm.moduel';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import {
       { name: Notification.name, schema: NotificationSchema },
     ]),
     DatabaseModule,
+    AlarmModule,
   ],
   controllers: [FollowController],
   providers: [

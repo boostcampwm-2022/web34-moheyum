@@ -21,28 +21,16 @@ export default function SideBar() {
     setdropdownState(!dropdownState);
   };
   const authedUserInfo = useRecoilValue(authedUser);
-  const test = async () => {
-    const response = await fetch('/api/alarm/emit', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: undefined,
-    });
-  };
   useEffect(() => {
-    test();
     const eventSource = new EventSource('/api/alarm');
     eventSource.onmessage = (event) => {
       console.log(event.data);
       setNewNoti(event.data);
-      eventSource.close();
     };
     eventSource.onerror = (error) => {
-      console.log('에러니?', error);
-      eventSource.close();
+      console.log('SSE error', error);
     };
+    return () => eventSource.close();
   });
 
   return (

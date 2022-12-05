@@ -11,6 +11,7 @@ import { FollowRepository } from 'src/common/database/follow.repository';
 import { FollowerPostDto } from './dto/follower-post.dto';
 import { UserRepository } from 'src/common/database/user.repository';
 import { NotificationRepository } from 'src/common/database/notification.repository';
+import { AlarmService } from 'src/alarm/alarm.service';
 
 @Injectable()
 export class PostService {
@@ -19,6 +20,7 @@ export class PostService {
     private readonly followRepository: FollowRepository,
     private readonly userRepository: UserRepository,
     private readonly notificationRepository: NotificationRepository,
+    private readonly alarmService: AlarmService,
   ) {}
 
   getAllPosts(): Promise<Post[]> {
@@ -45,15 +47,18 @@ export class PostService {
         `${user.nickname}(${user.userid})님이 답글을 작성하셨습니다.`,
         `/post/${post._id}`,
       );
+      this.alarmService.emit(parentPost.author, { data: true });
     }
     if (createPostDto.mentions && createPostDto.mentions.length >= 1) {
-      createPostDto.mentions.forEach((v) => {
-        if (v !== user.userid)
+      createPostDto.mentions.forEach((v: string) => {
+        if (v !== user.userid) {
           this.notificationRepository.create(
             v,
             `${user.nickname}(${user.userid})님이 회원님을 언급하였습니다.`,
             `/post/${post._id}`,
           );
+          this.alarmService.emit(v, { data: true });
+        }
       });
     }
     await this.userRepository.updatePostCount({ userid: user.userid }, 1);

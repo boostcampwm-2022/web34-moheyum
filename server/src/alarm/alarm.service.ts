@@ -8,6 +8,7 @@ export class AlarmService {
   private readonly emitter: EventEmitter;
   constructor() {
     this.emitter = new EventEmitter();
+    this.emitter.setMaxListeners(0);
   }
 
   subscribe(userid: string) {
@@ -15,6 +16,6 @@ export class AlarmService {
   }
 
   async emit(userid: string, data) {
-    await this.emitter.emit(userid, { data });
+    this.emitter.emit(userid, { data });
   }
 }

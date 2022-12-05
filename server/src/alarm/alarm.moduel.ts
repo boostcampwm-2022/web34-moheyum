@@ -5,6 +5,6 @@ import { AlarmService } from './alarm.service';
 @Module({
   controllers: [AlarmController],
   providers: [AlarmService],
-  //   exports: [AlarmService],
+  exports: [AlarmService],
 })
 export class AlarmModule {}
