@@ -16,6 +16,6 @@ export class AlarmController {
   @UseGuards(JwtAuthGuard)
   @Post('emit')
   async emit(@GetUser() user) {
-    await this.alarmService.emit(user.userid, true);
+    await this.alarmService.emit(user.userid, { data: true });
   }
 }

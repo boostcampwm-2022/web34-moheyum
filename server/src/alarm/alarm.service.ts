@@ -14,7 +14,7 @@ export class AlarmService {
     return fromEvent(this.emitter, userid);
   }
 
-  async emit(userid: string, data: boolean) {
-    this.emitter.emit(userid, data);
+  async emit(userid: string, data) {
+    await this.emitter.emit(userid, { data });
   }
 }
