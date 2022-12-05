@@ -16,7 +16,7 @@ export default function SideBar() {
   const dropdownRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
   const [dropdownState, setdropdownState] = useState<boolean>(false);
   const [newNoti, setNewNoti] = useState<boolean>(false);
-  const eventSource = new EventSource('/api/alarm');
+
   const showSettingdropdown = () => {
     setdropdownState(!dropdownState);
   };
@@ -31,15 +31,19 @@ export default function SideBar() {
       body: undefined,
     });
   };
-  test();
-  eventSource.onmessage = (event) => {
-    console.log(event.data);
-    setNewNoti(event.data);
-  };
-  eventSource.onerror = (error) => {
-    console.log('에러니?', error);
-    eventSource.close();
-  };
+  useEffect(() => {
+    test();
+    const eventSource = new EventSource('/api/alarm');
+    eventSource.onmessage = (event) => {
+      console.log(event.data);
+      setNewNoti(event.data);
+      eventSource.close();
+    };
+    eventSource.onerror = (error) => {
+      console.log('에러니?', error);
+      eventSource.close();
+    };
+  });
 
   return (
     <Wrapper>
