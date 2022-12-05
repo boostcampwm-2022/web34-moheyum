@@ -2,9 +2,7 @@ import styled from '@emotion/styled';
 import { GetServerSidePropsContext } from 'next';
 import React from 'react';
 import AuthGuard from '../../../components/AuthGuard';
-import SideBar from '../../../components/Main/SideBar';
 import ReadPost from '../../../components/ReadParentPost';
-import Frame from '../../../styles/frame';
 import { httpGet } from '../../../utils/http';
 import type PostProps from '../../../types/Post';
 import EditorWrapper from '../../../components/Write';
@@ -18,15 +16,12 @@ interface Props {
 export default function Post({ response }: { response: Props }) {
   return (
     <AuthGuard noRedirect>
-      <Frame>
-        <SideBar />
-        <ContentWrapper>
-          <PostWrapper>
-            <ReadPost postData={response.data.post} />
-          </PostWrapper>
-          <EditorWrapper postData={response.data.post} />
-        </ContentWrapper>
-      </Frame>
+      <ContentWrapper>
+        <PostWrapper>
+          <ReadPost postData={response.data.post} />
+        </PostWrapper>
+        <EditorWrapper postData={response.data.post} />
+      </ContentWrapper>
     </AuthGuard>
   );
 }
