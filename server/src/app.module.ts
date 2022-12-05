@@ -12,6 +12,7 @@ import { UserModule } from './user/user.module';
 import { FollowModule } from './follow/follow.module';
 import { NcloudModule } from './ncloud/ncloud.module';
 import { NotificationModule } from './notification/notification.module';
+import { AlarmModule } from './alarm/alarm.moduel';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { NotificationModule } from './notification/notification.module';
     FollowModule,
     NcloudModule,
     NotificationModule,
+    AlarmModule,
   ],
 })
 export class AppModule {
