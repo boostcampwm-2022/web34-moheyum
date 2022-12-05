@@ -24,6 +24,7 @@
   "packageManager": "yarn@3.2.4",
   "devDependencies": {
     "@types/node": "18.11.9",
+    "@types/prop-types": "^15.7.5",
     "@types/react": "18.0.25",
     "@types/react-dom": "18.0.8",
     "eslint": "8.27.0",

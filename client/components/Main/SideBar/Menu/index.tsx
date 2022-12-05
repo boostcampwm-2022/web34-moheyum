@@ -31,7 +31,7 @@ export default function Menu({
             <div className="text">{text}</div>
           </>
         )}
-        {noti && text === '알림' && <NewNoti></NewNoti>}
+        {noti && text === '알림' && <NewNoti />}
       </div>
       <span />
     </Wrapper>

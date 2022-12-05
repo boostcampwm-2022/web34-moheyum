@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState, useEffect } from 'react';
 import Router from 'next/router';
-import { useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { newNotification } from '../../atom';
 import Paginator, { NEXT } from '../../utils/paginator';
 import { ExceptionPage, NotificationContainer, TopBar, Wrapper, NewNoti } from './index.style';
@@ -8,8 +8,9 @@ import { NotificationCard } from './NotificationCard';
 
 export default function Notification() {
   const [nextCursor, setNextCursor] = useState('START');
-  let { loading, error, pages, next } = Paginator(`/api/notification/list/`, nextCursor);
-  const [newNotiState, setNewNotiState] = useRecoilState(newNotification);
+  const { loading, error, pages, next } = Paginator(`/api/notification/list/`, nextCursor);
+  const setNewNotiState = useSetRecoilState(newNotification);
+  const [newState, setNewState] = useState(false);
   setNewNotiState(false);
   const observer = useRef<any>();
   const updateNotification = () => {
@@ -19,9 +20,10 @@ export default function Notification() {
     const eventSource = new EventSource('/api/alarm');
     eventSource.onmessage = (event) => {
       setNewNotiState(event.data);
+      setNewState(event.data);
     };
-    eventSource.onerror = (error) => {
-      console.error('SSE error', error);
+    eventSource.onerror = (e) => {
+      console.error('SSE error', e);
     };
     return () => eventSource.close();
   });
@@ -43,7 +45,7 @@ export default function Notification() {
       <TopBar>
         <h1>알림</h1>
       </TopBar>
-      {newNotiState && (
+      {newState && (
         <NewNoti onClick={updateNotification}>
           <div>새 소식</div>
         </NewNoti>

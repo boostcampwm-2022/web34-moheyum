@@ -12,11 +12,7 @@ const menuList = [
   { routeSrc: '/search', imgSrc: '/search.svg', text: '검색', avatar: false },
 ];
 
-SideBar.defaultProps = {
-  notiState: false,
-};
-
-export default function SideBar({ notiState }: { notiState: boolean }) {
+export default function SideBar({ notiState = false }: { notiState: boolean }) {
   const dropdownRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
   const [dropdownState, setdropdownState] = useState<boolean>(false);
   const showSettingdropdown = () => {
@@ -24,19 +20,18 @@ export default function SideBar({ notiState }: { notiState: boolean }) {
   };
   const authedUserInfo = useRecoilValue(authedUser);
   const [newNotiState, setNewNotiState] = useRecoilState(newNotification);
-  console.log(newNotiState);
-  if (!notiState) {
-    useEffect(() => {
-      const eventSource = new EventSource('/api/alarm');
+  useEffect(() => {
+    const eventSource = new EventSource('/api/alarm');
+    if (!notiState) {
       eventSource.onmessage = (event) => {
         setNewNotiState(event.data);
       };
       eventSource.onerror = (error) => {
         console.error('SSE error', error);
       };
-      return () => eventSource.close();
-    });
-  }
+    }
+    return () => eventSource.close();
+  }, [notiState]);
 
   return (
     <Wrapper>
