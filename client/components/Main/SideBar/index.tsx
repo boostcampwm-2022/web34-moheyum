@@ -12,7 +12,11 @@ const menuList = [
   { routeSrc: '/search', imgSrc: '/search.svg', text: '검색', avatar: false },
 ];
 
-export default function SideBar() {
+SideBar.defaultProps = {
+  notiState: false,
+};
+
+export default function SideBar({ notiState }: { notiState: boolean }) {
   const dropdownRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
   const [dropdownState, setdropdownState] = useState<boolean>(false);
   const [newNoti, setNewNoti] = useState<boolean>(false);
@@ -21,17 +25,18 @@ export default function SideBar() {
     setdropdownState(!dropdownState);
   };
   const authedUserInfo = useRecoilValue(authedUser);
-  useEffect(() => {
-    const eventSource = new EventSource('/api/alarm');
-    eventSource.onmessage = (event) => {
-      console.log(event.data);
-      setNewNoti(event.data);
-    };
-    eventSource.onerror = (error) => {
-      console.log('SSE error', error);
-    };
-    return () => eventSource.close();
-  });
+  if (!notiState) {
+    useEffect(() => {
+      const eventSource = new EventSource('/api/alarm');
+      eventSource.onmessage = (event) => {
+        setNewNoti(event.data);
+      };
+      eventSource.onerror = (error) => {
+        console.error('SSE error', error);
+      };
+      return () => eventSource.close();
+    });
+  }
 
   return (
     <Wrapper>

@@ -9,7 +9,7 @@ export default function notification() {
   return (
     <AuthGuard>
       <Frame>
-        <SideBar />
+        <SideBar notiState={true} />
         <ContentWrapper>
           <Notification />
         </ContentWrapper>
