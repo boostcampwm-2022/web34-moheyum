@@ -1,10 +1,11 @@
-import React, { useState, useRef, RefObject } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRecoilValue } from 'recoil';
 import Menu from './Menu';
 import Title from './Title';
-import { Dropdown, Setting, SideMenuBox, Wrapper } from './index.style';
+import { Setting, SideMenuBox, Wrapper } from './index.style';
 import { authedUser } from '../../../atom';
+import SideBarDropdown from './SideBarDropdown';
 
 const menuList = [
   { routeSrc: '/', imgSrc: '/home.svg', text: '홈', avatar: false },
@@ -13,7 +14,6 @@ const menuList = [
 ];
 
 export default function SideBar() {
-  const dropdownRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
   const [dropdownState, setdropdownState] = useState<boolean>(false);
   const showSettingdropdown = () => {
     setdropdownState(!dropdownState);
@@ -34,17 +34,7 @@ export default function SideBar() {
           </Link>
         )}
       </SideMenuBox>
-      {dropdownState && (
-        <Dropdown ref={dropdownRef}>
-          <div>
-            <li>
-              <Link href="/myAccount">내 계정 정보 확인</Link>
-            </li>
-            <li>알림 일시중지</li>
-            <li>로그아웃</li>
-          </div>
-        </Dropdown>
-      )}
+      {dropdownState && <SideBarDropdown />}
       <Setting onClick={showSettingdropdown}>
         <Menu imgSrc="/setting.svg" text="설정" avatar={false} />
       </Setting>
