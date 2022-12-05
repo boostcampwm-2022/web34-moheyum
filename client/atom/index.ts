@@ -1,16 +1,5 @@
 import { atom } from 'recoil';
 
-interface newsfeedType {
-  _id: string;
-  title: string;
-  description: string;
-  author: string;
-}
-export const newsfeedState = atom({
-  key: 'newsfeed',
-  default: [] as newsfeedType[],
-});
-
 interface AuthedUser {
   logined: boolean;
   userid: string;
@@ -28,4 +17,9 @@ export const defaultAuthedUser: AuthedUser = {
 export const authedUser = atom<AuthedUser>({
   key: 'authedUser',
   default: defaultAuthedUser,
+});
+
+export const newNotification = atom({
+  key: 'state',
+  default: false,
 });
