@@ -81,9 +81,15 @@ export const Loader = styled.div`
   ${displayCenter}
 `;
 
-export const DeleteButton = styled.button`
+export const PostButton = styled.button`
   ${buttonStyle}
   width: 50px;
   height: 28px;
-  margin: 20px;
+  margin: 10px;
+  padding: 0;
+`;
+
+export const ButtonConatiner = styled.div`
+  display: flex;
+  align-items: center;
 `;

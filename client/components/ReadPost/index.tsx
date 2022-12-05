@@ -23,7 +23,8 @@ import {
   CommentBox,
   Loader,
   MainContentBox,
-  DeleteButton,
+  PostButton,
+  ButtonConatiner,
 } from './index.style';
 
 interface PostData {
@@ -72,6 +73,11 @@ export default function ReadPost({ postData, title }: PostData) {
       Router.push('/');
     }
   };
+
+  const modifyHandler = async () => {
+    Router.push(`/post/${postData._id}/modify`);
+  };
+
   useEffect(() => {
     if (!contentRef.current) return;
     contentRef.current.innerHTML = renderMarkdown(postData.description);
@@ -96,12 +102,20 @@ export default function ReadPost({ postData, title }: PostData) {
                 createdAt={postData.createdAt}
               />
             </Link>
-            <DeleteButton
-              style={{ display: authedUserInfo.userid === postData.author ? 'block' : 'none' }}
-              onClick={deleteHandler}
-            >
-              삭제
-            </DeleteButton>
+            <ButtonConatiner>
+              <PostButton
+                style={{ display: authedUserInfo.userid === postData.author ? 'block' : 'none' }}
+                onClick={modifyHandler}
+              >
+                수정
+              </PostButton>
+              <PostButton
+                style={{ display: authedUserInfo.userid === postData.author ? 'block' : 'none' }}
+                onClick={deleteHandler}
+              >
+                삭제
+              </PostButton>
+            </ButtonConatiner>
           </HeaderBox>
           <ContentBox ref={contentRef}>{postData.description || '글 내용'}</ContentBox>
         </MainContentBox>

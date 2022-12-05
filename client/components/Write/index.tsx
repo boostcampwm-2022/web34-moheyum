@@ -4,19 +4,21 @@ import Router from 'next/router';
 import Editor from './Editor';
 import { mainSectionStyle } from '../../styles/mixin';
 import { TopBar, ButtonBack } from '../../styles/common';
+import PostProps from '../../types/Post';
 
 const goBack = () => {
   Router.back();
 };
 interface Props {
-  postData: {
-    _id: string;
+  postData?: {
+    _id?: string;
   };
+  modifyPostData?: PostProps | null;
 }
-export default function EditorWrapper({ postData }: Props) {
+export default function EditorWrapper({ postData, modifyPostData }: Props) {
   return (
     <Wrapper>
-      {postData._id === '' && (
+      {!postData && (
         <TopBar>
           <div>
             <ButtonBack type="button" onClick={goBack} />
@@ -24,7 +26,7 @@ export default function EditorWrapper({ postData }: Props) {
           <h1>새 글 작성</h1>
         </TopBar>
       )}
-      <Editor postData={postData} />
+      {modifyPostData ? <Editor modifyPostData={modifyPostData} /> : <Editor parentPostData={postData} />}
     </Wrapper>
   );
 }
@@ -32,3 +34,10 @@ export default function EditorWrapper({ postData }: Props) {
 const Wrapper = styled.div`
   ${mainSectionStyle}
 `;
+
+EditorWrapper.defaultProps = {
+  postData: {
+    _id: '',
+  },
+  modifyPostData: null,
+};
