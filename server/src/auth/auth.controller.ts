@@ -100,7 +100,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     await this.authService.checkEmailCode(emailCheckDto, authNum);
-    res.cookie('authNum', '', this.authService.deleteCookie());
+    res.cookie('authNum', '', this.authService.deleteCookieOption());
     return {};
   }
 
