@@ -4,7 +4,7 @@ import { displayColumn } from './mixin';
 import { mainSectionSize } from './theme';
 
 export const MainTopBar = styled.header`
-  position: fixed;
+  /* position: fixed; */
   background-color: ${COLORS.WHITE};
   height: 61px;
   border-bottom: 2px solid ${COLORS.GRAY3};
@@ -20,27 +20,22 @@ export const MainTopBar = styled.header`
 `;
 
 export const TopBar = styled.header`
-  position: fixed;
+  /* position: fixed; */
   background-color: ${COLORS.WHITE};
   height: 61px;
   width: ${mainSectionSize}px;
   border-bottom: 2px solid ${COLORS.GRAY3};
-  ${displayColumn}
-  div {
-    display: flex;
-    height: 12px;
-    h1 {
-      flex: 1;
-      font-size: 22px;
-      font-weight: 500;
-      text-align: left;
-      color: ${COLORS.BLACK};
-      margin-left: 6px;
-      ${displayColumn}
-    }
-    div {
-      height: 12px;
-    }
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  h1 {
+    flex: 1;
+    font-size: 22px;
+    font-weight: 500;
+    text-align: left;
+    color: ${COLORS.BLACK};
+    margin-left: 6px;
+    ${displayColumn}
   }
 `;
 
@@ -52,5 +47,6 @@ export const ButtonBack = styled.button`
   margin-left: 15px;
   background-image: url('/ico_chveron_left.svg');
   background-repeat: no-repeat;
+  background-size: contain;
   cursor: pointer;
 `;

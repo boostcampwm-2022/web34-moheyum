@@ -113,8 +113,8 @@ export class AuthService {
    * @description Redis에서 리프레시 토큰 제거
    * @param userid
    */
-  public async removeRefeshTokenfromRedis(userid) {
-    await this.redisService.del(userid);
+  public removeRefeshTokenfromRedis(userid) {
+    this.redisService.del(userid);
   }
   /**
    * @description Access토큰 옵션 설정
@@ -161,8 +161,11 @@ export class AuthService {
    * @description 쿠키제거
    * @Creturns CookieOptions
    */
-  public deleteCookie(): CookieOptions {
+  public deleteCookieOption(): CookieOptions {
     return {
+      httpOnly: true,
+      path: '/',
+      sameSite: 'strict',
       maxAge: 0,
     };
   }
@@ -305,5 +308,11 @@ export class AuthService {
       userid,
     });
     return { userid, nickname, profileimg };
+  }
+  deleteUserWithState(userid: string) {
+    return this.userRepository.findOneAndUpdate(
+      { userid: userid },
+      { state: false },
+    );
   }
 }

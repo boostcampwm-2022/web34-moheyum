@@ -23,11 +23,12 @@ export class NotificationRepository {
     try {
       return await newNotif.save();
     } catch (error) {
-      if (error.code === 11000) throw new ConflictException();
-      else {
-        console.error(error);
-        throw new InternalServerErrorException();
-      }
+      console.error(error);
+      // if (error.code === 11000) throw new ConflictException();
+      // else {
+      //   console.error(error);
+      //   throw new InternalServerErrorException();
+      // }
     }
   }
 

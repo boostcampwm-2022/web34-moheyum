@@ -11,10 +11,20 @@ import Paginator, { NEXT } from '../../utils/paginator';
 import type PostProps from '../../types/Post';
 import Comment, { commentItem } from './Comment';
 import UserProfile from './UserProfile';
-import ProfileImg from './UserProfile/ProfileImg';
+import ProfileImg from '../ProfileImg';
 import ParentPost from './ParentPost';
 import type { Parent } from '../../types/Post';
-import { ContentBox, PostContent, HeaderBox, Wrapper, CommentBox, Loader, MainContentBox } from './index.style';
+import { httpDelete } from '../../utils/http';
+import {
+  ContentBox,
+  PostContent,
+  HeaderBox,
+  Wrapper,
+  CommentBox,
+  Loader,
+  MainContentBox,
+  DeleteButton,
+} from './index.style';
 
 interface PostData {
   postData: PostProps;
@@ -24,11 +34,6 @@ interface PostData {
 export default function ReadPost({ postData, title }: PostData) {
   const authedUserInfo = useRecoilValue(authedUser);
   const contentRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (!contentRef.current) return;
-    contentRef.current.innerHTML = renderMarkdown(postData.description);
-  }, [contentRef.current?.textContent]);
-
   const goBack = () => {
     Router.back();
   };
@@ -59,15 +64,25 @@ export default function ReadPost({ postData, title }: PostData) {
     },
     [loading, next !== NEXT.END]
   );
+  const deleteHandler = async () => {
+    const response = await httpDelete(`/post/${postData._id}`);
+    if (response.statusCode !== 200) {
+      alert(`게시글 삭제에 실패하였습니다. ${response.message}`);
+    } else {
+      Router.push('/');
+    }
+  };
+  useEffect(() => {
+    if (!contentRef.current) return;
+    contentRef.current.innerHTML = renderMarkdown(postData.description);
+  }, [contentRef.current?.textContent]);
   return (
     <Wrapper>
       <TopBar>
         <div>
-          <div>
-            <ButtonBack type="button" onClick={goBack} />
-          </div>
-          <h1>{title}</h1>
+          <ButtonBack type="button" onClick={goBack} />
         </div>
+        <h1>{title}</h1>
       </TopBar>
       <PostContent>
         {postData.parentPost ? <ParentPost post={postData.parent.at(0) as Parent} /> : <div />}
@@ -81,6 +96,12 @@ export default function ReadPost({ postData, title }: PostData) {
                 createdAt={postData.createdAt}
               />
             </Link>
+            <DeleteButton
+              style={{ display: authedUserInfo.userid === postData.author ? 'block' : 'none' }}
+              onClick={deleteHandler}
+            >
+              삭제
+            </DeleteButton>
           </HeaderBox>
           <ContentBox ref={contentRef}>{postData.description || '글 내용'}</ContentBox>
         </MainContentBox>

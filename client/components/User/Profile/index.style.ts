@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import COLORS from '../../../styles/color';
+import { buttonStyle } from '../../../styles/mixin';
 
 export const ProfileContainer = styled.div`
   width: 100%;
@@ -33,9 +34,16 @@ export const ProfileNames = styled.div`
 
 export const ProfileNickname = styled.div`
   font-size: 32px;
+  font-weight: 600;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: ${COLORS.BLACK};
 `;
 
 export const ProfileUserid = styled.div`
+  margin-top: 5px;
+  color: ${COLORS.GRAY2};
   &:before {
     content: '@';
   }
@@ -44,6 +52,9 @@ export const ProfileUserid = styled.div`
 export const ProfileCounters = styled.div`
   margin: 20px 0;
   display: flex;
+  & span {
+    font-weight: 500;
+  }
 `;
 
 export const ProfileBio = styled.div`
@@ -51,6 +62,7 @@ export const ProfileBio = styled.div`
 `;
 
 export const ProfileEditButton = styled.button`
+  ${buttonStyle}
   background-color: ${COLORS.PRIMARY};
   border-radius: 4px;
   border: none;

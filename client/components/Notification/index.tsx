@@ -1,14 +1,9 @@
-import Router from 'next/router';
 import { useCallback, useRef, useState } from 'react';
-import { ButtonBack, TopBar } from '../../styles/common';
 import Paginator, { NEXT } from '../../utils/paginator';
-import { ExceptionPage, NotificationContainer, Wrapper } from './index.style';
+import { ExceptionPage, NotificationContainer, TopBar, Wrapper } from './index.style';
 import { NotificationCard } from './NotificationCard';
 
 export default function Notification() {
-  const goBack = () => {
-    Router.back();
-  };
   const [nextCursor, setNextCursor] = useState('START');
   const { loading, error, pages, next } = Paginator(`/api/notification/list/`, nextCursor);
   const observer = useRef<any>();
@@ -28,12 +23,7 @@ export default function Notification() {
   return (
     <Wrapper>
       <TopBar>
-        <div>
-          <div>
-            <ButtonBack type="button" onClick={goBack} />
-          </div>
-          <h1>알림</h1>
-        </div>
+        <h1>알림</h1>
       </TopBar>
       <NotificationContainer>
         {pages.map((item: any, index: number) => {

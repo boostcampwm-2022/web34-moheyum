@@ -1,7 +1,7 @@
 import React from 'react';
 import { calcTime } from '../../../utils/calctime';
 import { Author, PostedAt, AuthorDetail } from './index.style';
-import ProfileImg from './ProfileImg';
+import ProfileImg from '../../ProfileImg';
 
 export default function UserProfile({
   profileimg,

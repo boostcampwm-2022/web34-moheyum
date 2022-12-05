@@ -11,7 +11,7 @@ interface Props {
 function ProfileCounter({ ...props }: Props) {
   let JSX = (
     <>
-      {props.label} {props.counter}
+      {props.label} <span>{props.counter}</span>
     </>
   );
   if (props.url !== '') JSX = <Link href={props.url}>{JSX}</Link>;

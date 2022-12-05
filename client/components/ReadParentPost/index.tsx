@@ -5,7 +5,7 @@ import { ButtonBack, TopBar } from '../../styles/common';
 import PostProps from '../../types/Post';
 import { calcTime } from '../../utils/calctime';
 import renderMarkdown from '../../utils/markdown';
-import ProfileImg from '../ReadPost/UserProfile/ProfileImg';
+import ProfileImg from '../ProfileImg';
 import { Author, AuthorDetail, ContentBox, HeaderBox, PostContent, Wrapper } from './index.style';
 
 interface Props {
@@ -25,11 +25,9 @@ export default function ReadPost({ postData }: Props) {
     <Wrapper>
       <TopBar>
         <div>
-          <div>
-            <ButtonBack type="button" onClick={goBack} />
-          </div>
-          <h1>답글 작성</h1>
+          <ButtonBack type="button" onClick={goBack} />
         </div>
+        <h1>답글 작성</h1>
       </TopBar>
       <ContentBox>
         <HeaderBox>

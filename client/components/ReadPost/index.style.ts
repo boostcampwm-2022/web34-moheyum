@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
 import COLORS from '../../styles/color';
-import { markdownStyle, mainSectionStyle, displayCenter } from '../../styles/mixin';
+import { markdownStyle, mainSectionStyle, displayCenter, buttonStyle } from '../../styles/mixin';
 
 export const HeaderBox = styled.div`
-  width: 95%;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid ${COLORS.GRAY4};
@@ -17,9 +17,11 @@ export const PostContent = styled.div`
   overflow-x: hidden;
   overflow-y: scroll;
   display: flex;
+  flex: 1;
   flex-direction: column;
   align-items: center;
   -ms-overflow-style: none;
+  padding: 8px 15px;
   &::-webkit-scrollbar {
     display: none;
   }
@@ -34,14 +36,14 @@ export const MainContentBox = styled.div`
 `;
 
 export const ContentBox = styled.div`
-  width: 92%;
+  width: 100%;
   margin-top: 20px;
   ${markdownStyle}
   font-size: 18px;
 `;
 
 export const CommentBox = styled.div`
-  width: 95%;
+  width: 100%;
   margin-top: 40px;
   border-top: 1px solid ${COLORS.GRAY4};
   display: flex;
@@ -77,4 +79,11 @@ export const Loader = styled.div`
   width: 20px;
   height: 20px;
   ${displayCenter}
+`;
+
+export const DeleteButton = styled.button`
+  ${buttonStyle}
+  width: 50px;
+  height: 28px;
+  margin: 20px;
 `;

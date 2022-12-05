@@ -16,7 +16,7 @@ import type { Props } from '../../pages/[userid]/following';
 
 export default function FollowerSection({ userData }: { userData: Props }) {
   const goBack = () => {
-    Router.back();
+    Router.push(`/${userData.userid}`);
   };
 
   const [nextCursor, setNextCursor] = useState('START');
@@ -42,11 +42,9 @@ export default function FollowerSection({ userData }: { userData: Props }) {
     <Wrapper>
       <TopBar>
         <div>
-          <div>
-            <ButtonBack type="button" onClick={goBack} />
-          </div>
-          <h1>{userData.nickname || '유저 닉네임'}</h1>
+          <ButtonBack type="button" onClick={goBack} />
         </div>
+        <h1>{userData.nickname || '유저 닉네임'}</h1>
       </TopBar>
       <TopFollowContainer>
         <TopFollowActivated>
