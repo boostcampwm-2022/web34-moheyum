@@ -1,19 +1,14 @@
 import { GetServerSidePropsContext } from 'next';
 import React from 'react';
 import AuthGuard from '../components/AuthGuard';
-import SideBar from '../components/Main/SideBar';
 import UserSection from '../components/User';
-import Frame from '../styles/frame';
 import { UserPostProps } from '../types/Post';
 import { httpGet } from '../utils/http';
 
 export default function Post({ userData }: { userData: UserPostProps }) {
   return (
     <AuthGuard noRedirect>
-      <Frame>
-        <SideBar />
-        <UserSection userData={userData} />
-      </Frame>
+      <UserSection userData={userData} />
     </AuthGuard>
   );
 }

@@ -1,7 +1,5 @@
 import React from 'react';
 import { GetServerSidePropsContext } from 'next';
-import Frame from '../../styles/frame';
-import SideBar from '../../components/Main/SideBar';
 import AuthGuard from '../../components/AuthGuard';
 import FollowingSection from '../../components/Follow/Following';
 import { httpGet } from '../../utils/http';
@@ -14,10 +12,7 @@ export interface Props {
 export default function following({ userData }: { userData: Props }) {
   return (
     <AuthGuard noRedirect>
-      <Frame>
-        <SideBar />
-        <FollowingSection userData={userData} />
-      </Frame>
+      <FollowingSection userData={userData} />
     </AuthGuard>
   );
 }
