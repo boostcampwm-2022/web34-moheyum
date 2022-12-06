@@ -8,7 +8,7 @@ export const NEXT = {
 
 // export type NEXT = 'START' | 'END'
 
-export default function Paginator(fetchUrl: string, nextCursor: string) {
+export default function usePaginator(fetchUrl: string, nextCursor: string) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [pages, setPages] = useState<any>([]);

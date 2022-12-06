@@ -6,7 +6,7 @@ import ReactLoading from 'react-loading';
 import { authedUser } from '../../atom';
 import COLORS from '../../styles/color';
 import { ButtonBack, TopBar } from '../../styles/common';
-import Paginator, { NEXT } from '../../utils/paginator';
+import usePaginator, { NEXT } from '../../hooks/usePaginator';
 import type PostProps from '../../types/Post';
 import Comment, { commentItem } from './Comment';
 import ProfileImg from '../UserProfile/ProfileImg';
@@ -30,7 +30,7 @@ export default function ReadPost({ postData, title }: PostData) {
     commentCount = postData.childPosts.length;
   }
   const [nextCursor, setNextCursor] = useState(NEXT.START);
-  const { loading, error, pages, next } = Paginator(`/api/post/comments/${postData._id}`, nextCursor);
+  const { loading, error, pages, next } = usePaginator(`/api/post/comments/${postData._id}`, nextCursor);
 
   const observer = useRef<any>();
   const lastFollowElementRef = useCallback(

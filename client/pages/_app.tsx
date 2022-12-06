@@ -45,4 +45,10 @@ const AppStyle = styled.div`
 
 const ComponentWrapper = styled.div`
   ${mainSectionStyle}
+  @media only screen and (max-width: ${({ theme }) => theme.wideWindow}) {
+    width: calc(100% - ${({ theme }) => theme.sidebar.maxWidth});
+  }
+  @media only screen and (max-width: ${({ theme }) => theme.smallWindow}) {
+    width: calc(100% - ${({ theme }) => theme.sidebar.minWidth});
+  }
 `;

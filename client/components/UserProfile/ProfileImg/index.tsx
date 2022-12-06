@@ -15,7 +15,7 @@ export const Profile = styled.div`
   border: 2px solid ${COLORS.PRIMARY};
   margin: 8px;
   padding-right: 45px;
-  background-color: ${COLORS.GRAY3};
+  background-color: ${COLORS.WHITE};
   img {
     width: 50px;
     height: 50px;

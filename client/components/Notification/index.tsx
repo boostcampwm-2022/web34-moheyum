@@ -2,13 +2,13 @@ import { useCallback, useRef, useState, useEffect } from 'react';
 import Router from 'next/router';
 import { useSetRecoilState } from 'recoil';
 import { newNotification } from '../../atom';
-import Paginator, { NEXT } from '../../utils/paginator';
+import usePaginator, { NEXT } from '../../hooks/usePaginator';
 import { ExceptionPage, NotificationContainer, TopBar, Wrapper, NewNoti } from './index.style';
 import { NotificationCard } from './NotificationCard';
 
 export default function Notification() {
   const [nextCursor, setNextCursor] = useState('START');
-  const { loading, error, pages, next } = Paginator(`/api/notification/list/`, nextCursor);
+  const { loading, error, pages, next } = usePaginator(`/api/notification/list/`, nextCursor);
   const setNewNotiState = useSetRecoilState(newNotification);
   const [newState, setNewState] = useState(false);
   setNewNotiState(false);

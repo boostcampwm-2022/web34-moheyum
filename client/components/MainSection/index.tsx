@@ -4,11 +4,11 @@ import { ArticleCard } from './Articlecard';
 import { ArticlesSection, FakeButton, NewArticleSection, Placeholder, Wrapper, Newsfeed } from './index.style';
 import { MainTopBar } from '../../styles/common';
 
-import Paginator, { NEXT } from '../../utils/paginator';
+import usePaginator, { NEXT } from '../../hooks/usePaginator';
 
 export default function MainSection() {
   const [nextCursor, setNextCursor] = useState(NEXT.START);
-  const { loading, pages, next } = Paginator(`/api/post/newsfeed`, nextCursor);
+  const { loading, pages, next } = usePaginator(`/api/post/newsfeed`, nextCursor);
 
   const observer = useRef<any>();
   const lastFollowElementRef = useCallback(

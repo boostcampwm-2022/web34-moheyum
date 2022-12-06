@@ -11,7 +11,7 @@ import {
 } from './index.style';
 import { FollowMember } from './FollowMember';
 import { ButtonBack, TopBar } from '../../styles/common';
-import Paginator, { NEXT } from '../../utils/paginator';
+import usePaginator, { NEXT } from '../../hooks/usePaginator';
 import type { Props } from '../../pages/[userid]/following';
 
 export default function FollowerSection({ userData }: { userData: Props }) {
@@ -21,7 +21,7 @@ export default function FollowerSection({ userData }: { userData: Props }) {
 
   const [nextCursor, setNextCursor] = useState('START');
 
-  const { loading, error, pages, next } = Paginator(`/api/follow/list/follower/${userData.userid}`, nextCursor);
+  const { loading, error, pages, next } = usePaginator(`/api/follow/list/follower/${userData.userid}`, nextCursor);
 
   const observer = useRef<any>();
   const lastFollowElementRef = useCallback(
