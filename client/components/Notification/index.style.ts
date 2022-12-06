@@ -44,3 +44,26 @@ export const ExceptionPage = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
+export const NewNoti = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 50px;
+  background-color: ${COLORS.WHITE};
+  border: 0px;
+  border-bottom: 2px solid ${COLORS.GRAY5};
+  div {
+    width: 100px;
+    height: 20px;
+    color: ${COLORS.PRIMARY_DARK};
+    font-size: 16px;
+  }
+  &:hover {
+    background-color: ${COLORS.GRAY4};
+    button {
+      background-color: ${COLORS.GRAY4};
+    }
+  }
+`;

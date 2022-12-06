@@ -12,6 +12,7 @@ import { UserModule } from './user/user.module';
 import { FollowModule } from './follow/follow.module';
 import { NcloudModule } from './ncloud/ncloud.module';
 import { NotificationModule } from './notification/notification.module';
+import { EventModule } from './alarm/event.module';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './common/filter/http-execption.filter';
 @Module({
@@ -28,6 +29,7 @@ import { HttpExceptionFilter } from './common/filter/http-execption.filter';
     FollowModule,
     NcloudModule,
     NotificationModule,
+    EventModule,
   ],
   providers: [
     {

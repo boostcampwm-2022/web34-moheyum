@@ -1,12 +1,32 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState, useEffect } from 'react';
+import Router from 'next/router';
+import { useSetRecoilState } from 'recoil';
+import { newNotification } from '../../atom';
 import Paginator, { NEXT } from '../../utils/paginator';
-import { ExceptionPage, NotificationContainer, TopBar, Wrapper } from './index.style';
+import { ExceptionPage, NotificationContainer, TopBar, Wrapper, NewNoti } from './index.style';
 import { NotificationCard } from './NotificationCard';
 
 export default function Notification() {
   const [nextCursor, setNextCursor] = useState('START');
   const { loading, error, pages, next } = Paginator(`/api/notification/list/`, nextCursor);
+  const setNewNotiState = useSetRecoilState(newNotification);
+  const [newState, setNewState] = useState(false);
+  setNewNotiState(false);
   const observer = useRef<any>();
+  const updateNotification = () => {
+    Router.reload();
+  };
+  useEffect(() => {
+    const eventSource = new EventSource('/api/alarm');
+    eventSource.onmessage = (event) => {
+      setNewNotiState(event.data);
+      setNewState(event.data);
+    };
+    eventSource.onerror = (e) => {
+      console.error('SSE error', e);
+    };
+    return () => eventSource.close();
+  });
   const lastNotificationElementRef = useCallback(
     (node: any) => {
       if (loading) return;
@@ -25,6 +45,11 @@ export default function Notification() {
       <TopBar>
         <h1>알림</h1>
       </TopBar>
+      {newState && (
+        <NewNoti onClick={updateNotification}>
+          <div>새 소식</div>
+        </NewNoti>
+      )}
       <NotificationContainer>
         {pages.map((item: any, index: number) => {
           if (pages.length === index + 1)

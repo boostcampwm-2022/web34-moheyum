@@ -71,3 +71,12 @@ export const Wrapper = styled.div`
     }
   }
 `;
+
+export const NewNoti = styled.div`
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  margin: 10px;
+  border-radius: 5px;
+  background-color: ${COLORS.RED};
+`;

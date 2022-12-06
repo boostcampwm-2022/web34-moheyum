@@ -1,8 +1,18 @@
 import React from 'react';
 import Image from 'next/legacy/image';
-import { Wrapper } from './index.style';
+import { Wrapper, NewNoti } from './index.style';
 
-export default function Menu({ imgSrc, text, avatar }: { imgSrc: string; text: string; avatar: boolean }) {
+export default function Menu({
+  imgSrc,
+  text,
+  avatar,
+  noti,
+}: {
+  imgSrc: string;
+  text: string;
+  avatar: boolean;
+  noti: boolean;
+}) {
   return (
     <Wrapper>
       <div>
@@ -21,6 +31,7 @@ export default function Menu({ imgSrc, text, avatar }: { imgSrc: string; text: s
             <div className="text">{text}</div>
           </>
         )}
+        {noti && text === '알림' && <NewNoti />}
       </div>
       <span />
     </Wrapper>
