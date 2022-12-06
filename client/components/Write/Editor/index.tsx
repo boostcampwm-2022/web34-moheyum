@@ -9,7 +9,6 @@ import UserDropDown from './UserDropDown';
 import { getLeftWidth } from '../../../styles/theme';
 import UserProfile from '../../UserProfile';
 import {
-  Author,
   BottomButtonConatiner,
   CommentTopBar,
   EditorContainer,
@@ -29,7 +28,7 @@ interface Props {
     _id?: string;
   };
   modifyPostData?: PostProps;
-  isComment?: boolean;
+  isComment?: number | null;
 }
 
 Editor.defaultProps = {
@@ -37,7 +36,7 @@ Editor.defaultProps = {
     _id: '',
   },
   modifyPostData: null,
-  isComment: false,
+  isComment: null,
 };
 
 interface followUser {
@@ -49,12 +48,16 @@ interface followUser {
 let allMentionList: followUser[] = [];
 
 export default function Editor({ parentPostData, modifyPostData, isComment }: Props) {
+  console.log('start inComment', isComment);
   const contentRef = useRef<HTMLDivElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const [tabIndex, setTabIndex] = useState(0); // 0 Editor, 1 Preview
   const [content, setContent] = useState<string>('');
   const [dropDownDisplay, setDropDownDisplay] = useState<string>('none');
-  const [dropDownPosition, setDropDownPosition] = useState<{ x: string; y: string }>({ x: '0px', y: '0px' });
+  const [dropDownPosition, setDropDownPosition] = useState<{ x: string; y: string }>({
+    x: '0px',
+    y: '0px',
+  });
   const [checkMentionActive, setCheckMentionActive] = useState<boolean>(false);
   const [mentionList, setMentionList] = useState<string[]>([]);
   const [followList, setFollowList] = useState<followUser[]>([]);
@@ -124,10 +127,10 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
 
   // 처음 렌더 될때만 전체 멘션 리스트 가져옴
   useEffect(() => {
-    setDropDownPosition({
+    setDropDownPosition((prevState) => ({
+      ...prevState,
       x: `${getLeftWidth(window.innerWidth) + 42}px`,
-      y: isComment ? '371px' : '193.5px',
-    });
+    }));
     fetchMentionList();
     checkIfModifying();
   }, []);
@@ -252,6 +255,12 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
 
     // 멘션 시작
     if (key === '@') {
+      if (cursor.anchorNode?.nodeName === 'DIV') {
+        setDropDownPosition((prevState) => ({
+          ...prevState,
+          y: isComment ? `${isComment + 216}px` : `${173}px`,
+        }));
+      }
       setCheckMentionActive(true);
       return;
     }
