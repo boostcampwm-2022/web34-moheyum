@@ -324,7 +324,7 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
           e.preventDefault();
           if (followList.at(selectUser)) {
             userId = followList.at(selectUser)?.userid;
-            if (userId?.slice(inputUserId.length)) word = userId?.slice(inputUserId.length);
+            if (userId) word = userId;
           }
           pasteAction(`${word} `);
           setCheckMentionActive(false);
