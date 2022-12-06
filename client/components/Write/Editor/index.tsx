@@ -8,6 +8,7 @@ import renderMarkdown from '../../../utils/markdown';
 import UserDropDown from './UserDropDown';
 import { getLeftWidth } from '../../../styles/theme';
 import UserProfile from '../../UserProfile';
+import COLORS from '../../../styles/color';
 import {
   BottomButtonConatiner,
   CommentTopBar,
@@ -63,6 +64,7 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
   const [inputUserId, setInputUserId] = useState<string>('');
   const [contentHTML, setContentHTML] = useState<string>('<div><br></div>'); // 탭 전환용
   const [selectUser, setSelectUser] = useState<number>(0);
+  const [imageOver, setImageOver] = useState<boolean>(false);
   const authedUserInfo = useRecoilValue(authedUser);
 
   const submitHandler = async () => {
@@ -361,6 +363,12 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
   // 이미지 드래그 앤 드롭
 
   const dragOver = useCallback((e: DragEvent<HTMLDivElement>) => {
+    setImageOver(true);
+    e.preventDefault();
+  }, []);
+
+  const dragEnd = useCallback((e: DragEvent<HTMLDivElement>) => {
+    setImageOver(false);
     e.preventDefault();
   }, []);
 
@@ -382,7 +390,7 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
       if (format === 'JPG' || format === 'JPEG' || format === 'PNG') {
         fetchImage()
           .then((imageData) => {
-            const data = `![${files[0].name as string}](${imageData.imageLink})`;
+            const data = `![${files[0].name as string}](${imageData.data.imageLink})`;
             pasteAction(data);
             setContent(data); // setContent를 안하면 프리뷰에 반영이 안됩니다..
           })
@@ -395,6 +403,7 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
 
   const handleDrop = useCallback((e: DragEvent<HTMLDivElement>): void => {
     e.preventDefault();
+    setImageOver(false);
     handleFiles(e.dataTransfer.files);
   }, []);
 
@@ -437,7 +446,12 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
           onPaste={handlePaste}
           onDrop={handleDrop}
           onDragOver={dragOver}
-          style={{ display: `${tabIndex === 0 ? 'block' : 'none'}` }}
+          onDragLeave={dragEnd}
+          style={{
+            display: `${tabIndex === 0 ? 'block' : 'none'}`,
+            border: `1px solid ${imageOver ? COLORS.BLUE : COLORS.WHITE}`,
+            backgroundColor: `${imageOver ? COLORS.GRAY5 : COLORS.WHITE}`,
+          }}
           suppressContentEditableWarning
         >
           <div>
