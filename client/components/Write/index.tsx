@@ -18,7 +18,7 @@ interface Props {
 export default function EditorWrapper({ postData, modifyPostData }: Props) {
   return (
     <Wrapper>
-      {!postData && (
+      {!postData?._id && (
         <TopBar>
           <div>
             <ButtonBack type="button" onClick={goBack} />

@@ -122,8 +122,8 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
   // 처음 렌더 될때만 전체 멘션 리스트 가져옴
   useEffect(() => {
     setDropDownPosition({
-      x: `${getLeftWidth(window.innerWidth) + 40}px`,
-      y: '177.5px',
+      x: `${getLeftWidth(window.innerWidth) + 42}px`,
+      y: '193.5px',
     });
     fetchMentionList();
     checkIfModifying();
@@ -148,7 +148,7 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
       setSelectUser(0);
     } else {
       setInputUserId('');
-      moveModal();
+      moveModal(false);
       setFollowList(allMentionList.slice(0, 5));
       setDropDownDisplay('block');
       setSelectUser(0);
@@ -269,6 +269,7 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
       } else {
         setInputUserId((prevState) => prevState.slice(0, prevState.length - 1));
         setSelectUser(0);
+        moveModal(true);
         return;
       }
     }
@@ -308,21 +309,24 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
     } else if (key !== 'CapsLock' && key !== 'Shift') {
       setFollowList([]);
     }
-    console.log(inputUserId);
 
     if (key !== 'CapsLock' && key !== 'Shift') {
       // 기능키 입력시 모달 이동 안함 (다른키 예외처리도 필요할 듯)
-      moveModal(); // 기능키 제외 문자키 입력마다 모달창 위치 계속 갱신해줘야함
+      moveModal(false); // 기능키 제외 문자키 입력마다 모달창 위치 계속 갱신해줘야함
     }
   };
 
   // 모달 위치 갱신
-  const moveModal = useCallback(() => {
+  const moveModal = useCallback((isBack: boolean) => {
     const cursor = window.getSelection();
     if (cursor?.anchorNode?.nodeName !== '#text') return;
     const range = cursor?.getRangeAt(0);
     if (range) {
       const bounds = range.getBoundingClientRect();
+      if (isBack) {
+        setDropDownPosition({ x: `${bounds.x}px`, y: `${bounds.y + 5}px` });
+        return;
+      }
       setDropDownPosition({ x: `${bounds.x + 20}px`, y: `${bounds.y + 5}px` });
     }
   }, []);
