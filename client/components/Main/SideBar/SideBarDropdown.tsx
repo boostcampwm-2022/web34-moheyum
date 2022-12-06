@@ -7,8 +7,7 @@ import { Dropdown } from './index.style';
 export default function SideBarDropdown() {
   const router = useRouter();
   const signOut = async () => {
-    const result = await httpPost('/auth/logout', {});
-    console.log(result);
+    await httpPost('/auth/logout', {});
     router.reload();
   };
   return (
