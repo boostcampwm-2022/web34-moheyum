@@ -62,7 +62,7 @@ export default function ReadPost({ postData, title }: PostData) {
       </TopBar>
       <PostContent>
         {postData.parentPost ? <ParentPost post={postData.parent.at(0) as Parent} /> : <div />}
-        <MainPost postData={postData}></MainPost>
+        <MainPost postData={postData} />
         <CommentBox>
           <div id="title">답글: {commentCount}개</div>
           <div id="comment">

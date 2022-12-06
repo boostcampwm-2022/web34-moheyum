@@ -26,7 +26,7 @@ export default function Post({ response }: { response: Props }) {
         </div>
         <h1>답글 작성</h1>
       </TopBar>
-      <CommentPost response={response}></CommentPost>
+      <CommentPost response={response} />
     </AuthGuard>
   );
 }

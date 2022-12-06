@@ -295,19 +295,20 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
     // 멘션 종료 조건
     if (key === 'Backspace') {
       // @지우면 모달창 닫음, 멘션 active 종료
-      if (checkMentionActive && /@\<\/div\>$/.test(contentRef.current.innerHTML)) {
+      if (checkMentionActive && /@<\/div>$/.test(contentRef.current.innerHTML)) {
         setCheckMentionActive(false);
         return;
         // 그외에는 멘션 active 유지.
-      } else {
-        setInputUserId((prevState) => prevState.slice(0, prevState.length - 1));
-        setSelectUser(0);
-        moveDropDown(true);
-        return;
       }
+      setInputUserId((prevState) => prevState.slice(0, prevState.length - 1));
+      setSelectUser(0);
+      moveDropDown(true);
+      return;
     }
 
     if (checkMentionActive) {
+      let word: string = '';
+      let userId;
       switch (key) {
         // 멘션 리스트 모달창 선택 대상 이동
         case 'ArrowDown':
@@ -321,9 +322,8 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
         // 멘션 입력 완료, 멘션 active 종료 => 드롭다운 리스트에서 고른 경우
         case 'Enter':
           e.preventDefault();
-          let word: string = '';
           if (followList.at(selectUser)) {
-            const userId = followList.at(selectUser)?.userid;
+            userId = followList.at(selectUser)?.userid;
             if (userId?.slice(inputUserId.length)) word = userId?.slice(inputUserId.length);
           }
           pasteAction(`${word} `);
@@ -335,11 +335,10 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
         // 멘션 입력 완료, 멘션 active 종료 => 직접 pullname 입력한 경우
         case ' ':
           e.preventDefault();
-          const userInput = inputUserId;
           pasteAction(` `);
           setCheckMentionActive(false);
-          if (userInput) {
-            setMentionList((prevState) => prevState.concat(userInput));
+          if (inputUserId) {
+            setMentionList((prevState) => prevState.concat(inputUserId));
           }
           break;
         default:

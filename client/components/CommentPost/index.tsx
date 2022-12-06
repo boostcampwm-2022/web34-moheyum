@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import React, { useRef, useState, useEffect } from 'react';
-import MainPost from '../../components/ReadPost/MainPost';
-import Editor from '../../components/Write/Editor';
+import MainPost from '../ReadPost/MainPost';
+import Editor from '../Write/Editor';
 import type PostProps from '../../types/Post';
 import COLORS from '../../styles/color';
 

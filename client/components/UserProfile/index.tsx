@@ -3,17 +3,18 @@ import { calcTime } from '../../utils/calctime';
 import { Author, PostedAt, AuthorDetail } from './index.style';
 import ProfileImg from './ProfileImg';
 
-export default function UserProfile({
-  profileimg,
-  nickname,
-  author,
-  createdAt,
-}: {
+interface Props {
   profileimg: string;
   nickname: string;
   author: string;
   createdAt?: string | null;
-}) {
+}
+
+UserProfile.defaultProps = {
+  createdAt: null,
+};
+
+export default function UserProfile({ profileimg, nickname, author, createdAt }: Props) {
   return (
     <Author>
       <ProfileImg imgUrl={profileimg} />
