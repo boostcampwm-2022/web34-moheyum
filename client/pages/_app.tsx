@@ -11,6 +11,7 @@ import theme from '../styles/theme';
 import globalStyle from '../styles/global';
 import Frame from '../styles/frame';
 import SideBar from '../components/SideBar';
+import ToastController from '../components/Toast';
 
 const NoSideBar = ['/login', '/signup'];
 
@@ -30,6 +31,7 @@ export default function App({ Component, pageProps }: AppProps) {
               <Component {...pageProps} />
             </ComponentWrapper>
           </Frame>
+          <ToastController />
         </AppStyle>
       </RecoilRoot>
     </ThemeProvider>

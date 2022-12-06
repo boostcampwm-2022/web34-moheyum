@@ -7,9 +7,8 @@ import { FollowRepository } from 'src/common/database/follow.repository';
 import { FollowerPostDto } from './dto/follower-post.dto';
 import { UserRepository } from 'src/common/database/user.repository';
 import { NotificationRepository } from 'src/common/database/notification.repository';
-import { EventService } from 'src/alarm/event.service';
+import { EventService } from 'src/event/event.service';
 import { PostException } from 'src/common/exeception/post.exception';
-
 
 @Injectable()
 export class PostService {

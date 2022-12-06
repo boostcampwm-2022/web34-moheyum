@@ -29,7 +29,7 @@ export default function AuthGuard({ children, noRedirect }: React.PropsWithChild
       setAuthedUserInfo({ logined: true, ...result.data });
       setAuthorized(true);
     }
-    if (result.message === 'Unauthorized') {
+    if (response.statusText === 'Unauthorized') {
       setAuthorized(false);
       setAuthedUserInfo(defaultAuthedUser);
       if (!noRedirect)

@@ -11,7 +11,7 @@ import {
   Notification,
   NotificationSchema,
 } from 'src/common/database/notification.schema';
-import { EventModule } from 'src/alarm/event.module';
+import { EventModule } from 'src/event/event.module';
 
 @Module({
   imports: [
