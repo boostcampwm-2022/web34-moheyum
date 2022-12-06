@@ -126,10 +126,6 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
 
   // 처음 렌더 될때만 전체 멘션 리스트 가져옴
   useEffect(() => {
-    setDropDownPosition((prevState) => ({
-      ...prevState,
-      x: `${getLeftWidth(window.innerWidth) + 42}px`,
-    }));
     fetchMentionList();
     checkIfModifying();
   }, []);
@@ -160,6 +156,17 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
     }
   }, [checkMentionActive]);
 
+  // 윈도우 창 조절시 드롭다운 위치 재조정
+  useEffect(() => {
+    const handleResize = () => {
+      moveDropDown(false);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  });
+
   useEffect(() => {
     if (!previewRef.current || !contentRef.current) return;
     if (tabIndex === 1) {
@@ -170,7 +177,13 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
   // 드롭다운 위치 갱신
   const moveDropDown = useCallback((isBack: boolean) => {
     const cursor = window.getSelection();
-    if (cursor?.anchorNode?.nodeName !== '#text') return;
+    if (cursor?.anchorNode?.nodeName !== '#text') {
+      setDropDownPosition((prevState) => ({
+        ...prevState,
+        x: `${getLeftWidth(window.innerWidth) + 42}px`,
+      }));
+      return;
+    }
     const range = cursor?.getRangeAt(0);
     if (range) {
       const bounds = range.getBoundingClientRect();
