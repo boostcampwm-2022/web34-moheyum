@@ -8,11 +8,7 @@ interface ToastProps {
 }
 
 function ToastMessageInstance({ message }: ToastProps) {
-  return (
-    <MessageWrapper>
-      {message.message}: {message.key}
-    </MessageWrapper>
-  );
+  return <MessageWrapper>{message.message}</MessageWrapper>;
 }
 
 export default React.memo(ToastMessageInstance, (prev, next) => prev.message.key === next.message.key);
