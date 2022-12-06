@@ -3,7 +3,7 @@ import { EventEmitter } from 'events';
 import { fromEvent } from 'rxjs';
 
 @Injectable()
-export class AlarmService {
+export class EventService {
   //   constructor(private readonly emitter: EventEmitter) {}
   private readonly emitter: EventEmitter;
   constructor() {

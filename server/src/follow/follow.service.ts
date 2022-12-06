@@ -5,7 +5,7 @@ import { User } from 'src/common/database/user.schema';
 import { FollowListDto } from './dto/follow-list.dto';
 import { UserService } from 'src/user/user.service';
 import { NotificationRepository } from 'src/common/database/notification.repository';
-import { AlarmService } from 'src/alarm/alarm.service';
+import { EventService } from 'src/alarm/event.service';
 
 @Injectable()
 export class FollowService {
@@ -14,7 +14,7 @@ export class FollowService {
     private readonly userRepository: UserRepository,
     private readonly userService: UserService,
     private readonly notificationRepository: NotificationRepository,
-    private readonly alarmService: AlarmService,
+    private readonly eventService: EventService,
   ) {}
 
   async followUser(targetid: string, user: User) {
@@ -38,7 +38,7 @@ export class FollowService {
           `${user.nickname}(${user.userid})님이 팔로우하였습니다.`,
           `/${user.userid}`,
         );
-        this.alarmService.emit(targetid, { data: true });
+        this.eventService.emit(targetid, { data: true });
         return res;
       })
       .catch((err) => {

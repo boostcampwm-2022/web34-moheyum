@@ -13,7 +13,7 @@ import {
   NotificationSchema,
 } from 'src/common/database/notification.schema';
 import { NotificationRepository } from 'src/common/database/notification.repository';
-import { AlarmModule } from 'src/alarm/alarm.moduel';
+import { EventModule } from 'src/alarm/event.module';
 
 @Module({
   imports: [
@@ -24,7 +24,7 @@ import { AlarmModule } from 'src/alarm/alarm.moduel';
     ]),
     AuthModule,
     DatabaseModule,
-    AlarmModule,
+    EventModule,
   ],
   controllers: [PostController],
   providers: [

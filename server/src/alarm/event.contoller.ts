@@ -1,11 +1,11 @@
-import { Controller, Post, Request, Sse, UseGuards } from '@nestjs/common';
+import { Controller, Post, Sse, UseGuards } from '@nestjs/common';
 import { GetUser } from 'src/common/decorator/get-user.decorator';
 import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
-import { AlarmService } from './alarm.service';
+import { EventService } from './event.service';
 
-@Controller('alarm')
-export class AlarmController {
-  constructor(private readonly alarmService: AlarmService) {}
+@Controller('event')
+export class EventController {
+  constructor(private readonly alarmService: EventService) {}
 
   @UseGuards(JwtAuthGuard)
   @Sse()
