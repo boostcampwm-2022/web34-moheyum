@@ -14,9 +14,8 @@ export default function SideBarDropdown() {
   return (
     <Dropdown>
       <button type="button">
-        <Link href="/myAccount">내 계정 정보 확인</Link>
+        <Link href="/myAccount">내 계정</Link>
       </button>
-      <button type="button">알림 일시중지</button>
       <button type="button" onClick={signOut}>
         로그아웃
       </button>
