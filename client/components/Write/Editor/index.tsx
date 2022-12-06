@@ -1,12 +1,13 @@
 import React, { ClipboardEvent, KeyboardEvent, useEffect, useRef, useState, useCallback, DragEvent } from 'react';
 import Router from 'next/router';
+import Link from 'next/link';
 import { useRecoilValue } from 'recoil';
 import { authedUser } from '../../../atom';
 import { httpPost, httpGet, httpPatch } from '../../../utils/http';
 import renderMarkdown from '../../../utils/markdown';
 import UserDropDown from './UserDropDown';
 import { getLeftWidth } from '../../../styles/theme';
-import ProfileImg from '../../ProfileImg';
+import UserProfile from '../../UserProfile';
 import {
   Author,
   BottomButtonConatiner,
@@ -28,6 +29,7 @@ interface Props {
     _id?: string;
   };
   modifyPostData?: PostProps;
+  isComment?: boolean;
 }
 
 Editor.defaultProps = {
@@ -35,6 +37,7 @@ Editor.defaultProps = {
     _id: '',
   },
   modifyPostData: null,
+  isComment: false,
 };
 
 interface followUser {
@@ -45,7 +48,7 @@ interface followUser {
 
 let allMentionList: followUser[] = [];
 
-export default function Editor({ parentPostData, modifyPostData }: Props) {
+export default function Editor({ parentPostData, modifyPostData, isComment }: Props) {
   const contentRef = useRef<HTMLDivElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const [tabIndex, setTabIndex] = useState(0); // 0 Editor, 1 Preview
@@ -123,7 +126,7 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
   useEffect(() => {
     setDropDownPosition({
       x: `${getLeftWidth(window.innerWidth) + 42}px`,
-      y: '193.5px',
+      y: isComment ? '371px' : '193.5px',
     });
     fetchMentionList();
     checkIfModifying();
@@ -381,10 +384,13 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
     <Wrapper>
       <CommentTopBar>
         <PostHeader>
-          <Author>
-            <ProfileImg imgUrl={authedUserInfo.profileimg} />
-            <span>{authedUserInfo.nickname || 'ananymous'}</span>
-          </Author>
+          <Link href={`/${authedUserInfo.userid}`}>
+            <UserProfile
+              profileimg={authedUserInfo.profileimg}
+              nickname={authedUserInfo.nickname}
+              author={authedUserInfo.userid}
+            />
+          </Link>
         </PostHeader>
       </CommentTopBar>
       <ToolbarContainer>

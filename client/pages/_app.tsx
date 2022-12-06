@@ -10,7 +10,7 @@ import COLORS from '../styles/color';
 import theme from '../styles/theme';
 import globalStyle from '../styles/global';
 import Frame from '../styles/frame';
-import SideBar from '../components/Main/SideBar';
+import SideBar from '../components/SideBar';
 
 const NoSideBar = ['/login', '/signup'];
 

@@ -1,7 +1,7 @@
 import React from 'react';
-import { calcTime } from '../../../utils/calctime';
+import { calcTime } from '../../utils/calctime';
 import { Author, PostedAt, AuthorDetail } from './index.style';
-import ProfileImg from '../../ProfileImg';
+import ProfileImg from './ProfileImg';
 
 export default function UserProfile({
   profileimg,
@@ -12,7 +12,7 @@ export default function UserProfile({
   profileimg: string;
   nickname: string;
   author: string;
-  createdAt: string;
+  createdAt?: string | null;
 }) {
   return (
     <Author>
@@ -22,7 +22,7 @@ export default function UserProfile({
         <div id="user-id">@{author || '작성자 아이디'}</div>
       </AuthorDetail>
       <PostedAt>
-        <div id="time">{calcTime(createdAt)}</div>
+        {createdAt && <div id="time">{calcTime(createdAt)}</div>}
         <div>&nbsp;</div>
       </PostedAt>
     </Author>

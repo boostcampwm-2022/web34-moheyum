@@ -1,10 +1,10 @@
 import React, { useCallback, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArticleCard } from '../Articlecard';
+import { ArticleCard } from './Articlecard';
 import { ArticlesSection, FakeButton, NewArticleSection, Placeholder, Wrapper, Newsfeed } from './index.style';
-import { MainTopBar } from '../../../styles/common';
+import { MainTopBar } from '../../styles/common';
 
-import Paginator, { NEXT } from '../../../utils/paginator';
+import Paginator, { NEXT } from '../../utils/paginator';
 
 export default function MainSection() {
   const [nextCursor, setNextCursor] = useState(NEXT.START);

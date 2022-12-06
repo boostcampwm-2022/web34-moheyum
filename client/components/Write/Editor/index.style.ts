@@ -117,6 +117,7 @@ export const CommentTopBar = styled.div`
 `;
 export const PostHeader = styled.div`
   width: 100%;
+  padding: 0px 15px;
   display: flex;
   justify-content: space-between;
 `;

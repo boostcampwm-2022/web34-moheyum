@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { ArticleCard } from '../../Main/Articlecard';
+import { ArticleCard } from '../../MainSection/Articlecard';
 import { PostLabel, SectionDivider } from './index.style';
 import Paginator, { NEXT } from '../../../utils/paginator';
 import { UserPostProps } from '../../../types/Post';

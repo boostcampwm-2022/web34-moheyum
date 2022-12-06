@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
-import UserProfile from '../UserProfile';
+import UserProfile from '../../UserProfile';
 import renderMarkdown from '../../../utils/markdown';
 import { CommentItem, CommentContentBox } from './index.style';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Author, AuthorDetail } from './index.style';
-import ProfileImg from '../../../ProfileImg';
+import ProfileImg from '../../../UserProfile/ProfileImg';
 
 export default function UserProfile({
   profileimg,

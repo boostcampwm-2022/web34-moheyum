@@ -1,5 +1,5 @@
 import React from 'react';
-import MainSection from '../components/Main/Mainsection';
+import MainSection from '../components/MainSection';
 import AuthGuard from '../components/AuthGuard';
 
 export default function Home() {
