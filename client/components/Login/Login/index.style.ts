@@ -7,7 +7,7 @@ export const Wrapper = styled.div`
   height: 100%;
   ${displayColumn}
   align-items: left;
-  @media only screen and (max-width: ${({ theme }) => theme.wideWindow}) {
+  @media only screen and (max-width: ${({ theme }) => theme.smallWindow}) {
     width: 400px;
     align-items: center;
   }

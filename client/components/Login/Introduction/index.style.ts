@@ -10,7 +10,7 @@ export const Wrapper = styled.div`
   width: 50%;
   height: 100%;
   ${displayCenter}
-  @media only screen and (max-width: ${({ theme }) => theme.wideWindow}) {
+  @media only screen and (max-width: ${({ theme }) => theme.smallWindow}) {
     display: none;
   }
 `;
@@ -28,5 +28,9 @@ export const Text = styled.div`
   margin: 15px;
   margin-left: 20px;
   font-size: 22px;
-  line-height: 40px;
+  line-height: 43px;
+  font-family: 'Jua', sans-serif;
+  span {
+    font-family: 'Jua', sans-serif;
+  }
 `;
