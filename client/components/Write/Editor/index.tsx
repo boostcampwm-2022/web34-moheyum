@@ -253,13 +253,7 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
       return;
     }
 
-    // 멘션 모달 창 닫는 조건
-    if (key === ' ') {
-      if (checkMentionActive) {
-        setCheckMentionActive(false);
-        return;
-      }
-    }
+    // 멘션 종료 조건
     if (key === 'Backspace') {
       // @지우면 모달창 닫음, 멘션 active 종료
       if (checkMentionActive && /@\<\/div\>$/.test(contentRef.current.innerHTML)) {
@@ -286,7 +280,7 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
       return;
     }
 
-    // 멘션 입력 완료, 멘션 active 종료
+    // 멘션 입력 완료, 멘션 active 종료 => 드롭다운 리스트에서 고른 경우
     if (checkMentionActive && key === 'Enter') {
       e.preventDefault();
       let word: string = '';
@@ -295,6 +289,18 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
         if (userId?.slice(inputUserId.length)) word = userId?.slice(inputUserId.length);
       }
       pasteAction(`${word} `);
+      setCheckMentionActive(false);
+      if (word) {
+        setMentionList((prevState) => prevState.concat(word));
+      }
+      return;
+    }
+
+    // 멘션 입력 완료, 멘션 active 종료 => 직접 pullname 입력한 경우
+    if (checkMentionActive && key === ' ') {
+      e.preventDefault();
+      const word = inputUserId;
+      pasteAction(` `);
       setCheckMentionActive(false);
       if (word) {
         setMentionList((prevState) => prevState.concat(word));
