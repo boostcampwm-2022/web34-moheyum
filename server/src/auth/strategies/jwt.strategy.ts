@@ -5,6 +5,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UserRepository } from '../../common/database/user.repository';
 import { User } from '../../common/database/user.schema';
 import { Request } from 'express';
+import { UserException } from 'src/common/exeception/user.exception';
 
 @Injectable()
 export class JwtStartegy extends PassportStrategy(Strategy, 'jwt-strategy') {
@@ -26,7 +27,7 @@ export class JwtStartegy extends PassportStrategy(Strategy, 'jwt-strategy') {
     const { userid } = payload;
     const user: User = await this.userRepository.findOne({ userid });
     if (!user) {
-      throw new UnauthorizedException();
+      throw UserException.userUnAuthorizedToken();
     }
 
     return user;

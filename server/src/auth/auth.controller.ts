@@ -49,32 +49,29 @@ export class AuthController {
   @Post('/signup')
   async signUp(@Body() userCreateDto: UserCreateDto) {
     await this.authService.signUp(userCreateDto);
-    return {
-      message: 'success',
-      data: {},
-    };
+    return {};
   }
 
   @HttpCode(200)
   @Post('/signin')
   async signIn(
     @Body() authCredentialsDto: AuthCredentialsDto,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
   ) {
     const { accessToken, refreshToken } = await this.authService.signIn(
       authCredentialsDto,
     );
     res.cookie('a_t', accessToken, this.authService.getAccessOptions());
     res.cookie('r_t', refreshToken, this.authService.getRefreshOptions());
-    res.json({
-      message: 'success',
-      data: {},
-    });
+    return {};
   }
 
   @UseGuards(JwtRefreshGuard)
   @Get('refresh')
-  async refresh(@GetPayload() userid: string, @Res() res: Response) {
+  async refresh(
+    @GetPayload() userid: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     // TODO db상에서 가져와야함
     const payload = { userid };
     const data = await this.authService.checkUserAuthData(userid);
@@ -82,57 +79,43 @@ export class AuthController {
     const refreshToken = await this.authService.createRefreshToken(payload);
     res.cookie('a_t', accessToken, this.authService.getAccessOptions());
     res.cookie('r_t', refreshToken, this.authService.getRefreshOptions());
-    res.json({
-      message: 'success',
-      data: data,
-    });
+    return data;
   }
 
   @HttpCode(200)
   @Post('email-verification')
-  async sendEmailCode(@Body() emailCheckDto: EmailDto, @Res() res: Response) {
+  async sendEmailCode(
+    @Body() emailCheckDto: EmailDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const authNum: string = await this.authService.sendEmailCode(emailCheckDto);
     res.cookie('authNum', authNum, this.authService.getEmailOptions());
-    return res.send({
-      message: 'success',
-      data: {},
-    });
+    return {};
   }
 
   @Get('email-verification')
   async checkEmailCode(
     @Query() emailCheckDto: EmailCheckDto,
     @Cookies('authNum') authNum: string,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
   ) {
     await this.authService.checkEmailCode(emailCheckDto, authNum);
     res.cookie('authNum', '', this.authService.deleteCookieOption());
-    return res.send({
-      message: 'success',
-      data: {},
-    });
+    return {};
   }
 
   @HttpCode(200)
   @Post('id-inquiry')
   async findId(@Body() emailDTO: EmailDto) {
     const userid = await this.authService.findId(emailDTO);
-    return {
-      message: 'success',
-      data: {
-        userid,
-      },
-    };
+    return userid;
   }
 
   @HttpCode(200)
   @Post('password-inquiry')
   async findPw(@Body() findPwDTO: FindPwDto) {
     if (await this.authService.findPw(findPwDTO)) {
-      return {
-        message: 'success',
-        data: {},
-      };
+      return {};
     }
   }
 

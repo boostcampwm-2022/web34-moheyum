@@ -2,9 +2,8 @@ import { ExecutionContext, Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Observable } from 'rxjs';
 import { TokenExpiredError } from 'jsonwebtoken';
-import { UnauthorizedException } from '@nestjs/common';
-import { HttpException } from '@nestjs/common';
-import { HttpStatus } from '@nestjs/common';
+import { UserException } from '../exeception/user.exception';
+import { CommonException } from '../exeception/common.exception';
 
 @Injectable()
 export class JwtRefreshGuard extends AuthGuard('jwt-refresh') {
@@ -15,13 +14,10 @@ export class JwtRefreshGuard extends AuthGuard('jwt-refresh') {
   }
   handleRequest<TUser = any>(err: any, user: any, info: any): TUser {
     if (info instanceof TokenExpiredError) {
-      throw new HttpException(
-        { message: '토큰 인증 만료' },
-        HttpStatus.FORBIDDEN,
-      );
+      throw CommonException.commonExpiredToekn();
     }
     if (err || !user) {
-      throw err || new UnauthorizedException();
+      throw err || UserException.userUnAuthorizedToken();
     }
     return user;
   }

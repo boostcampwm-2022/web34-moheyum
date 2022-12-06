@@ -27,7 +27,6 @@ export class FollowRepository {
     } catch (error) {
       if (error.code === 11000) throw new ConflictException();
       else {
-        console.error(error);
         throw new InternalServerErrorException();
       }
     }
