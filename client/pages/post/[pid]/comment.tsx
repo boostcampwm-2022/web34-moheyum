@@ -1,11 +1,11 @@
-import styled from '@emotion/styled';
 import { GetServerSidePropsContext } from 'next';
 import React from 'react';
+import Router from 'next/router';
 import AuthGuard from '../../../components/AuthGuard';
-import ReadPost from '../../../components/ReadParentPost';
 import { httpGet } from '../../../utils/http';
 import type PostProps from '../../../types/Post';
-import EditorWrapper from '../../../components/Write';
+import CommentPost from '../../../components/CommentPost';
+import { ButtonBack, TopBar } from '../../../styles/common';
 
 interface Props {
   data: {
@@ -13,15 +13,20 @@ interface Props {
   };
 }
 
+const goBack = () => {
+  Router.back();
+};
+
 export default function Post({ response }: { response: Props }) {
   return (
-    <AuthGuard noRedirect>
-      <ContentWrapper>
-        <PostWrapper>
-          <ReadPost postData={response.data.post} />
-        </PostWrapper>
-        <EditorWrapper postData={response.data.post} />
-      </ContentWrapper>
+    <AuthGuard>
+      <TopBar>
+        <div>
+          <ButtonBack type="button" onClick={goBack} />
+        </div>
+        <h1>답글 작성</h1>
+      </TopBar>
+      <CommentPost response={response} />
     </AuthGuard>
   );
 }
@@ -35,18 +40,3 @@ export async function getServerSideProps({ query: { pid } }: GetServerSidePropsC
     },
   };
 }
-const ContentWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  max-width: 1090px;
-  height: 100%;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-`;
-const PostWrapper = styled.div`
-  flex: 1;
-`;

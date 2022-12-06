@@ -1,31 +1,19 @@
-import React, { useEffect, useRef, useCallback, useState } from 'react';
+import React, { useRef, useCallback, useState } from 'react';
 import Link from 'next/link';
 import Router from 'next/router';
 import { useRecoilValue } from 'recoil';
 import ReactLoading from 'react-loading';
-import renderMarkdown from '../../utils/markdown';
 import { authedUser } from '../../atom';
 import COLORS from '../../styles/color';
 import { ButtonBack, TopBar } from '../../styles/common';
 import Paginator, { NEXT } from '../../utils/paginator';
 import type PostProps from '../../types/Post';
 import Comment, { commentItem } from './Comment';
-import UserProfile from './UserProfile';
-import ProfileImg from '../ProfileImg';
+import ProfileImg from '../UserProfile/ProfileImg';
 import ParentPost from './ParentPost';
 import type { Parent } from '../../types/Post';
-import { httpDelete } from '../../utils/http';
-import {
-  ContentBox,
-  PostContent,
-  HeaderBox,
-  Wrapper,
-  CommentBox,
-  Loader,
-  MainContentBox,
-  PostButton,
-  ButtonConatiner,
-} from './index.style';
+import MainPost from './MainPost';
+import { PostContent, Wrapper, CommentBox, Loader } from './index.style';
 
 interface PostData {
   postData: PostProps;
@@ -34,7 +22,6 @@ interface PostData {
 
 export default function ReadPost({ postData, title }: PostData) {
   const authedUserInfo = useRecoilValue(authedUser);
-  const contentRef = useRef<HTMLDivElement>(null);
   const goBack = () => {
     Router.back();
   };
@@ -65,23 +52,6 @@ export default function ReadPost({ postData, title }: PostData) {
     },
     [loading, next !== NEXT.END]
   );
-  const deleteHandler = async () => {
-    const response = await httpDelete(`/post/${postData._id}`);
-    if (response.statusCode !== 200) {
-      alert(`게시글 삭제에 실패하였습니다. ${response.message}`);
-    } else {
-      Router.push('/');
-    }
-  };
-
-  const modifyHandler = async () => {
-    Router.push(`/post/${postData._id}/modify`);
-  };
-
-  useEffect(() => {
-    if (!contentRef.current) return;
-    contentRef.current.innerHTML = renderMarkdown(postData.description);
-  }, [contentRef.current?.textContent]);
   return (
     <Wrapper>
       <TopBar>
@@ -92,33 +62,7 @@ export default function ReadPost({ postData, title }: PostData) {
       </TopBar>
       <PostContent>
         {postData.parentPost ? <ParentPost post={postData.parent.at(0) as Parent} /> : <div />}
-        <MainContentBox>
-          <HeaderBox>
-            <Link href={`/${postData.author}`}>
-              <UserProfile
-                profileimg={postData.authorDetail.profileimg}
-                nickname={postData.authorDetail.nickname}
-                author={postData.author}
-                createdAt={postData.createdAt}
-              />
-            </Link>
-            <ButtonConatiner>
-              <PostButton
-                style={{ display: authedUserInfo.userid === postData.author ? 'block' : 'none' }}
-                onClick={modifyHandler}
-              >
-                수정
-              </PostButton>
-              <PostButton
-                style={{ display: authedUserInfo.userid === postData.author ? 'block' : 'none' }}
-                onClick={deleteHandler}
-              >
-                삭제
-              </PostButton>
-            </ButtonConatiner>
-          </HeaderBox>
-          <ContentBox ref={contentRef}>{postData.description || '글 내용'}</ContentBox>
-        </MainContentBox>
+        <MainPost postData={postData} />
         <CommentBox>
           <div id="title">답글: {commentCount}개</div>
           <div id="comment">

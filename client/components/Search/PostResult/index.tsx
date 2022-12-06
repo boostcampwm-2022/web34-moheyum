@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import React, { useCallback, useRef, useState } from 'react';
 import COLORS from '../../../styles/color';
 import Paginator, { NEXT } from '../../../utils/paginator';
-import { ArticleCard } from '../../Main/Articlecard';
+import { ArticleCard } from '../../MainSection/Articlecard';
 
 export default function PostResult({ keyword }: { keyword: string }) {
   const [nextCursor, setNextCursor] = useState('START');

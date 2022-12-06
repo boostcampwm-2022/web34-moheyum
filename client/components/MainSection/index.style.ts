@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import COLORS from '../../../styles/color';
-import { buttonStyle, mainSectionStyle } from '../../../styles/mixin';
+import COLORS from '../../styles/color';
+import { buttonStyle, mainSectionStyle } from '../../styles/mixin';
 
 export const Wrapper = styled.section`
   ${mainSectionStyle}

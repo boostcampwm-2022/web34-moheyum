@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { calcTime } from '../../../utils/calctime';
 import { Author, AuthorDetail, Wrapper, ContentBox, HeaderBox, ParentTree, ParentTreeContainer } from './index.style';
-import ProfileImg from '../../ProfileImg';
+import ProfileImg from '../../UserProfile/ProfileImg';
 import type { Parent } from '../../../types/Post';
 import renderMarkdown from '../../../utils/markdown';
 

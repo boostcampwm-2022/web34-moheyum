@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import { displayColumn } from '../../../styles/mixin';
-import COLORS from '../../../styles/color';
+import { displayColumn } from '../../styles/mixin';
+import COLORS from '../../styles/color';
 
 export const Dropdown = styled.div`
   width: fit-content;

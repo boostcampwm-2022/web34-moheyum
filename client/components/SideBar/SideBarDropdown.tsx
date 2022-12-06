@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { httpPost } from '../../../utils/http';
+import { httpPost } from '../../utils/http';
 import { Dropdown } from './index.style';
 
 export default function SideBarDropdown() {

@@ -1,14 +1,14 @@
 import React, { ClipboardEvent, KeyboardEvent, useEffect, useRef, useState, useCallback, DragEvent } from 'react';
 import Router from 'next/router';
+import Link from 'next/link';
 import { useRecoilValue } from 'recoil';
 import { authedUser } from '../../../atom';
 import { httpPost, httpGet, httpPatch } from '../../../utils/http';
 import renderMarkdown from '../../../utils/markdown';
 import UserDropDown from './UserDropDown';
 import { getLeftWidth } from '../../../styles/theme';
-import ProfileImg from '../../ProfileImg';
+import UserProfile from '../../UserProfile';
 import {
-  Author,
   BottomButtonConatiner,
   CommentTopBar,
   EditorContainer,
@@ -28,6 +28,7 @@ interface Props {
     _id?: string;
   };
   modifyPostData?: PostProps;
+  isComment?: number | null;
 }
 
 Editor.defaultProps = {
@@ -35,6 +36,7 @@ Editor.defaultProps = {
     _id: '',
   },
   modifyPostData: null,
+  isComment: null,
 };
 
 interface followUser {
@@ -45,13 +47,16 @@ interface followUser {
 
 let allMentionList: followUser[] = [];
 
-export default function Editor({ parentPostData, modifyPostData }: Props) {
+export default function Editor({ parentPostData, modifyPostData, isComment }: Props) {
   const contentRef = useRef<HTMLDivElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const [tabIndex, setTabIndex] = useState(0); // 0 Editor, 1 Preview
   const [content, setContent] = useState<string>('');
   const [dropDownDisplay, setDropDownDisplay] = useState<string>('none');
-  const [dropDownPosition, setDropDownPosition] = useState<{ x: string; y: string }>({ x: '0px', y: '0px' });
+  const [dropDownPosition, setDropDownPosition] = useState<{ x: string; y: string }>({
+    x: '0px',
+    y: '0px',
+  });
   const [checkMentionActive, setCheckMentionActive] = useState<boolean>(false);
   const [mentionList, setMentionList] = useState<string[]>([]);
   const [followList, setFollowList] = useState<followUser[]>([]);
@@ -121,10 +126,6 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
 
   // 처음 렌더 될때만 전체 멘션 리스트 가져옴
   useEffect(() => {
-    setDropDownPosition({
-      x: `${getLeftWidth(window.innerWidth) + 40}px`,
-      y: '177.5px',
-    });
     fetchMentionList();
     checkIfModifying();
   }, []);
@@ -135,7 +136,7 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
       setFollowList([]);
       return;
     }
-    const regex = new RegExp(`^${inputUserId}`, 'g');
+    const regex = new RegExp(`^${inputUserId}`);
     const filteredList = allMentionList.filter((user) => regex.test(user.userid) && user);
     setFollowList(filteredList.slice(0, 5));
   }, [inputUserId]);
@@ -148,12 +149,23 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
       setSelectUser(0);
     } else {
       setInputUserId('');
-      moveModal();
+      moveDropDown(false);
       setFollowList(allMentionList.slice(0, 5));
       setDropDownDisplay('block');
       setSelectUser(0);
     }
   }, [checkMentionActive]);
+
+  // 윈도우 창 조절시 드롭다운 위치 재조정
+  useEffect(() => {
+    const handleResize = () => {
+      moveDropDown(false);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  });
 
   useEffect(() => {
     if (!previewRef.current || !contentRef.current) return;
@@ -161,6 +173,27 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
       previewRef.current.innerHTML = renderMarkdown(content);
     } else if (contentHTML !== '<div><br></div>') contentRef.current.innerHTML = contentHTML;
   }, [tabIndex]);
+
+  // 드롭다운 위치 갱신
+  const moveDropDown = useCallback((isBack: boolean) => {
+    const cursor = window.getSelection();
+    if (cursor?.anchorNode?.nodeName !== '#text') {
+      setDropDownPosition((prevState) => ({
+        ...prevState,
+        x: `${getLeftWidth(window.innerWidth) + 42}px`,
+      }));
+      return;
+    }
+    const range = cursor?.getRangeAt(0);
+    if (range) {
+      const bounds = range.getBoundingClientRect();
+      if (isBack) {
+        setDropDownPosition({ x: `${bounds.x}px`, y: `${bounds.y + 5}px` });
+        return;
+      }
+      setDropDownPosition({ x: `${bounds.x + 20}px`, y: `${bounds.y + 5}px` });
+    }
+  }, []);
 
   // ---------------------------------------------------------------------------------------------------------
   // 아래부터 에디터 제스쳐 관련 코드
@@ -249,70 +282,83 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
 
     // 멘션 시작
     if (key === '@') {
+      if (cursor.anchorNode?.nodeName === 'DIV') {
+        setDropDownPosition((prevState) => ({
+          ...prevState,
+          y: isComment ? `${isComment + 216}px` : `${173}px`,
+        }));
+      }
       setCheckMentionActive(true);
       return;
     }
 
-    // 멘션 모달 창 닫는 조건
-    if (key === ' ' || key === 'Backspace') {
-      if (checkMentionActive) {
+    // 멘션 종료 조건
+    if (key === 'Backspace') {
+      // @지우면 모달창 닫음, 멘션 active 종료
+      if (checkMentionActive && /@<\/div>$/.test(contentRef.current.innerHTML)) {
         setCheckMentionActive(false);
         return;
+        // 그외에는 멘션 active 유지.
       }
-    }
-
-    // 멘션 리스트 모달창 선택 대상 이동
-    if (checkMentionActive && key === 'ArrowDown') {
-      e.preventDefault();
-      setSelectUser((prevState) => (prevState + 1 > followList.length - 1 ? 0 : prevState + 1));
-      return;
-    }
-    if (checkMentionActive && key === 'ArrowUp') {
-      e.preventDefault();
-      setSelectUser((prevState) => (prevState - 1 < 0 ? followList.length - 1 : prevState - 1));
-      return;
-    }
-
-    // 멘션 입력 완료, 멘션 active 종료
-    if (checkMentionActive && key === 'Enter') {
-      e.preventDefault();
-      let word: string = '';
-      if (followList.at(selectUser)) {
-        const userId = followList.at(selectUser)?.userid;
-        if (userId?.slice(inputUserId.length)) word = userId?.slice(inputUserId.length);
-      }
-      pasteAction(`${word} `);
-      setCheckMentionActive(false);
-      if (word) {
-        setMentionList((prevState) => prevState.concat(word));
-      }
-      return;
-    }
-
-    // 멘션 키 active 상태일 때, 단어 입력하는 동안 발생하는 이벤트
-    if (checkMentionActive && key.match(/^\w$/i)) {
-      setInputUserId((prevState) => prevState + key);
+      setInputUserId((prevState) => prevState.slice(0, prevState.length - 1));
       setSelectUser(0);
-    } else if (key !== 'CapsLock' && key !== 'Shift') {
-      setFollowList([]);
+      moveDropDown(true);
+      return;
     }
 
-    if (key !== 'CapsLock' && key !== 'Shift') {
-      // 기능키 입력시 모달 이동 안함 (다른키 예외처리도 필요할 듯)
-      moveModal(); // 기능키 제외 문자키 입력마다 모달창 위치 계속 갱신해줘야함
+    if (checkMentionActive) {
+      let word: string = '';
+      let userId;
+      switch (key) {
+        // 멘션 리스트 모달창 선택 대상 이동
+        case 'ArrowDown':
+          e.preventDefault();
+          setSelectUser((prevState) => (prevState + 1 > followList.length - 1 ? 0 : prevState + 1));
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          setSelectUser((prevState) => (prevState - 1 < 0 ? followList.length - 1 : prevState - 1));
+          break;
+        // 멘션 입력 완료, 멘션 active 종료 => 드롭다운 리스트에서 고른 경우
+        case 'Enter':
+          e.preventDefault();
+          if (followList.at(selectUser)) {
+            userId = followList.at(selectUser)?.userid;
+            if (userId) word = userId;
+          }
+          pasteAction(`${word} `);
+          setCheckMentionActive(false);
+          if (word) {
+            setMentionList((prevState) => prevState.concat(word));
+          }
+          break;
+        // 멘션 입력 완료, 멘션 active 종료 => 직접 pullname 입력한 경우
+        case ' ':
+          e.preventDefault();
+          pasteAction(` `);
+          setCheckMentionActive(false);
+          if (inputUserId) {
+            setMentionList((prevState) => prevState.concat(inputUserId));
+          }
+          break;
+        default:
+          // 멘션 키 active 상태일 때, 단어 입력하는 동안 발생하는 이벤트
+          if (checkMentionActive && key.match(/^\w$/i)) {
+            setInputUserId((prevState) => prevState + key);
+            setSelectUser(0);
+          } else if (key !== 'CapsLock' && key !== 'Shift') {
+            setFollowList([]);
+          }
+          if (key !== 'CapsLock' && key !== 'Shift') {
+            // 기능키 입력시 모달 이동 안함 (다른키 예외처리도 필요할 듯)
+            moveDropDown(false); // 기능키 제외 문자키 입력마다 모달창 위치 계속 갱신해줘야함
+          }
+      }
     }
   };
 
-  // 모달 위치 갱신
-  const moveModal = useCallback(() => {
-    const cursor = window.getSelection();
-    if (cursor?.anchorNode?.nodeName !== '#text') return;
-    const range = cursor?.getRangeAt(0);
-    if (range) {
-      const bounds = range.getBoundingClientRect();
-      setDropDownPosition({ x: `${bounds.x + 20}px`, y: `${bounds.y + 5}px` });
-    }
-  }, []);
+  // ---------------------------------------------------------------------------------------------------------
+  // 이미지 드래그 앤 드롭
 
   const dragOver = useCallback((e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -358,10 +404,13 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
     <Wrapper>
       <CommentTopBar>
         <PostHeader>
-          <Author>
-            <ProfileImg imgUrl={authedUserInfo.profileimg} />
-            <span>{authedUserInfo.nickname || 'ananymous'}</span>
-          </Author>
+          <Link href={`/${authedUserInfo.userid}`}>
+            <UserProfile
+              profileimg={authedUserInfo.profileimg}
+              nickname={authedUserInfo.nickname}
+              author={authedUserInfo.userid}
+            />
+          </Link>
         </PostHeader>
       </CommentTopBar>
       <ToolbarContainer>

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import Menu from './Menu';
 import Title from './Title';
-import { authedUser, newNotification } from '../../../atom';
+import { authedUser, newNotification } from '../../atom';
 import { Setting, SideMenuBox, Wrapper } from './index.style';
 import SideBarDropdown from './SideBarDropdown';
 
