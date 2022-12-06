@@ -8,6 +8,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from '../database/user.schema';
 import { Model, FilterQuery } from 'mongoose';
 import { UserCreateDto } from '../../auth/dto/user-create.dto';
+import { UserException } from '../exeception/user.exception';
 
 @Injectable()
 export class UserRepository {
@@ -27,9 +28,13 @@ export class UserRepository {
     try {
       return await newUser.save();
     } catch (error) {
-      if (error.code === 11000) throw new ConflictException();
-      else {
-        console.error(error);
+      if (error.code === 11000) {
+        if (!!error.keyValue.userid) throw UserException.userDuplicateId();
+        else if (!!error.keyValue.nickname)
+          throw UserException.userDuplicateNickname();
+        else if (!!error.keyValue.email)
+          throw UserException.userDuplicateEmail();
+      } else {
         throw new InternalServerErrorException();
       }
     }
@@ -46,7 +51,7 @@ export class UserRepository {
       },
       { new: true },
     );
-    if (!result) throw new NotFoundException();
+    if (!result) throw UserException.userNotFound();
     return result;
   }
 
@@ -63,7 +68,7 @@ export class UserRepository {
     user: Partial<User>,
   ): Promise<User> {
     const result = await this.userModel.findOneAndUpdate(userFilterQuery, user);
-    if (!result) throw new NotFoundException();
+    if (!result) throw UserException.userNotFound();
     return result;
   }
 
@@ -76,7 +81,7 @@ export class UserRepository {
       },
       { new: true },
     );
-    if (!result) throw new NotFoundException();
+    if (!result) throw UserException.userNotFound();
     return result;
   }
 
@@ -91,7 +96,7 @@ export class UserRepository {
       },
       { new: true },
     );
-    if (!result) throw new NotFoundException();
+    if (!result) throw UserException.userNotFound();
     return result;
   }
 
@@ -106,7 +111,7 @@ export class UserRepository {
       },
       { new: true },
     );
-    if (!result) throw new NotFoundException();
+    if (!result) throw UserException.userNotFound();
     return result;
   }
 

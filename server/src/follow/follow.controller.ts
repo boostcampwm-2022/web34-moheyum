@@ -22,10 +22,7 @@ export class FollowController {
   @UseGuards(JwtAuthGuard)
   async followUser(@Param('targetid') targetid: string, @GetUser() user: User) {
     return {
-      message: 'success',
-      data: {
-        followCount: await this.followService.followUser(targetid, user),
-      },
+      followCount: await this.followService.followUser(targetid, user),
     };
   }
 
@@ -36,10 +33,7 @@ export class FollowController {
     @GetUser() user: User,
   ) {
     return {
-      message: 'success',
-      data: {
-        isFollow: await this.followService.followCheck(targetid, user),
-      },
+      isFollow: await this.followService.followCheck(targetid, user),
     };
   }
 
@@ -51,10 +45,7 @@ export class FollowController {
     @GetUser() user: User,
   ) {
     return {
-      message: 'success',
-      data: {
-        followCancel: await this.followService.followCancel(targetid, user),
-      },
+      followCancel: await this.followService.followCancel(targetid, user),
     };
   }
 
@@ -67,10 +58,7 @@ export class FollowController {
       targetid,
       followListDTO,
     );
-    return {
-      message: 'success',
-      data: list,
-    };
+    return list;
   }
 
   @Get('/list/following/:targetid')
@@ -82,9 +70,6 @@ export class FollowController {
       targetid,
       followListDTO,
     );
-    return {
-      message: 'success',
-      data: list,
-    };
+    return list;
   }
 }

@@ -35,10 +35,7 @@ export class UserController {
   @Get('mentionlist')
   async getMentionList(@GetUser() user: User) {
     const data = await this.userService.getMentionList(user.userid);
-    return {
-      message: 'success',
-      data: data,
-    };
+    return data;
   }
 
   @Get('/search')
@@ -48,10 +45,7 @@ export class UserController {
   ) {
     if (!/^[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣\d_]{1,16}$/.test(keyword))
       throw new BadRequestException();
-    return {
-      message: 'success',
-      data: await this.userService.searchUser(keyword, next),
-    };
+    return await this.userService.searchUser(keyword, next);
   }
   @HttpCode(200)
   @UseGuards(JwtAuthGuard)
@@ -71,10 +65,7 @@ export class UserController {
   }
   @Get('/:userid')
   async getUserProfile(@Param('userid') userid: string) {
-    return {
-      message: 'success',
-      data: await this.userService.getUserData(userid),
-    };
+    return await this.userService.getUserData(userid);
   }
 
   @HttpCode(200)
@@ -84,10 +75,7 @@ export class UserController {
     @Param('userid') userid: string,
     @Body() userUpdateDto: UserUpdateDto,
   ) {
-    return {
-      message: 'success',
-      data: await this.userService.updateUserProfile(userid, userUpdateDto),
-    };
+    return await this.userService.updateUserProfile(userid, userUpdateDto);
   }
 
   @HttpCode(200)
@@ -101,10 +89,7 @@ export class UserController {
     const url = await this.ncloudServie.upload(file);
     await this.userService.updateUserAvatar(userid, url.imageLink);
     return {
-      message: 'success',
-      data: {
-        profileimg: url.imageLink,
-      },
+      profileimg: url.imageLink,
     };
   }
 }

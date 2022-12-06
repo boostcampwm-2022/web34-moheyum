@@ -5,6 +5,8 @@ import { User } from 'src/common/database/user.schema';
 import { FollowListDto } from './dto/follow-list.dto';
 import { UserService } from 'src/user/user.service';
 import { NotificationRepository } from 'src/common/database/notification.repository';
+import { FollowException } from 'src/common/exeception/follow.exception';
+import { UserException } from 'src/common/exeception/user.exception';
 
 @Injectable()
 export class FollowService {
@@ -17,14 +19,8 @@ export class FollowService {
 
   async followUser(targetid: string, user: User) {
     const data = await this.userService.getUserData(targetid);
-    if (targetid === user.userid)
-      throw new BadRequestException({
-        message: '자기 자신은 팔로우 할 수 없습니다',
-      });
-    if (!data)
-      throw new BadRequestException({
-        message: '존재하지 않는 사용자 입니다',
-      });
+    if (targetid === user.userid) throw FollowException.followMyId();
+    if (!data) throw UserException.userNotFound();
 
     const follow = this.followRepository
       .create(targetid, user)
@@ -39,26 +35,15 @@ export class FollowService {
         return res;
       })
       .catch((err) => {
-        if (err.status === 409)
-          throw new BadRequestException({
-            message: '이미 팔로우 된 사용자입니다',
-          });
-        throw new BadRequestException({
-          message: '팔로우 실패. 요청 값 확인 바람',
-        });
+        if (err.status === 409) throw FollowException.followAlready();
+        throw FollowException.followError();
       });
     return follow;
   }
   async followCancel(targetid: string, user: User) {
     const data = await this.userService.getUserData(targetid);
-    if (targetid === user.userid)
-      throw new BadRequestException({
-        message: '자기 자신은 팔로우 취소 할 수 없습니다',
-      });
-    if (!data)
-      throw new BadRequestException({
-        message: '존재하지 않는 사용자 입니다',
-      });
+    if (targetid === user.userid) throw FollowException.followCancelMyId();
+    if (!data) throw UserException.userNotFound();
     const cancel = this.followRepository
       .delete({
         userid: user.userid,
@@ -70,13 +55,8 @@ export class FollowService {
         return res;
       })
       .catch((err) => {
-        if (err.status === 404)
-          throw new BadRequestException({
-            message: '팔로우가 되어 있지 않는 사용자입니다',
-          });
-        throw new BadRequestException({
-          message: '팔로우 취소 실패. 요청 값 확인 바람',
-        });
+        if (err.status === 404) throw FollowException.followCancelAlready();
+        throw FollowException.followCancelError();
       });
     return cancel;
   }

@@ -18,19 +18,13 @@ export class NotificationController {
   @Get('/list')
   @UseGuards(JwtAuthGuard)
   async notificationList(@GetUser() user: User, @Query('next') next: string) {
-    return {
-      message: 'success',
-      data: await this.notificationService.findListByUserid(user, next),
-    };
+    return await this.notificationService.findListByUserid(user, next);
   }
 
   @Get('/count')
   @UseGuards(JwtAuthGuard)
   async notificationCount(@GetUser() user: User) {
-    return {
-      message: 'success',
-      data: await this.notificationService.findNumberByUserid(user),
-    };
+    return await this.notificationService.findNumberByUserid(user);
   }
 
   @Delete('/id/:notifId')
@@ -39,19 +33,13 @@ export class NotificationController {
     @Param('notifId') notifId: string,
     @GetUser() user: User,
   ) {
-    return {
-      message: 'success',
-      data: await this.notificationService.deleteOne(user, notifId),
-    };
+    return await this.notificationService.deleteOne(user, notifId);
   }
 
   @Delete('/list')
   @UseGuards(JwtAuthGuard)
   async notificationDeleteAll(@GetUser() user: User) {
-    return {
-      message: 'success',
-      data: await this.notificationService.deleteMany(user),
-    };
+    return await this.notificationService.deleteMany(user);
   }
 
   // @Post('/test')

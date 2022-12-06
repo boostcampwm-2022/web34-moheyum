@@ -24,20 +24,12 @@ import { PostGuard } from 'src/common/guard/post.guard';
 export class PostController {
   constructor(private postService: PostService) {}
 
-  // @Get()
-  // getAllPosts(): Promise<Post_[]> {
-  //   return this.postService.getAllPosts();
-  // }
-
   @Get('/author/:userid')
   async getUserPosts(
     @Param('userid') userid: string,
     @Query() followerPostDTO: FollowerPostDto,
   ) {
-    return {
-      message: 'success',
-      data: await this.postService.getUserPosts(userid, followerPostDTO),
-    };
+    return await this.postService.getUserPosts(userid, followerPostDTO);
   }
 
   @HttpCode(200)
@@ -48,8 +40,7 @@ export class PostController {
     @GetUser() user: User,
   ) {
     return {
-      message: 'success',
-      data: { post: await this.postService.createPost(createPostDto, user) },
+      post: await this.postService.createPost(createPostDto, user),
     };
   }
 
@@ -59,10 +50,7 @@ export class PostController {
     @GetUser() user: User,
     @Query() followerPostDTO: FollowerPostDto,
   ) {
-    return {
-      message: 'success',
-      data: await this.postService.getFollowingPost(user, followerPostDTO),
-    };
+    return await this.postService.getFollowingPost(user, followerPostDTO);
   }
 
   @HttpCode(200)
@@ -71,21 +59,16 @@ export class PostController {
     @Query('next') next: string,
     @Query('keyword') keyword: string,
   ) {
-    return {
-      message: 'success',
-      data: await this.postService.searchPost(keyword, next),
-    };
+    return await this.postService.searchPost(keyword, next);
   }
 
   @Get('/:id')
   async getPostById(@Param('id', PostIdValidationPipe) id: string): Promise<{
-    message: string;
-    data: { post: Post_ };
+    post: Post_;
   }> {
     const postData = await this.postService.getPostById(id);
     return {
-      message: 'success',
-      data: { post: postData },
+      post: postData,
     };
   }
 
@@ -97,12 +80,10 @@ export class PostController {
     @Param('id', PostIdValidationPipe) id: string,
     @GetUser() user: User,
   ): {
-    message: string;
-    data: { post: Promise<void> };
+    post: Promise<void>;
   } {
     return {
-      message: 'success',
-      data: { post: this.postService.deletePost(id, user) },
+      post: this.postService.deletePost(id, user),
     };
   }
 
@@ -113,12 +94,10 @@ export class PostController {
     @Param('id', PostIdValidationPipe) id: string,
     @Body() post: CreatePostDto,
   ): {
-    message: string;
-    data: { post: Promise<Post_> };
+    post: Promise<Post_>;
   } {
     return {
-      message: 'success',
-      data: { post: this.postService.updatePost(id, post) },
+      post: this.postService.updatePost(id, post),
     };
   }
 
@@ -126,11 +105,8 @@ export class PostController {
   async getCommentsByPostId(
     @Param('id', PostIdValidationPipe) id: string,
     @Query() followerPostDTO: FollowerPostDto,
-  ): Promise<{ message: string; data: { post: Post_[]; next: string } }> {
+  ): Promise<{ post: Post_[]; next: string }> {
     const data = await this.postService.getCommentsOfPost(id, followerPostDTO);
-    return {
-      message: 'success',
-      data: data,
-    };
+    return data;
   }
 }
