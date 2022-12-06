@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { buttonStyle, inputStyle, mainSectionStyle } from '../../styles/mixin';
 import { TopBar, ButtonBack } from '../../styles/common';
 import COLORS from '../../styles/color';
-import { httpPut } from '../../utils/http';
+import { httpDelete, httpPut } from '../../utils/http';
 
 const goBack = () => {
   Router.back();
@@ -63,6 +63,17 @@ export default function MyAccount() {
     Router.push('/');
   };
 
+  const deleteAccount = async () => {
+    // 이 부분 UI를 어떻게 해야 할까?
+    // eslint-disable-next-line no-restricted-globals
+    const confirmed = confirm('회원 탈퇴를 하시겠습니까?\n삭제된 계정은 복구할 수 없습니다.');
+    if (confirmed) {
+      await httpDelete(`/auth`);
+      alert(`탈퇴가 완료되었습니다.\n이용해주셔서 감사합니다.`);
+      Router.push('/');
+    }
+  };
+
   return (
     <Wrapper>
       <TopBar>
@@ -95,6 +106,11 @@ export default function MyAccount() {
             <ErrorMessage>&nbsp;{errors.confirm?.message as string}</ErrorMessage>
           </FormField>
           <ButtonRow>
+            <DeleteAccountButton>
+              <button type="button" onClick={deleteAccount}>
+                회원 탈퇴
+              </button>
+            </DeleteAccountButton>
             <span>&nbsp;{errorMessage}</span>
             <SubmitPassword type="submit">변경</SubmitPassword>
           </ButtonRow>
@@ -121,6 +137,7 @@ const ChangePasswordForm = styled.form`
   width: 100%;
   max-width: 500px;
   flex: 1;
+  user-select: none;
 `;
 
 const FormField = styled.div`
@@ -170,6 +187,16 @@ const ButtonRow = styled.div`
     font-weight: 500;
     text-align: left;
     margin-right: 10px;
+  }
+`;
+
+const DeleteAccountButton = styled.div`
+  flex: 1;
+  & > button {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    color: ${COLORS.GRAY2};
   }
 `;
 
