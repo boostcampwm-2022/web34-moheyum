@@ -35,7 +35,6 @@ export class FollowService {
         return res;
       })
       .catch((err) => {
-        console.error(`*********${err}`);
         if (err.status === 409) throw FollowException.followAlready();
         throw FollowException.followError();
       });

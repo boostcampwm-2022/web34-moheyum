@@ -35,7 +35,6 @@ export class UserRepository {
         else if (!!error.keyValue.email)
           throw UserException.userDuplicateEmail();
       } else {
-        console.error(error);
         throw new InternalServerErrorException();
       }
     }
