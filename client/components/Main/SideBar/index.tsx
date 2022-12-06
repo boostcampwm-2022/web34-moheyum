@@ -12,7 +12,15 @@ const menuList = [
   { routeSrc: '/search', imgSrc: '/search.svg', text: '검색', avatar: false },
 ];
 
-export default function SideBar({ notiState = false }: { notiState: boolean }) {
+type SideBarProps = {
+  notiState?: boolean;
+};
+
+SideBar.defaultProps = {
+  notiState: false,
+};
+
+export default function SideBar({ notiState }: React.PropsWithChildren<SideBarProps>) {
   const dropdownRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
   const [dropdownState, setdropdownState] = useState<boolean>(false);
   const showSettingdropdown = () => {
