@@ -1,4 +1,5 @@
 import { atom } from 'recoil';
+import { ToastMessage } from '../types/Toast';
 
 interface AuthedUser {
   logined: boolean;
@@ -22,4 +23,9 @@ export const authedUser = atom<AuthedUser>({
 export const newNotification = atom({
   key: 'state',
   default: false,
+});
+
+export const toastMessageList = atom<ToastMessage[]>({
+  key: 'toast',
+  default: [],
 });

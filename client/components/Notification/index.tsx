@@ -17,7 +17,7 @@ export default function Notification() {
     Router.reload();
   };
   useEffect(() => {
-    const eventSource = new EventSource('/api/alarm');
+    const eventSource = new EventSource('/api/event');
     eventSource.onmessage = (event) => {
       setNewNotiState(event.data);
       setNewState(event.data);
