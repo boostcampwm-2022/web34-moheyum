@@ -2,7 +2,7 @@ import React, { ClipboardEvent, KeyboardEvent, useEffect, useRef, useState, useC
 import Router from 'next/router';
 import { useRecoilValue } from 'recoil';
 import { authedUser } from '../../../atom';
-import { httpPost, httpGet } from '../../../utils/http';
+import { httpPost, httpGet, httpPatch } from '../../../utils/http';
 import renderMarkdown from '../../../utils/markdown';
 import UserDropDown from './UserDropDown';
 import { getLeftWidth } from '../../../styles/theme';
@@ -21,12 +21,21 @@ import {
   ToolbarContainer,
   Wrapper,
 } from './index.style';
+import PostProps from '../../../types/Post';
 
 interface Props {
-  postData: {
+  parentPostData?: {
     _id?: string;
   };
+  modifyPostData?: PostProps;
 }
+
+Editor.defaultProps = {
+  parentPostData: {
+    _id: '',
+  },
+  modifyPostData: null,
+};
 
 interface followUser {
   userid: string;
@@ -36,16 +45,13 @@ interface followUser {
 
 let allMentionList: followUser[] = [];
 
-export default function Editor({ postData }: Props) {
+export default function Editor({ parentPostData, modifyPostData }: Props) {
   const contentRef = useRef<HTMLDivElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const [tabIndex, setTabIndex] = useState(0); // 0 Editor, 1 Preview
   const [content, setContent] = useState<string>('');
   const [dropDownDisplay, setDropDownDisplay] = useState<string>('none');
-  const [dropDownPosition, setDropDownPosition] = useState<{ x: string; y: string }>({
-    x: `${getLeftWidth(window.innerWidth) + 40}px`,
-    y: '177.5px',
-  });
+  const [dropDownPosition, setDropDownPosition] = useState<{ x: string; y: string }>({ x: '0px', y: '0px' });
   const [checkMentionActive, setCheckMentionActive] = useState<boolean>(false);
   const [mentionList, setMentionList] = useState<string[]>([]);
   const [followList, setFollowList] = useState<followUser[]>([]);
@@ -53,6 +59,112 @@ export default function Editor({ postData }: Props) {
   const [contentHTML, setContentHTML] = useState<string>('<div><br></div>'); // 탭 전환용
   const [selectUser, setSelectUser] = useState<number>(0);
   const authedUserInfo = useRecoilValue(authedUser);
+
+  const submitHandler = async () => {
+    const removeDup = new Set(mentionList);
+    const target = contentRef.current;
+    if (!target) return;
+    const postContent = target.innerHTML.replace(/<div>([\s\S]*?)<\/div>/g, '$1\n');
+
+    // 수정의 경우
+    if (modifyPostData) {
+      const result = await httpPatch(`/post/${modifyPostData._id}`, {
+        author: 1,
+        description: postContent,
+        parentPost: modifyPostData.parentPost,
+      });
+      if (result.statusCode !== 200) {
+        alert(`글 수정에 실패했습니다.\nERROR statusCode: ${result.statusCode}\nERROR message: ${result.message}`);
+        return;
+      }
+      Router.push(`/post/${modifyPostData._id}`);
+      return;
+    }
+
+    // 새 글 쓰기
+    const result = await httpPost('/post', {
+      author: 1,
+      description: postContent,
+      parentPost: parentPostData?._id === '' ? null : parentPostData?._id,
+      mentions: Array.from(removeDup),
+    });
+    if (result.statusCode !== 200) {
+      alert(`글 작성에 실패했습니다.\nERROR statusCode: ${result.statusCode}\nERROR message: ${result.message}`);
+      return;
+    }
+    Router.back();
+  };
+
+  const selectTab = (index: number) => {
+    if (index === 0) {
+      setTabIndex(0);
+    }
+    if (index === 1) {
+      // preview
+      if (!contentRef.current) return;
+      setContentHTML(contentRef.current.innerHTML);
+      setTabIndex(1);
+    }
+  };
+
+  const fetchMentionList = async () => {
+    const response = await httpGet('/user/mentionlist');
+    allMentionList = [...response.data];
+  };
+
+  const checkIfModifying = () => {
+    if (!modifyPostData || !contentRef.current) return;
+    setContentHTML(modifyPostData.description);
+    setContent(modifyPostData.description);
+    contentRef.current.textContent = modifyPostData.description;
+  };
+
+  // 처음 렌더 될때만 전체 멘션 리스트 가져옴
+  useEffect(() => {
+    setDropDownPosition({
+      x: `${getLeftWidth(window.innerWidth) + 40}px`,
+      y: '177.5px',
+    });
+    fetchMentionList();
+    checkIfModifying();
+  }, []);
+
+  // 사용자가 입력한 검색할 문자, 전체 mentionList에서 필터링
+  useEffect(() => {
+    if (inputUserId === '') {
+      setFollowList([]);
+      return;
+    }
+    const regex = new RegExp(`^${inputUserId}`, 'g');
+    const filteredList = allMentionList.filter((user) => regex.test(user.userid) && user);
+    setFollowList(filteredList.slice(0, 5));
+  }, [inputUserId]);
+
+  // 멘션 입력 시작,종료되었을 경우 (@키 누르면 멘션 시작, 종료: 엔터키로 입력 완료했거나, backspace 혹은 space 키로 취소했거나)
+  useEffect(() => {
+    if (!checkMentionActive) {
+      setInputUserId('');
+      setDropDownDisplay('none');
+      setSelectUser(0);
+    } else {
+      setInputUserId('');
+      moveModal();
+      setFollowList(allMentionList.slice(0, 5));
+      setDropDownDisplay('block');
+      setSelectUser(0);
+    }
+  }, [checkMentionActive]);
+
+  useEffect(() => {
+    if (!previewRef.current || !contentRef.current) return;
+    if (tabIndex === 1) {
+      previewRef.current.innerHTML = renderMarkdown(content);
+    } else if (contentHTML !== '<div><br></div>') contentRef.current.innerHTML = contentHTML;
+  }, [tabIndex]);
+
+  // ---------------------------------------------------------------------------------------------------------
+  // 아래부터 에디터 제스쳐 관련 코드
+
   const pasteAction = (data: string) => {
     // console.log(JSON.stringify(data));
     const cursor = window.getSelection();
@@ -191,36 +303,6 @@ export default function Editor({ postData }: Props) {
     }
   };
 
-  const submitHandler = async () => {
-    const removeDup = new Set(mentionList);
-    const target = contentRef.current;
-    if (!target) return;
-    const result = await httpPost('/post', {
-      author: 1,
-      title: 'title',
-      description: contentRef.current.innerText,
-      parentPost: postData._id === '' ? null : postData._id,
-      mentions: Array.from(removeDup),
-    });
-    if (result.statusCode !== 200) {
-      alert(`글 작성에 실패했습니다.\nERROR statusCode: ${result.statusCode}\nERROR message: ${result.message}`);
-      return;
-    }
-    Router.back();
-  };
-
-  const selectTab = (index: number) => {
-    if (index === 0) {
-      setTabIndex(0);
-    }
-    if (index === 1) {
-      // preview
-      if (!contentRef.current) return;
-      setContentHTML(contentRef.current.innerHTML);
-      setTabIndex(1);
-    }
-  };
-
   // 모달 위치 갱신
   const moveModal = useCallback(() => {
     const cursor = window.getSelection();
@@ -231,53 +313,6 @@ export default function Editor({ postData }: Props) {
       setDropDownPosition({ x: `${bounds.x + 20}px`, y: `${bounds.y + 5}px` });
     }
   }, []);
-
-  const fetchMentionList = async () => {
-    const response = await httpGet('/user/mentionlist');
-    allMentionList = [...response.data];
-  };
-
-  // 처음 렌더 될때만 전체 멘션 리스트 가져옴
-  useEffect(() => {
-    fetchMentionList();
-  }, []);
-
-  // 사용자가 입력한 검색할 문자, 전체 mentionList에서 필터링
-  useEffect(() => {
-    if (inputUserId === '') {
-      setFollowList([]);
-      return;
-    }
-    const regex = new RegExp(`^${inputUserId}`, 'g');
-    const filteredList = allMentionList.filter((user) => regex.test(user.userid) && user);
-    setFollowList(filteredList.slice(0, 5));
-  }, [inputUserId]);
-
-  // 멘션 입력 시작,종료되었을 경우 (@키 누르면 멘션 시작, 종료: 엔터키로 입력 완료했거나, backspace 혹은 space 키로 취소했거나)
-  useEffect(() => {
-    if (!checkMentionActive) {
-      setInputUserId('');
-      setDropDownDisplay('none');
-      setSelectUser(0);
-    } else {
-      setInputUserId('');
-      moveModal();
-      setFollowList(allMentionList.slice(0, 5));
-      setDropDownDisplay('block');
-      setSelectUser(0);
-    }
-  }, [checkMentionActive]);
-
-  useEffect(() => {
-    if (!contentRef.current) {
-      if (!previewRef.current) return;
-      previewRef.current.innerHTML = renderMarkdown(content);
-    } else {
-      contentRef.current.innerHTML = contentHTML;
-    }
-  }, [tabIndex]);
-
-  // ---------------------------------------------------------------------------------------------------------
 
   const dragOver = useCallback((e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -325,13 +360,12 @@ export default function Editor({ postData }: Props) {
         <PostHeader>
           <Author>
             <ProfileImg imgUrl={authedUserInfo.profileimg} />
-            {authedUserInfo.nickname || 'ananymous'}
+            <span>{authedUserInfo.nickname || 'ananymous'}</span>
           </Author>
         </PostHeader>
       </CommentTopBar>
       <ToolbarContainer>
         <EditorTabs>
-          {/* &nbsp; */}
           <EditorTabTool style={{ fontWeight: 'bold' }}>B</EditorTabTool>
           <EditorTabTool style={{ fontStyle: 'italic' }}>I</EditorTabTool>
           <EditorTabTool style={{ textDecorationLine: 'underline' }}>U</EditorTabTool>
@@ -346,24 +380,22 @@ export default function Editor({ postData }: Props) {
         </EditorTabs>
       </ToolbarContainer>
       <EditorContainer>
-        {tabIndex === 0 ? (
-          <EditorTextBox
-            contentEditable={tabIndex === 0}
-            ref={contentRef}
-            onKeyUp={handleKeyUp}
-            onKeyDown={handleKeyDown}
-            onPaste={handlePaste}
-            onDrop={handleDrop}
-            onDragOver={dragOver}
-            suppressContentEditableWarning
-          >
-            <div>
-              <br />
-            </div>
-          </EditorTextBox>
-        ) : (
-          <PreviewTextBox ref={previewRef} />
-        )}
+        <EditorTextBox
+          contentEditable={tabIndex === 0}
+          ref={contentRef}
+          onKeyUp={handleKeyUp}
+          onKeyDown={handleKeyDown}
+          onPaste={handlePaste}
+          onDrop={handleDrop}
+          onDragOver={dragOver}
+          style={{ display: `${tabIndex === 0 ? 'block' : 'none'}` }}
+          suppressContentEditableWarning
+        >
+          <div>
+            <br />
+          </div>
+        </EditorTextBox>
+        <PreviewTextBox ref={previewRef} style={{ display: `${tabIndex === 1 ? 'block' : 'none'}` }} />
         <input type="file" id="fileUpload" style={{ display: 'none' }} />
         {followList.length !== 0 && (
           <UserDropDown

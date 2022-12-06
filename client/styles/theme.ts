@@ -7,11 +7,11 @@ export const mainSectionSize = maxFrameSize - sidebarSize - 1;
 export const getLeftWidth = (windowWidth: number) => {
   if (windowWidth > 1295) {
     return (windowWidth - maxFrameSize) / 2 + sidebarSize;
-  } else if (windowWidth <= 1000) {
-    return 82;
-  } else {
-    return sidebarSize;
   }
+  if (windowWidth <= 1000) {
+    return 82;
+  }
+  return sidebarSize;
 };
 
 const theme: Theme = {

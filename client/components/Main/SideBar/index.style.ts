@@ -9,19 +9,28 @@ export const Dropdown = styled.div`
   justify-content: center;
   align-items: right;
   margin-bottom: 10px;
-  div {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    white-space: nowrap;
-    background-color: ${COLORS.WHITE};
-    border-radius: 10px;
-    ${displayColumn}
-    border: 1px solid ${COLORS.PRIMARY_DARK};
-    li {
-      list-style: none;
-      font-size: 14px;
-      margin: 10px 10px;
+  position: relative;
+  white-space: nowrap;
+  background-color: ${COLORS.WHITE};
+  border-radius: 6px;
+  ${displayColumn}
+  border: 1px solid ${COLORS.PRIMARY_DARK};
+  button {
+    font-size: 14px;
+    margin: 0px 10px;
+    padding: 10px 0;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid ${COLORS.GRAY3};
+
+    &:hover {
+      color: ${COLORS.PRIMARY_DARK};
+      font-weight: 600;
+      & a {
+        color: ${COLORS.PRIMARY_DARK};
+        font-weight: 600;
+      }
     }
   }
 `;
@@ -47,4 +56,5 @@ export const Setting = styled.div`
   width: 100%;
   height: 50px;
   margin-bottom: 20px;
+  cursor: pointer;
 `;
