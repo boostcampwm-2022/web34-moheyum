@@ -64,7 +64,7 @@ export class AuthService {
       +this.configService.get('saltOrRounds'),
     );
 
-    await this.redisService.set(
+    this.redisService.set(
       userid,
       hashedToken,
       +this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME') * 1000,
@@ -83,7 +83,7 @@ export class AuthService {
       secret: this.configService.get('JWT_REFRESH_TOKEN_SECRET'),
       expiresIn,
     });
-    this.setRefreshTokenInRedis(jwt, payload.userid);
+    await this.setRefreshTokenInRedis(jwt, payload.userid);
     return jwt;
   }
 
