@@ -254,9 +254,21 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
     }
 
     // 멘션 모달 창 닫는 조건
-    if (key === ' ' || key === 'Backspace') {
+    if (key === ' ') {
       if (checkMentionActive) {
         setCheckMentionActive(false);
+        return;
+      }
+    }
+    if (key === 'Backspace') {
+      // @지우면 모달창 닫음, 멘션 active 종료
+      if (checkMentionActive && /@\<\/div\>$/.test(contentRef.current.innerHTML)) {
+        setCheckMentionActive(false);
+        return;
+        // 그외에는 멘션 active 유지.
+      } else {
+        setInputUserId((prevState) => prevState.slice(0, prevState.length - 1));
+        setSelectUser(0);
         return;
       }
     }
@@ -296,6 +308,7 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
     } else if (key !== 'CapsLock' && key !== 'Shift') {
       setFollowList([]);
     }
+    console.log(inputUserId);
 
     if (key !== 'CapsLock' && key !== 'Shift') {
       // 기능키 입력시 모달 이동 안함 (다른키 예외처리도 필요할 듯)
