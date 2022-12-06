@@ -1,13 +1,22 @@
 import React, { FormEvent, useState } from 'react';
-import styled from '@emotion/styled';
 import Router from 'next/router';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers';
 import { useForm } from 'react-hook-form';
-import { buttonStyle, inputStyle, mainSectionStyle } from '../../styles/mixin';
 import { TopBar, ButtonBack } from '../../styles/common';
-import COLORS from '../../styles/color';
 import { httpDelete, httpPut } from '../../utils/http';
+import {
+  ButtonRow,
+  ChangePasswordForm,
+  ContentBox,
+  DeleteAccountButton,
+  ErrorMessage,
+  FormField,
+  FormRow,
+  PasswordInput,
+  SubmitPassword,
+  Wrapper,
+} from './index.style';
 
 const goBack = () => {
   Router.back();
@@ -119,87 +128,3 @@ export default function MyAccount() {
     </Wrapper>
   );
 }
-
-const Wrapper = styled.div`
-  ${mainSectionStyle}
-`;
-
-const ContentBox = styled.div`
-  flex: 1;
-  width: 100%;
-  padding: 20px;
-  display: flex;
-`;
-
-const ChangePasswordForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 500px;
-  flex: 1;
-  user-select: none;
-`;
-
-const FormField = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 5px 0;
-`;
-
-const FormRow = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  & > div {
-    margin-right: 20px;
-    width: 25%;
-    text-align: right;
-  }
-`;
-
-const PasswordInput = styled.input`
-  ${inputStyle}
-  width: 60%;
-`;
-
-const ErrorMessage = styled.div`
-  width: 100%;
-  padding-left: calc(25% + 20px);
-  color: ${COLORS.RED};
-  font-size: 14px;
-  font-weight: 500;
-  text-align: left;
-`;
-
-const ButtonRow = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 20px;
-  & > span {
-    color: ${COLORS.RED};
-    font-size: 14px;
-    font-weight: 500;
-    text-align: left;
-    margin-right: 10px;
-  }
-`;
-
-const DeleteAccountButton = styled.div`
-  flex: 1;
-  & > button {
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-    color: ${COLORS.GRAY2};
-  }
-`;
-
-const SubmitPassword = styled.button`
-  ${buttonStyle}
-`;
