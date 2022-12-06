@@ -5,7 +5,7 @@ import { User } from 'src/common/database/user.schema';
 import { FollowListDto } from './dto/follow-list.dto';
 import { UserService } from 'src/user/user.service';
 import { NotificationRepository } from 'src/common/database/notification.repository';
-import { EventService } from 'src/alarm/event.service';
+import { EventService } from 'src/event/event.service';
 import { FollowException } from 'src/common/exeception/follow.exception';
 import { UserException } from 'src/common/exeception/user.exception';
 
