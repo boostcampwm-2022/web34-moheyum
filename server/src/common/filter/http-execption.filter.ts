@@ -20,10 +20,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
       exception instanceof HttpException
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
+    const timestamp = new Date().toLocaleString();
     const log = {
-      timestamp: new Date().toLocaleDateString(),
       url: req.url,
       ip: req.ip,
+      time: timestamp,
       agent: req.get('user-agent'),
       message: exception.message,
       stack: exception.stack,
