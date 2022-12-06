@@ -29,7 +29,7 @@ export default function SideBar({ notiState }: React.PropsWithChildren<SideBarPr
   const authedUserInfo = useRecoilValue(authedUser);
   const [newNotiState, setNewNotiState] = useRecoilState(newNotification);
   useEffect(() => {
-    const eventSource = new EventSource('/api/alarm');
+    const eventSource = new EventSource('/api/event');
     if (!notiState) {
       eventSource.onmessage = (event) => {
         setNewNotiState(event.data);
