@@ -135,7 +135,7 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
       setFollowList([]);
       return;
     }
-    const regex = new RegExp(`^${inputUserId}`, 'g');
+    const regex = new RegExp(`^${inputUserId}`);
     const filteredList = allMentionList.filter((user) => regex.test(user.userid) && user);
     setFollowList(filteredList.slice(0, 5));
   }, [inputUserId]);
