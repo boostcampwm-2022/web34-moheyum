@@ -22,7 +22,7 @@ export default function Pwinquiry() {
       alert('이메일 형식에 맞지 않습니다.');
       return;
     }
-    const response = await fetch('/api/auth/id-inquiry', {
+    const response = await fetch('/api/auth/password-inquiry', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -31,6 +31,9 @@ export default function Pwinquiry() {
       body: JSON.stringify({ email: userInfo.email, userid: userInfo.id }),
     });
     switch (response.status) {
+      case 422:
+        alert(`없는 아이디입니다.${response.status}: ${response.statusText}`);
+        break;
       case 404:
         alert(`없는 이메일입니다.${response.status}: ${response.statusText}`);
         break;
