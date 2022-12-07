@@ -11,11 +11,13 @@ export default function Notification() {
   const { loading, error, pages, next } = usePaginator(`/api/notification/list/`, nextCursor);
   const setNewNotiState = useSetRecoilState(newNotification);
   const [newState, setNewState] = useState(false);
-  setNewNotiState(false);
   const observer = useRef<any>();
   const updateNotification = () => {
     Router.reload();
   };
+  useEffect(() => {
+    setNewNotiState(false);
+  }, []);
   useEffect(() => {
     const eventSource = new EventSource('/api/event');
     eventSource.onmessage = (event) => {
