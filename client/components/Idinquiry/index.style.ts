@@ -27,6 +27,11 @@ export const Box = styled.div`
   transition: all 0.3s ease;
 `;
 
+export const Top = styled.div`
+  width: 100%;
+  height: 50px;
+`;
+
 export const ButtonBack = styled.button`
   border: none;
   background-color: transparent;

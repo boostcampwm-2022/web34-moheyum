@@ -5,7 +5,7 @@ import Idinquiry from '../components/Idinquiry';
 export default function idinquiry() {
   return (
     <SignFrame>
-      <Idinquiry></Idinquiry>
+      <Idinquiry />
     </SignFrame>
   );
 }
