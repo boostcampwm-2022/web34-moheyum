@@ -122,14 +122,14 @@ export class AuthController {
   @HttpCode(200)
   @UseGuards(JwtAuthGuard)
   @Post('logout')
-  async logout(@GetUser() user: User, @Res() res: Response) {
+  async logout(
+    @GetUser() user: User,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     await this.authService.removeRefeshTokenfromRedis(user.userid);
     res.cookie('a_t', '', this.authService.deleteCookieOption());
     res.cookie('r_t', '', this.authService.deleteCookieOption());
 
-    return res.send({
-      message: 'success',
-      data: {},
-    });
+    return {};
   }
 }

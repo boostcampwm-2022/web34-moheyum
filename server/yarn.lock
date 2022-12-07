@@ -8586,6 +8586,7 @@ __metadata:
     mongoose: ^6.7.2
     multer: ^1.4.5-lts.1
     nest-winston: ^1.8.0
+    nestjs-rate-limiter: ^3.1.0
     nodemailer: ^6.8.0
     passport: ^0.6.0
     passport-jwt: ^4.0.0
@@ -8616,6 +8617,15 @@ __metadata:
     "@nestjs/common": ^5.0.0 || ^6.6.0 || ^7.0.0 || ^8.0.0 || ^9.0.0
     winston: ^3.0.0
   checksum: 7837eea05d68af3b4b6b6a1771adbf915086f4b6dff03c0131be1b0800b562e6fde7ef580a5e626f5a3ab92996845889230ac037432fe1d0e14a61da93668314
+  languageName: node
+  linkType: hard
+
+"nestjs-rate-limiter@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "nestjs-rate-limiter@npm:3.1.0"
+  dependencies:
+    rate-limiter-flexible: 2.1.10
+  checksum: b2de4d993ea312f6fe782bf0899d752ac085485e138498352b592bb1f2fa255b8634a8854b0cc41b265c105b1221bd64588b3c15192742d0472fa849f345b181
   languageName: node
   linkType: hard
 
@@ -9602,6 +9612,13 @@ __metadata:
   version: 1.2.1
   resolution: "range-parser@npm:1.2.1"
   checksum: 0a268d4fea508661cf5743dfe3d5f47ce214fd6b7dec1de0da4d669dd4ef3d2144468ebe4179049eff253d9d27e719c88dae55be64f954e80135a0cada804ec9
+  languageName: node
+  linkType: hard
+
+"rate-limiter-flexible@npm:2.1.10":
+  version: 2.1.10
+  resolution: "rate-limiter-flexible@npm:2.1.10"
+  checksum: 9fa83ca5fde175f9a781acb58527a41bd9a1fe4c820c363fb324b5a70b82c2a5c9db907ccd6aeba2f4b41d5b7df72d9b6504c34b44c993eba75f3ed1cd24f579
   languageName: node
   linkType: hard
 
