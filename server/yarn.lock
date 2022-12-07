@@ -5961,6 +5961,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"helmet@npm:^6.0.1":
+  version: 6.0.1
+  resolution: "helmet@npm:6.0.1"
+  checksum: 1ca20d0b7888b6208130bbb50d183e68d53bb5fa0caead2106226d6d53216dfc893b4b5c07528304e342884f75d87702003b80884b065cb5dcbc705fb4a6ad52
+  languageName: node
+  linkType: hard
+
 "hexoid@npm:1.0.0":
   version: 1.0.0
   resolution: "hexoid@npm:1.0.0"
@@ -8571,6 +8578,7 @@ __metadata:
     eslint-plugin-prettier: ^4.0.0
     generate-password: ^1.7.0
     handlebars: ^4.7.7
+    helmet: ^6.0.1
     ioredis: ^5.2.4
     jest: 28.1.3
     jsonwebtoken: ^8.5.1
