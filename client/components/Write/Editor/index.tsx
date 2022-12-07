@@ -153,7 +153,6 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
       setInputUserId('');
       moveDropDown(false);
       setFollowList(allMentionList.slice(0, 5));
-      setDropDownDisplay('block');
       setSelectUser(0);
     }
   }, [checkMentionActive]);
@@ -310,7 +309,7 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
 
     if (checkMentionActive) {
       let word: string = '';
-      let userId;
+      let userId: string;
       switch (key) {
         // 멘션 리스트 모달창 선택 대상 이동
         case 'ArrowDown':
@@ -325,13 +324,13 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
         case 'Enter':
           e.preventDefault();
           if (followList.at(selectUser)) {
-            userId = followList.at(selectUser)?.userid;
-            if (userId) word = userId;
-          }
-          pasteAction(`${word} `);
-          setCheckMentionActive(false);
-          if (word) {
-            setMentionList((prevState) => prevState.concat(word));
+            userId = followList.at(selectUser)?.userid as string;
+            if (userId) word = userId.slice(inputUserId.length, userId.length);
+            pasteAction(`${word} `);
+            setCheckMentionActive(false);
+            if (userId) {
+              setMentionList((prevState) => prevState.concat(userId));
+            }
           }
           break;
         // 멘션 입력 완료, 멘션 active 종료 => 직접 pullname 입력한 경우
@@ -345,6 +344,7 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
           break;
         default:
           // 멘션 키 active 상태일 때, 단어 입력하는 동안 발생하는 이벤트
+          setDropDownDisplay('block');
           if (checkMentionActive && key.match(/^\w$/i)) {
             setInputUserId((prevState) => prevState + key);
             setSelectUser(0);
@@ -391,7 +391,7 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
         fetchImage()
           .then((imageData) => {
             const data = `![${files[0].name as string}](${imageData.data.imageLink})`;
-            pasteAction(data);
+            pasteAction(`${data}`);
             setContent(data); // setContent를 안하면 프리뷰에 반영이 안됩니다..
           })
           .catch((e) => alert(`이미지 업로드에 실패하였습니다. Error Message: ${e}`));
