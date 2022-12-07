@@ -13,7 +13,7 @@ import Frame from '../styles/frame';
 import SideBar from '../components/SideBar';
 import ToastController from '../components/Toast';
 
-const NoSideBar = ['/login', '/signup'];
+const NoSideBar = ['/login', '/signup', '/idinquiry', '/pwinquiry'];
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
