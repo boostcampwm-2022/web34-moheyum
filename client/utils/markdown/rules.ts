@@ -9,7 +9,11 @@ function divideLines(str: string): string {
 }
 
 function headers(str: string): string {
-  let result = str.replace(/^### ([\S ]+)$/gm, '<h3>$1</h3>');
+  let result = str;
+  result = result.replace(/^###### ([\S ]+)$/gm, '<h6>$1</h6>');
+  result = result.replace(/^##### ([\S ]+)$/gm, '<h5>$1</h5>');
+  result = result.replace(/^#### ([\S ]+)$/gm, '<h4>$1</h4>');
+  result = result.replace(/^### ([\S ]+)$/gm, '<h3>$1</h3>');
   result = result.replace(/^## ([\S ]+)$/gm, '<h2>$1</h2>');
   result = result.replace(/^# ([\S ]+)$/gm, '<h1>$1</h1>');
   return result;
@@ -21,14 +25,25 @@ function code(str: string): string {
 }
 
 function codeBlock(str: string): string {
-  const result = str.replace(/<div>```<\/div>\n([\S\s]+?)\n<div>```<\/div>/gm, '<pre>$1</pre>');
+  const result = str.replace(/<div>```(?:.*)<\/div>\n([\S\s]+?)\n<div>```<\/div>/gm, '<pre>$1</pre>');
   return result;
 }
 
 function blockQuote(str: string): string {
-  let result = str.replace(/^> ([\s\S]+?)\n\n/gm, '<blockquote>$1</blockquote>\n');
-  result = result.replace(/^> /gm, '');
-  result = result.replace(/<blockquote>(.+?)\n/gm, '<blockquote><div>$1</div>\n'); // 첫줄 div 보정
+  const reg = /(?<=^|\n)> {0,3}([\s\S]*?)(?=\n\n|$)/g;
+  let result = str;
+  const blocks = str.match(reg);
+
+  blocks?.forEach((item) => {
+    let newBlock = item;
+    while (newBlock.match(/(?<=^|\n|<blockquote>)> {0,3}/g)) {
+      // console.log(newBlock.match(/(?<=^|\n|<blockquote>)> {0,3}/g));
+      newBlock = newBlock.replace(/(?<=^|\n|<blockquote>)> {0,3}([\s\S]*?)(?=\n\n|$)/g, '<blockquote>$1</blockquote>');
+      newBlock = newBlock.replace(/(?<=^|\n)>? {0,3}/g, '');
+    }
+    result = result.replace(item, newBlock);
+  });
+
   return result;
 }
 
@@ -43,7 +58,8 @@ function italic(str: string): string {
 }
 
 function underline(str: string): string {
-  const result = str.replace(/_(.+?)_/g, '<u>$1</u>');
+  let result = str.replace(/__([^_\n]+?)__/g, '<u>$1</u>');
+  result = result.replace(/_([^_\n]+?)_/g, '<u>$1</u>');
   return result;
 }
 
@@ -68,6 +84,7 @@ function link(str: string): string {
 function hr(str: string): string {
   let result = str.replace(/^<div>[* ]+<\/div>$/gm, '<hr/>');
   result = result.replace(/^<div>[- ]+<\/div>$/gm, '<hr/>');
+  result = result.replace(/^<div>[_ ]+<\/div>$/gm, '<hr/>');
   return result;
 }
 
@@ -76,17 +93,18 @@ export default function doParse(str: string): string {
   let result = str;
   // console.log(JSON.stringify(result));
   result = blockQuote(result);
+  // console.log(JSON.stringify(result));
   result = emptyLines(result);
   result = headers(result);
   result = code(result);
   result = divideLines(result);
   result = codeBlock(result);
+  result = hr(result);
   result = bold(result);
   result = italic(result);
   result = underline(result);
   result = strike(result);
   result = link(result);
   // console.log(JSON.stringify(result));
-  result = hr(result);
   return result;
 }
