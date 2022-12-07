@@ -89,6 +89,7 @@ export const EditorTextBox = styled.div`
   flex: 1;
   /* display: inline-block; */
   white-space: pre-wrap;
+  word-break: break-all;
   word-wrap: break-word;
   &:focus {
     outline: none;

@@ -7,7 +7,7 @@ import { Global, ThemeProvider } from '@emotion/react';
 import { useRouter } from 'next/router';
 import { displayCenter, mainSectionStyle } from '../styles/mixin';
 import COLORS from '../styles/color';
-import theme from '../styles/theme';
+import AppTheme from '../styles/theme';
 import globalStyle from '../styles/global';
 import Frame from '../styles/frame';
 import SideBar from '../components/SideBar';
@@ -18,7 +18,7 @@ const NoSideBar = ['/login', '/signup'];
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={AppTheme}>
       <RecoilRoot>
         <Global styles={globalStyle} />
         <AppStyle>
@@ -45,4 +45,10 @@ const AppStyle = styled.div`
 
 const ComponentWrapper = styled.div`
   ${mainSectionStyle}
+  @media only screen and (max-width: ${({ theme }) => theme.wideWindow}) {
+    width: calc(100% - ${({ theme }) => theme.sidebar.maxWidth});
+  }
+  @media only screen and (max-width: ${({ theme }) => theme.smallWindow}) {
+    width: calc(100% - ${({ theme }) => theme.sidebar.minWidth});
+  }
 `;

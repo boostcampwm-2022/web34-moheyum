@@ -1,13 +1,13 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { ArticleCard } from '../../MainSection/Articlecard';
 import { PostLabel, SectionDivider } from './index.style';
-import Paginator, { NEXT } from '../../../utils/paginator';
+import usePaginator, { NEXT } from '../../../hooks/usePaginator';
 import { UserPostProps } from '../../../types/Post';
 
 export default function PostList({ userData }: { userData: UserPostProps }) {
   const [nextCursor, setNextCursor] = useState('START');
 
-  const { loading, pages, next } = Paginator(`/api/post/author/${userData.userid}`, nextCursor);
+  const { loading, pages, next } = usePaginator(`/api/post/author/${userData.userid}`, nextCursor);
 
   const observer = useRef<any>();
   const lastFollowElementRef = useCallback(

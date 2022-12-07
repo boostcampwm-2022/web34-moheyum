@@ -8,7 +8,7 @@ export const MainTopBar = styled.header`
   background-color: ${COLORS.WHITE};
   height: 61px;
   border-bottom: 2px solid ${COLORS.GRAY3};
-  width: ${mainSectionSize}px;
+  width: 100%;
   color: ${COLORS.BLACK};
   font-size: 22px;
   text-align: left;
@@ -23,7 +23,7 @@ export const TopBar = styled.header`
   /* position: fixed; */
   background-color: ${COLORS.WHITE};
   height: 61px;
-  width: ${mainSectionSize}px;
+  width: 100%;
   border-bottom: 2px solid ${COLORS.GRAY3};
   display: flex;
   flex-direction: row;

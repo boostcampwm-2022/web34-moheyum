@@ -1,12 +1,12 @@
 import styled from '@emotion/styled';
 import React, { useCallback, useRef, useState } from 'react';
 import COLORS from '../../../styles/color';
-import Paginator, { NEXT } from '../../../utils/paginator';
+import usePaginator, { NEXT } from '../../../hooks/usePaginator';
 import { FollowMember } from '../../Follow/FollowMember';
 
 export default function UserResult({ keyword }: { keyword: string }) {
   const [nextCursor, setNextCursor] = useState('START');
-  const { loading, error, pages, next } = Paginator(`/api/user/search?keyword=${keyword}`, nextCursor);
+  const { loading, error, pages, next } = usePaginator(`/api/user/search?keyword=${keyword}`, nextCursor);
 
   const observer = useRef<any>();
   const lastFollowElementRef = useCallback(

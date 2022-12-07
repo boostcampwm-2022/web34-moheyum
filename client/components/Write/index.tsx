@@ -33,6 +33,11 @@ export default function EditorWrapper({ postData, modifyPostData }: Props) {
 
 const Wrapper = styled.div`
   ${mainSectionStyle}
+  width: 100%;
+  max-width: calc(${({ theme }) => theme.wideWindow} - ${({ theme }) => theme.sidebar.maxWidth});
+  @media only screen and (max-width: ${({ theme }) => theme.smallWindow}) {
+    max-width: calc(${({ theme }) => theme.smallWindow} - - ${({ theme }) => theme.sidebar.minWidth});
+  }
 `;
 
 EditorWrapper.defaultProps = {

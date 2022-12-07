@@ -4,12 +4,6 @@ import { buttonStyle, mainSectionStyle } from '../../styles/mixin';
 
 export const Wrapper = styled.section`
   ${mainSectionStyle}
-  @media only screen and (max-width: ${({ theme }) => theme.wideWindow}) {
-    width: calc(100% - ${({ theme }) => theme.sidebar.maxWidth});
-  }
-  @media only screen and (max-width: ${({ theme }) => theme.smallWindow}) {
-    width: calc(100% - ${({ theme }) => theme.sidebar.minWidth});
-  }
 `;
 
 export const NewArticleSection = styled.div`
