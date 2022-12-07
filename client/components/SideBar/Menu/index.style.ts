@@ -53,8 +53,8 @@ export const Wrapper = styled.div`
     width: 35px;
     height: 35px;
     border-radius: 40px;
-    border: 2px solid ${COLORS.GRAY2};
-    background-color: ${COLORS.GRAY3};
+    border: 1px solid ${COLORS.PRIMARY_DARK};
+    background-color: ${COLORS.WHITE};
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;

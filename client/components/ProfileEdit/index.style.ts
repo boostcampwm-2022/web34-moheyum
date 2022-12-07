@@ -45,7 +45,7 @@ export const Avatar = styled.div<avatarProps>`
   height: 146px;
   border-radius: 146px;
   border: 2px solid ${COLORS.PRIMARY};
-  background-color: ${COLORS.GRAY3};
+  background-color: ${COLORS.WHITE};
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
