@@ -19,7 +19,7 @@ export default function Menu({
         {avatar ? (
           <>
             <div className="imageBox">
-              <div className="avatarBox" style={{ backgroundImage: `url(${imgSrc})` }} />
+              <Image className="avatarBox" src={imgSrc} alt="item" width={25} height={25} priority />
             </div>
             <div className="text">{text}</div>
           </>
