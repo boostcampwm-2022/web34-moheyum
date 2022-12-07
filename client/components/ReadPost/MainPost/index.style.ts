@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import COLORS from '../../../styles/color';
-import { markdownStyle, buttonStyle } from '../../../styles/mixin';
+import { markdownStyle } from '../../../styles/mixin';
 
 export const HeaderBox = styled.div`
   width: 100%;

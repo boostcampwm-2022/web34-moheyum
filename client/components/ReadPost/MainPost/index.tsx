@@ -27,9 +27,6 @@ export default function MainPost({ postData }: { postData: PostProps }) {
     if (!contentRef.current) return;
     contentRef.current.innerHTML = renderMarkdown(postData.description);
   }, [contentRef.current?.textContent]);
-  const menuHandler = () => {
-    dropDownDisplay ? setDropDownDisplay(false) : setDropDownDisplay(true);
-  };
   const deleteHandler = async () => {
     setDropDownDisplay(false);
     const response = await httpDelete(`/post/${postData._id}`);
@@ -58,9 +55,9 @@ export default function MainPost({ postData }: { postData: PostProps }) {
         <ButtonConatiner>
           <MenuDropDown
             style={{ display: authedUserInfo.userid === postData.author ? 'block' : 'none' }}
-            onClick={menuHandler}
+            onClick={() => (dropDownDisplay ? setDropDownDisplay(false) : setDropDownDisplay(true))}
           >
-            <Image src="/menu.svg" alt="Logo" width={30} height={30} priority></Image>
+            <Image src="/menu.svg" alt="Logo" width={30} height={30} priority />
           </MenuDropDown>
           {dropDownDisplay && (
             <DropDown>
