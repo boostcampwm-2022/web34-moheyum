@@ -4,7 +4,7 @@ import COLORS from '../../styles/color';
 
 export const Wrapper = styled.div`
   width: 488px;
-  height: 300px;
+  height: 350px;
   background-color: ${COLORS.OFF_WHITE};
   border: 3px solid ${COLORS.PRIMARY_DARK};
   border-radius: 15px;
@@ -58,15 +58,15 @@ export const Description = styled.div`
   text-align: center;
 `;
 
-export const EmailInput = styled.input`
+export const Input = styled.input`
   width: 80%;
   height: 33px;
   ${inputStyle}
+  margin-bottom: 20px;
 `;
 
 export const IdInquiryButton = styled.button`
   ${buttonStyle}
   width: 80%;
   height: 33px;
-  margin-top: 20px;
 `;

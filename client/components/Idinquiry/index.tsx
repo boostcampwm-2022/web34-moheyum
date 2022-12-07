@@ -1,4 +1,4 @@
-import React, { useState, useRef, RefObject, ChangeEvent } from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import Router from 'next/router';
 import { Wrapper, Box, Title, ButtonBack, IdInquiryButton, Description, EmailInput, Top } from './index.style';
 
@@ -8,7 +8,6 @@ export default function Idinquiry() {
   };
   const [userEmail, setUserEmail] = useState('');
   const [userId, setUserId] = useState('');
-  const inputEmailRef: RefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
   const onChangeEmail = (e: ChangeEvent<HTMLInputElement>): void => {
     setUserEmail(e.target.value);
   };
@@ -31,7 +30,6 @@ export default function Idinquiry() {
       return;
     }
     setUserId(userData.data);
-    console.log(userData.data);
   };
   return (
     <Wrapper>
@@ -52,12 +50,7 @@ export default function Idinquiry() {
           <>
             <Title>아이디 찾기</Title>
             <Description>가입할 때 입력했던 이메일 주소를 입력해주세요.</Description>
-            <EmailInput
-              placeholder="이메일 주소"
-              name="userEmail"
-              onChange={onChangeEmail}
-              ref={inputEmailRef}
-            ></EmailInput>
+            <EmailInput placeholder="이메일 주소" name="userEmail" onChange={onChangeEmail} />
             <IdInquiryButton onClick={handleInpuiry}>아이디 찾기</IdInquiryButton>
           </>
         )}
