@@ -18,6 +18,7 @@ import {
   SignupRowMessage,
   SignupSubmitContainer,
   SignupVerifyMessage,
+  SubmitButton,
 } from './index.style';
 
 // 페이지 변경되거나 추가되면 여기도 업데이트 필요.
@@ -168,6 +169,7 @@ export default function SignupModal() {
     });
     if (response.statusCode !== 200) {
       alert(`오류가 발생했습니다.\nERROR statusCode: ${response.statusCode}\nERROR message: ${response.message}`);
+      setVerified(false);
       return;
     }
     const signinResponse = await httpPost('/auth/signin', {
@@ -282,7 +284,7 @@ export default function SignupModal() {
         {timer > -1 && startVerify && <SignupRowMessage>{secToTime(timer)}</SignupRowMessage>}
         {errorMessages.verify && startVerify && <SignupVerifyMessage>{errorMessages.verify}</SignupVerifyMessage>}
         <SignupSubmitContainer>
-          <MoheyumButton type="submit">회원가입</MoheyumButton>
+          <SubmitButton type="submit">회원가입</SubmitButton>
         </SignupSubmitContainer>
       </SignupForm>
     </ModalWrapper>
