@@ -5,10 +5,9 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers';
 import { authedUser } from '../../atom';
-import { ResponseType, httpGet } from '../../utils/http';
+import { ResponseType, httpGet, httpPut } from '../../utils/http';
 import { ButtonBack, TopBar } from '../../styles/common';
 import getByteLength from '../../utils/getByteLength';
-import { httpPut } from '../../utils/http';
 import {
   ProfileAndImgContainer,
   Wrapper,
