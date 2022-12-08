@@ -119,8 +119,14 @@ export const MoheyumButton = styled.button<sizeProps>`
   ${buttonStyle}
 `;
 
+export const SubmitButton = styled.button`
+  width: 150px;
+  height: 32px;
+  ${buttonStyle}
+`;
+
 export const SignupSubmitContainer = styled.div`
-  width: 85%;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
