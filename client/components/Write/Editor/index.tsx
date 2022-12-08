@@ -200,11 +200,11 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
   const pasteAction = (data: string) => {
     // console.log(JSON.stringify(data));
     const cursor = window.getSelection();
-    if (!cursor) return;
-    if (!contentRef.current) return;
+    if (!cursor) return false;
+    if (!contentRef.current) return false;
     const collapseNode = cursor.anchorNode;
     if (cursor.type === 'Caret') {
-      if (!cursor.anchorNode) return;
+      if (!cursor.anchorNode) return false;
       const position = cursor.anchorNode.nodeType === 3 ? cursor.anchorOffset + data.length : 1;
       cursor.anchorNode.textContent = `${cursor.anchorNode?.textContent?.slice(
         0,
@@ -214,7 +214,7 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
       window.getSelection()?.collapse(collapseNode, position);
     }
     if (cursor.type === 'Range') {
-      if (!cursor.anchorNode || !cursor.focusNode) return;
+      if (!cursor.anchorNode || !cursor.focusNode) return false;
       cursor.deleteFromDocument();
       const position = cursor.anchorNode.nodeType === 3 ? cursor.anchorOffset + data.length : 1;
       cursor.anchorNode.textContent = `${cursor.anchorNode?.textContent?.slice(
@@ -223,6 +223,7 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
       )}${data}${cursor.anchorNode?.textContent?.slice(cursor.anchorOffset)}`;
       window.getSelection()?.collapse(collapseNode, position);
     }
+    return true;
   };
 
   const handlePaste = (e: ClipboardEvent<HTMLDivElement>) => {
@@ -383,8 +384,10 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
         fetchImage()
           .then((imageData) => {
             const data = `![${files[0].name as string}](${imageData.data.imageLink})`;
-            pasteAction(`${data}`);
-            setContent(data); // setContent를 안하면 프리뷰에 반영이 안됩니다..
+            const success = pasteAction(`${data}`);
+            if (success) {
+              setContent(data); // setContent를 안하면 프리뷰에 반영이 안됩니다..
+            }
           })
           .catch((e) => alert(`이미지 업로드에 실패하였습니다. Error Message: ${e}`));
       } else {
