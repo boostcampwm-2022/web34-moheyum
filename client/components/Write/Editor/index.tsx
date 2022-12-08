@@ -51,6 +51,11 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
   const previewRef = useRef<HTMLDivElement>(null);
   const [tabIndex, setTabIndex] = useState(0); // 0 Editor, 1 Preview
   const [content, setContent] = useState<string>('');
+  const [contentHTML, setContentHTML] = useState<string>('<div><br></div>'); // 탭 전환용
+  const authedUserInfo = useRecoilValue(authedUser);
+  const [imageOver, setImageOver] = useState<boolean>(false);
+
+  // 멘션 기능 관련 상태.
   const [dropDownDisplay, setDropDownDisplay] = useState<string>('none');
   const [dropDownPosition, setDropDownPosition] = useState<{ x: string; y: string }>({
     x: '0px',
@@ -60,10 +65,7 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
   const [mentionList, setMentionList] = useState<string[]>([]);
   const [followList, setFollowList] = useState<followUser[]>([]);
   const [inputUserId, setInputUserId] = useState<string>('');
-  const [contentHTML, setContentHTML] = useState<string>('<div><br></div>'); // 탭 전환용
   const [selectUser, setSelectUser] = useState<number>(0);
-  const [imageOver, setImageOver] = useState<boolean>(false);
-  const authedUserInfo = useRecoilValue(authedUser);
 
   const submitHandler = async () => {
     const removeDup = new Set(mentionList);
@@ -198,25 +200,32 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
   // 아래부터 에디터 제스쳐 관련 코드
 
   const pasteAction = (data: string) => {
-    // console.log(JSON.stringify(data));
     const cursor = window.getSelection();
     if (!cursor) return false;
     if (!contentRef.current) return false;
     const collapseNode = cursor.anchorNode;
     if (cursor.type === 'Caret') {
       if (!cursor.anchorNode) return false;
-      const position = cursor.anchorNode.nodeType === 3 ? cursor.anchorOffset + data.length : 1;
-      cursor.anchorNode.textContent = `${cursor.anchorNode?.textContent?.slice(
-        0,
-        cursor.anchorOffset
-      )}${data}${cursor.anchorNode?.textContent?.slice(cursor.anchorOffset)}`;
-
+      const position = cursor.anchorNode.nodeName === '#text' ? cursor.anchorOffset + data.length : 1;
+      switch (cursor.anchorNode.nodeName) {
+        case 'DIV':
+          cursor.anchorNode.textContent = `${cursor.anchorNode?.textContent}${data}`;
+          break;
+        case '#text':
+          cursor.anchorNode.textContent = `${cursor.anchorNode?.textContent?.slice(
+            0,
+            cursor.anchorOffset
+          )}${data}${cursor.anchorNode?.textContent?.slice(cursor.anchorOffset)}`;
+          break;
+        default:
+          break;
+      }
       window.getSelection()?.collapse(collapseNode, position);
     }
     if (cursor.type === 'Range') {
       if (!cursor.anchorNode || !cursor.focusNode) return false;
       cursor.deleteFromDocument();
-      const position = cursor.anchorNode.nodeType === 3 ? cursor.anchorOffset + data.length : 1;
+      const position = cursor.anchorNode.nodeName === '#text' ? cursor.anchorOffset + data.length : 1;
       cursor.anchorNode.textContent = `${cursor.anchorNode?.textContent?.slice(
         0,
         cursor.anchorOffset
