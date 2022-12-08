@@ -3,6 +3,7 @@ import Router from 'next/router';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers';
+import { httpPost } from '../../utils/http';
 import {
   Wrapper,
   Box,
@@ -38,20 +39,12 @@ export default function Idinquiry() {
     setUserEmail(e.target.value);
   };
   const handleInpuiry = async () => {
-    const response = await fetch('/api/auth/id-inquiry', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify({ email: userEmail }),
-    });
-    const userData = await response.json();
-    if (userData.message !== 'success') {
+    const response = await httpPost('/api/auth/id-inquiry', { email: userEmail });
+    if (response.message !== 'success') {
       alert('아이디를 찾을 수 없습니다.');
       return;
     }
-    setUserId(userData.data);
+    setUserId(response.data);
   };
   return (
     <Wrapper>
