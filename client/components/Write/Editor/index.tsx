@@ -176,6 +176,13 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
   // 드롭다운 위치 갱신
   const moveDropDown = useCallback((isBack: boolean) => {
     const cursor = window.getSelection();
+    if (cursor?.anchorNode?.nodeName !== '#text') {
+      setDropDownPosition((prevState) => ({
+        ...prevState,
+        x: `${getLeftWidth(window.innerWidth) + 42}px`,
+      }));
+      return;
+    }
     const range = cursor?.getRangeAt(0);
     if (range) {
       const bounds = range.getBoundingClientRect();
