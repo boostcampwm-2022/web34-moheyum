@@ -68,10 +68,10 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
   const authedUserInfo = useRecoilValue(authedUser);
 
   // 실시간 미리보기를 활성화하려면 이걸 키고 preview element의 렌더링 조건을 tabIndex === 0 으로 바꿔주세요
-  useEffect(() => {
-    if (!previewRef.current) return;
-    previewRef.current.innerHTML = renderMarkdown(content);
-  }, [content]);
+  // useEffect(() => {
+  //   if (!previewRef.current) return;
+  //   previewRef.current.innerHTML = renderMarkdown(content);
+  // }, [content]);
 
   const submitHandler = async () => {
     const removeDup = new Set(mentionList);
@@ -464,7 +464,7 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
             <br />
           </div>
         </EditorTextBox>
-        <PreviewTextBox ref={previewRef} style={{ display: `${tabIndex === 0 ? 'block' : 'none'}`, width: '50%' }} />
+        <PreviewTextBox ref={previewRef} style={{ display: `${tabIndex === 1 ? 'block' : 'none'}`, width: '50%' }} />
         <input type="file" id="fileUpload" style={{ display: 'none' }} />
         {followList.length !== 0 && (
           <UserDropDown
