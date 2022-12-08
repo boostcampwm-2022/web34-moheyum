@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
-  ProfileAvatar,
+  AvatarBox,
   ProfileBio,
   ProfileContainer,
   ProfileCounters,
@@ -16,6 +17,7 @@ import ProfileCounter from './ProfileCounter';
 import { authedUser } from '../../../atom';
 import { httpGet, httpDelete, httpPost } from '../../../utils/http';
 import { UserPostProps } from '../../../types/Post';
+import defaultProfile from '../../../public/default-profile.png';
 
 function UserProfile({ userData }: { userData: UserPostProps }) {
   const authedUserInfo = useRecoilValue(authedUser);
@@ -47,7 +49,9 @@ function UserProfile({ userData }: { userData: UserPostProps }) {
 
   return (
     <ProfileContainer>
-      <ProfileAvatar src={userData.profileimg} />
+      <AvatarBox>
+        <Image src={userData.profileimg !== '' ? userData.profileimg : defaultProfile} alt="profile picture" fill />
+      </AvatarBox>
       <ProfileDetail>
         <ProfileNames>
           <ProfileNickname>

@@ -26,7 +26,7 @@ export default function CommentPost({ response }: { response: Props }) {
 }
 const ContentWrapper = styled.div`
   overflow-x: hidden;
-  overflow-y: hidden;
+  overflow-y: scroll;
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -41,6 +41,7 @@ const MainPostWrapper = styled.div`
 const CommentEditor = styled.div`
   overflow-y: scroll;
   width: 100%;
+  min-height: 300px;
   flex: 1;
   border-top: 2px solid ${COLORS.GRAY3};
   margin-top: 20px;

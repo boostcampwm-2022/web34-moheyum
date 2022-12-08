@@ -83,8 +83,9 @@ export const markdownStyle = css`
   padding: 10px;
   font-size: 16px;
   white-space: normal;
-  line-height: 16px;
+  line-height: 1.5em;
   min-height: 12px;
+  overflow-x: hidden;
 
   & * {
     margin-bottom: 16px;
@@ -146,5 +147,23 @@ export const markdownStyle = css`
 
   & i {
     font-style: italic;
+  }
+
+  & img {
+    max-width: 100%;
+    margin: 0 auto;
+    align-self: center;
+    display: block;
+  }
+
+  & a {
+    text-decoration: underline;
+    color: ${COLORS.BLUE};
+    &:hover {
+      color: ${COLORS.PRIMARY_DARK};
+    }
+    &:active {
+      color: ${COLORS.PRIMARY};
+    }
   }
 `;

@@ -80,7 +80,7 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
     const removeDup = new Set(mentionList);
     const target = contentRef.current;
     if (!target) return;
-    const postContent = target.innerHTML.replace(/<div>([\s\S]*?)<\/div>/g, '$1\n');
+    const postContent = target.innerHTML.replace(/<div>([\s\S]*?)<\/div>/g, '$1\n').replace(/<br>/g, '');
 
     // 수정의 경우
     if (modifyPostData) {
@@ -122,7 +122,8 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
     if (index === 1) {
       // preview
       if (!contentRef.current) return;
-      setContentHTML(contentRef.current.innerHTML);
+      // setContentHTML(contentRef.current.innerHTML);
+      setContent(contentRef.current.innerText);
       setTabIndex(1);
     }
   };
@@ -408,10 +409,7 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
         fetchImage()
           .then((imageData) => {
             const data = `![${files[0].name as string}](${imageData.data.imageLink})`;
-            const success = pasteAction(`${data}`);
-            if (success) {
-              setContent(data); // setContent를 안하면 프리뷰에 반영이 안됩니다..
-            }
+            pasteAction(`${data}`);
           })
           .catch((e) => toast.addMessage(`이미지 업로드에 실패하였습니다. Error Message: ${e}`));
       } else {

@@ -1,10 +1,12 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { authedUser } from '../../../atom';
 import useToast from '../../../hooks/useToast';
 import { httpPost, httpDelete, httpGet } from '../../../utils/http';
-import { Avatar, Button, ButtonArea, Container, Information, UserId, UserNickname } from './index.style';
+import { AvatarBox, Button, ButtonArea, Container, Information, UserId, UserNickname } from './index.style';
+import defaultProfile from '../../../public/default-profile.png';
 
 interface UserData {
   userid: string;
@@ -41,7 +43,9 @@ export const FollowMember = React.forwardRef<HTMLInputElement, UserData>(
     return (
       <div ref={ref}>
         <Container>
-          <Avatar src={profileimg} />
+          <AvatarBox>
+            <Image src={profileimg !== '' ? profileimg : defaultProfile} alt="profile picture" fill />
+          </AvatarBox>
           <Information>
             <UserNickname>
               <Link href={`/${userid}`}>{nickname}</Link>
