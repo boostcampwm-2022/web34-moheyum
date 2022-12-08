@@ -123,7 +123,6 @@ export function doParseForArticleCard(str: string): MarkdownWithoutStyle {
   const img = /<img src="(.+?)".+?\/>/g.exec(withStyle);
   if (img) {
     [, result.thumbnail] = img;
-    console.log(withStyle);
   }
 
   return result;
