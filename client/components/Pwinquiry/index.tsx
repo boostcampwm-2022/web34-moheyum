@@ -1,8 +1,41 @@
 import React, { useState, ChangeEvent } from 'react';
 import Router from 'next/router';
-import { Wrapper, Box, Title, ButtonBack, IdInquiryButton, Description, Input, Top } from './index.style';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers';
+import {
+  Wrapper,
+  Box,
+  Title,
+  ButtonBack,
+  IdInquiryButton,
+  Description,
+  Input,
+  Top,
+  PwInquiryForm,
+  IdRowMessage,
+  EmailRowMessage,
+  CompleteBox,
+} from './index.style';
+
+const schema = yup.object().shape({
+  id: yup
+    .string()
+    .required('아이디를 입력하세요.')
+    .matches(/^[a-z|A-Z|0-9|]+$/i, '영어, 숫자만 가능합니다.')
+    .max(16, '16자 이내로 입력하세요.')
+    .min(4, '4 글자 이상 입력하세요.'),
+  email: yup.string().required('이메일을 입력하세요.').email('이메일 형식에 맞지 않습니다.'),
+});
 
 export default function Pwinquiry() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
   const goBack = () => {
     Router.back();
   };
@@ -18,10 +51,6 @@ export default function Pwinquiry() {
     });
   };
   const handleInpuiry = async () => {
-    if (!userInfo.email.match(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]+$/i)) {
-      alert('이메일 형식에 맞지 않습니다.');
-      return;
-    }
     const response = await fetch('/api/auth/password-inquiry', {
       method: 'POST',
       headers: {
@@ -51,20 +80,20 @@ export default function Pwinquiry() {
           <ButtonBack onClick={goBack} />
         </Top>
         {sendSuccess ? (
-          <>
-            <div style={{ height: '75px' }}>&nbsp;</div>
-            <Title>비밀번호 찾기</Title>
+          <CompleteBox>
+            <Title>임시 비밀번호 발급</Title>
             <Description>임시비밀번호를 메일로 전송하였습니다.</Description>
-            <div style={{ height: '75px' }}>&nbsp;</div>
-          </>
+          </CompleteBox>
         ) : (
-          <>
+          <PwInquiryForm onSubmit={handleSubmit(handleInpuiry)}>
             <Title>비밀번호 찾기</Title>
             <Description>가입할 때 입력했던 아이디와 이메일 주소를 입력해주세요.</Description>
-            <Input placeholder="아이디" name="id" onChange={onChangeInput} />
-            <Input placeholder="이메일 주소" name="email" onChange={onChangeInput} />
-            <IdInquiryButton onClick={handleInpuiry}>비밀번호 찾기</IdInquiryButton>
-          </>
+            <Input placeholder="아이디" {...register('id')} onChange={onChangeInput} />
+            {errors.id && <IdRowMessage>{errors.id.message as string}</IdRowMessage>}
+            <Input placeholder="이메일 주소" {...register('email')} onChange={onChangeInput} />
+            {errors.email && <EmailRowMessage>{errors.email.message as string}</EmailRowMessage>}
+            <IdInquiryButton type="submit">비밀번호 찾기</IdInquiryButton>
+          </PwInquiryForm>
         )}
       </Box>
     </Wrapper>

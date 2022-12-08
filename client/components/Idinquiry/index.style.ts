@@ -34,8 +34,9 @@ export const IdInquiryForm = styled.form`
   align-items: center;
 `;
 
-export const IdBox = styled.div`
+export const CompleteBox = styled.div`
   width: 100%;
+  height: 220px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -66,6 +67,9 @@ export const Description = styled.div`
   height: 40px;
   font-size: 16px;
   text-align: center;
+  span {
+    font-weight: 600;
+  }
 `;
 
 export const EmailInput = styled.input`

@@ -4,7 +4,7 @@ import COLORS from '../../styles/color';
 
 export const Wrapper = styled.div`
   width: 488px;
-  height: 350px;
+  height: 400px;
   background-color: ${COLORS.OFF_WHITE};
   border: 3px solid ${COLORS.PRIMARY_DARK};
   border-radius: 15px;
@@ -17,14 +17,27 @@ export const Wrapper = styled.div`
 
 export const Box = styled.div`
   width: 100%;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  transition: all 0.3s ease;
+`;
+
+export const PwInquiryForm = styled.form`
+  width: 100%;
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 10px;
-  margin-bottom: 30px;
-  transition: all 0.3s ease;
+`;
+
+export const CompleteBox = styled.div`
+  width: 100%;
+  height: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const Top = styled.div`
@@ -63,10 +76,38 @@ export const Input = styled.input`
   height: 33px;
   ${inputStyle}
   margin-bottom: 20px;
+  &:last-of-type {
+    margin-top: 20px;
+  }
+`;
+
+export const EmailRowMessage = styled.div`
+  list-style: none;
+  width: 75%;
+  height: 0;
+  display: flex;
+  align-items: flex-end;
+  margin-left: 0px;
+  font-size: 12px;
+  color: ${COLORS.RED};
+  font-weight: 600;
+`;
+
+export const IdRowMessage = styled.div`
+  list-style: none;
+  width: 75%;
+  height: 0;
+  display: flex;
+  align-items: flex-end;
+  margin-left: 0px;
+  font-size: 12px;
+  color: ${COLORS.RED};
+  font-weight: 600;
 `;
 
 export const IdInquiryButton = styled.button`
   ${buttonStyle}
   width: 80%;
   height: 33px;
+  margin-top: 20px;
 `;

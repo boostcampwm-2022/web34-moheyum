@@ -14,7 +14,7 @@ import {
   Top,
   IdInquiryForm,
   EmailRowMessage,
-  IdBox,
+  CompleteBox,
 } from './index.style';
 
 const schema = yup.object().shape({
@@ -60,14 +60,12 @@ export default function Idinquiry() {
           <ButtonBack onClick={goBack} />
         </Top>
         {userId ? (
-          <IdBox>
-            <div style={{ height: '50px' }}>&nbsp;</div>
-            <Title>아이디 찾기</Title>
+          <CompleteBox>
+            <Title>아이디</Title>
             <Description>
-              가입하신 아이디는 <span>{userId}입니다.</span>
+              가입하신 아이디는 <span>{userId}</span>입니다.
             </Description>
-            <div style={{ height: '50px' }}>&nbsp;</div>
-          </IdBox>
+          </CompleteBox>
         ) : (
           <IdInquiryForm onSubmit={handleSubmit(handleInpuiry)}>
             <Title>아이디 찾기</Title>
