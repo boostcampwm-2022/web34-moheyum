@@ -1,4 +1,4 @@
-import Image from 'next/legacy/image';
+import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import { calcTime } from '../../../utils/calctime';
@@ -33,7 +33,7 @@ export const ArticleCard = React.forwardRef<HTMLInputElement, Props>(
           <UserProfile profileimg={profileimg} nickname={nickname} author={author!} />
           <HeaderInfo>
             <Comments>
-              <Image src="/ico_comment.svg" width={18} height={18} alt="author profile" />
+              <Image src="/ico_comment.svg" alt="comment" width={18} height={18} />
               <span>{comments}</span>
             </Comments>
             <PostedAt>{calcTime(date)}</PostedAt>

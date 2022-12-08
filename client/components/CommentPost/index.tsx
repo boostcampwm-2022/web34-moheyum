@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef } from 'react';
 import MainPost from '../ReadPost/MainPost';
 import Editor from '../Write/Editor';
 import type PostProps from '../../types/Post';
@@ -13,19 +13,13 @@ interface Props {
 
 export default function CommentPost({ response }: { response: Props }) {
   const mainPostRef = useRef<HTMLDivElement>(null);
-  const [mainPostHeight, setMainPostHeight] = useState<number>(0);
-  useEffect(() => {
-    if (mainPostRef.current) {
-      setMainPostHeight(mainPostRef.current?.clientHeight);
-    }
-  });
   return (
     <ContentWrapper>
       <MainPostWrapper ref={mainPostRef}>
         <MainPost postData={response.data.post} />
       </MainPostWrapper>
       <CommentEditor>
-        <Editor parentPostData={response.data.post} isComment={mainPostHeight} />
+        <Editor parentPostData={response.data.post} />
       </CommentEditor>
     </ContentWrapper>
   );

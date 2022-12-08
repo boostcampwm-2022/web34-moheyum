@@ -10,7 +10,8 @@ export const Wrapper = styled.div`
 
 export const Icon = styled.div`
   position: relative;
-  margin-left: 22px;
+  margin-left: 10px;
+  margin-top: 4px;
   @media only screen and (max-width: ${({ theme }) => theme.smallWindow}) {
     display: none;
   }

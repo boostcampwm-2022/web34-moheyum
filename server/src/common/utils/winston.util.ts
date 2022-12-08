@@ -3,27 +3,43 @@ import * as winston from 'winston';
 import 'winston-daily-rotate-file';
 // import * as winstonDaily from 'winston-daily-rotate-file';
 const { combine, timestamp, printf } = winston.format;
-const dir = __dirname + '/../../../log';
-// const dailyOptions = (level: string) => {
-//   return {
-//     level,
-//     datePattern: 'YYYY-MM-DD',
-//     dirname: dir + `/${level}`,
-//     filename: `%DATE%.${level}`,
-//     maxSize: '100M',
-//     maxFiles: '30d',
-//     extension: '.log',
-//     zippedArchive: true, // gzip으로 압축 가능
-//   };
-// };
+const dir = __dirname + '/../../../log/';
+
+const dailyOptions = (level: string, skip: boolean) => {
+  return {
+    datePattern: 'YYYY-MM-DD',
+    dirname: dir,
+    filename: `%DATE%`,
+    maxSize: '100M',
+    maxFiles: '30d',
+    extension: '.log',
+    level: level,
+    silent: skip,
+    format: logFormat,
+    zippedArchive: true, // gzip으로 압축 가능
+  };
+};
+const consoleOptions = (level: string, skip: boolean) => {
+  return {
+    level: level,
+    silent: skip,
+    format: winston.format.combine(
+      winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+      winston.format.errors({ stack: true }),
+      utilities.format.nestLike('MOHEYUM', {
+        prettyPrint: true,
+      }),
+    ),
+  };
+};
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const warnFilter = winston.format((info, _opts) => {
-  return info.level === 'warn' ? info : false;
-});
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const errorFilter = winston.format((info, _opts) => {
-  return info.level === 'error' ? info : false;
-});
+// const warnFilter = winston.format((info, _opts) => {
+//   return info.level === 'warn' ? info : false;
+// });
+// // eslint-disable-next-line @typescript-eslint/no-unused-vars
+// const errorFilter = winston.format((info, _opts) => {
+//   return info.level === 'error' ? info : false;
+// });
 const logFormat = combine(
   timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
   printf((info) => {
@@ -36,75 +52,11 @@ const logFormat = combine(
 export const winstonLogger = WinstonModule.createLogger({
   format: logFormat,
   transports:
-    process.env.NODE_ENV === 'production'
-      ? [
-          new winston.transports.DailyRotateFile({
-            datePattern: 'YYYY-MM-DD',
-            dirname: dir + `/warn`,
-            filename: `%DATE%.warn`,
-            maxSize: '100M',
-            maxFiles: '30d',
-            extension: '.log',
-            level: 'warn',
-            format: combine(warnFilter(), logFormat),
-            zippedArchive: true, // gzip으로 압축 가능
-          }),
-          new winston.transports.DailyRotateFile({
-            datePattern: 'YYYY-MM-DD',
-            dirname: dir + `/error`,
-            filename: `%DATE%.error`,
-            maxSize: '100M',
-            maxFiles: '30d',
-            extension: '.log',
-            level: 'error',
-            format: combine(errorFilter(), logFormat),
-            zippedArchive: true, // gzip으로 압축 가능
-          }),
-          // new winstonDaily(dailyOptions('info')),
-          // new winstonDaily(dailyOptions('warn')),
-          // new winstonDaily(dailyOptions('error')),
-        ]
-      : [
-          new winston.transports.Console({
-            level: 'silly',
-            format: winston.format.combine(
-              winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-              winston.format.errors({ stack: true }),
-              utilities.format.nestLike('MOHEYUM', {
-                prettyPrint: true,
-              }),
-            ),
-          }),
-        ],
-
-  // transports: [
-  //   process.env.NODE_ENV === 'production'
-  //     ? new winstonDaily(dailyOptions('info'))
-  //     : new winston.transports.Console({
-  //         level: 'silly',
-  //         format: winston.format.combine(
-  //           winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-  //           winston.format.errors({ stack: true }),
-  //           utilities.format.nestLike('MOHEYUM', {
-  //             prettyPrint: true,
-  //           }),
-  //         ),
-  //       }),
-  //   // new winston.transports.Console({
-  //   //   level: process.env.NODE_ENV === 'production' ? 'warn' : 'silly',
-  //   //   format:
-  //   //     process.env.NODE_ENV === 'production'
-  //   //       ? winston.format.simple() //production은 가볍게
-  //   //       : winston.format.combine(
-  //   //           winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-  //   //           winston.format.errors({ stack: true }),
-  //   //           utilities.format.nestLike('MOHEYUM', {
-  //   //             prettyPrint: true,
-  //   //           }),
-  //   //         ),
-  //   // }),
-  //   //daily rotate
-  //   // new winstonDaily(dailyOptions('warn')),
-  //   // new winstonDaily(dailyOptions('error')),
-  // ],
+    process.env.SKIP_LOG !== 'true' || !process.env.SKIP_LOG
+      ? process.env.NODE_ENV === 'production'
+        ? [new winston.transports.DailyRotateFile(dailyOptions('warn', false))]
+        : [new winston.transports.Console(consoleOptions('silly', false))]
+      : process.env.NODE_ENV === 'production'
+      ? [new winston.transports.DailyRotateFile(dailyOptions('warn', true))]
+      : [new winston.transports.Console(consoleOptions('silly', true))],
 });

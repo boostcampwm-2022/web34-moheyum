@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  testt:
+    image: moheyum/nginx-dev:latest
+    ports:
+      - "80:80"
+    deploy:
+      mode: global
+      update_config:
+        delay: 10s

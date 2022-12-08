@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "nginx:on": "docker build --target local -t web34-nginx-local:latest ./nginx && docker run --add-host host.docker.internal:host-gateway --name nginx-local --rm -p 80:80 web34-nginx-local:latest",
+    "nginx:off": "docker rm -f nginx-local"
+  }
+}
