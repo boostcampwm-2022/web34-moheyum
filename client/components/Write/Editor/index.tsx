@@ -221,6 +221,7 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
           break;
       }
       window.getSelection()?.collapse(collapseNode, position);
+      return true;
     }
     if (cursor.type === 'Range') {
       if (!cursor.anchorNode || !cursor.focusNode) return false;
@@ -231,8 +232,9 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
         cursor.anchorOffset
       )}${data}${cursor.anchorNode?.textContent?.slice(cursor.anchorOffset)}`;
       window.getSelection()?.collapse(collapseNode, position);
+      return true;
     }
-    return true;
+    return false;
   };
 
   const handlePaste = (e: ClipboardEvent<HTMLDivElement>) => {
