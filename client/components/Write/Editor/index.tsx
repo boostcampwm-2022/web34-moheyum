@@ -29,7 +29,6 @@ interface Props {
     _id?: string;
   };
   modifyPostData?: PostProps;
-  isComment?: number | null;
 }
 
 Editor.defaultProps = {
@@ -37,7 +36,6 @@ Editor.defaultProps = {
     _id: '',
   },
   modifyPostData: null,
-  isComment: null,
 };
 
 interface followUser {
@@ -48,7 +46,7 @@ interface followUser {
 
 let allMentionList: followUser[] = [];
 
-export default function Editor({ parentPostData, modifyPostData, isComment }: Props) {
+export default function Editor({ parentPostData, modifyPostData }: Props) {
   const contentRef = useRef<HTMLDivElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const [tabIndex, setTabIndex] = useState(0); // 0 Editor, 1 Preview
@@ -178,13 +176,6 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
   // 드롭다운 위치 갱신
   const moveDropDown = useCallback((isBack: boolean) => {
     const cursor = window.getSelection();
-    if (cursor?.anchorNode?.nodeName !== '#text') {
-      setDropDownPosition((prevState) => ({
-        ...prevState,
-        x: `${getLeftWidth(window.innerWidth) + 42}px`,
-      }));
-      return;
-    }
     const range = cursor?.getRangeAt(0);
     if (range) {
       const bounds = range.getBoundingClientRect();
@@ -283,12 +274,6 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
 
     // 멘션 시작
     if (key === '@') {
-      if (cursor.anchorNode?.nodeName === 'DIV') {
-        setDropDownPosition((prevState) => ({
-          ...prevState,
-          y: isComment ? `${isComment + 216}px` : `${173}px`,
-        }));
-      }
       setCheckMentionActive(true);
       return;
     }
