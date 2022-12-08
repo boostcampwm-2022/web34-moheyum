@@ -71,11 +71,11 @@ function strike(str: string): string {
 
 function link(str: string): string {
   let result = str.replace(
-    /!\[(.+)\]\((http[s]?:\/\/(?:(?:[\dA-z]*)(?:\.[\dA-z]*)*)(?::[\d]+)?(?:\/.*)?)\)/gm,
+    /!\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm,
     '<img src="$2" alt="$1"/>'
   );
   result = result.replace(
-    /\[(.+)\]\((http[s]?:\/\/(?:(?:[\dA-z]*)(?:\.[\dA-z]*)*)(?::[\d]+)?(?:\/.*)?)\)/gm,
+    /\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm,
     '<a href="$2">$1</a>'
   );
   return result;
