@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from 'next/legacy/image';
+import Image from 'next/image';
 import { Wrapper, NewNoti, Item, ImageBox, Text, BorderBottom } from './index.style';
 
 export default function Menu({

@@ -1,10 +1,10 @@
 import React from 'react';
-import Image from 'next/legacy/image';
+import Image from 'next/image';
 import styled from '@emotion/styled';
 import COLORS from '../../../styles/color';
 
 export default function ProfileImg({ imgUrl }: { imgUrl: string }) {
-  return <Profile>{imgUrl ? <Image src={imgUrl} alt="Logo" layout="fill" priority /> : <div />}</Profile>;
+  return <Profile>{imgUrl ? <Image src={imgUrl} alt="Logo" width={46} height={46} priority /> : <div />}</Profile>;
 }
 
 export const Profile = styled.div`
@@ -17,8 +17,6 @@ export const Profile = styled.div`
   padding-right: 45px;
   background-color: ${COLORS.WHITE};
   img {
-    width: 50px;
-    height: 50px;
     border-radius: 50px;
   }
 `;

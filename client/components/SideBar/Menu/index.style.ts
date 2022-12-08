@@ -53,6 +53,7 @@ export const ImageBox = styled.div`
   .avatarBox {
     border-radius: 40px;
     background-color: ${COLORS.WHITE};
+    border: 1px solid ${COLORS.PRIMARY};
   }
 `;
 
