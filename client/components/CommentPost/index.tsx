@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef } from 'react';
 import MainPost from '../ReadPost/MainPost';
 import Editor from '../Write/Editor';
 import type PostProps from '../../types/Post';
