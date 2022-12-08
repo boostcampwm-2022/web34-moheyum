@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRecoilValue } from 'recoil';
 import { authedUser } from '../../../atom';
 import { httpPost, httpGet, httpPatch } from '../../../utils/http';
-import renderMarkdown from '../../../utils/markdown';
+import { renderMarkdown } from '../../../utils/markdown';
 import UserDropDown from './UserDropDown';
 import { getLeftWidth } from '../../../styles/theme';
 import UserProfile from '../../UserProfile';
@@ -66,6 +66,12 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
   const [followList, setFollowList] = useState<followUser[]>([]);
   const [inputUserId, setInputUserId] = useState<string>('');
   const [selectUser, setSelectUser] = useState<number>(0);
+
+  // 실시간 미리보기를 활성화하려면 이걸 키고 preview element의 렌더링 조건을 tabIndex === 0 으로 바꿔주세요
+  // useEffect(() => {
+  //   if (!previewRef.current) return;
+  //   previewRef.current.innerHTML = renderMarkdown(content);
+  // }, [content]);
 
   const submitHandler = async () => {
     const removeDup = new Set(mentionList);
@@ -251,7 +257,7 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
         contentRef.current.innerHTML = '<div><br/></div>';
       }
     }
-    setContent(contentRef.current.innerText.replace(/\n\n/g, '\n'));
+    setContent(contentRef.current.innerText);
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
@@ -464,7 +470,7 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
             <br />
           </div>
         </EditorTextBox>
-        <PreviewTextBox ref={previewRef} style={{ display: `${tabIndex === 1 ? 'block' : 'none'}` }} />
+        <PreviewTextBox ref={previewRef} style={{ display: `${tabIndex === 1 ? 'block' : 'none'}`, width: '50%' }} />
         <input type="file" id="fileUpload" style={{ display: 'none' }} />
         {followList.length !== 0 && (
           <UserDropDown

@@ -4,7 +4,7 @@ import { calcTime } from '../../../utils/calctime';
 import { Author, AuthorDetail, Wrapper, ContentBox, HeaderBox, ParentTree, ParentTreeContainer } from './index.style';
 import ProfileImg from '../../UserProfile/ProfileImg';
 import type { Parent } from '../../../types/Post';
-import renderMarkdown from '../../../utils/markdown';
+import { renderMarkdown } from '../../../utils/markdown';
 
 export default function ParentPost({ post }: { post: Parent }) {
   const contentRef = useRef<HTMLDivElement>(null);

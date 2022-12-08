@@ -13,6 +13,11 @@ export const Wrapper = styled.div`
   color: ${COLORS.BLACK};
   user-select: none;
   background-color: ${COLORS.PRIMARY_LIGHT};
+  
+  &:hover {
+    font-weight: 600;
+  }
+  
   &:hover > span {
     width: 100%;
   }

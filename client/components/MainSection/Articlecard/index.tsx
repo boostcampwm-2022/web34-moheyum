@@ -5,7 +5,7 @@ import { calcTime } from '../../../utils/calctime';
 import {
   ArticleContent,
   ArticleHeader,
-  ArticleImage,
+  ArticleImageContainer,
   Comments,
   Content,
   HeaderInfo,
@@ -22,10 +22,11 @@ interface Props {
   profileimg: string;
   nickname: string;
   author?: string;
+  thumbnail?: string | null;
 }
 
 export const ArticleCard = React.forwardRef<HTMLInputElement, Props>(
-  ({ id, description, author, nickname, date, comments, profileimg }: Props, ref) => (
+  ({ id, description, author, nickname, date, comments, profileimg, thumbnail }: Props, ref) => (
     <Link href={`/post/${id}`}>
       <Wrapper ref={ref}>
         <ArticleHeader>
@@ -40,7 +41,11 @@ export const ArticleCard = React.forwardRef<HTMLInputElement, Props>(
         </ArticleHeader>
         <ArticleContent>
           <Content>{description || '글 내용이 없어용!'}</Content>
-          <ArticleImage />
+          {thumbnail && (
+            <ArticleImageContainer>
+              <Image src={thumbnail} layout="fill" alt="post thumbnail" />
+            </ArticleImageContainer>
+          )}
         </ArticleContent>
         <hr />
       </Wrapper>
@@ -51,4 +56,5 @@ export const ArticleCard = React.forwardRef<HTMLInputElement, Props>(
 ArticleCard.defaultProps = {
   description: '',
   author: '',
+  thumbnail: null,
 };
