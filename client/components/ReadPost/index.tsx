@@ -56,7 +56,7 @@ export default function ReadPost({ postData, title }: PostData) {
     <Wrapper>
       <TopBar>
         <div>
-          <ButtonBack type="button" onClick={goBack} />
+          <ButtonBack aria-label="go-back" type="button" onClick={goBack} />
         </div>
         <h1>{title}</h1>
       </TopBar>

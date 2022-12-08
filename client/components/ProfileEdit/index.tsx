@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers';
 import { authedUser } from '../../atom';
-import { ResponseType, httpGet } from '../../utils/http';
+import { ResponseType, httpGet, httpPut } from '../../utils/http';
 import { ButtonBack, TopBar } from '../../styles/common';
 import getByteLength from '../../utils/getByteLength';
 import {
@@ -109,8 +109,10 @@ export default function ProfileEditSection() {
   };
 
   const handleProfileSubmit = () => {
-    // fetch('/api/user/')
-    if (!profileImg) return;
+    if (!profileImg) {
+      profileSubmit();
+      return;
+    }
     const formData = new FormData();
     formData.append('file', profileImg!);
     fetch(`/api/user/${myProfile.userid}/avatar`, {
@@ -136,23 +138,15 @@ export default function ProfileEditSection() {
   };
 
   const profileSubmit = () => {
-    fetch(`/api/user/${myProfile.userid}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify({
-        nickname: myProfile.nickname,
-        bio: myProfile.bio,
-      }),
+    httpPut(`/user/${myProfile.userid}`, {
+      nickname: myProfile.nickname,
+      bio: myProfile.bio,
     })
       .catch((e) => {
         alert('프로필 편집에 실패했습니다.');
         console.error(e);
       })
       .finally(() => {
-        // Router.reload();
         goBack();
       });
   };
@@ -188,9 +182,7 @@ export default function ProfileEditSection() {
           </BioEditArea>
           <ErrorMessage>{errors.bio && (errors.bio.message as string)}</ErrorMessage>
           <ButtonBox>
-            <div>
-              <SubmitButton type="submit">저장</SubmitButton>
-            </div>
+            <SubmitButton type="submit">저장</SubmitButton>
           </ButtonBox>
         </InputsContainer>
       </EditSection>

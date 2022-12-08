@@ -30,9 +30,7 @@ jobs:
           mkdir -p ~/.ssh/
           echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
           sshpass -p "${{ secrets.SCP_PASSWORD }}" scp -P ${{ secrets.SCP_PORT }} -r ${{ secrets.SCP_USERNAME }}@${{ secrets.SCP_HOST }}:~/ftp/client/ ./
-          ls -la
           cd client
-          ls -la
           # npm i -g yarn
           corepack enable
           yarn install

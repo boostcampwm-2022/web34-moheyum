@@ -22,7 +22,7 @@ import {
 } from './index.style';
 
 // 페이지 변경되거나 추가되면 여기도 업데이트 필요.
-const urlList = ['signup', 'post', 'notification', 'login', 'myAccount', 'search', 'write'];
+const urlList = ['signup', 'post', 'notification', 'login', 'myAccount', 'search', 'write', 'idinquiry', 'pwinquiry'];
 
 const schema = yup.object().shape({
   id: yup
