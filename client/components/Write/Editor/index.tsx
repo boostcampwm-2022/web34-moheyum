@@ -23,6 +23,7 @@ import {
   Wrapper,
 } from './index.style';
 import PostProps from '../../../types/Post';
+import useToast from '../../../hooks/useToast';
 
 interface Props {
   parentPostData?: {
@@ -67,6 +68,8 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
   const [inputUserId, setInputUserId] = useState<string>('');
   const [selectUser, setSelectUser] = useState<number>(0);
 
+  const toast = useToast();
+
   // 실시간 미리보기를 활성화하려면 이걸 키고 preview element의 렌더링 조건을 tabIndex === 0 으로 바꿔주세요
   // useEffect(() => {
   //   if (!previewRef.current) return;
@@ -87,7 +90,9 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
         parentPost: modifyPostData.parentPost,
       });
       if (result.statusCode !== 200) {
-        alert(`글 수정에 실패했습니다.\nERROR statusCode: ${result.statusCode}\nERROR message: ${result.message}`);
+        toast.addMessage(
+          `글 수정에 실패했습니다.\nERROR statusCode: ${result.statusCode}\nERROR message: ${result.message}`
+        );
         return;
       }
       Router.push(`/post/${modifyPostData._id}`);
@@ -102,7 +107,9 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
       mentions: Array.from(removeDup),
     });
     if (result.statusCode !== 200) {
-      alert(`글 작성에 실패했습니다.\nERROR statusCode: ${result.statusCode}\nERROR message: ${result.message}`);
+      toast.addMessage(
+        `글 작성에 실패했습니다.\nERROR statusCode: ${result.statusCode}\nERROR message: ${result.message}`
+      );
       return;
     }
     Router.back();
@@ -406,9 +413,9 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
               setContent(data); // setContent를 안하면 프리뷰에 반영이 안됩니다..
             }
           })
-          .catch((e) => alert(`이미지 업로드에 실패하였습니다. Error Message: ${e}`));
+          .catch((e) => toast.addMessage(`이미지 업로드에 실패하였습니다. Error Message: ${e}`));
       } else {
-        alert(`이미지 포맷을 확인해주세요.업로드 된 파일 이름 ${files[0].name} / 포맷 ${format}`);
+        toast.addMessage(`이미지 포맷을 확인해주세요.업로드 된 파일 이름 ${files[0].name} / 포맷 ${format}`);
       }
     }
   };

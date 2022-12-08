@@ -17,11 +17,13 @@ import {
   DropDown,
   PostButton,
 } from './index.style';
+import useToast from '../../../hooks/useToast';
 
 export default function MainPost({ postData }: { postData: PostProps }) {
   const authedUserInfo = useRecoilValue(authedUser);
   const contentRef = useRef<HTMLDivElement>(null);
   const [dropDownDisplay, setDropDownDisplay] = useState<boolean>(false);
+  const toast = useToast();
 
   useEffect(() => {
     if (!contentRef.current) return;
@@ -31,7 +33,7 @@ export default function MainPost({ postData }: { postData: PostProps }) {
     setDropDownDisplay(false);
     const response = await httpDelete(`/post/${postData._id}`);
     if (response.statusCode !== 200) {
-      alert(`게시글 삭제에 실패하였습니다. ${response.message}`);
+      toast.addMessage(`게시글 삭제에 실패하였습니다. ${response.message}`);
     } else {
       Router.push('/');
     }
