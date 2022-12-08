@@ -2,6 +2,7 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { authedUser } from '../../../atom';
+import useToast from '../../../hooks/useToast';
 import { httpPost, httpDelete, httpGet } from '../../../utils/http';
 import { Avatar, Button, ButtonArea, Container, Information, UserId, UserNickname } from './index.style';
 
@@ -16,6 +17,7 @@ export const FollowMember = React.forwardRef<HTMLInputElement, UserData>(
   ({ userid, nickname, profileimg, displayButton }: UserData, ref) => {
     const [following, setFollowing] = useState(false);
     const authedUserInfo = useRecoilValue(authedUser);
+    const toast = useToast();
 
     useEffect(() => {
       if (authedUserInfo.logined) {
@@ -32,7 +34,7 @@ export const FollowMember = React.forwardRef<HTMLInputElement, UserData>(
           : await httpPost(`/follow/following/${userid}`, {});
         if (response.message === 'success') setFollowing((prev) => !prev);
       } catch (e) {
-        alert(`Follow ERROR: ${e}`);
+        toast.addMessage(`Follow ERROR: ${e}`);
       }
     };
 

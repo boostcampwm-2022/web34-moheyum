@@ -20,6 +20,7 @@ import {
   SignupVerifyMessage,
   SubmitButton,
 } from './index.style';
+import useToast from '../../hooks/useToast';
 
 // 페이지 변경되거나 추가되면 여기도 업데이트 필요.
 const urlList = ['signup', 'post', 'notification', 'login', 'myAccount', 'search', 'write', 'idinquiry', 'pwinquiry'];
@@ -76,6 +77,7 @@ export default function SignupModal() {
     verify: '',
   });
 
+  const toast = useToast();
   const [startVerify, setStartVerify] = useState<boolean>(false);
   const [verified, setVerified] = useState<boolean>(false);
   const [timer, setTimer] = useState<number>(-1);
@@ -168,7 +170,9 @@ export default function SignupModal() {
       password: formValues.password,
     });
     if (response.statusCode !== 200) {
-      alert(`오류가 발생했습니다.\nERROR statusCode: ${response.statusCode}\nERROR message: ${response.message}`);
+      toast.addMessage(
+        `오류가 발생했습니다.\nERROR statusCode: ${response.statusCode}\nERROR message: ${response.message}`
+      );
       setVerified(false);
       return;
     }
@@ -177,7 +181,7 @@ export default function SignupModal() {
       password: formValues.password,
     });
     if (signinResponse.statusCode !== 200) {
-      alert(
+      toast.addMessage(
         `회원 가입에 성공했으나 로그인에 실패했습니다.\nERROR statusCode: ${signinResponse.statusCode}\nERROR message: ${signinResponse.message}`
       );
       return;

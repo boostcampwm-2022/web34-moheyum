@@ -6,6 +6,7 @@ import Title from './Title';
 import { authedUser, newNotification } from '../../atom';
 import { Setting, SideMenuBox, Wrapper } from './index.style';
 import SideBarDropdown from './SideBarDropdown';
+import useToast from '../../hooks/useToast';
 
 const menuList = [
   { routeSrc: '/', imgSrc: '/ico_home.svg', text: '홈', avatar: false },
@@ -13,16 +14,10 @@ const menuList = [
   { routeSrc: '/search', imgSrc: '/ico_search.svg', text: '검색', avatar: false },
 ];
 
-type SideBarProps = {
-  notiState?: boolean;
-};
-
-SideBar.defaultProps = {
-  notiState: false,
-};
-
-export default function SideBar({ notiState }: React.PropsWithChildren<SideBarProps>) {
+export default function SideBar() {
   const [dropdownState, setdropdownState] = useState<boolean>(false);
+  const toast = useToast();
+
   const showSettingdropdown = () => {
     setdropdownState(!dropdownState);
   };
@@ -30,16 +25,15 @@ export default function SideBar({ notiState }: React.PropsWithChildren<SideBarPr
   const [newNotiState, setNewNotiState] = useRecoilState(newNotification);
   useEffect(() => {
     const eventSource = new EventSource('/api/event');
-    if (!notiState) {
-      eventSource.onmessage = (event) => {
-        setNewNotiState(event.data);
-      };
-      eventSource.onerror = (error) => {
-        console.error('SSE error', error);
-      };
-    }
+    eventSource.onmessage = (event) => {
+      setNewNotiState(event.data);
+      toast.addMessage('새 알림이 도착했습니다.');
+    };
+    eventSource.onerror = (error) => {
+      toast.addMessage(`SSE error : ${error}`);
+    };
     return () => eventSource.close();
-  }, [notiState]);
+  }, []);
 
   return (
     <Wrapper>

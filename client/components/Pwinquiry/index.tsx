@@ -18,6 +18,7 @@ import {
   EmailRowMessage,
   CompleteBox,
 } from './index.style';
+import useToast from '../../hooks/useToast';
 
 const schema = yup.object().shape({
   id: yup
@@ -37,6 +38,8 @@ export default function Pwinquiry() {
   } = useForm({
     resolver: yupResolver(schema),
   });
+  const toast = useToast();
+
   const goBack = () => {
     Router.back();
   };
@@ -55,16 +58,16 @@ export default function Pwinquiry() {
     const response = await httpPost('/auth/password-inquiry', { email: userInfo.email, userid: userInfo.id });
     switch (response.statusCode) {
       case 422:
-        alert(`없는 아이디입니다.${response.statusCode}: ${response.message}`);
+        toast.addMessage(`없는 아이디입니다.${response.statusCode}: ${response.message}`);
         break;
       case 404:
-        alert(`없는 이메일입니다.${response.statusCode}: ${response.message}`);
+        toast.addMessage(`없는 이메일입니다.${response.statusCode}: ${response.message}`);
         break;
       case 200:
         setSendSuccess(true);
         break;
       default:
-        alert(`서버 오류. ${response.statusCode}: ${response.message}`);
+        toast.addMessage(`서버 오류. ${response.statusCode}: ${response.message}`);
     }
   };
   return (

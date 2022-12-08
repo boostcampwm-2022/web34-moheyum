@@ -27,6 +27,7 @@ import {
   ProfileImage,
   ButtonBox,
 } from './index.style';
+import useToast from '../../hooks/useToast';
 
 interface ProfileEditable {
   nickname: string;
@@ -65,6 +66,8 @@ export default function ProfileEditSection() {
   const goBack = () => {
     Router.back();
   };
+
+  const toast = useToast();
 
   const authedUserInfo = useRecoilValue(authedUser);
   const setAuthedUserInfo = useSetRecoilState(authedUser);
@@ -132,8 +135,7 @@ export default function ProfileEditSection() {
         profileSubmit();
       })
       .catch((e) => {
-        alert(e);
-        console.error(e);
+        toast.addMessage(e);
       });
   };
 
@@ -143,8 +145,7 @@ export default function ProfileEditSection() {
       bio: myProfile.bio,
     })
       .catch((e) => {
-        alert('프로필 편집에 실패했습니다.');
-        console.error(e);
+        toast.addMessage(`프로필 편집에 실패했습니다.\n${e}`);
       })
       .finally(() => {
         goBack();
