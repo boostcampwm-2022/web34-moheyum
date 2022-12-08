@@ -6,6 +6,7 @@ import Title from './Title';
 import { authedUser, newNotification } from '../../atom';
 import { Setting, SideMenuBox, Wrapper } from './index.style';
 import SideBarDropdown from './SideBarDropdown';
+import useToast from '../../hooks/useToast';
 
 const menuList = [
   { routeSrc: '/', imgSrc: '/ico_home.svg', text: '홈', avatar: false },
@@ -23,6 +24,8 @@ SideBar.defaultProps = {
 
 export default function SideBar({ notiState }: React.PropsWithChildren<SideBarProps>) {
   const [dropdownState, setdropdownState] = useState<boolean>(false);
+  const toast = useToast();
+
   const showSettingdropdown = () => {
     setdropdownState(!dropdownState);
   };
@@ -33,9 +36,11 @@ export default function SideBar({ notiState }: React.PropsWithChildren<SideBarPr
     if (!notiState) {
       eventSource.onmessage = (event) => {
         setNewNotiState(event.data);
+        toast.addMessage('새 알림이 도착했습니다.');
       };
       eventSource.onerror = (error) => {
-        console.error('SSE error', error);
+        // console.error('SSE error', error);
+        toast.addMessage(`SSE error : ${error}`);
       };
     }
     return () => eventSource.close();
