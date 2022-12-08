@@ -12,6 +12,9 @@ import {
   UseInterceptors,
   Delete,
   Res,
+  CacheKey,
+  CacheInterceptor,
+  CacheTTL,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from 'src/common/database/user.schema';
@@ -22,8 +25,11 @@ import { GetUser } from 'src/common/decorator/get-user.decorator';
 import { NcloudService } from 'src/ncloud/ncloud.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { GetUserUpdatePasswordDto } from './dto/get-update-password.dto';
+import { MoheyumInterceptor } from 'src/common/cache/cache.interceptor';
+import { CacheEvict } from 'src/common/cache/cache-evict.decorator';
 
 @Controller('user')
+@UseInterceptors(MoheyumInterceptor)
 export class UserController {
   constructor(
     private userService: UserService,
@@ -32,6 +38,8 @@ export class UserController {
 
   @HttpCode(200)
   @UseGuards(JwtAuthGuard)
+  @CacheKey('mention')
+  @CacheTTL(300)
   @Get('mentionlist')
   async getMentionList(@GetUser() user: User) {
     const data = await this.userService.getMentionList(user.userid);
@@ -47,6 +55,7 @@ export class UserController {
       throw new BadRequestException();
     return await this.userService.searchUser(keyword, next);
   }
+
   @HttpCode(200)
   @UseGuards(JwtAuthGuard)
   @Put('password')
@@ -70,6 +79,7 @@ export class UserController {
 
   @HttpCode(200)
   @UseGuards(JwtAuthGuard, UpdateAuthGuard)
+  @CacheEvict('mention')
   @Put('/:userid')
   async updateUserProfile(
     @Param('userid') userid: string,
