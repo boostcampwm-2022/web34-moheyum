@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRecoilValue } from 'recoil';
 import { authedUser } from '../../../atom';
 import { httpPost, httpGet, httpPatch } from '../../../utils/http';
-import renderMarkdown from '../../../utils/markdown';
+import { renderMarkdown } from '../../../utils/markdown';
 import UserDropDown from './UserDropDown';
 import { getLeftWidth } from '../../../styles/theme';
 import UserProfile from '../../UserProfile';

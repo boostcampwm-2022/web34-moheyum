@@ -58,8 +58,8 @@ function italic(str: string): string {
 }
 
 function underline(str: string): string {
-  let result = str.replace(/__([^_\n]+?)__/g, '<u>$1</u>');
-  result = result.replace(/_([^_\n]+?)_/g, '<u>$1</u>');
+  const result = str.replace(/__([^_\n]+?)__/g, '<u>$1</u>');
+  // result = result.replace(/_([^_\n]+?)_/g, '<u>$1</u>');
   return result;
 }
 
@@ -88,7 +88,7 @@ function hr(str: string): string {
   return result;
 }
 
-export default function doParse(str: string): string {
+export function doParse(str: string): string {
   // console.log('parse start');
   let result = str;
   // console.log(JSON.stringify(result));
@@ -106,5 +106,25 @@ export default function doParse(str: string): string {
   result = strike(result);
   result = link(result);
   // console.log(JSON.stringify(result));
+  return result;
+}
+
+type MarkdownWithoutStyle = {
+  content: string;
+  thumbnail: string;
+};
+
+export function doParseForArticleCard(str: string): MarkdownWithoutStyle {
+  const result: MarkdownWithoutStyle = { content: '', thumbnail: '' };
+  const withStyle = doParse(str);
+
+  result.content = withStyle.replace(/<\/?.+?>/g, '').replace(/&nbsp;/g, '');
+
+  const img = /<img src="(.+?)".+?\/>/g.exec(withStyle);
+  if (img) {
+    [, result.thumbnail] = img;
+    console.log(withStyle);
+  }
+
   return result;
 }

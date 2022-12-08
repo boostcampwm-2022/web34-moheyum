@@ -3,6 +3,7 @@ import { ArticleCard } from '../../MainSection/Articlecard';
 import { PostLabel, SectionDivider } from './index.style';
 import usePaginator, { NEXT } from '../../../hooks/usePaginator';
 import { UserPostProps } from '../../../types/Post';
+import { renderMarkdownWithoutStyle } from '../../../utils/markdown';
 
 export default function PostList({ userData }: { userData: UserPostProps }) {
   const [nextCursor, setNextCursor] = useState('START');
@@ -29,17 +30,19 @@ export default function PostList({ userData }: { userData: UserPostProps }) {
       <PostLabel>게시글</PostLabel>
       <SectionDivider />
       {pages.map((item: any, index: number) => {
+        const parsed = renderMarkdownWithoutStyle(item.description);
         if (pages.length === index + 1)
           return (
             <ArticleCard
               author={item.authorDetail.userid}
               profileimg={item.authorDetail.profileimg}
               id={item._id}
-              description={item.description}
+              description={parsed.content}
               date={item.createdAt}
               comments={item.childPosts}
               nickname={item.authorDetail.nickname}
               key={item._id}
+              thumbnail={parsed.thumbnail}
               ref={lastFollowElementRef}
             />
           );
@@ -48,11 +51,12 @@ export default function PostList({ userData }: { userData: UserPostProps }) {
             author={item.authorDetail.userid}
             profileimg={item.authorDetail.profileimg}
             id={item._id}
-            description={item.description}
+            description={parsed.content}
             date={item.createdAt}
             comments={item.childPosts}
             nickname={item.authorDetail.nickname}
             key={item._id}
+            thumbnail={parsed.thumbnail}
           />
         );
       })}

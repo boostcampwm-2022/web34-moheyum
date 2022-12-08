@@ -5,7 +5,7 @@ import { useRecoilValue } from 'recoil';
 import { httpDelete } from '../../../utils/http';
 import { authedUser } from '../../../atom';
 import type PostProps from '../../../types/Post';
-import renderMarkdown from '../../../utils/markdown';
+import { renderMarkdown } from '../../../utils/markdown';
 import UserProfile from '../../UserProfile';
 import { ContentBox, HeaderBox, MainContentBox, PostButton, ButtonConatiner } from './index.style';
 
