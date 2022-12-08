@@ -8,9 +8,9 @@ import { Setting, SideMenuBox, Wrapper } from './index.style';
 import SideBarDropdown from './SideBarDropdown';
 
 const menuList = [
-  { routeSrc: '/', imgSrc: '/home.svg', text: '홈', avatar: false },
-  { routeSrc: '/notification', imgSrc: '/announce.svg', text: '알림', avatar: false },
-  { routeSrc: '/search', imgSrc: '/search.svg', text: '검색', avatar: false },
+  { routeSrc: '/', imgSrc: '/ico_home.svg', text: '홈', avatar: false },
+  { routeSrc: '/notification', imgSrc: '/ico_notification.svg', text: '알림', avatar: false },
+  { routeSrc: '/search', imgSrc: '/ico_search.svg', text: '검색', avatar: false },
 ];
 
 type SideBarProps = {
@@ -58,7 +58,7 @@ export default function SideBar({ notiState }: React.PropsWithChildren<SideBarPr
       </SideMenuBox>
       {dropdownState && <SideBarDropdown />}
       <Setting onClick={showSettingdropdown}>
-        <Menu imgSrc="/setting.svg" text="설정" avatar={false} noti={false} />
+        <Menu imgSrc="/ico_setting.svg" text="설정" avatar={false} noti={false} />
       </Setting>
     </Wrapper>
   );

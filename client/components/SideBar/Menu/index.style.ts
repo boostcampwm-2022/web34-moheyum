@@ -29,6 +29,10 @@ export const Wrapper = styled.div`
     transition: all 0.3s ease;
   }
 
+  &:hover {
+    font-weight: 600;
+  }
+
   &:hover > span {
     width: 100%;
   }
