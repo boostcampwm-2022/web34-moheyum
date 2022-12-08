@@ -19,7 +19,7 @@ export const FollowMember = React.forwardRef<HTMLInputElement, UserData>(
 
     useEffect(() => {
       if (authedUserInfo.logined) {
-        httpGet(`/api/follow/check/${userid}`).then((data) => {
+        httpGet(`/follow/check/${userid}`).then((data) => {
           setFollowing(data.data.isFollow);
         });
       }
@@ -28,8 +28,8 @@ export const FollowMember = React.forwardRef<HTMLInputElement, UserData>(
     const ToggleFollowing = async () => {
       try {
         const response = following
-          ? await httpDelete(`/api/follow/following/${userid}`)
-          : await httpPost(`/api/follow/following/${userid}`, {});
+          ? await httpDelete(`/follow/following/${userid}`)
+          : await httpPost(`/follow/following/${userid}`, {});
         if (response.message === 'success') setFollowing((prev) => !prev);
       } catch (e) {
         alert(`Follow ERROR: ${e}`);

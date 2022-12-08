@@ -52,7 +52,7 @@ export default function Pwinquiry() {
     });
   };
   const handleInpuiry = async () => {
-    const response = await httpPost('/api/auth/password-inquiry', { email: userInfo.email, userid: userInfo.id });
+    const response = await httpPost('/auth/password-inquiry', { email: userInfo.email, userid: userInfo.id });
     switch (response.statusCode) {
       case 422:
         alert(`없는 아이디입니다.${response.statusCode}: ${response.message}`);

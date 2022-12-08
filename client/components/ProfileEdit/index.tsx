@@ -109,7 +109,10 @@ export default function ProfileEditSection() {
   };
 
   const handleProfileSubmit = () => {
-    if (!profileImg) return;
+    if (!profileImg) {
+      profileSubmit();
+      return;
+    }
     const formData = new FormData();
     formData.append('file', profileImg!);
     fetch(`/api/user/${myProfile.userid}/avatar`, {
@@ -135,7 +138,7 @@ export default function ProfileEditSection() {
   };
 
   const profileSubmit = () => {
-    httpPut(`/api/user/${myProfile.userid}`, {
+    httpPut(`/user/${myProfile.userid}`, {
       nickname: myProfile.nickname,
       bio: myProfile.bio,
     })

@@ -39,7 +39,7 @@ export default function Idinquiry() {
     setUserEmail(e.target.value);
   };
   const handleInpuiry = async () => {
-    const response = await httpPost('/api/auth/id-inquiry', { email: userEmail });
+    const response = await httpPost('/auth/id-inquiry', { email: userEmail });
     if (response.message !== 'success') {
       alert('아이디를 찾을 수 없습니다.');
       return;

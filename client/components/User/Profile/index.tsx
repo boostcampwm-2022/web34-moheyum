@@ -32,7 +32,7 @@ function UserProfile({ userData }: { userData: UserPostProps }) {
   }, []);
 
   const cancleFollow = () => {
-    httpDelete(`/api/follow/following/${userData.userid}`).then((result) => {
+    httpDelete(`/follow/following/${userData.userid}`).then((result) => {
       if (result.message === 'success') {
         setImFollowing(false);
       }
@@ -40,7 +40,7 @@ function UserProfile({ userData }: { userData: UserPostProps }) {
   };
 
   const submitFollow = () => {
-    httpPost(`/api/follow/following/${userData.userid}`, {}).then((result) => {
+    httpPost(`/follow/following/${userData.userid}`, {}).then((result) => {
       if (result.message === 'success') setImFollowing(true);
     });
   };
