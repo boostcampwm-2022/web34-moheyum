@@ -1,4 +1,4 @@
-import React, { useState, useRef, ChangeEvent, RefObject } from 'react';
+import React, { useState, useRef, ChangeEvent, RefObject, KeyboardEvent } from 'react';
 import Router from 'next/router';
 import Link from 'next/link';
 import { httpPost } from '../../../utils/http';
@@ -44,6 +44,13 @@ export default function Login() {
     });
   };
 
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    const { key } = e;
+    if (key === 'Enter') {
+      doLogin();
+    }
+  };
+
   const doLogin = async () => {
     if (!isInputExist(inputIdRef, inputPwRef, account.id, account.pw)) {
       return;
@@ -83,6 +90,7 @@ export default function Login() {
           name="pw"
           ref={inputPwRef}
           onChange={onChangeAccount}
+          onKeyDown={handleKeyDown}
         />
         <button type="submit" onClick={doLogin}>
           로그인
