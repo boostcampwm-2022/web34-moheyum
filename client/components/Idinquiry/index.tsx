@@ -17,6 +17,7 @@ import {
   EmailRowMessage,
   CompleteBox,
 } from './index.style';
+import useToast from '../../hooks/useToast';
 
 const schema = yup.object().shape({
   email: yup.string().required('이메일을 입력하세요.').email('이메일 형식에 맞지 않습니다.'),
@@ -38,10 +39,13 @@ export default function Idinquiry() {
   const onChangeEmail = (e: ChangeEvent<HTMLInputElement>): void => {
     setUserEmail(e.target.value);
   };
+
+  const toast = useToast();
+
   const handleInpuiry = async () => {
     const response = await httpPost('/auth/id-inquiry', { email: userEmail });
     if (response.message !== 'success') {
-      alert('아이디를 찾을 수 없습니다.');
+      toast.addMessage('아이디를 찾을 수 없습니다.');
       return;
     }
     setUserId(response.data);

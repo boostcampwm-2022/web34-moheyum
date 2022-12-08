@@ -3,6 +3,7 @@ import React, { useCallback, useRef, useState } from 'react';
 import COLORS from '../../../styles/color';
 import usePaginator, { NEXT } from '../../../hooks/usePaginator';
 import { ArticleCard } from '../../MainSection/Articlecard';
+import { renderMarkdownWithoutStyle } from '../../../utils/markdown';
 
 export default function PostResult({ keyword }: { keyword: string }) {
   const [nextCursor, setNextCursor] = useState('START');
@@ -26,17 +27,19 @@ export default function PostResult({ keyword }: { keyword: string }) {
   return (
     <ResultContainer>
       {pages.map((item: any, index: number) => {
+        const parsed = renderMarkdownWithoutStyle(item.description);
         if (pages.length === index + 1)
           return (
             <ArticleCard
               author={item.authorDetail.userid}
               profileimg={item.authorDetail.profileimg}
               id={item._id}
-              description={item.description}
+              description={parsed.content}
               date={item.createdAt}
               comments={item.childPosts}
               nickname={item.authorDetail.nickname}
               key={item._id}
+              thumbnail={parsed.thumbnail}
               ref={lastFollowElementRef}
             />
           );
@@ -45,11 +48,12 @@ export default function PostResult({ keyword }: { keyword: string }) {
             author={item.authorDetail.userid}
             profileimg={item.authorDetail.profileimg}
             id={item._id}
-            description={item.description}
+            description={parsed.content}
             date={item.createdAt}
             comments={item.childPosts}
             nickname={item.authorDetail.nickname}
             key={item._id}
+            thumbnail={parsed.thumbnail}
           />
         );
       })}

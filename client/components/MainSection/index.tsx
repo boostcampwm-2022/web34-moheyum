@@ -5,6 +5,7 @@ import { ArticlesSection, FakeButton, NewArticleSection, Placeholder, Wrapper, N
 import { MainTopBar } from '../../styles/common';
 
 import usePaginator, { NEXT } from '../../hooks/usePaginator';
+import { renderMarkdownWithoutStyle } from '../../utils/markdown';
 
 export default function MainSection() {
   const [nextCursor, setNextCursor] = useState(NEXT.START);
@@ -40,17 +41,19 @@ export default function MainSection() {
         </Link>
         <ArticlesSection>
           {pages.map((item: any, index: number) => {
+            const parsed = renderMarkdownWithoutStyle(item.description);
             if (pages.length === index + 1)
               return (
                 <ArticleCard
                   author={item.authorDetail.userid}
                   profileimg={item.authorDetail.profileimg}
                   id={item._id}
-                  description={item.description}
+                  description={parsed.content}
                   date={item.createdAt}
                   comments={item.childPosts}
                   nickname={item.authorDetail.nickname}
                   key={item._id}
+                  thumbnail={parsed.thumbnail}
                   ref={lastFollowElementRef}
                 />
               );
@@ -59,11 +62,12 @@ export default function MainSection() {
                 author={item.authorDetail.userid}
                 profileimg={item.authorDetail.profileimg}
                 id={item._id}
-                description={item.description}
+                description={parsed.content}
                 date={item.createdAt}
                 comments={item.childPosts}
                 nickname={item.authorDetail.nickname}
                 key={item._id}
+                thumbnail={parsed.thumbnail}
               />
             );
           })}

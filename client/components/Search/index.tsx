@@ -43,7 +43,7 @@ export default function SearchSection() {
     <Wrapper>
       <TopBar>
         <TopBarContainer>
-          <Image alt="search button" width={30} height={30} src="/search.svg" />
+          <Image alt="search button" width={30} height={30} src="/ico_search.svg" />
           <SearchInputBar type="text" placeholder="검색어를 입력하세요." onKeyDown={handleEnter} ref={inputRef} />
         </TopBarContainer>
       </TopBar>

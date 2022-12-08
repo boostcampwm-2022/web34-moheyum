@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import COLORS from './color';
 import { displayColumn } from './mixin';
-import { mainSectionSize } from './theme';
 
 export const MainTopBar = styled.header`
   /* position: fixed; */
