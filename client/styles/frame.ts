@@ -6,8 +6,6 @@ import { maxFrameSize } from './theme';
 const Frame = styled.div`
   background-color: ${COLORS.BACKGROUND};
   width: ${maxFrameSize}px;
-  min-width: 600px;
-  min-height: 861px;
   height: 100%;
   ${displayCenter}
   border-right: 1px solid ${COLORS.GRAY3};
