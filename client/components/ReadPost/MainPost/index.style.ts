@@ -21,7 +21,7 @@ export const ContentBox = styled.div`
   width: 100%;
   margin-top: 20px;
   ${markdownStyle}
-  font-size: 18px;
+  font-size: 16px;
 `;
 
 export const MenuDropDown = styled.button`

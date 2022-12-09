@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { Wrapper, NewNoti, Item, ImageBox, Text, BorderBottom } from './index.style';
+import defaultProfile from '../../../public/default-profile.png';
 
 export default function Menu({
   imgSrc,
@@ -18,7 +19,14 @@ export default function Menu({
       {avatar ? (
         <Item>
           <ImageBox>
-            <Image className="avatarBox" src={imgSrc} alt="item" width={25} height={25} priority />
+            <Image
+              className="avatarBox"
+              src={imgSrc !== '' ? imgSrc : defaultProfile}
+              alt="item"
+              width={25}
+              height={25}
+              priority
+            />
           </ImageBox>
           <Text>{text}</Text>
         </Item>

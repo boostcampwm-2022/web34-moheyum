@@ -2,9 +2,14 @@ import React from 'react';
 import Image from 'next/image';
 import styled from '@emotion/styled';
 import COLORS from '../../../styles/color';
+import defaultProfile from '../../../public/default-profile.png';
 
 export default function ProfileImg({ imgUrl }: { imgUrl: string }) {
-  return <Profile>{imgUrl ? <Image src={imgUrl} alt="Logo" width={46} height={46} priority /> : <div />}</Profile>;
+  return (
+    <Profile>
+      <Image src={imgUrl !== '' ? imgUrl : defaultProfile} alt="Logo" width={46} height={46} priority />
+    </Profile>
+  );
 }
 
 export const Profile = styled.div`
@@ -17,6 +22,7 @@ export const Profile = styled.div`
   padding-right: 45px;
   background-color: ${COLORS.WHITE};
   img {
+    object-fit: cover;
     border-radius: 50px;
   }
 `;

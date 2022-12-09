@@ -9,7 +9,7 @@ const nextConfig = {
     },
   ],
   images: {
-    domains: ['kr.object.ncloudstorage.com', 'localhost'],
+    domains: ['kr.object.ncloudstorage.com', 'localhost', 's3-us-west-2.amazonaws.com'],
   },
 };
 

@@ -13,11 +13,11 @@ export const Wrapper = styled.div`
   color: ${COLORS.BLACK};
   user-select: none;
   background-color: ${COLORS.PRIMARY_LIGHT};
-  
+
   &:hover {
     font-weight: 600;
   }
-  
+
   &:hover > span {
     width: 100%;
   }
@@ -59,6 +59,7 @@ export const ImageBox = styled.div`
     border-radius: 40px;
     background-color: ${COLORS.WHITE};
     border: 1px solid ${COLORS.PRIMARY};
+    object-fit: cover;
   }
 `;
 
