@@ -88,11 +88,20 @@ export default function Notification() {
                 url={item.url}
                 message={item.message}
                 createdAt={item.createdAt}
+                notifId={item._id}
                 key={item._id}
                 ref={lastNotificationElementRef}
               />
             );
-          return <NotificationCard url={item.url} message={item.message} createdAt={item.createdAt} key={item._id} />;
+          return (
+            <NotificationCard
+              url={item.url}
+              message={item.message}
+              createdAt={item.createdAt}
+              notifId={item._id}
+              key={item._id}
+            />
+          );
         })}
         {loading && <ExceptionPage>Loading</ExceptionPage>}
         {error && <ExceptionPage>error</ExceptionPage>}
