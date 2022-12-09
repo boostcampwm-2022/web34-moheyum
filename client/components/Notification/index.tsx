@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState, useEffect } from 'react';
 import Router from 'next/router';
-import { useRecoilValue, useRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { newNotification } from '../../atom';
 import usePaginator, { NEXT } from '../../hooks/usePaginator';
 import { ExceptionPage, NotificationContainer, TopBar, Wrapper, NewNoti } from './index.style';
