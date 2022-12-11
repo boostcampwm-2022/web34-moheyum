@@ -133,6 +133,7 @@ export const markdownStyle = css`
     overflow-x: hidden;
     word-wrap: break-word;
     white-space: nowrap;
+    font-family: D2Coding, 'D2 coding', monospace;
     & > div {
       white-space: pre-wrap;
     }
