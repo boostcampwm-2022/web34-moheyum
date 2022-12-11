@@ -57,7 +57,7 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
   const [imageOver, setImageOver] = useState<boolean>(false);
 
   // 멘션 기능 관련 상태.
-  const [dropDownDisplay, setDropDownDisplay] = useState<string>('none');
+  const [dropDownDisplay, setDropDownDisplay] = useState<boolean>(false);
   const [dropDownPosition, setDropDownPosition] = useState<{ x: string; y: string }>({
     x: '0px',
     y: '0px',
@@ -161,7 +161,7 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
   useEffect(() => {
     if (!checkMentionActive) {
       setInputUserId('');
-      setDropDownDisplay('none');
+      setDropDownDisplay(false);
       setSelectUser(0);
     } else {
       setInputUserId('');
@@ -362,7 +362,7 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
           break;
         default:
           // 멘션 키 active 상태일 때, 단어 입력하는 동안 발생하는 이벤트
-          setDropDownDisplay('block');
+          setDropDownDisplay(true);
           if (checkMentionActive && key.match(/^\w$/i)) {
             setInputUserId((prevState) => prevState + key);
             setSelectUser(0);
@@ -390,7 +390,7 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
     e.preventDefault();
   }, []);
 
-  const handleFiles = (files: FileList) => {
+  const handleFiles = async (files: FileList) => {
     const fetchImage = async () => {
       const response = await fetch(`/api/image`, {
         method: 'POST',
@@ -402,18 +402,19 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
 
     const formData = new FormData();
     formData.append('file', files[0]);
-
+    const SIZE_LIMIT = 1000000 * 10;
+    if (files[0].size > SIZE_LIMIT) {
+      toast.addMessage(`${SIZE_LIMIT / 1000000}MB 이하의 그림 파일만 등록 가능합니다.`);
+      return;
+    }
     if (contentRef.current) {
       const format: string = `${files[0].name.split('.').slice(-1)}`.toUpperCase();
       if (format === 'JPG' || format === 'JPEG' || format === 'PNG') {
-        fetchImage()
-          .then((imageData) => {
-            const data = `![${files[0].name as string}](${imageData.data.imageLink})`;
-            pasteAction(`${data}`);
-          })
-          .catch((e) => toast.addMessage(`이미지 업로드에 실패하였습니다. Error Message: ${e}`));
+        const response = await fetchImage();
+        const data = `![${files[0].name as string}](${response.data.imageLink})`;
+        pasteAction(`${data}`);
       } else {
-        toast.addMessage(`이미지 포맷을 확인해주세요.업로드 된 파일 이름 ${files[0].name} / 포맷 ${format}`);
+        toast.addMessage(`이미지 포맷을 확인해주세요.\n업로드 된 파일 이름 ${files[0].name}`);
       }
     }
   };
