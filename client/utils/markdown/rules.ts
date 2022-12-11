@@ -19,6 +19,18 @@ function headers(str: string): string {
   return result;
 }
 
+function unorderedList(str: string): string {
+  const result = str.replace(/^[-*] (.*)$/gm, '<ul><li>$1</li></ul>').replace(/<\/ul>\n<ul>/gm, '');
+  return result;
+}
+
+function orderedList(str: string): string {
+  const result = str
+    .replace(/^(\d+)[).] (.*)$/gm, '<ol start="$1"><li>$2</li></ol>')
+    .replace(/<\/ol>\n<ol start="\d+">/gm, '');
+  return result;
+}
+
 function code(str: string): string {
   const result = str.replace(/`([^`\n]+?)`/gm, '<code>$1</code>');
   return result;
@@ -111,6 +123,8 @@ export function doParse(str: string): string {
   result = emptyLines(result);
   result = headers(result);
   result = code(result);
+  result = unorderedList(result);
+  result = orderedList(result);
   result = divideLines(result);
   result = hr(result);
   result = bold(result);

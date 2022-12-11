@@ -167,4 +167,14 @@ export const markdownStyle = css`
       color: ${COLORS.PRIMARY};
     }
   }
+
+  & ul {
+    list-style: circle;
+    list-style-position: inside;
+  }
+
+  & ol {
+    list-style: decimal;
+    list-style-position: inside;
+  }
 `;
