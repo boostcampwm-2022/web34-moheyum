@@ -20,7 +20,7 @@ function headers(str: string): string {
 }
 
 function code(str: string): string {
-  const result = str.replace(/`([\S\n][^`\n]+)`/gm, '<code>$1</code>');
+  const result = str.replace(/`([\S \t]+?)`/gm, '<code>$1</code>');
   return result;
 }
 
@@ -71,11 +71,11 @@ function strike(str: string): string {
 
 function link(str: string): string {
   let result = str.replace(
-    /!\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm,
+    /!\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm,
     '<img src="$2" alt="$1"/>'
   );
   result = result.replace(
-    /\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm,
+    /\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm,
     '<a href="$2">$1</a>'
   );
   return result;

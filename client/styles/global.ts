@@ -2,6 +2,8 @@ import { css } from '@emotion/react';
 
 const globalStyle = css`
   @import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
+  @import url(http://cdn.jsdelivr.net/gh/joungkyun/font-d2coding/d2coding.css);
+  @import url(http://cdn.jsdelivr.net/gh/snz-hayden/toolo/fonts/jua/jua.css);
 
   html,
   body,

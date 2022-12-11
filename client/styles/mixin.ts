@@ -123,6 +123,7 @@ export const markdownStyle = css`
     background-color: ${COLORS.GRAY3};
     border-radius: 6px;
     font-size: 85%;
+    font-family: D2Coding, 'D2 coding', monospace;
   }
 
   & pre {
