@@ -62,7 +62,7 @@ v2
 
 |||
 :--:|:--:
-<img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/d3061b60-1e3d-4db5-9993-295edad7fc3d/email.gif?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221211%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221211T080343Z&X-Amz-Expires=86400&X-Amz-Signature=c0f78b5f86c23dd071b4419db22e8147fe80ece2577173b6b1ed244974b1f4f6&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22email.gif%22&x-id=GetObject" width="500" height="280"/>|![무한 스크롤](https://user-images.githubusercontent.com/81913106/206894637-0d43e595-0038-4b58-847e-9ca8c6dde650.gif)
+<img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/d3061b60-1e3d-4db5-9993-295edad7fc3d/email.gif?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221211%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221211T080343Z&X-Amz-Expires=86400&X-Amz-Signature=c0f78b5f86c23dd071b4419db22e8147fe80ece2577173b6b1ed244974b1f4f6&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22email.gif%22&x-id=GetObject" width="480" height="270"/>|![무한 스크롤](https://user-images.githubusercontent.com/81913106/206894637-0d43e595-0038-4b58-847e-9ca8c6dde650.gif)
 이메일 인증을 통한 회원가입, 비밀번호 찾기|무한 스크롤을 통한 뉴스피드 탐색
 
 ## 🛠️ 프로젝트 구조 및 사용 기술
@@ -118,8 +118,8 @@ TOOL|![Figma](https://img.shields.io/badge/Figma-F24E1E?logo=figma&logoColor=whi
 ### 5. API 서버 성능 수치화
 
 - (예정)
-- Grafana K6를 통해 벤치마크를 하고 현재 서버로 수용 가능한 유저 수를 가늠했어요.
-- 2022년 12월 6일 아래의 조건에서 p(90) 응답 대기 시간이 300ms 미만임을 확인했어요.
+- Grafana K6를 통해 벤치마크를 하고 현재 서버로 수용 가능한 유저 수를 가늠.
+- 2022년 12월 6일 아래의 조건에서 p(90) 응답 대기 시간이 300ms 미만임을 확인.
     - API 서버 1대 (1vCPU, 2GB RAM)
     - 가상 유저 300명
     - 1초당 1 리퀘스트
