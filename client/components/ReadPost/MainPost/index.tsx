@@ -59,7 +59,7 @@ export default function MainPost({ postData }: { postData: PostProps }) {
             style={{ display: authedUserInfo.userid === postData.author ? 'block' : 'none' }}
             onClick={() => (dropDownDisplay ? setDropDownDisplay(false) : setDropDownDisplay(true))}
           >
-            <Image src="/menu.svg" alt="Logo" width={30} height={30} priority />
+            <Image src="/menu.svg" alt="Menu" width={30} height={30} priority />
           </MenuDropDown>
           {dropDownDisplay && (
             <DropDown>

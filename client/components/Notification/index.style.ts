@@ -25,9 +25,53 @@ export const TopBar = styled.header`
     font-weight: 500;
     text-align: left;
     color: ${COLORS.BLACK};
-    margin-left: 6px;
     ${displayColumn}
     margin-left: 33px;
+  }
+  img {
+    border-radius: 5px;
+    &:hover {
+      background-color: ${COLORS.GRAY5};
+    }
+  }
+`;
+
+export const Menu = styled.div`
+  width: 30px;
+  margin-right: 33px;
+`;
+
+export const DropDown = styled.div`
+  position: absolute;
+  width: 70px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid ${COLORS.PRIMARY};
+  border-radius: 10px;
+  background-color: ${COLORS.WHITE};
+  margin-left: -80px;
+  margin-top: -35px;
+  z-index: 1;
+`;
+
+export const PostButton = styled.div`
+  width: 100%;
+  background-color: ${COLORS.WHITE};
+  height: 38px;
+  line-height: 39px;
+  text-align: center;
+  font-size: 15px;
+  border-radius: 10px;
+  &:hover {
+    background-color: ${COLORS.GRAY5};
+    color: ${COLORS.PRIMARY_DARK};
+  }
+  &:active {
+    font-weight: 600;
+    background-color: ${COLORS.GRAY4};
   }
 `;
 
