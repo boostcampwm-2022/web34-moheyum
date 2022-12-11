@@ -20,7 +20,7 @@ function headers(str: string): string {
 }
 
 function unorderedList(str: string): string {
-  const result = str.replace(/^[-*] (.*)$/gm, '<ul><li>$1</li></ul>').replace(/<\/ul>\n<ul>/gm, '');
+  const result = str.replace(/^ *[-*+] (.*)$/gm, '<ul><li>$1</li></ul>').replace(/<\/ul>\n<ul>/gm, '');
   return result;
 }
 
@@ -46,9 +46,9 @@ function codeBlock(str: string): [string, string[]] {
   return [result, match ?? []];
 }
 
-function recoverCodeBlocks(str: string, codes: string[]): string {
+function recoverPlaceholders(str: string, codes: string[], placeholder: string): string {
   if (codes.length === 0) return str;
-  return codes.reduce((prev, curr) => prev.replace('\u235e', curr), str);
+  return codes.reduce((prev, curr) => prev.replace(placeholder, curr), str);
 }
 
 function blockQuote(str: string): string {
@@ -83,8 +83,8 @@ function italic(str: string): string {
 }
 
 function underline(str: string): string {
-  const result = str.replace(/__([^_\n]+?)__/g, '<u>$1</u>');
-  // result = result.replace(/_([^_\n]+?)_/g, '<u>$1</u>');
+  let result = str.replace(/__([^_\n]+?)__/g, '<u>$1</u>');
+  result = result.replace(/_([^_\n]+?)_/g, '<u>$1</u>');
   return result;
 }
 
@@ -94,16 +94,49 @@ function strike(str: string): string {
   return result;
 }
 
-function link(str: string): string {
+// TODO : href와 src도 codeBlock처럼 따로 빼두기
+function link(str: string): [string, string[], string[]] {
+  // let result = str.replace(
+  //   /!\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm,
+  //   '<img src="$2" alt="$1"/>'
+  // );
+  // result = result.replace(
+  //   /\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm,
+  //   '<a href="$2">$1</a>'
+  // );
   let result = str.replace(
     /!\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm,
-    '<img src="$2" alt="$1"/>'
+    '\u235f'
   );
   result = result.replace(
     /\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm,
-    '<a href="$2">$1</a>'
+    '\u2360'
   );
-  return result;
+
+  let matchImg = str.match(
+    /!\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm
+  );
+  if (matchImg) {
+    matchImg = matchImg.map((e) =>
+      e.replace(
+        /!\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm,
+        '<img src="$2" alt="$1"/>'
+      )
+    );
+  }
+  let matchLink = str.match(
+    /\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm
+  );
+  if (matchLink) {
+    matchLink = matchLink.map((e) =>
+      e.replace(
+        /\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm,
+        '<a href="$2">$1</a>'
+      )
+    );
+  }
+
+  return [result, matchImg ?? [], matchLink ?? []];
 }
 
 function hr(str: string): string {
@@ -118,7 +151,10 @@ export function doParse(str: string): string {
   // console.log(JSON.stringify(result));
   let result = str;
   let codes: string[] = [];
+  let links: string[] = [];
+  let imgs: string[] = [];
   [result, codes] = codeBlock(result);
+  [result, links, imgs] = link(result);
   result = blockQuote(result);
   result = emptyLines(result);
   result = headers(result);
@@ -131,8 +167,9 @@ export function doParse(str: string): string {
   result = italic(result);
   result = underline(result);
   result = strike(result);
-  result = link(result);
-  result = recoverCodeBlocks(result, codes);
+  result = recoverPlaceholders(result, codes, '\u235e');
+  result = recoverPlaceholders(result, links, '\u235f');
+  result = recoverPlaceholders(result, imgs, '\u2360');
   // console.log(JSON.stringify(result));
   // console.log(codes);
   return result;
