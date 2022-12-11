@@ -94,7 +94,8 @@ export class UserController {
 
   @HttpCode(200)
   @UseGuards(JwtAuthGuard, UpdateAuthGuard)
-  @CacheIndividual('user')
+  @CacheIndividual('avatar')
+  @CacheEvict('')
   @UseInterceptors(FileInterceptor('file'))
   @Put('/:userid/avatar')
   async uploadAvatar(

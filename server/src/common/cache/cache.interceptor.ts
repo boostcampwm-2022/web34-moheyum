@@ -133,6 +133,7 @@ export class MoheyumInterceptor extends CacheInterceptor {
           key === ''
             ? `/api/user/${context.switchToHttp().getRequest().user.userid}`
             : `${key}/${context.switchToHttp().getRequest().user.userid}`;
+        break;
       default:
         appendKey = key === '' ? req.originalUrl : `${key}`;
         break;
