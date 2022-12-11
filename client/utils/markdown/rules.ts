@@ -4,7 +4,7 @@ function emptyLines(str: string): string {
 }
 
 function divideLines(str: string): string {
-  const result = str.replace(/^([^<\n][\S \t]*)[\n]*$/gm, '<div>$1</div>');
+  const result = str.replace(/^([^<\n][\S \t]*)\n*$/gm, '<div>$1</div>');
   return result;
 }
 
@@ -20,12 +20,13 @@ function headers(str: string): string {
 }
 
 function code(str: string): string {
-  const result = str.replace(/`([\S \t]+?)`/gm, '<code>$1</code>');
+  const result = str.replace(/`([^`\n]+?)`/gm, '<code>$1</code>');
   return result;
 }
 
 function codeBlock(str: string): string {
-  const result = str.replace(/<div>```(?:.*)<\/div>\n([\S\s]+?)\n<div>```<\/div>/gm, '<pre>$1</pre>');
+  console.log(JSON.stringify(str));
+  const result = str.replace(/^```(?:.*)\n([\S\s]+?)\n```$/gm, '<pre>$1</pre>');
   return result;
 }
 
@@ -93,22 +94,20 @@ function hr(str: string): string {
 
 export function doParse(str: string): string {
   // console.log('parse start');
+  // console.log(JSON.stringify(result));
   let result = str;
-  // console.log(JSON.stringify(result));
+  result = codeBlock(result);
   result = blockQuote(result);
-  // console.log(JSON.stringify(result));
   result = emptyLines(result);
   result = headers(result);
   result = code(result);
   result = divideLines(result);
-  result = codeBlock(result);
   result = hr(result);
   result = bold(result);
   result = italic(result);
   result = underline(result);
   result = strike(result);
   result = link(result);
-  // console.log(JSON.stringify(result));
   return result;
 }
 
