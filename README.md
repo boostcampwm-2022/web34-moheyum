@@ -16,16 +16,12 @@
 
 
 -->
-
-# ![logo](https://i.imgur.com/xMwOfj0.png)
+# <img src="https://user-images.githubusercontent.com/81913106/206893672-4ebced07-b6a2-4563-9951-d6add4a481fd.png" width="200" height="32"/>
 > 마크다운을 지원하는 SNS  
 모헤윰으로 당신의 일상을 공유해보세요.
 
 
-
----
-
-## 기능
+## 🔍 프로젝트 주요 기능
 
 <!--
 데모 영상
@@ -61,10 +57,14 @@ v2
 
 |||
 :--:|:--:
-![](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/d3061b60-1e3d-4db5-9993-295edad7fc3d/email.gif?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221211%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221211T080343Z&X-Amz-Expires=86400&X-Amz-Signature=c0f78b5f86c23dd071b4419db22e8147fe80ece2577173b6b1ed244974b1f4f6&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22email.gif%22&x-id=GetObject)|![](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/c9909890-9ff0-4b9a-bdd6-2736f5d52d4f/%E1%84%86%E1%85%AE%E1%84%92%E1%85%A1%E1%86%AB%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%A9%E1%86%AF.gif?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221211%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221211T080423Z&X-Amz-Expires=86400&X-Amz-Signature=de12ce6add23d589d97355ba76fdae8359281a80115fa975c734b604726df3ae&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22%25E1%2584%2586%25E1%2585%25AE%25E1%2584%2592%25E1%2585%25A1%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25A9%25E1%2586%25AF.gif%22&x-id=GetObject)
+<img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/d3061b60-1e3d-4db5-9993-295edad7fc3d/email.gif?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221211%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221211T080343Z&X-Amz-Expires=86400&X-Amz-Signature=c0f78b5f86c23dd071b4419db22e8147fe80ece2577173b6b1ed244974b1f4f6&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22email.gif%22&x-id=GetObject" width="500" height="280"/>|![무한 스크롤](https://user-images.githubusercontent.com/81913106/206894637-0d43e595-0038-4b58-847e-9ca8c6dde650.gif)
 이메일 인증을 통한 회원가입, 비밀번호 찾기|무한 스크롤을 통한 뉴스피드 탐색
-![마크다운 에디터](https://user-images.githubusercontent.com/81913106/206893134-2932ed3e-e949-447f-a11a-a589a6b2849a.gif)|![](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/230bd528-95b8-4354-8e95-101a45e39ebb/upload.gif?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221203%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221203T094459Z&X-Amz-Expires=86400&X-Amz-Signature=ed25760a4577a4645d015fb659c149994182e1509894f10676b850d8bed6fc96&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22upload.gif%22&x-id=GetObject)
-마크다운 형식의 게시글 작성|드래그 앤 드랍을 통한 이미지 업로드
+
+|||
+:--:|:--:
+![마크다운 에디터](https://user-images.githubusercontent.com/81913106/206893134-2932ed3e-e949-447f-a11a-a589a6b2849a.gif)|![프로필 페이지](https://user-images.githubusercontent.com/81913106/206894456-89831a9e-003b-44cd-ba5e-34d061850b44.gif)
+마크다운 형식의 게시글 작성|유저 프로필 페이지 및 팔로우
+
 
 - 이메일 인증을 통한 회원가입, 비밀번호 찾기
 - 무한 스크롤을 통한 뉴스피드 탐색
@@ -74,7 +74,7 @@ v2
     - 게시글에 대한 답글 작성 및 탐색
 - 프로필 페이지
 
-## 프로젝트 구조 및 사용 기술
+## 🛠️ 프로젝트 구조 및 사용 기술
 
 <!--
 작업 이력
@@ -82,8 +82,7 @@ v2
 - SFTP 제외 (기술이 아니라 프로토콜임, 편법이라 노출해서 좋을거 없음)
 - 카테고리별로 분류
 -->
-
-![image](https://user-images.githubusercontent.com/57206558/205439322-ca839964-4898-4438-82f1-37d5fdd7858f.png)
+<img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/cb826a8f-361f-48b8-ba0a-23e4420f7822/system2x_%287%29.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221211%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221211T081518Z&X-Amz-Expires=86400&X-Amz-Signature=e0dfca363f11b70be5c7aa4ac1adeaef341cf7c15400a7e50f61afa9824bd262&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22system%25402x%2520%287%29.png%22&x-id=GetObject" width="800" height="350"/>
 
 
 |Category|Tech Stack|
@@ -94,7 +93,7 @@ COMMON|![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescr
 INFRA|![NCloud](https://img.shields.io/badge/NCloud-green?logo=naver) ![Github Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF?logo=github%20actions&logoColor=white) ![PM2](https://img.shields.io/badge/PM2-2B037A?logo=pm2) ![NGINX](https://img.shields.io/badge/NGINX-009639?logo=nginx)
 TOOL|![Figma](https://img.shields.io/badge/Figma-F24E1E?logo=figma&logoColor=white)
 
-## 도전
+## 💪 도전
 
 <!-- 
 
@@ -104,9 +103,9 @@ TOOL|![Figma](https://img.shields.io/badge/Figma-F24E1E?logo=figma&logoColor=whi
 
 ### 1. 별도의 라이브러리 없이 마크다운 에디터 구현
 
-- 사용자가 기본적인 서식을 적용할 수 있기를 원했어요.
-- 직접 에디터를 구현하고, 입력한 내용을 Markdown Parser가 렌더링해줘요.
-- 멘션 추천 등 원하는 기능과 UI를 추가할 수 있었어요.
+- 사용자가 기본적인 서식을 적용할 수 있는 에디터를 구현하는 것이 목표.
+- 직접 에디터를 구현하고, 사용자가 입력한 내용을 Markdown Parser가 렌더링.
+- 멘션 추천 기능과 이미지 업로드 기능 구현.
 
 ### 2. Next.js를 이용한 SSR 도입
 
@@ -129,14 +128,17 @@ TOOL|![Figma](https://img.shields.io/badge/Figma-F24E1E?logo=figma&logoColor=whi
 ### 5. API 서버 성능 수치화
 
 - (예정)
-- <>를 통한 스트레스 테스트
-- <>를 통한 벤치마크
+- Grafana K6를 통해 벤치마크를 하고 현재 서버로 수용 가능한 유저 수를 가늠했어요.
+- 2022년 12월 6일 아래의 조건에서 p(90) 응답 대기 시간이 300ms 미만임을 확인했어요.
+    - API 서버 1대 (1vCPU, 2GB RAM)
+    - 가상 유저 300명
+    - 1초당 1 리퀘스트
 
 ### 6. Auto-Scaling
 
 - (예정)
 
-## 멤버
+## 👨‍👨‍👧‍👦 멤버
 
 | J024_김남효 | J097_백성익 | J142_이선민 | J149_이우재 |
 |:---:|:---:|:---:|:---:|
@@ -144,7 +146,7 @@ TOOL|![Figma](https://img.shields.io/badge/Figma-F24E1E?logo=figma&logoColor=whi
 | [namhyo01](https://github.com/namhyo01) | [906bc906](https://github.com/906bc906) | [leesunmin1231](https://github.com/leesunmin1231) | [prayinforrain](https://github.com/prayinforrain) |
 | Backend | Backend | Frontend | Frontend |
 
-## 문서
+## 📚 문서
 
 - [Notion](https://polarlsm.notion.site/Moheyum-4c54f7ce6bc348bd84121578d4079b50)
 - [Figma](https://www.figma.com/file/bUlrkKtjfXPfHvdIvLuXvc/Moheyum?node-id=158%3A1655&t=U1UrufRdVG1ntwB2-0)
