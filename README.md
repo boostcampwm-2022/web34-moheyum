@@ -57,22 +57,13 @@ v2
 
 |||
 :--:|:--:
-<img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/d3061b60-1e3d-4db5-9993-295edad7fc3d/email.gif?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221211%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221211T080343Z&X-Amz-Expires=86400&X-Amz-Signature=c0f78b5f86c23dd071b4419db22e8147fe80ece2577173b6b1ed244974b1f4f6&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22email.gif%22&x-id=GetObject" width="500" height="280"/>|![무한 스크롤](https://user-images.githubusercontent.com/81913106/206894637-0d43e595-0038-4b58-847e-9ca8c6dde650.gif)
-이메일 인증을 통한 회원가입, 비밀번호 찾기|무한 스크롤을 통한 뉴스피드 탐색
-
-|||
-:--:|:--:
 ![마크다운 에디터](https://user-images.githubusercontent.com/81913106/206893134-2932ed3e-e949-447f-a11a-a589a6b2849a.gif)|![프로필 페이지](https://user-images.githubusercontent.com/81913106/206894456-89831a9e-003b-44cd-ba5e-34d061850b44.gif)
 마크다운 형식의 게시글 작성|유저 프로필 페이지 및 팔로우
 
-
-- 이메일 인증을 통한 회원가입, 비밀번호 찾기
-- 무한 스크롤을 통한 뉴스피드 탐색
-- 마크다운 형식의 게시글 작성
-    - 드래그 앤 드랍을 통한 이미지 업로드
-    - 팔로워/팔로잉 유저 멘션
-    - 게시글에 대한 답글 작성 및 탐색
-- 프로필 페이지
+|||
+:--:|:--:
+<img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/d3061b60-1e3d-4db5-9993-295edad7fc3d/email.gif?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221211%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221211T080343Z&X-Amz-Expires=86400&X-Amz-Signature=c0f78b5f86c23dd071b4419db22e8147fe80ece2577173b6b1ed244974b1f4f6&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22email.gif%22&x-id=GetObject" width="500" height="280"/>|![무한 스크롤](https://user-images.githubusercontent.com/81913106/206894637-0d43e595-0038-4b58-847e-9ca8c6dde650.gif)
+이메일 인증을 통한 회원가입, 비밀번호 찾기|무한 스크롤을 통한 뉴스피드 탐색
 
 ## 🛠️ 프로젝트 구조 및 사용 기술
 
@@ -109,8 +100,7 @@ TOOL|![Figma](https://img.shields.io/badge/Figma-F24E1E?logo=figma&logoColor=whi
 
 ### 2. Next.js를 이용한 SSR 도입
 
-- 내용이 자주 변하지 않는 일부 페이지에 SSR 기능을 도입했어요.
-- 글 읽기 페이지는 서비스를 처음 접한 유저들도 볼 수 있는 만큼 SSR을 통해 성능적인 이점을 챙길 수 있었어요.
+- 내용이 자주 변하지 않는 일부 페이지에 SSR 기능을 도입
 
 ### 3. MongoDB 쿼리 최적화
 
