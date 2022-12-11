@@ -9,8 +9,8 @@ import {
   UseGuards,
   HttpCode,
   Query,
-  CacheKey,
   CacheTTL,
+  UseInterceptors,
 } from '@nestjs/common';
 import { GetUser } from 'src/common/decorator/get-user.decorator';
 import { User } from 'src/common/database/user.schema';
@@ -21,8 +21,11 @@ import { PostIdValidationPipe } from './pipes/post-id-validation.pipe';
 import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
 import { FollowerPostDto } from './dto/follower-post.dto';
 import { PostGuard } from 'src/common/guard/post.guard';
+import { MoheyumInterceptor } from 'src/common/cache/cache.interceptor';
+import { CacheEvict } from 'src/common/cache/cache-evict.decorator';
 
 @Controller('post')
+@UseInterceptors(MoheyumInterceptor)
 export class PostController {
   constructor(private postService: PostService) {}
 
@@ -64,6 +67,7 @@ export class PostController {
     return await this.postService.searchPost(keyword, next);
   }
 
+  @CacheTTL(24 * 60 * 60)
   @Get('/:id')
   async getPostById(@Param('id', PostIdValidationPipe) id: string): Promise<{
     post: Post_;
@@ -76,6 +80,7 @@ export class PostController {
 
   @HttpCode(200)
   @UseGuards(JwtAuthGuard, PostGuard)
+  @CacheEvict()
   @Delete('/:id')
   @UseGuards(JwtAuthGuard)
   deletePost(
@@ -91,6 +96,7 @@ export class PostController {
 
   @HttpCode(200)
   @UseGuards(JwtAuthGuard, PostGuard)
+  @CacheEvict()
   @Patch('/:id')
   updatePost(
     @Param('id', PostIdValidationPipe) id: string,

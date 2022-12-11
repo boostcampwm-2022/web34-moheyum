@@ -16,7 +16,7 @@ import {
 
 @Injectable()
 export class MoheyumInterceptor extends CacheInterceptor {
-  private readonly CACHE_EVICT_METHODS = ['POST', 'DELETE', 'PUT', ' PATCH'];
+  private readonly CACHE_EVICT_METHODS = ['POST', 'DELETE', 'PUT', 'PATCH'];
 
   async intercept(
     context: ExecutionContext,
@@ -46,6 +46,8 @@ export class MoheyumInterceptor extends CacheInterceptor {
     );
     switch (cacheIndividual) {
       case 'userid':
+      case 'checkFollow':
+      case 'notificationCount':
         return `_${context.switchToHttp().getRequest().user.userid}`;
       default:
         return '';
@@ -126,6 +128,10 @@ export class MoheyumInterceptor extends CacheInterceptor {
             ? `/api/user/mentionlist_${
                 context.switchToHttp().getRequest().user.userid
               }`
+            : key === 'checkFollow'
+            ? `/api/follow/check/${req.params.targetid}_${
+                context.switchToHttp().getRequest().user.userid
+              }`
             : `${key}_${context.switchToHttp().getRequest().user.userid}`;
         break;
       case 'avatar':
@@ -133,6 +139,14 @@ export class MoheyumInterceptor extends CacheInterceptor {
           key === ''
             ? `/api/user/${context.switchToHttp().getRequest().user.userid}`
             : `${key}/${context.switchToHttp().getRequest().user.userid}`;
+        break;
+      case 'checkFollow':
+        appendKey =
+          req.originalUrl +
+          `_${context.switchToHttp().getRequest().user.userid}`;
+        break;
+      case 'notificationCount':
+        appendKey = `${key}_${context.switchToHttp().getRequest().user.userid}`;
         break;
       default:
         appendKey = key === '' ? req.originalUrl : `${key}`;

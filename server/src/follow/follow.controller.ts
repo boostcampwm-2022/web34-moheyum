@@ -7,27 +7,38 @@ import {
   HttpCode,
   Post,
   Query,
+  UseInterceptors,
+  CacheTTL,
 } from '@nestjs/common';
 import { FollowService } from './follow.service';
 import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
 import { GetUser } from 'src/common/decorator/get-user.decorator';
 import { User } from 'src/common/database/user.schema';
 import { FollowListDto } from './dto/follow-list.dto';
+import { MoheyumInterceptor } from 'src/common/cache/cache.interceptor';
+import { CacheEvict } from 'src/common/cache/cache-evict.decorator';
+import { CacheIndividual } from 'src/common/cache/cahce-individual.decorator';
 
 @Controller('follow')
+@UseInterceptors(MoheyumInterceptor)
 export class FollowController {
   constructor(private followService: FollowService) {}
+
   @HttpCode(200)
-  @Post('/following/:targetid')
   @UseGuards(JwtAuthGuard)
+  @CacheEvict('', 'checkFollow')
+  @CacheIndividual('userid')
+  @Post('/following/:targetid')
   async followUser(@Param('targetid') targetid: string, @GetUser() user: User) {
     return {
       followCount: await this.followService.followUser(targetid, user),
     };
   }
 
-  @Get('/check/:targetid')
   @UseGuards(JwtAuthGuard)
+  @CacheIndividual('checkFollow')
+  @CacheTTL(30 * 60)
+  @Get('/check/:targetid')
   async followCheck(
     @Param('targetid') targetid: string,
     @GetUser() user: User,
@@ -38,8 +49,10 @@ export class FollowController {
   }
 
   @HttpCode(200)
-  @Delete('/following/:targetid')
   @UseGuards(JwtAuthGuard)
+  @CacheEvict('', 'checkFollow')
+  @CacheIndividual('userid')
+  @Delete('/following/:targetid')
   async followCancel(
     @Param('targetid') targetid: string,
     @GetUser() user: User,
