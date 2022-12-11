@@ -20,6 +20,7 @@
 > 마크다운을 지원하는 SNS  
 모헤윰으로 당신의 일상을 공유해보세요.
 
+<br>
 
 ## 🔍 프로젝트 주요 기능
 
@@ -62,8 +63,10 @@ v2
 
 |||
 :--:|:--:
-<img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/d3061b60-1e3d-4db5-9993-295edad7fc3d/email.gif?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221211%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221211T080343Z&X-Amz-Expires=86400&X-Amz-Signature=c0f78b5f86c23dd071b4419db22e8147fe80ece2577173b6b1ed244974b1f4f6&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22email.gif%22&x-id=GetObject" width="480" height="270"/>|![무한 스크롤](https://user-images.githubusercontent.com/81913106/206894637-0d43e595-0038-4b58-847e-9ca8c6dde650.gif)
+<img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/d3061b60-1e3d-4db5-9993-295edad7fc3d/email.gif?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221211%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221211T080343Z&X-Amz-Expires=86400&X-Amz-Signature=c0f78b5f86c23dd071b4419db22e8147fe80ece2577173b6b1ed244974b1f4f6&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22email.gif%22&x-id=GetObject" width="480"/>|![무한 스크롤](https://user-images.githubusercontent.com/81913106/206894637-0d43e595-0038-4b58-847e-9ca8c6dde650.gif)
 이메일 인증을 통한 회원가입, 비밀번호 찾기|무한 스크롤을 통한 뉴스피드 탐색
+
+<br>
 
 ## 🛠️ 프로젝트 구조 및 사용 기술
 
@@ -73,7 +76,7 @@ v2
 - SFTP 제외 (기술이 아니라 프로토콜임, 편법이라 노출해서 좋을거 없음)
 - 카테고리별로 분류
 -->
-<img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/cb826a8f-361f-48b8-ba0a-23e4420f7822/system2x_%287%29.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221211%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221211T081518Z&X-Amz-Expires=86400&X-Amz-Signature=e0dfca363f11b70be5c7aa4ac1adeaef341cf7c15400a7e50f61afa9824bd262&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22system%25402x%2520%287%29.png%22&x-id=GetObject" width="800" height="350"/>
+<img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/cb826a8f-361f-48b8-ba0a-23e4420f7822/system2x_%287%29.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221211%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221211T081518Z&X-Amz-Expires=86400&X-Amz-Signature=e0dfca363f11b70be5c7aa4ac1adeaef341cf7c15400a7e50f61afa9824bd262&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22system%25402x%2520%287%29.png%22&x-id=GetObject" width="800"/>
 
 
 |Category|Tech Stack|
@@ -83,6 +86,8 @@ BE&DB|![Nest](https://img.shields.io/badge/NestJS-E0234E?logo=nestjs) ![Mongoose
 COMMON|![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white) ![YarnBerry](https://img.shields.io/badge/Yarn--Berry-2C8EBB?logo=yarn&logoColor=white)
 INFRA|![NCloud](https://img.shields.io/badge/NCloud-green?logo=naver) ![Github Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF?logo=github%20actions&logoColor=white) ![PM2](https://img.shields.io/badge/PM2-2B037A?logo=pm2) ![NGINX](https://img.shields.io/badge/NGINX-009639?logo=nginx)
 TOOL|![Figma](https://img.shields.io/badge/Figma-F24E1E?logo=figma&logoColor=white)
+
+<br>
 
 ## 💪 도전
 
@@ -128,6 +133,8 @@ TOOL|![Figma](https://img.shields.io/badge/Figma-F24E1E?logo=figma&logoColor=whi
 
 - (예정)
 
+<br>
+
 ## 👨‍👨‍👧‍👦 멤버
 
 | J024_김남효 | J097_백성익 | J142_이선민 | J149_이우재 |
@@ -135,6 +142,8 @@ TOOL|![Figma](https://img.shields.io/badge/Figma-F24E1E?logo=figma&logoColor=whi
 |<img src="https://user-images.githubusercontent.com/57206558/205439057-1bcba98d-56cf-429b-b603-9774b48a4ed3.png" width="300px">|<img src="https://user-images.githubusercontent.com/57206558/205439066-4afa7c25-5b8f-44a8-a966-42501ec3b434.png" width="300px">|<img src="https://user-images.githubusercontent.com/57206558/205439070-0b91e964-25c8-4369-87cf-d9efce622ba9.png" width="300px">|<img src="https://user-images.githubusercontent.com/57206558/205439080-057bda4e-400f-4d08-b3af-c381d6bfb107.png" width="300px">
 | [namhyo01](https://github.com/namhyo01) | [906bc906](https://github.com/906bc906) | [leesunmin1231](https://github.com/leesunmin1231) | [prayinforrain](https://github.com/prayinforrain) |
 | Backend | Backend | Frontend | Frontend |
+
+<br>
 
 ## 📚 문서
 
