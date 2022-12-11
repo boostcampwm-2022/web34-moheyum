@@ -30,16 +30,19 @@ function codeBlock(str: string): string {
 }
 
 function blockQuote(str: string): string {
-  const reg = /(?<=^|\n)> {0,3}([\s\S]*?)(?=\n\n|$)/g;
+  const reg = /(?<=^|\n)\uff1e {0,3}([\s\S]*?)(?=\n\n|$)/g;
   let result = str;
   const blocks = str.match(reg);
 
   blocks?.forEach((item) => {
     let newBlock = item;
-    while (newBlock.match(/(?<=^|\n|<blockquote>)> {0,3}/g)) {
+    while (newBlock.match(/(?<=^|\n|<blockquote>)\uff1e {0,3}/g)) {
       // console.log(newBlock.match(/(?<=^|\n|<blockquote>)> {0,3}/g));
-      newBlock = newBlock.replace(/(?<=^|\n|<blockquote>)> {0,3}([\s\S]*?)(?=\n\n|$)/g, '<blockquote>$1</blockquote>');
-      newBlock = newBlock.replace(/(?<=^|\n)>? {0,3}/g, '');
+      newBlock = newBlock.replace(
+        /(?<=^|\n|<blockquote>)\uff1e {0,3}([\s\S]*?)(?=\n\n|$)/g,
+        '<blockquote>$1</blockquote>'
+      );
+      newBlock = newBlock.replace(/(?<=^|\n)\uff1e? {0,3}/g, '');
     }
     result = result.replace(item, newBlock);
   });
