@@ -24,10 +24,19 @@ function code(str: string): string {
   return result;
 }
 
-function codeBlock(str: string): string {
-  console.log(JSON.stringify(str));
-  const result = str.replace(/^```(?:.*)\n([\S\s]+?)\n```$/gm, '<pre>$1</pre>');
-  return result;
+function codeBlock(str: string): [string, string[]] {
+  const result = str.replace(/^```(?:[^\n`]*)\n([\S\s]+?)\n```$/gm, '\u235e');
+  let match = str.match(/^```(?:[^\n`]*)\n([\S\s]+?)\n```$/gm);
+  if (match)
+    match = match.map((e) =>
+      e.replace(/^```(?:[^\n`]*)\n([\S\s]+?)\n```$/gm, '<pre>$1</pre>').replace(/\n/gm, '\n<br/>')
+    );
+  return [result, match ?? []];
+}
+
+function recoverCodeBlocks(str: string, codes: string[]): string {
+  if (codes.length === 0) return str;
+  return codes.reduce((prev, curr) => prev.replace('\u235e', curr), str);
 }
 
 function blockQuote(str: string): string {
@@ -96,7 +105,8 @@ export function doParse(str: string): string {
   // console.log('parse start');
   // console.log(JSON.stringify(result));
   let result = str;
-  result = codeBlock(result);
+  let codes: string[] = [];
+  [result, codes] = codeBlock(result);
   result = blockQuote(result);
   result = emptyLines(result);
   result = headers(result);
@@ -108,6 +118,9 @@ export function doParse(str: string): string {
   result = underline(result);
   result = strike(result);
   result = link(result);
+  result = recoverCodeBlocks(result, codes);
+  // console.log(JSON.stringify(result));
+  // console.log(codes);
   return result;
 }
 
