@@ -8,6 +8,7 @@ export const mainSectionStyle = css`
   display: flex;
   flex-direction: column;
   background-color: ${COLORS.WHITE};
+  overflow-x: hidden;
 `;
 
 export const displayCenter = css`
