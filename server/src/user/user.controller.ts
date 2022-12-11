@@ -13,8 +13,8 @@ import {
   Delete,
   Res,
   CacheKey,
-  CacheInterceptor,
   CacheTTL,
+  CacheInterceptor,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from 'src/common/database/user.schema';
@@ -27,6 +27,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { GetUserUpdatePasswordDto } from './dto/get-update-password.dto';
 import { MoheyumInterceptor } from 'src/common/cache/cache.interceptor';
 import { CacheEvict } from 'src/common/cache/cache-evict.decorator';
+import { CacheIndividual } from 'src/common/cache/cahce-individual.decorator';
 
 @Controller('user')
 @UseInterceptors(MoheyumInterceptor)
@@ -38,14 +39,15 @@ export class UserController {
 
   @HttpCode(200)
   @UseGuards(JwtAuthGuard)
-  @CacheKey('mention')
-  @CacheTTL(300)
+  @CacheIndividual('userid')
+  @CacheTTL(1800)
   @Get('mentionlist')
   async getMentionList(@GetUser() user: User) {
     const data = await this.userService.getMentionList(user.userid);
     return data;
   }
 
+  @CacheTTL(30)
   @Get('/search')
   async searchUser(
     @Query('keyword') keyword: string,
@@ -72,6 +74,8 @@ export class UserController {
       data: {},
     };
   }
+
+  @CacheTTL(1800)
   @Get('/:userid')
   async getUserProfile(@Param('userid') userid: string) {
     return await this.userService.getUserData(userid);
@@ -79,7 +83,7 @@ export class UserController {
 
   @HttpCode(200)
   @UseGuards(JwtAuthGuard, UpdateAuthGuard)
-  @CacheEvict('mention')
+  @CacheEvict()
   @Put('/:userid')
   async updateUserProfile(
     @Param('userid') userid: string,
@@ -90,6 +94,7 @@ export class UserController {
 
   @HttpCode(200)
   @UseGuards(JwtAuthGuard, UpdateAuthGuard)
+  @CacheIndividual('user')
   @UseInterceptors(FileInterceptor('file'))
   @Put('/:userid/avatar')
   async uploadAvatar(

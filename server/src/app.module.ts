@@ -46,10 +46,6 @@ import { RedisModule } from './redis/redis.module';
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
     },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: CacheInterceptor,
-    },
     Logger,
   ],
 })

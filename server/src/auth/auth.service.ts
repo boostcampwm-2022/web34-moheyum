@@ -62,7 +62,7 @@ export class AuthService {
     this.redisService.set(
       userid,
       refreshToken,
-      +this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME') * 1000,
+      +this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME') + 500,
     );
   }
   /**
