@@ -51,7 +51,6 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
   const contentRef = useRef<HTMLDivElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const [tabIndex, setTabIndex] = useState(0); // 0 Editor, 1 Preview
-  const [content, setContent] = useState<string>('');
   const [contentHTML, setContentHTML] = useState<string>('<div><br></div>'); // 탭 전환용
   const authedUserInfo = useRecoilValue(authedUser);
   const [imageOver, setImageOver] = useState<boolean>(false);
@@ -123,7 +122,6 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
       // preview
       if (!contentRef.current) return;
       // setContentHTML(contentRef.current.innerHTML);
-      setContent(contentRef.current.innerText);
       setTabIndex(1);
     }
   };
@@ -136,7 +134,6 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
   const checkIfModifying = () => {
     if (!modifyPostData || !contentRef.current) return;
     setContentHTML(modifyPostData.description);
-    setContent(modifyPostData.description);
     contentRef.current.textContent = modifyPostData.description;
   };
 
@@ -185,7 +182,7 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
   useEffect(() => {
     if (!previewRef.current || !contentRef.current) return;
     if (tabIndex === 1) {
-      previewRef.current.innerHTML = renderMarkdown(content);
+      previewRef.current.innerHTML = renderMarkdown(contentRef.current.innerText);
     } else if (contentHTML !== '<div><br></div>') contentRef.current.innerHTML = contentHTML;
   }, [tabIndex]);
 
@@ -265,7 +262,6 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
         contentRef.current.innerHTML = '<div><br/></div>';
       }
     }
-    setContent(contentRef.current.innerText);
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
