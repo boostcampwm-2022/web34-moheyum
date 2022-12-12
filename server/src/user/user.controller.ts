@@ -28,6 +28,7 @@ import { GetUserUpdatePasswordDto } from './dto/get-update-password.dto';
 import { MoheyumInterceptor } from 'src/common/cache/cache.interceptor';
 import { CacheEvict } from 'src/common/cache/cache-evict.decorator';
 import { CacheIndividual } from 'src/common/cache/cahce-individual.decorator';
+import { CachePagination } from 'src/common/cache/cache-next-ttl.decorator';
 
 @Controller('user')
 @UseInterceptors(MoheyumInterceptor)
@@ -47,7 +48,8 @@ export class UserController {
     return data;
   }
 
-  @CacheTTL(30)
+  @CachePagination(true)
+  @CacheTTL(20)
   @Get('/search')
   async searchUser(
     @Query('keyword') keyword: string,

@@ -67,7 +67,7 @@ export class MoheyumInterceptor extends CacheInterceptor {
               ? [key, response]
               : [key, response, { ttl }]
             : req.query.next === undefined
-            ? [key, response, { ttl: 10 }]
+            ? [key, response, { ttl: 5 }]
             : isNil(ttl)
             ? [key, response]
             : [key, response, { ttl }];
@@ -84,11 +84,11 @@ export class MoheyumInterceptor extends CacheInterceptor {
       CACHE_INDIVIDUAL_METADATA,
       context.getHandler(),
     );
-    const req = context.switchToHttp().getRequest();
     switch (cacheIndividual) {
       case 'userid':
       case 'checkFollow':
       case 'notificationCount':
+      case 'notification':
         return `_${context.switchToHttp().getRequest().user.userid}`;
       default:
         return '';

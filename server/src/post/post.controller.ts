@@ -23,12 +23,15 @@ import { FollowerPostDto } from './dto/follower-post.dto';
 import { PostGuard } from 'src/common/guard/post.guard';
 import { MoheyumInterceptor } from 'src/common/cache/cache.interceptor';
 import { CacheEvict } from 'src/common/cache/cache-evict.decorator';
+import { CachePagination } from 'src/common/cache/cache-next-ttl.decorator';
 
 @Controller('post')
 @UseInterceptors(MoheyumInterceptor)
 export class PostController {
   constructor(private postService: PostService) {}
 
+  @CachePagination(true)
+  @CacheTTL(300)
   @Get('/author/:userid')
   async getUserPosts(
     @Param('userid') userid: string,
@@ -38,8 +41,8 @@ export class PostController {
   }
 
   @HttpCode(200)
-  @Post()
   @UseGuards(JwtAuthGuard)
+  @Post()
   async CreatePost(
     @Body() createPostDto: CreatePostDto,
     @GetUser() user: User,
@@ -49,8 +52,10 @@ export class PostController {
     };
   }
 
-  @Get('newsfeed')
   @UseGuards(JwtAuthGuard)
+  @CachePagination(true)
+  @CacheTTL(20)
+  @Get('newsfeed')
   async getFollowingPost(
     @GetUser() user: User,
     @Query() followerPostDTO: FollowerPostDto,
@@ -59,6 +64,8 @@ export class PostController {
   }
 
   @HttpCode(200)
+  @CachePagination(true)
+  @CacheTTL(20)
   @Get('/search')
   async searchPost(
     @Query('next') next: string,

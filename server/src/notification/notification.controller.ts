@@ -9,6 +9,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { CacheEvict } from 'src/common/cache/cache-evict.decorator';
+import { CachePagination } from 'src/common/cache/cache-next-ttl.decorator';
 import { MoheyumInterceptor } from 'src/common/cache/cache.interceptor';
 import { CacheIndividual } from 'src/common/cache/cahce-individual.decorator';
 import { User } from 'src/common/database/user.schema';
@@ -23,6 +24,8 @@ export class NotificationController {
 
   @Get('/list')
   @UseGuards(JwtAuthGuard)
+  @CacheIndividual('notification')
+  @CachePagination(true)
   async notificationList(@GetUser() user: User, @Query('next') next: string) {
     return await this.notificationService.findListByUserid(user, next);
   }
