@@ -22,6 +22,7 @@ import { FindPwDto } from './dto/find-pw-dto';
 import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
 import { GetUser } from 'src/common/decorator/get-user.decorator';
 import { User } from 'src/common/database/user.schema';
+import { RateLimit } from 'nestjs-rate-limiter';
 
 @Controller('auth')
 export class AuthController {
@@ -53,6 +54,12 @@ export class AuthController {
   }
 
   @HttpCode(200)
+  @RateLimit({
+    keyPrefix: 'signin',
+    points: 20,
+    duration: 60,
+    errorMessage: '로그인을 다시 시도해주세요',
+  })
   @Post('/signin')
   async signIn(
     @Body() authCredentialsDto: AuthCredentialsDto,
