@@ -15,7 +15,6 @@ import {
   EditorContainer,
   EditorTabItem,
   EditorTabs,
-  EditorTabTool,
   EditorTextBox,
   PostHeader,
   PreviewTextBox,
