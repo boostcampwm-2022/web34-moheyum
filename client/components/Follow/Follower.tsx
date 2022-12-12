@@ -1,5 +1,5 @@
 import Router from 'next/router';
-import React, { useCallback, useRef, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import {
   FollowContainer,

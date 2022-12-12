@@ -1,9 +1,9 @@
-import { useCallback, useRef, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Router from 'next/router';
 import { useRecoilState } from 'recoil';
 import Image from 'next/image';
 import { newNotification } from '../../atom';
-import usePaginator, { NEXT } from '../../hooks/usePaginator';
+import usePaginator from '../../hooks/usePaginator';
 import {
   ExceptionPage,
   NotificationContainer,

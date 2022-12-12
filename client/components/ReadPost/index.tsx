@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import Router from 'next/router';
 import { useRecoilValue } from 'recoil';

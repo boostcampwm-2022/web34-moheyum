@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState, useEffect } from 'react';
+import React, { useCallback, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useRecoilState } from 'recoil';
 import { ArticleCard } from './Articlecard';
