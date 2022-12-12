@@ -42,7 +42,13 @@ export default function ReadPost({ postData, title }: PostData) {
         <h1>{title}</h1>
       </TopBar>
       <PostContent>
-        {postData.parentPost ? <ParentPost post={postData.parent.at(0) as Parent} /> : <div />}
+        {postData.parentPost ? (
+          <Link href={`/post/${postData.parent.at(0)?._id}`}>
+            <ParentPost post={postData.parent.at(0) as Parent} />
+          </Link>
+        ) : (
+          <div />
+        )}
         <MainPost postData={postData} />
         <CommentBox>
           <div id="title">답글: {commentCount}개</div>

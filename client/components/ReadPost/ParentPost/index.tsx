@@ -1,7 +1,16 @@
 import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { calcTime } from '../../../utils/calctime';
-import { Author, AuthorDetail, Wrapper, ContentBox, HeaderBox, ParentTree, ParentTreeContainer } from './index.style';
+import {
+  Author,
+  AuthorDetail,
+  Wrapper,
+  ContentBox,
+  HeaderBox,
+  ParentTree,
+  ParentTreeContainer,
+  ParentFilter,
+} from './index.style';
 import ProfileImg from '../../UserProfile/ProfileImg';
 import type { Parent } from '../../../types/Post';
 import { renderMarkdown } from '../../../utils/markdown';
@@ -15,7 +24,8 @@ export default function ParentPost({ post }: { post: Parent }) {
   return (
     <Wrapper>
       <HeaderBox>
-        <Link href={`/${post.author}`}>
+        <Link href={`/post/${post._id}`}>
+          <ParentFilter />
           <Author>
             <ProfileImg imgUrl={post.authorDetail.profileimg} />
             <AuthorDetail>
@@ -30,11 +40,9 @@ export default function ParentPost({ post }: { post: Parent }) {
         <ParentTreeContainer>
           <ParentTree />
         </ParentTreeContainer>
-        <Link href={`/post/${post._id}`}>
-          <div className="content" ref={contentRef}>
-            {post.description}
-          </div>
-        </Link>
+        <div className="content" ref={contentRef}>
+          {post.description}
+        </div>
       </ContentBox>
     </Wrapper>
   );

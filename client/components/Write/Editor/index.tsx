@@ -15,7 +15,6 @@ import {
   EditorContainer,
   EditorTabItem,
   EditorTabs,
-  EditorTabTool,
   EditorTextBox,
   PostHeader,
   PreviewTextBox,
@@ -122,7 +121,7 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
     if (index === 1) {
       // preview
       if (!contentRef.current) return;
-      // setContentHTML(contentRef.current.innerHTML);
+      setContentHTML(contentRef.current.innerHTML);
       setContent(contentRef.current.innerText);
       setTabIndex(1);
     }
@@ -253,6 +252,10 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
 
   const handlePaste = (e: ClipboardEvent<HTMLDivElement>) => {
     e.preventDefault();
+    if (e.clipboardData?.files.length > 0) {
+      handleFiles(e.clipboardData.files);
+      return;
+    }
     const data = e.clipboardData?.getData('Text');
     pasteAction(data);
   };
@@ -422,7 +425,7 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
   const handleDrop = useCallback((e: DragEvent<HTMLDivElement>): void => {
     e.preventDefault();
     setImageOver(false);
-    handleFiles(e.dataTransfer.files);
+    if (e.dataTransfer.files.length > 0) handleFiles(e.dataTransfer.files);
   }, []);
 
   // ---------------------------------------------------------------------------------------------------------
@@ -441,11 +444,6 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
         </PostHeader>
       </CommentTopBar>
       <ToolbarContainer>
-        <EditorTabs>
-          <EditorTabTool style={{ fontWeight: 'bold' }}>B</EditorTabTool>
-          <EditorTabTool style={{ fontStyle: 'italic' }}>I</EditorTabTool>
-          <EditorTabTool style={{ textDecorationLine: 'underline' }}>U</EditorTabTool>
-        </EditorTabs>
         <EditorTabs>
           <EditorTabItem selected={tabIndex === 0} onClick={() => selectTab(0)}>
             마크다운
