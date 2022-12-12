@@ -3,7 +3,7 @@ import { DropDown, User } from './index.style';
 import COLORS from '../../../../styles/color';
 
 interface Props {
-  dropDownDisplay: string;
+  dropDownDisplay: boolean;
   dropDownPosition: {
     x: string;
     y: string;
@@ -17,7 +17,7 @@ export default function UserDropDown({ dropDownDisplay, dropDownPosition, userLi
     <DropDown
       style={{
         position: 'absolute',
-        display: dropDownDisplay,
+        display: dropDownDisplay ? 'block' : 'none',
         left: dropDownPosition.x,
         top: dropDownPosition.y,
       }}

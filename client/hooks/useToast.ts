@@ -5,7 +5,7 @@ export default function useToast() {
   const [toastList, setToastList] = useRecoilState(toastMessageList);
 
   const addMessage = (message: string, key?: string) => {
-    const newMessage = { message, key: key ?? `${Math.floor(Math.random())}${message}` };
+    const newMessage = { message, key: key ?? `${Math.floor(Math.random() * 13579)}${message}` };
     setToastList([...toastList, newMessage]);
   };
 

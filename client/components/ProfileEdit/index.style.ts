@@ -13,6 +13,8 @@ export const Wrapper = styled.div`
 export const EditSection = styled.div`
   width: 100%;
   flex: 1;
+  display: flex;
+  justify-content: center;
 `;
 
 export const InputsContainer = styled.form`
@@ -30,7 +32,6 @@ export const InputsContainer = styled.form`
 `;
 
 export const ProfileAndImgContainer = styled.div`
-  padding-left: 60px;
   display: flex;
   width: 100%;
 `;
@@ -81,14 +82,13 @@ export const ProfileEmail = styled.div`
 `;
 
 export const NicknameEditArea = styled.div`
-  height: 60px;
+  /* height: 60px; */
   margin-top: 60px;
   width: 100%;
-  padding-left: 60px;
 `;
 
 export const BioEditArea = styled.div`
-  padding-left: 60px;
+  margin-top: 60px;
   height: 160px;
   display: flex;
   flex-direction: row;
@@ -98,10 +98,10 @@ export const BioEditArea = styled.div`
 `;
 
 export const ButtonBox = styled.div`
-  padding-left: 60px;
-  height: 60px;
+  /* height: 60px; */
   width: 100%;
   display: flex;
+  justify-content: flex-end;
   margin-top: 20px;
 `;
 
@@ -118,7 +118,7 @@ export const NicknameInput = styled.input`
 
 export const BioInput = styled.textarea`
   ${inputStyle}
-  width: 400px;
+  width: 450px;
   resize: none;
 `;
 

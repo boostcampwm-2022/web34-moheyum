@@ -29,9 +29,9 @@ export default function SideBar() {
       setNewNotiState(event.data);
       toast.addMessage('새 알림이 도착했습니다.');
     };
-    eventSource.onerror = (error) => {
-      toast.addMessage(`SSE error : ${error}`);
-    };
+    // eventSource.onerror = (error) => {
+    //   toast.addMessage(`SSE error : ${error}`);
+    // };
     return () => eventSource.close();
   }, []);
 

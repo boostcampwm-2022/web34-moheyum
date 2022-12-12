@@ -4,7 +4,7 @@ import React, { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { TopBar } from '../../styles/common';
 import PostResult from './PostResult';
 import UserResult from './UserResult';
-import { Wrapper, TopBarContainer, SearchInputBar, TabContainer } from './index.style';
+import { Wrapper, TopBarContainer, SearchInputBar, TabContainer, ResultContainer } from './index.style';
 
 export default function SearchSection() {
   const router = useRouter();
@@ -55,8 +55,9 @@ export default function SearchSection() {
           사용자 검색
         </button>
       </TabContainer>
-      {tabIndex === 0 && <PostResult keyword={keyword} />}
-      {tabIndex === 1 && <UserResult keyword={keyword} />}
+      {keyword === '' && <ResultContainer>검색 결과 없음</ResultContainer>}
+      {tabIndex === 0 && keyword !== '' && <PostResult keyword={keyword} />}
+      {tabIndex === 1 && keyword !== '' && <UserResult keyword={keyword} />}
     </Wrapper>
   );
 }
