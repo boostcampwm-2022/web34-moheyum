@@ -172,7 +172,7 @@ export class AuthService {
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const { userid, password } = authCredentialsDto;
     const user = await this.userRepository.findOne({ userid });
-    if (user && (await bcrypt.compare(password, user.password))) {
+    if (user && user.state && (await bcrypt.compare(password, user.password))) {
       const payload = { userid };
       const accessToken = await this.createAccessToken(payload);
       const refreshToken = await this.createRefreshToken(payload);
