@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import Router from 'next/router';
 import { useRecoilState } from 'recoil';
+import ReactLoading from 'react-loading';
 import Image from 'next/image';
 import { newNotification } from '../../atom';
+import { Loader } from '../../styles/common';
+import COLORS from '../../styles/color';
 import usePaginator from '../../hooks/usePaginator';
 import {
   ExceptionPage,
@@ -13,6 +16,7 @@ import {
   DropDown,
   PostButton,
   Menu,
+  Footer,
 } from './index.style';
 import { NotificationCard } from './NotificationCard';
 import { httpDelete } from '../../utils/http';
@@ -88,7 +92,9 @@ export default function Notification() {
             />
           );
         })}
-        {loading && <ExceptionPage>Loading</ExceptionPage>}
+        <Footer>
+          <Loader>{loading && <ReactLoading type="spin" color={COLORS.PRIMARY} />}</Loader>
+        </Footer>
         {error && <ExceptionPage>error</ExceptionPage>}
       </NotificationContainer>
     </Wrapper>

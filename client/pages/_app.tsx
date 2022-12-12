@@ -25,7 +25,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <Global styles={globalStyle} />
         <AppStyle>
           <Head>
-            <title>Moheyum</title>
+            <title>mo:heyum</title>
           </Head>
           <Frame>
             {!NoSideBar.includes(router.pathname) && <SideBar />}
