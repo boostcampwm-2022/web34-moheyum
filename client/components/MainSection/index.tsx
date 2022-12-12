@@ -4,28 +4,32 @@ import { useRecoilState } from 'recoil';
 import { ArticleCard } from './Articlecard';
 import { ArticlesSection, FakeButton, NewArticleSection, Placeholder, Wrapper, Newsfeed } from './index.style';
 import { MainTopBar } from '../../styles/common';
-import { scrollY, newsfeedList } from '../../atom';
+import { scrollHandle, newsfeedList } from '../../atom';
 import usePaginator from '../../hooks/usePaginator';
 import { renderMarkdownWithoutStyle } from '../../utils/markdown';
 
 export default function MainSection() {
   const scrollRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
-  const [scroll, setScroll] = useRecoilState(scrollY);
+  const [scrollhandler, setScrollHandler] = useRecoilState(scrollHandle);
   const [currentNewsfeed, setCurrentNewsfeed] = useRecoilState(newsfeedList);
-  const { pages, lastFollowElementRef } = usePaginator(`/api/post/newsfeed`);
+  const { pages, next, lastFollowElementRef } = usePaginator(`/api/post/newsfeed`, scrollhandler.nextPageId);
   const onScroll = useCallback(() => {
-    if (scrollRef.current) {
-      setScroll(scrollRef.current.scrollTop);
-    }
+    setScrollHandler((prevState) => ({ ...prevState, scrollY: scrollRef.current ? scrollRef.current.scrollTop : 0 }));
   }, []);
   useEffect(() => {
-    if (pages.length !== 0) {
+    if (pages.length !== 0 && scrollhandler.nextPageId !== '') {
       setCurrentNewsfeed((prevState) => prevState.concat(pages));
+      setScrollHandler((prevState) => ({ ...prevState, nextPageId: next }));
     }
   }, [pages]);
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTo(0, scroll);
+    if (!scrollhandler.historyBack) {
+      setScrollHandler((prevState) => ({ ...prevState, historyBack: false, scrollY: 0, nextPageId: 'START' }));
+    } else {
+      if (scrollRef.current) {
+        scrollRef.current.scrollTo(0, scrollhandler.scrollY);
+      }
+      setScrollHandler((prevState) => ({ ...prevState, historyBack: false }));
     }
   }, []);
   return (

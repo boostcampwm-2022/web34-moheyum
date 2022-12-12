@@ -30,17 +30,12 @@ export const toastMessageList = atom<ToastMessage[]>({
   default: [],
 });
 
-export const scrollY = atom({
-  key: 'scrollY',
-  default: 0,
+export const scrollHandle = atom({
+  key: 'scrollHandle',
+  default: { scrollY: 0, historyBack: false, nextPageId: 'START' },
 });
 
 export const newsfeedList = atom({
   key: 'newsfeedList',
   default: [],
-});
-
-export const historyBack = atom({
-  key: 'historyBack',
-  default: false,
 });

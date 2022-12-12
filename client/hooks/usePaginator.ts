@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { useRecoilState } from 'recoil';
-import { historyBack } from '../atom';
+import { useSetRecoilState } from 'recoil';
+import { scrollHandle } from '../atom';
 // original source code: https://www.youtube.com/watch?v=NZKUirTtxcg
 
 export const NEXT = {
@@ -10,7 +10,12 @@ export const NEXT = {
 
 // export type NEXT = 'START' | 'END'
 
-function useFetchPage(fetchUrl: string, nextCursor: string, isBack: boolean) {
+function getFetchUrlWidthNext(fetchUrl: string, next: string) {
+  if (fetchUrl.includes('?')) return fetchUrl + `&next=${next}`;
+  else return fetchUrl + `?next=${next}`;
+}
+
+function useFetchPage(fetchUrl: string, nextCursor: string) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [pages, setPages] = useState<any>([]);
@@ -26,9 +31,10 @@ function useFetchPage(fetchUrl: string, nextCursor: string, isBack: boolean) {
     setLoading(true);
     setError(false);
     let fetchUrlwithNext = fetchUrl;
-    if (next !== NEXT.START && next !== NEXT.END && nextCursor !== 'START') {
-      if (fetchUrlwithNext.includes('?')) fetchUrlwithNext += `&next=${next}`;
-      else fetchUrlwithNext += `?next=${next}`;
+    if (next === NEXT.START && nextCursor !== '' && nextCursor !== NEXT.START) {
+      fetchUrlwithNext = getFetchUrlWidthNext(fetchUrl, nextCursor);
+    } else if (next !== NEXT.START && next !== NEXT.END && nextCursor !== 'START') {
+      fetchUrlwithNext = getFetchUrlWidthNext(fetchUrl, next);
     }
     fetch(`${fetchUrlwithNext}`, {
       signal: abortController.signal,
@@ -55,15 +61,16 @@ function useFetchPage(fetchUrl: string, nextCursor: string, isBack: boolean) {
     return () => {
       abortController.abort();
     };
-  }, [fetchUrl, nextCursor, isBack]);
+  }, [fetchUrl, nextCursor]);
 
   return { loading, error, pages, next };
 }
 
-export default function usePaginator(url: string) {
-  const [nextCursor, setNextCursor] = useState(NEXT.START);
-  const [historyback, setHistoryBack] = useRecoilState(historyBack);
-  const { loading, error, pages, next } = useFetchPage(url, nextCursor, historyback);
+export default function usePaginator(url: string, nextStart: string = 'START') {
+  // if (nextStart === '') return { pages: [], next: '' };
+  const [nextCursor, setNextCursor] = useState(nextStart);
+  const setScrollHandler = useSetRecoilState(scrollHandle);
+  const { loading, error, pages, next } = useFetchPage(url, nextCursor);
 
   const observer = useRef<any>();
   const lastFollowElementRef = useCallback(
@@ -73,12 +80,12 @@ export default function usePaginator(url: string) {
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && next !== NEXT.END) {
           setNextCursor(next);
-          setHistoryBack(false);
+          // setScrollHandler((prevState) => ({ ...prevState, historyBack: true }));
         }
       });
       if (node) observer.current.observe(node);
     },
     [loading, next !== NEXT.END]
   );
-  return { loading, error, pages, lastFollowElementRef };
+  return { loading, error, pages, next, lastFollowElementRef };
 }

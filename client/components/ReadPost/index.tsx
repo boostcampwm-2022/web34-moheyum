@@ -1,9 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
 import Router from 'next/router';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import ReactLoading from 'react-loading';
-import { authedUser } from '../../atom';
+import { authedUser, scrollHandle } from '../../atom';
 import COLORS from '../../styles/color';
 import { ButtonBack, TopBar } from '../../styles/common';
 import usePaginator from '../../hooks/usePaginator';
@@ -22,7 +22,9 @@ interface PostData {
 
 export default function ReadPost({ postData, title }: PostData) {
   const authedUserInfo = useRecoilValue(authedUser);
+  const setHistoryBack = useSetRecoilState(scrollHandle);
   const goBack = () => {
+    setHistoryBack((prevState) => ({ ...prevState, historyBack: true }));
     Router.back();
   };
   let commentCount = 0;
