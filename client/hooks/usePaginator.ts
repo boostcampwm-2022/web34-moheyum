@@ -1,6 +1,4 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { useSetRecoilState } from 'recoil';
-import { scrollHandle } from '../atom';
 // original source code: https://www.youtube.com/watch?v=NZKUirTtxcg
 
 export const NEXT = {
@@ -67,9 +65,7 @@ function useFetchPage(fetchUrl: string, nextCursor: string) {
 }
 
 export default function usePaginator(url: string, nextStart: string = 'START') {
-  // if (nextStart === '') return { pages: [], next: '' };
   const [nextCursor, setNextCursor] = useState(nextStart);
-  const setScrollHandler = useSetRecoilState(scrollHandle);
   const { loading, error, pages, next } = useFetchPage(url, nextCursor);
 
   const observer = useRef<any>();
@@ -80,7 +76,6 @@ export default function usePaginator(url: string, nextStart: string = 'START') {
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && next !== NEXT.END) {
           setNextCursor(next);
-          // setScrollHandler((prevState) => ({ ...prevState, historyBack: true }));
         }
       });
       if (node) observer.current.observe(node);
