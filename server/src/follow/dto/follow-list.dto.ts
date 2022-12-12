@@ -8,5 +8,5 @@ export class FollowListDto {
   @Transform(({ value }) => parseInt(value))
   @IsNumber()
   @IsOptional()
-  limit = 2;
+  limit = 20;
 }

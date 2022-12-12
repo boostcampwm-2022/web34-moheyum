@@ -62,7 +62,7 @@ export class AuthService {
     this.redisService.set(
       userid,
       refreshToken,
-      +this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME') + 500,
+      +this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME') + 60,
     );
   }
   /**
@@ -91,12 +91,10 @@ export class AuthService {
   public async checkRefreshTokenValidation(
     refreshToken: string,
     userid: string,
-  ) {
+  ): Promise<boolean> {
     const hashedRefreshToken = await this.redisService.get(userid);
-    const isValidate = refreshToken === hashedRefreshToken;
-    // const isValidate = await bcrypt.compare(refreshToken, hashedRefreshToken);
-    if (isValidate) return true;
-    return false;
+    const isValidate: boolean = refreshToken === hashedRefreshToken;
+    return isValidate;
   }
   /**
    * @description Redis에서 리프레시 토큰 제거
@@ -168,6 +166,7 @@ export class AuthService {
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const { userid, password } = authCredentialsDto;
     const user = await this.userRepository.findOne({ userid });
+    if (!user.state) throw UserException.userStateFalse();
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload = { userid };
       const accessToken = this.createAccessToken(payload);

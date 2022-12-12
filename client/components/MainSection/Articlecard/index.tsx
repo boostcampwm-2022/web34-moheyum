@@ -1,11 +1,11 @@
-import Image from 'next/legacy/image';
+import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import { calcTime } from '../../../utils/calctime';
 import {
   ArticleContent,
   ArticleHeader,
-  ArticleImage,
+  ArticleImageContainer,
   Comments,
   Content,
   HeaderInfo,
@@ -22,17 +22,18 @@ interface Props {
   profileimg: string;
   nickname: string;
   author?: string;
+  thumbnail?: string | null;
 }
 
 export const ArticleCard = React.forwardRef<HTMLInputElement, Props>(
-  ({ id, description, author, nickname, date, comments, profileimg }: Props, ref) => (
+  ({ id, description, author, nickname, date, comments, profileimg, thumbnail }: Props, ref) => (
     <Link href={`/post/${id}`}>
       <Wrapper ref={ref}>
         <ArticleHeader>
           <UserProfile profileimg={profileimg} nickname={nickname} author={author!} />
           <HeaderInfo>
             <Comments>
-              <Image src="/ico_comment.svg" width={18} height={18} />
+              <Image src="/ico_comment.svg" alt="comment" width={18} height={18} />
               <span>{comments}</span>
             </Comments>
             <PostedAt>{calcTime(date)}</PostedAt>
@@ -40,7 +41,11 @@ export const ArticleCard = React.forwardRef<HTMLInputElement, Props>(
         </ArticleHeader>
         <ArticleContent>
           <Content>{description || '글 내용이 없어용!'}</Content>
-          <ArticleImage />
+          {thumbnail && (
+            <ArticleImageContainer>
+              <Image src={thumbnail} fill sizes="100%, 100%" alt="post thumbnail" />
+            </ArticleImageContainer>
+          )}
         </ArticleContent>
         <hr />
       </Wrapper>
@@ -51,4 +56,5 @@ export const ArticleCard = React.forwardRef<HTMLInputElement, Props>(
 ArticleCard.defaultProps = {
   description: '',
   author: '',
+  thumbnail: null,
 };

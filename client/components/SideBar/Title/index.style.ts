@@ -6,20 +6,26 @@ export const Wrapper = styled.div`
   height: 61px;
   border-bottom: 2px ridge ${COLORS.PRIMARY};
   user-select: none;
+  a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 export const Icon = styled.div`
   position: relative;
-  margin-left: 22px;
+  width: 100%;
+  margin-top: 2px;
   @media only screen and (max-width: ${({ theme }) => theme.smallWindow}) {
     display: none;
   }
 `;
 
 export const SmallIcon = styled.div`
-  width: 100%;
+  width: 37px;
   height: 61px;
-  margin-left: 23px;
+  padding-top: 10px;
   display: none;
   @media only screen and (max-width: ${({ theme }) => theme.smallWindow}) {
     display: flex;

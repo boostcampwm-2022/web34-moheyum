@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers';
 import { authedUser } from '../../atom';
-import { ResponseType, httpGet } from '../../utils/http';
+import { ResponseType, httpGet, httpPut } from '../../utils/http';
 import { ButtonBack, TopBar } from '../../styles/common';
 import getByteLength from '../../utils/getByteLength';
 import {
@@ -15,7 +15,6 @@ import {
   ProfileArea,
   ProfileUserid,
   ProfileEmail,
-  ChangeAvatarButton,
   InputsContainer,
   NicknameEditArea,
   BioEditArea,
@@ -25,8 +24,10 @@ import {
   ErrorMessage,
   ProfileImageInput,
   EditSection,
-  ProfileImgForm,
+  ProfileImage,
+  ButtonBox,
 } from './index.style';
+import useToast from '../../hooks/useToast';
 
 interface ProfileEditable {
   nickname: string;
@@ -47,7 +48,10 @@ const schema = yup.object().shape({
       message: '16바이트 이내로 입력 가능합니다.',
       test: (value) => getByteLength(value as string) <= 16,
     }),
-  bio: yup.string(),
+  bio: yup.string().test({
+    message: '500바이트 이내로 입력 가능합니다.',
+    test: (value) => getByteLength(value as string) <= 500,
+  }),
 });
 
 export default function ProfileEditSection() {
@@ -62,6 +66,8 @@ export default function ProfileEditSection() {
   const goBack = () => {
     Router.back();
   };
+
+  const toast = useToast();
 
   const authedUserInfo = useRecoilValue(authedUser);
   const setAuthedUserInfo = useSetRecoilState(authedUser);
@@ -105,9 +111,11 @@ export default function ProfileEditSection() {
     setMyProfile((prevProfile) => ({ ...prevProfile, bio: e.target.value }));
   };
 
-  const handleProfileImgSubmit = () => {
-    // fetch('/api/user/')
-    if (!profileImg) return;
+  const handleProfileSubmit = () => {
+    if (!profileImg) {
+      profileSubmit();
+      return;
+    }
     const formData = new FormData();
     formData.append('file', profileImg!);
     fetch(`/api/user/${myProfile.userid}/avatar`, {
@@ -124,32 +132,22 @@ export default function ProfileEditSection() {
           return { ...userInfo, profileimg };
         });
         setProfileImg(undefined);
+        profileSubmit();
       })
       .catch((e) => {
-        alert(e);
-        console.error(e);
+        toast.addMessage(e);
       });
   };
 
-  const handleProfileSubmit = () => {
-    // TODO : 별명, 소개로 밀어넣을 수 있는 값이 유효한지 확인해야 함..
-    fetch(`/api/user/${myProfile.userid}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify({
-        nickname: myProfile.nickname,
-        bio: myProfile.bio,
-      }),
+  const profileSubmit = () => {
+    httpPut(`/user/${myProfile.userid}`, {
+      nickname: myProfile.nickname,
+      bio: myProfile.bio,
     })
       .catch((e) => {
-        alert('프로필 편집에 실패했습니다.');
-        console.error(e);
+        toast.addMessage(`프로필 편집에 실패했습니다.\n${e}`);
       })
       .finally(() => {
-        // Router.reload();
         goBack();
       });
   };
@@ -163,18 +161,17 @@ export default function ProfileEditSection() {
         <h1>프로필 편집</h1>
       </TopBar>
       <EditSection>
-        <ProfileImgForm onSubmit={handleSubmit(handleProfileImgSubmit)} encType="multipart/form-data">
+        <InputsContainer onSubmit={handleSubmit(handleProfileSubmit)}>
           <ProfileAndImgContainer>
             <ProfileImageInput type="file" ref={selectFile} onChange={handleImg} accept="image/*" />
-            <Avatar src={previewImg ?? myProfile.profileimg} onClick={() => selectFile.current!.click()} />
+            <ProfileImage>
+              <Avatar src={previewImg ?? myProfile.profileimg} onClick={() => selectFile.current!.click()} />
+            </ProfileImage>
             <ProfileArea>
               <ProfileUserid>{myProfile.userid}</ProfileUserid>
               <ProfileEmail>{myProfile.email}</ProfileEmail>
-              {previewImg && <ChangeAvatarButton type="submit">프로필 사진 저장</ChangeAvatarButton>}
             </ProfileArea>
           </ProfileAndImgContainer>
-        </ProfileImgForm>
-        <InputsContainer onSubmit={handleSubmit(handleProfileSubmit)}>
           <NicknameEditArea>
             <span>별명:</span>
             <NicknameInput {...register('nickname')} value={myProfile.nickname} onChange={handleNicknameChange} />
@@ -185,7 +182,9 @@ export default function ProfileEditSection() {
             <BioInput {...register('bio')} value={myProfile.bio} onChange={handleBioChange} />
           </BioEditArea>
           <ErrorMessage>{errors.bio && (errors.bio.message as string)}</ErrorMessage>
-          <SubmitButton type="submit">저장</SubmitButton>
+          <ButtonBox>
+            <SubmitButton type="submit">저장</SubmitButton>
+          </ButtonBox>
         </InputsContainer>
       </EditSection>
     </Wrapper>

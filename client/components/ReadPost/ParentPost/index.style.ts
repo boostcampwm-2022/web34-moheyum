@@ -45,6 +45,8 @@ export const ContentBox = styled.div`
   & .content {
     ${markdownStyle}
     width: 100%;
+    max-height: 350px;
+    overflow-y: hidden;
   }
 `;
 
@@ -54,6 +56,12 @@ export const HeaderBox = styled.div`
   display: flex;
   justify-content: space-between;
   flex-direction: row;
+  & > a {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+  }
 `;
 
 export const ParentTreeContainer = styled.div`
@@ -61,6 +69,7 @@ export const ParentTreeContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 2;
 `;
 
 export const ParentTree = styled.div`
@@ -68,4 +77,11 @@ export const ParentTree = styled.div`
   margin: 0px 33px;
   border: 1px solid ${COLORS.GRAY3};
   height: calc(100% + 15px);
+`;
+
+export const ParentFilter = styled.div`
+  width: 100%;
+  height: 400px;
+  position: absolute;
+  background: linear-gradient(transparent 20%, ${COLORS.WHITE});
 `;

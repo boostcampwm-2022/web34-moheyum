@@ -15,6 +15,7 @@ import { CacheIndividual } from 'src/common/cache/cahce-individual.decorator';
 import { User } from 'src/common/database/user.schema';
 import { GetUser } from 'src/common/decorator/get-user.decorator';
 import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
+import { NotificationListDto } from './dto/notification-list.dto';
 import { NotificationService } from './notification.service';
 
 @Controller('notification')
@@ -26,8 +27,14 @@ export class NotificationController {
   @UseGuards(JwtAuthGuard)
   @CacheIndividual('notification')
   @CachePagination(true)
-  async notificationList(@GetUser() user: User, @Query('next') next: string) {
-    return await this.notificationService.findListByUserid(user, next);
+  async notificationList(
+    @GetUser() user: User,
+    @Query() notificationListDto: NotificationListDto,
+  ) {
+    return await this.notificationService.findListByUserid(
+      user,
+      notificationListDto,
+    );
   }
 
   @UseGuards(JwtAuthGuard)

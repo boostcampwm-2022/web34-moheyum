@@ -8,9 +8,7 @@ export const mainSectionStyle = css`
   display: flex;
   flex-direction: column;
   background-color: ${COLORS.WHITE};
-  /* & > div {
-    margin-top: 61px;
-  } */
+  overflow-x: hidden;
 `;
 
 export const displayCenter = css`
@@ -86,8 +84,9 @@ export const markdownStyle = css`
   padding: 10px;
   font-size: 16px;
   white-space: normal;
-  line-height: 16px;
+  line-height: 1.5em;
   min-height: 12px;
+  overflow-x: hidden;
 
   & * {
     margin-bottom: 16px;
@@ -125,6 +124,7 @@ export const markdownStyle = css`
     background-color: ${COLORS.GRAY3};
     border-radius: 6px;
     font-size: 85%;
+    font-family: D2Coding, 'D2 coding', monospace;
   }
 
   & pre {
@@ -134,6 +134,7 @@ export const markdownStyle = css`
     overflow-x: hidden;
     word-wrap: break-word;
     white-space: nowrap;
+    font-family: D2Coding, 'D2 coding', monospace;
     & > div {
       white-space: pre-wrap;
     }
@@ -149,5 +150,33 @@ export const markdownStyle = css`
 
   & i {
     font-style: italic;
+  }
+
+  & img {
+    max-width: 100%;
+    margin: 0 auto;
+    align-self: center;
+    display: block;
+  }
+
+  & a {
+    text-decoration: underline;
+    color: ${COLORS.BLUE};
+    &:hover {
+      color: ${COLORS.PRIMARY_DARK};
+    }
+    &:active {
+      color: ${COLORS.PRIMARY};
+    }
+  }
+
+  & ul {
+    list-style: circle;
+    list-style-position: inside;
+  }
+
+  & ol {
+    list-style: decimal;
+    list-style-position: inside;
   }
 `;

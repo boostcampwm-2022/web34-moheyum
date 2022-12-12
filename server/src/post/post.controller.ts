@@ -25,6 +25,7 @@ import { MoheyumInterceptor } from 'src/common/cache/cache.interceptor';
 import { CacheEvict } from 'src/common/cache/cache-evict.decorator';
 import { CachePagination } from 'src/common/cache/cache-next-ttl.decorator';
 import { CacheIndividual } from 'src/common/cache/cahce-individual.decorator';
+import { SearchPostListDto } from './dto/search-post-list.dto';
 
 @Controller('post')
 @UseInterceptors(MoheyumInterceptor)
@@ -69,11 +70,8 @@ export class PostController {
   @CachePagination(true)
   @CacheTTL(20)
   @Get('/search')
-  async searchPost(
-    @Query('next') next: string,
-    @Query('keyword') keyword: string,
-  ) {
-    return await this.postService.searchPost(keyword, next);
+  async searchPost(@Query() searchPostListDto: SearchPostListDto) {
+    return await this.postService.searchPost(searchPostListDto);
   }
 
   @CacheTTL(24 * 60 * 60)

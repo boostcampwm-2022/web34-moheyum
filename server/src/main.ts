@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
+import helmet from 'helmet';
 // import * as dotenv from 'dotenv';
 // import * as path from 'path';
 import { HttpStatus, ValidationPipe } from '@nestjs/common';
@@ -15,6 +16,7 @@ async function bootstrap() {
   });
   const configService = app.get<ConfigService>(ConfigService);
   app.use(cookieParser());
+  app.use(helmet());
   app.setGlobalPrefix('api');
   app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalPipes(
