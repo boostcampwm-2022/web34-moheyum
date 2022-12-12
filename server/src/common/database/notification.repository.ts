@@ -6,6 +6,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Notification, NotificationDocument } from './notification.schema';
 import { Model } from 'mongoose';
+import { NotificationListDto } from 'src/notification/dto/notification-list.dto';
 
 @Injectable()
 export class NotificationRepository {
@@ -39,18 +40,18 @@ export class NotificationRepository {
   //   }
   // }
 
-  findMany(userid: string, pageSize: number) {
+  findMany(userid: string, notificationListDto: NotificationListDto) {
     return this.notificationModel
       .find({ userid })
       .sort({ _id: -1 })
-      .limit(pageSize);
+      .limit(notificationListDto.limit);
   }
 
-  findManyWithNext(userid: string, pageSize: number, next: string) {
+  findManyWithNext(userid: string, notificationListDto: NotificationListDto) {
     return this.notificationModel
-      .find({ userid, _id: { $lt: next } })
+      .find({ userid, _id: { $lt: notificationListDto.next } })
       .sort({ _id: -1 })
-      .limit(pageSize);
+      .limit(notificationListDto.limit);
   }
 
   findCount(userid: string) {

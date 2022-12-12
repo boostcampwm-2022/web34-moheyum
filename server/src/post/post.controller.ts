@@ -19,6 +19,7 @@ import { PostIdValidationPipe } from './pipes/post-id-validation.pipe';
 import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
 import { FollowerPostDto } from './dto/follower-post.dto';
 import { PostGuard } from 'src/common/guard/post.guard';
+import { SearchPostListDto } from './dto/search-post-list.dto';
 
 @Controller('post')
 export class PostController {
@@ -55,11 +56,8 @@ export class PostController {
 
   @HttpCode(200)
   @Get('/search')
-  async searchPost(
-    @Query('next') next: string,
-    @Query('keyword') keyword: string,
-  ) {
-    return await this.postService.searchPost(keyword, next);
+  async searchPost(@Query() searchPostListDto: SearchPostListDto) {
+    return await this.postService.searchPost(searchPostListDto);
   }
 
   @Get('/:id')

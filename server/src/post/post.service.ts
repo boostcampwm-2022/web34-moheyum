@@ -9,6 +9,7 @@ import { UserRepository } from 'src/common/database/user.repository';
 import { NotificationRepository } from 'src/common/database/notification.repository';
 import { EventService } from 'src/event/event.service';
 import { PostException } from 'src/common/exeception/post.exception';
+import { SearchPostListDto } from './dto/search-post-list.dto';
 
 @Injectable()
 export class PostService {
@@ -69,10 +70,7 @@ export class PostService {
   }
 
   async deletePost(id: string, user: User): Promise<void> {
-    const post = await this.postRepository.findOne({ _id: id });
-    if (!post) throw PostException.postNotFound();
-    if (post.author !== user.userid) throw PostException.postUnAuthorized();
-    this.postRepository.deleteOne({ _id: id });
+    this.postRepository.findAndDelete({ _id: id });
     this.userRepository.updatePostCount({ userid: user.userid }, -1);
     return;
   }
@@ -102,11 +100,11 @@ export class PostService {
     };
   }
 
-  async searchPost(keyword: string, next: string) {
+  async searchPost(searchPostListDto: SearchPostListDto) {
     let result;
-    if (next)
-      result = await this.postRepository.searchPostWithNext(keyword, next);
-    else result = await this.postRepository.searchPost(keyword);
+    if (searchPostListDto.next !== '')
+      result = await this.postRepository.searchPostWithNext(searchPostListDto);
+    else result = await this.postRepository.searchPost(searchPostListDto);
     return {
       post: result,
       next: result.length < 10 ? '' : result.at(-1)._id,

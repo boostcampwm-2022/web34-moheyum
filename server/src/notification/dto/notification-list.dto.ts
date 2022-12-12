@@ -1,6 +1,6 @@
 import { IsOptional, IsNumber, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
-export class FollowListDto {
+export class NotificationListDto {
   @IsString()
   @IsOptional()
   next = '';

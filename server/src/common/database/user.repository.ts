@@ -4,6 +4,7 @@ import { User, UserDocument } from '../database/user.schema';
 import { Model, FilterQuery } from 'mongoose';
 import { UserCreateDto } from '../../auth/dto/user-create.dto';
 import { UserException } from '../exeception/user.exception';
+import { SearchUserListDto } from 'src/user/dto/search-user-list.dto';
 
 @Injectable()
 export class UserRepository {
@@ -110,37 +111,37 @@ export class UserRepository {
     return result;
   }
 
-  searchUserWithNext(keyword: string, next: string) {
+  searchUserWithNext(searchUserListDto: SearchUserListDto) {
     return this.userModel
       .find(
         {
           state: true,
-          _id: { $gt: next },
+          _id: { $gt: searchUserListDto.next },
           $or: [
-            { userid: { $regex: `^${keyword}` } },
-            { nickname: { $regex: `^${keyword}` } },
+            { userid: { $regex: `^${searchUserListDto.keyword}` } },
+            { nickname: { $regex: `^${searchUserListDto.keyword}` } },
           ],
         },
         { userid: 1, nickname: 1, profileimg: 1 },
       )
       .sort({ _id: 1 })
-      .limit(2);
+      .limit(searchUserListDto.limit);
   }
 
-  searchUser(keyword: string) {
+  searchUser(searchUserListDto: SearchUserListDto) {
     return this.userModel
       .find(
         {
           state: true,
           $or: [
-            { userid: { $regex: `^${keyword}` } },
-            { nickname: { $regex: `^${keyword}` } },
+            { userid: { $regex: `^${searchUserListDto.keyword}` } },
+            { nickname: { $regex: `^${searchUserListDto.keyword}` } },
           ],
         },
         { userid: 1, nickname: 1, profileimg: 1 },
       )
       .sort({ _id: 1 })
-      .limit(2);
+      .limit(searchUserListDto.limit);
   }
 
   searchUsersForSuggestion(userList: string[]) {

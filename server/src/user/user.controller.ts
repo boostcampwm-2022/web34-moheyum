@@ -22,6 +22,7 @@ import { GetUser } from 'src/common/decorator/get-user.decorator';
 import { NcloudService } from 'src/ncloud/ncloud.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { GetUserUpdatePasswordDto } from './dto/get-update-password.dto';
+import { SearchUserListDto } from './dto/search-user-list.dto';
 
 @Controller('user')
 export class UserController {
@@ -39,13 +40,10 @@ export class UserController {
   }
 
   @Get('/search')
-  async searchUser(
-    @Query('keyword') keyword: string,
-    @Query('next') next: string,
-  ) {
-    if (!/^[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣\d_]{1,16}$/.test(keyword))
+  async searchUser(@Query() searchUserListDto: SearchUserListDto) {
+    if (!/^[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣\d_]{1,16}$/.test(searchUserListDto.keyword))
       throw new BadRequestException();
-    return await this.userService.searchUser(keyword, next);
+    return await this.userService.searchUser(searchUserListDto);
   }
   @HttpCode(200)
   @UseGuards(JwtAuthGuard)

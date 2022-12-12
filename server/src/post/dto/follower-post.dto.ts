@@ -4,7 +4,7 @@ export class FollowerPostDto {
   @Transform(({ value }) => parseInt(value))
   @IsNumber()
   @IsOptional()
-  limit = 10;
+  limit = 20;
 
   // @IsNotEmpty()
   @IsString()

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UserRepository } from 'src/common/database/user.repository';
 import { FollowRepository } from 'src/common/database/follow.repository';
 import { User } from 'src/common/database/user.schema';

@@ -6,6 +6,7 @@ import { FollowRepository } from 'src/common/database/follow.repository';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { GetUserUpdatePasswordDto } from './dto/get-update-password.dto';
+import { SearchUserListDto } from './dto/search-user-list.dto';
 
 @Injectable()
 export class UserService {
@@ -51,11 +52,11 @@ export class UserService {
     return await this.userRepository.searchUsersForSuggestion(data);
   }
 
-  async searchUser(keyword: string, next: string) {
+  async searchUser(searchUserListDto: SearchUserListDto) {
     let result;
-    if (next)
-      result = await this.userRepository.searchUserWithNext(keyword, next);
-    else result = await this.userRepository.searchUser(keyword);
+    if (searchUserListDto.next !== '')
+      result = await this.userRepository.searchUserWithNext(searchUserListDto);
+    else result = await this.userRepository.searchUser(searchUserListDto);
     return {
       post: result,
       next: result.length < 2 ? '' : result.at(-1)._id,

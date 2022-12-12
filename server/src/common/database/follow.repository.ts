@@ -11,7 +11,6 @@ import { User } from './user.schema';
 import { FollowListDto } from 'src/follow/dto/follow-list.dto';
 @Injectable()
 export class FollowRepository {
-  limitData = 2;
   constructor(
     @InjectModel(Follow.name) private followModel: Model<FollowDocument>, // @InjectModel(Post.name) private PostModel: Model<PostDocument>,
   ) {}
@@ -52,7 +51,6 @@ export class FollowRepository {
         {
           $match: { targetid: targetid },
         },
-        { $limit: limit },
         {
           $lookup: {
             from: 'users',
@@ -68,6 +66,7 @@ export class FollowRepository {
             as: 'followerlist',
           },
         },
+        { $limit: limit },
         {
           $unwind: '$followerlist',
         },
@@ -82,7 +81,7 @@ export class FollowRepository {
       ])) ?? [];
     const res = {};
     res['post'] = dataList;
-    res['next'] = dataList.length === this.limitData ? dataList.at(-1)._id : '';
+    res['next'] = dataList.length === limit ? dataList.at(-1)._id : '';
     return res;
   }
   async findFollowersWithNext({ targetid }, followListDTO: FollowListDto) {
@@ -97,7 +96,6 @@ export class FollowRepository {
             ],
           },
         },
-        { $limit: limit },
         {
           $lookup: {
             from: 'users',
@@ -113,6 +111,7 @@ export class FollowRepository {
             ],
           },
         },
+        { $limit: limit },
         {
           $unwind: '$followerlist',
         },
@@ -127,7 +126,7 @@ export class FollowRepository {
       ])) ?? [];
     const res = {};
     res['post'] = dataList;
-    res['next'] = dataList.length === this.limitData ? dataList.at(-1)._id : '';
+    res['next'] = dataList.length === limit ? dataList.at(-1)._id : '';
     return res;
   }
 
@@ -139,7 +138,6 @@ export class FollowRepository {
         {
           $match: { userid: userid },
         },
-        { $limit: limit },
         {
           $lookup: {
             from: 'users',
@@ -155,6 +153,7 @@ export class FollowRepository {
             ],
           },
         },
+        { $limit: limit },
         {
           $unwind: '$followinglist',
         },
@@ -169,7 +168,7 @@ export class FollowRepository {
       ])) ?? [];
     const res = {};
     res['post'] = dataList;
-    res['next'] = dataList.length === this.limitData ? dataList.at(-1)._id : '';
+    res['next'] = dataList.length === limit ? dataList.at(-1)._id : '';
     return res;
   }
   async findFollowingWithNext({ userid }, followListDTO: FollowListDto) {
@@ -184,7 +183,6 @@ export class FollowRepository {
             ],
           },
         },
-        { $limit: limit },
         {
           $lookup: {
             from: 'users',
@@ -200,6 +198,7 @@ export class FollowRepository {
             as: 'followinglist',
           },
         },
+        { $limit: limit },
         {
           $unwind: '$followinglist',
         },
@@ -214,7 +213,7 @@ export class FollowRepository {
       ])) ?? [];
     const res = {};
     res['post'] = dataList;
-    res['next'] = dataList.length === this.limitData ? dataList.at(-1)._id : '';
+    res['next'] = dataList.length === limit ? dataList.at(-1)._id : '';
     return res;
   }
 

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { NotificationRepository } from 'src/common/database/notification.repository';
 import { User } from 'src/common/database/user.schema';
+import { NotificationListDto } from './dto/notification-list.dto';
 
 const pageSize = 2;
 
@@ -10,18 +11,17 @@ export class NotificationService {
     private readonly notificationRepository: NotificationRepository,
   ) {}
 
-  async findListByUserid(user: User, next: string) {
+  async findListByUserid(user: User, notificationListDto: NotificationListDto) {
     let result;
-    if (next)
+    if (notificationListDto.next !== '')
       result = await this.notificationRepository.findManyWithNext(
         user.userid,
-        pageSize,
-        next,
+        notificationListDto,
       );
     else
       result = await this.notificationRepository.findMany(
         user.userid,
-        pageSize,
+        notificationListDto,
       );
     return {
       post: result,

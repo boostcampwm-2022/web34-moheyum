@@ -5,6 +5,8 @@ import mongoose, { Model, FilterQuery } from 'mongoose';
 import { CreatePostDto } from '../../post/dto/create-post.dto';
 import { User } from 'src/common/database/user.schema';
 import { FollowerPostDto } from 'src/post/dto/follower-post.dto';
+import { SearchPostListDto } from 'src/post/dto/search-post-list.dto';
+import { PostException } from '../exeception/post.exception';
 
 @Injectable()
 export class PostRepository {
@@ -43,7 +45,7 @@ export class PostRepository {
         $unset: 'user',
       },
     ]);
-    if (postOne.length === 0) throw new NotFoundException();
+    if (postOne.length === 0) throw PostException.postNotFound();
 
     const data = postOne.at(0);
     if (data.parentPost !== '') {
@@ -125,6 +127,21 @@ export class PostRepository {
     //{ acknowledged: true, deletedCount: 1 }
     if (result.deletedCount === 0) throw new NotFoundException();
     return result.deletedCount;
+  }
+
+  async findAndDelete(boardFilterQuery: FilterQuery<Post>) {
+    const result = await this.postModel.findOneAndDelete(
+      boardFilterQuery,
+      boardFilterQuery,
+    );
+    if (result && result.parentPost) {
+      await this.postModel.updateOne(
+        { _id: result.parentPost },
+        {
+          $pull: { childPosts: result._id.toString() },
+        },
+      );
+    }
   }
 
   async getUserPostsWithNext(
@@ -305,11 +322,11 @@ export class PostRepository {
     return res;
   }
 
-  searchPost(keyword: string) {
+  searchPost(searchPostListDto: SearchPostListDto) {
     return this.postModel.aggregate([
-      { $match: { $text: { $search: keyword } } },
+      { $match: { $text: { $search: searchPostListDto.keyword } } },
       { $sort: { _id: -1 } },
-      { $limit: 10 },
+      { $limit: searchPostListDto.limit },
       {
         $lookup: {
           from: 'users',
@@ -333,16 +350,16 @@ export class PostRepository {
     ]);
   }
 
-  searchPostWithNext(keyword: string, next: string) {
+  searchPostWithNext(searchPostListDto: SearchPostListDto) {
     return this.postModel.aggregate([
       {
         $match: {
-          _id: { $lt: new mongoose.Types.ObjectId(next) },
-          $text: { $search: keyword },
+          _id: { $lt: new mongoose.Types.ObjectId(searchPostListDto.next) },
+          $text: { $search: searchPostListDto.keyword },
         },
       },
       { $sort: { _id: -1 } },
-      { $limit: 10 },
+      { $limit: searchPostListDto.limit },
       {
         $lookup: {
           from: 'users',
