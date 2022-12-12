@@ -1,9 +1,11 @@
 import React, { useCallback, useRef, useEffect, RefObject } from 'react';
 import Link from 'next/link';
 import { useRecoilState } from 'recoil';
+import ReactLoading from 'react-loading';
 import { ArticleCard } from './Articlecard';
-import { ArticlesSection, FakeButton, NewArticleSection, Placeholder, Wrapper, Newsfeed } from './index.style';
-import { MainTopBar } from '../../styles/common';
+import COLORS from '../../styles/color';
+import { ArticlesSection, FakeButton, NewArticleSection, Placeholder, Wrapper, Newsfeed, Footer } from './index.style';
+import { MainTopBar, Loader } from '../../styles/common';
 import { scrollHandle, newsfeedList } from '../../atom';
 import usePaginator from '../../hooks/usePaginator';
 import { renderMarkdownWithoutStyle } from '../../utils/markdown';
@@ -12,7 +14,7 @@ export default function MainSection() {
   const scrollRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
   const [scrollhandler, setScrollHandler] = useRecoilState(scrollHandle);
   const [currentNewsfeed, setCurrentNewsfeed] = useRecoilState(newsfeedList);
-  const { pages, next, lastFollowElementRef } = usePaginator(
+  const { pages, next, loading, lastFollowElementRef } = usePaginator(
     `/api/post/newsfeed`,
     scrollhandler.historyBack ? scrollhandler.nextPageId : 'START'
   );
@@ -83,6 +85,9 @@ export default function MainSection() {
           })}
         </ArticlesSection>
       </Newsfeed>
+      <Footer>
+        <Loader>{loading && <ReactLoading type="spin" color={COLORS.PRIMARY} />}</Loader>
+      </Footer>
     </Wrapper>
   );
 }

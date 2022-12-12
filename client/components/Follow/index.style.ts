@@ -52,3 +52,11 @@ export const NoFollowersMessage = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
+export const Footer = styled.footer`
+  width: '100%';
+  height: '50px';
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;

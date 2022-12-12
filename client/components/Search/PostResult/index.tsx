@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
 import React from 'react';
+import ReactLoading from 'react-loading';
+import { Loader } from '../../../styles/common';
 import COLORS from '../../../styles/color';
 import usePaginator from '../../../hooks/usePaginator';
 import { ArticleCard } from '../../MainSection/Articlecard';
@@ -42,7 +44,9 @@ export default function PostResult({ keyword }: { keyword: string }) {
         );
       })}
       {!loading && pages.length === 0 && <EmptyMessage>검색 결과 없음</EmptyMessage>}
-      {loading && <ErrorMessage>Loading</ErrorMessage>}
+      <Footer>
+        <Loader>{loading && <ReactLoading type="spin" color={COLORS.PRIMARY} />}</Loader>
+      </Footer>
       {error && <ErrorMessage>error</ErrorMessage>}
     </ResultContainer>
   );
@@ -84,4 +88,12 @@ export const EmptyMessage = styled.div`
   height: 100%;
   padding-bottom: 160px;
   color: ${COLORS.GRAY3};
+`;
+
+export const Footer = styled.footer`
+  width: '100%';
+  height: '50px';
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

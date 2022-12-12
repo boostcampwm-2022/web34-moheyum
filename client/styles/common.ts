@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import COLORS from './color';
-import { displayColumn } from './mixin';
+import { displayColumn, displayCenter } from './mixin';
 
 export const MainTopBar = styled.header`
   /* position: fixed; */
@@ -49,4 +49,11 @@ export const ButtonBack = styled.button`
   background-repeat: no-repeat;
   background-size: contain;
   cursor: pointer;
+`;
+
+export const Loader = styled.div`
+  margin-top: 40px;
+  width: 20px;
+  height: 20px;
+  ${displayCenter}
 `;

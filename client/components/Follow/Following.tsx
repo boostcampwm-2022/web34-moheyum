@@ -1,6 +1,9 @@
 import Router from 'next/router';
 import React from 'react';
 import Link from 'next/link';
+import ReactLoading from 'react-loading';
+import { Loader } from '../../styles/common';
+import COLORS from '../../styles/color';
 import {
   FollowContainer,
   NoFollowersMessage,
@@ -8,6 +11,7 @@ import {
   TopFollowContainer,
   TopFollowDeactivated,
   Wrapper,
+  Footer,
 } from './index.style';
 import { FollowMember } from './FollowMember';
 import { ButtonBack, TopBar } from '../../styles/common';
@@ -63,7 +67,9 @@ export default function FollowingSection({ userData }: { userData: Props }) {
             />
           );
         })}
-        {loading && <NoFollowersMessage>Loading</NoFollowersMessage>}
+        <Footer>
+          <Loader>{loading && <ReactLoading type="spin" color={COLORS.PRIMARY} />}</Loader>
+        </Footer>
         {error && <NoFollowersMessage>error</NoFollowersMessage>}
       </FollowContainer>
     </Wrapper>

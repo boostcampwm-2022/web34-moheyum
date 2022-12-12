@@ -5,7 +5,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import ReactLoading from 'react-loading';
 import { authedUser, scrollHandle } from '../../atom';
 import COLORS from '../../styles/color';
-import { ButtonBack, TopBar } from '../../styles/common';
+import { ButtonBack, TopBar, Loader } from '../../styles/common';
 import usePaginator from '../../hooks/usePaginator';
 import type PostProps from '../../types/Post';
 import Comment, { commentItem } from './Comment';
@@ -13,7 +13,7 @@ import ProfileImg from '../UserProfile/ProfileImg';
 import ParentPost from './ParentPost';
 import type { Parent } from '../../types/Post';
 import MainPost from './MainPost';
-import { PostContent, Wrapper, CommentBox, Loader } from './index.style';
+import { PostContent, Wrapper, CommentBox } from './index.style';
 
 interface PostData {
   postData: PostProps;
