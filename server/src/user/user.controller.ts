@@ -41,7 +41,7 @@ export class UserController {
   @HttpCode(200)
   @UseGuards(JwtAuthGuard)
   @CacheIndividual('userid')
-  @CacheTTL(1800)
+  @CacheTTL(60 * 10)
   @Get('mentionlist')
   async getMentionList(@GetUser() user: User) {
     const data = await this.userService.getMentionList(user.userid);
