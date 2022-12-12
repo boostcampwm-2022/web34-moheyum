@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useEffect } from 'react';
+import React, { useCallback, useRef, useEffect, RefObject } from 'react';
 import Link from 'next/link';
 import { useRecoilState } from 'recoil';
 import { ArticleCard } from './Articlecard';
@@ -9,12 +9,14 @@ import usePaginator from '../../hooks/usePaginator';
 import { renderMarkdownWithoutStyle } from '../../utils/markdown';
 
 export default function MainSection() {
-  const scrollRef = useRef<any>();
+  const scrollRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
   const [scroll, setScroll] = useRecoilState(scrollY);
   const [currentNewsfeed, setCurrentNewsfeed] = useRecoilState(newsfeedList);
   const { pages, lastFollowElementRef } = usePaginator(`/api/post/newsfeed`);
   const onScroll = useCallback(() => {
-    setScroll(scrollRef.current.scrollTop);
+    if (scrollRef.current) {
+      setScroll(scrollRef.current.scrollTop);
+    }
   }, []);
   useEffect(() => {
     if (pages.length !== 0) {
@@ -22,7 +24,9 @@ export default function MainSection() {
     }
   }, [pages]);
   useEffect(() => {
-    scrollRef.current.scrollTo(0, scroll);
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo(0, scroll);
+    }
   }, []);
   return (
     <Wrapper>
