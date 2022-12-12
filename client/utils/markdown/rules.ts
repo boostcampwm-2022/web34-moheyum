@@ -142,6 +142,10 @@ function hr(str: string): string {
   return result;
 }
 
+const CONATINER_BLOCKS = [blockQuote, unorderedList, orderedList];
+const LEAF_BLOCKS = [emptyLines, headers, code, divideLines, hr];
+const INLINES = [hr, bold, italic, underline, strike];
+
 export function doParse(str: string): string {
   let result = str;
   let codes: string[] = [];
@@ -151,20 +155,7 @@ export function doParse(str: string): string {
   [result, codes] = codeBlock(result);
   [result, links, imgs] = link(result);
 
-  result = pipe(
-    blockQuote,
-    unorderedList,
-    orderedList,
-    emptyLines,
-    headers,
-    code,
-    divideLines,
-    hr,
-    bold,
-    italic,
-    underline,
-    strike
-  )(result);
+  result = pipe(...CONATINER_BLOCKS, ...LEAF_BLOCKS, ...INLINES)(result);
 
   result = recoverPlaceholders(result, codes, '\u235e');
   result = recoverPlaceholders(result, links, '\u235f');
