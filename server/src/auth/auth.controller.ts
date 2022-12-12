@@ -27,6 +27,7 @@ import { GetUser } from 'src/common/decorator/get-user.decorator';
 import { User } from 'src/common/database/user.schema';
 import { RateLimit } from 'nestjs-rate-limiter';
 import { TokenExpiredError } from 'jsonwebtoken';
+
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -63,7 +64,7 @@ export class AuthController {
   @HttpCode(200)
   @RateLimit({
     keyPrefix: 'signin',
-    points: 20,
+    points: 5,
     duration: 60,
     errorMessage:
       '로그인을 너무 많이 요청하셨습니다. 조금 기다리셨다가 다시 시도해주세요',

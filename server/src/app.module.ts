@@ -25,7 +25,7 @@ import { rateLimiterConfig } from './common/config/registerConfig';
     }),
     RedisModule.forRootAsync(redisOptions),
     MongooseModule.forRootAsync(mongooseConfig),
-    RateLimiterModule.register(rateLimiterConfig),
+    RateLimiterModule.registerAsync(rateLimiterConfig),
     PostModule,
     AuthModule,
     UserModule,
