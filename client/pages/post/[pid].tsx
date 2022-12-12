@@ -1,21 +1,29 @@
 import { GetServerSidePropsContext } from 'next';
 import React from 'react';
+import Router from 'next/router';
 import AuthGuard from '../../components/AuthGuard';
 import ReadPost from '../../components/ReadPost';
 import { httpGet } from '../../utils/http';
 import type PostProps from '../../types/Post';
 
 interface Props {
+  statusCode: number;
   data: {
-    post: PostProps;
+    post: PostProps | null;
   };
 }
 
 export default function Post({ response }: { response: Props }) {
   const title = '게시글';
+  let postData;
+  if (response.statusCode === 404) {
+    postData = null;
+  } else {
+    postData = response.data.post;
+  }
   return (
     <AuthGuard noRedirect>
-      <ReadPost postData={response.data.post} title={title} />
+      <ReadPost postData={postData} title={title} />
     </AuthGuard>
   );
 }
