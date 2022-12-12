@@ -1,3 +1,7 @@
+function pipe(...functions: Function[]) {
+  return (input: any) => functions.reduce((acc, fn) => fn(acc), input);
+}
+
 function emptyLines(str: string): string {
   const result = str.replace(/(?<=\n)\n/gm, '\n&nbsp;\n');
   return result;
@@ -96,14 +100,6 @@ function strike(str: string): string {
 
 // TODO : href와 src도 codeBlock처럼 따로 빼두기
 function link(str: string): [string, string[], string[]] {
-  // let result = str.replace(
-  //   /!\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm,
-  //   '<img src="$2" alt="$1"/>'
-  // );
-  // result = result.replace(
-  //   /\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm,
-  //   '<a href="$2">$1</a>'
-  // );
   let result = str.replace(
     /!\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm,
     '\u235f'
@@ -147,31 +143,33 @@ function hr(str: string): string {
 }
 
 export function doParse(str: string): string {
-  // console.log('parse start');
-  // console.log(JSON.stringify(result));
   let result = str;
   let codes: string[] = [];
   let links: string[] = [];
   let imgs: string[] = [];
+
   [result, codes] = codeBlock(result);
   [result, links, imgs] = link(result);
-  result = blockQuote(result);
-  result = emptyLines(result);
-  result = headers(result);
-  result = code(result);
-  result = unorderedList(result);
-  result = orderedList(result);
-  result = divideLines(result);
-  result = hr(result);
-  result = bold(result);
-  result = italic(result);
-  result = underline(result);
-  result = strike(result);
+
+  result = pipe(
+    blockQuote,
+    unorderedList,
+    orderedList,
+    emptyLines,
+    headers,
+    code,
+    divideLines,
+    hr,
+    bold,
+    italic,
+    underline,
+    strike
+  )(result);
+
   result = recoverPlaceholders(result, codes, '\u235e');
   result = recoverPlaceholders(result, links, '\u235f');
   result = recoverPlaceholders(result, imgs, '\u2360');
-  // console.log(JSON.stringify(result));
-  // console.log(codes);
+
   return result;
 }
 
