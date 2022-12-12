@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { NOTIFICATION_LIMIT } from 'src/common/constants/pagination.constants';
 import { NotificationRepository } from 'src/common/database/notification.repository';
 import { User } from 'src/common/database/user.schema';
-
-const pageSize = 2;
+import { NotificationListDto } from './dto/notification-list.dto';
 
 @Injectable()
 export class NotificationService {
@@ -10,22 +10,17 @@ export class NotificationService {
     private readonly notificationRepository: NotificationRepository,
   ) {}
 
-  async findListByUserid(user: User, next: string) {
+  async findListByUserid(user: User, notificationListDto: NotificationListDto) {
     let result;
-    if (next)
+    if (notificationListDto.next !== '')
       result = await this.notificationRepository.findManyWithNext(
         user.userid,
-        pageSize,
-        next,
+        notificationListDto,
       );
-    else
-      result = await this.notificationRepository.findMany(
-        user.userid,
-        pageSize,
-      );
+    else result = await this.notificationRepository.findMany(user.userid);
     return {
       post: result,
-      next: result.length < pageSize ? '' : result.at(-1)._id,
+      next: result.length < NOTIFICATION_LIMIT ? '' : result.at(-1)._id,
     };
   }
 

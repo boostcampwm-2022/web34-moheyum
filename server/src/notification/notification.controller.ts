@@ -4,13 +4,12 @@ import {
   Get,
   Param,
   Query,
-  Request,
-  Sse,
   UseGuards,
 } from '@nestjs/common';
 import { User } from 'src/common/database/user.schema';
 import { GetUser } from 'src/common/decorator/get-user.decorator';
 import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
+import { NotificationListDto } from './dto/notification-list.dto';
 import { NotificationService } from './notification.service';
 
 @Controller('notification')
@@ -19,8 +18,14 @@ export class NotificationController {
 
   @Get('/list')
   @UseGuards(JwtAuthGuard)
-  async notificationList(@GetUser() user: User, @Query('next') next: string) {
-    return await this.notificationService.findListByUserid(user, next);
+  async notificationList(
+    @GetUser() user: User,
+    @Query() notificationListDto: NotificationListDto,
+  ) {
+    return await this.notificationService.findListByUserid(
+      user,
+      notificationListDto,
+    );
   }
 
   @Get('/count')

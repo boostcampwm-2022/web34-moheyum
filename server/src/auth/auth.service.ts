@@ -44,7 +44,7 @@ export class AuthService {
    * @param payload
    * @returns string
    */
-  public async createAccessToken(payload) {
+  public createAccessToken(payload) {
     const expiresIn = `${this.configService.get(
       'JWT_ACCESS_TOKEN_EXPIRATION_TIME',
     )}s`;
@@ -58,16 +58,11 @@ export class AuthService {
    * @param refreshToken
    * @param userid
    */
-  private async setRefreshTokenInRedis(refreshToken: string, userid: string) {
-    const hashedToken = await bcrypt.hash(
-      refreshToken,
-      +this.configService.get('saltOrRounds'),
-    );
-
+  private setRefreshTokenInRedis(refreshToken: string, userid: string) {
     this.redisService.set(
       userid,
-      hashedToken,
-      +this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME') * 1000,
+      refreshToken,
+      +this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME') + 60,
     );
   }
   /**
@@ -96,11 +91,10 @@ export class AuthService {
   public async checkRefreshTokenValidation(
     refreshToken: string,
     userid: string,
-  ) {
+  ): Promise<boolean> {
     const hashedRefreshToken = await this.redisService.get(userid);
-    const isValidate = await bcrypt.compare(refreshToken, hashedRefreshToken);
-    if (isValidate) return true;
-    return false;
+    const isValidate: boolean = refreshToken === hashedRefreshToken;
+    return isValidate;
   }
   /**
    * @description Redis에서 리프레시 토큰 제거
@@ -172,10 +166,14 @@ export class AuthService {
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const { userid, password } = authCredentialsDto;
     const user = await this.userRepository.findOne({ userid });
-    if (user && user.state && (await bcrypt.compare(password, user.password))) {
+    if (!user.state) throw UserException.userStateFalse();
+    if (user && (await bcrypt.compare(password, user.password))) {
       const payload = { userid };
-      const accessToken = await this.createAccessToken(payload);
+      const accessToken = this.createAccessToken(payload);
       const refreshToken = await this.createRefreshToken(payload);
+      // const accessToken = '1';
+      // const refreshToken = '1';
+
       return { accessToken, refreshToken };
     } else throw UserException.userUnAuthorized();
   }
