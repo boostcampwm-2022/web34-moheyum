@@ -67,7 +67,6 @@ function blockQuote(str: string): string {
       newBlock = newBlock.replace(/(?<=^|\n)\uff1e? {0,3}/g, '');
     }
     result = result.replace(item, newBlock);
-    console.log(result);
   });
 
   return result;
