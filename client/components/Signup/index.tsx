@@ -78,7 +78,6 @@ export default function SignupModal() {
   });
 
   const toast = useToast();
-  const [startVerify, setStartVerify] = useState<boolean>(false);
   const [verified, setVerified] = useState<boolean>(false);
   const [timer, setTimer] = useState<number>(-1);
 
@@ -92,10 +91,24 @@ export default function SignupModal() {
       ...formValues,
       [target.name]: target.value,
     });
+    if (target.name === 'email') {
+      if (timer > 0 || verified) {
+        toast.addMessage('이메일이 변경되어 재인증이 필요합니다.');
+        setTimer(1);
+        setVerified(false);
+      }
+    }
   };
 
   const sendEmailCode = async () => {
-    if (timer > 0 || verified) return;
+    if (timer > 0) {
+      toast.addMessage('이미 인증이 진행중입니다.');
+      return;
+    }
+    if (verified) {
+      toast.addMessage('이미 인증이 완료되었습니다.');
+      return;
+    }
     if (!formValues.email.match(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]+$/i)) {
       setErrorMessages({ ...errorMessages, email: '유효하지 않은 이메일입니다.' });
       return;
@@ -106,7 +119,6 @@ export default function SignupModal() {
       setErrorMessages({ ...errorMessages, email: emailRequestResult.message });
       return;
     }
-    setStartVerify(true);
     setErrorMessages({ ...errorMessages, email: '', verify: '' });
     setTimer(180);
   };
@@ -145,9 +157,9 @@ export default function SignupModal() {
     const emailVerificationResponse = await httpGet(`/auth/email-verification?code=${formValues.verify}`);
     if (emailVerificationResponse.statusCode === 200) {
       setTimer(-1);
-      setStartVerify(false);
       setErrorMessages({
         ...errorMessages,
+        email: '',
         verify: '',
       });
       setVerified(true);
@@ -276,7 +288,7 @@ export default function SignupModal() {
           </FieldContent>
         </SignupRow>
         {errorMessages.email && <SignupRowMessage>{errorMessages.email}</SignupRowMessage>}
-        <SignupRow hidden={!startVerify}>
+        <SignupRow hidden={timer < 0}>
           <FieldName>&nbsp;</FieldName>
           <FieldContent>
             <MoheyumInputText type="text" name="verify" placeholder="인증코드" onChange={onChangeFields} />
@@ -285,8 +297,8 @@ export default function SignupModal() {
             </MoheyumButton>
           </FieldContent>
         </SignupRow>
-        {timer > -1 && startVerify && <SignupRowMessage>{secToTime(timer)}</SignupRowMessage>}
-        {errorMessages.verify && startVerify && <SignupVerifyMessage>{errorMessages.verify}</SignupVerifyMessage>}
+        {timer > -1 && <SignupRowMessage>{secToTime(timer)}</SignupRowMessage>}
+        {errorMessages.verify && timer > -1 && <SignupVerifyMessage>{errorMessages.verify}</SignupVerifyMessage>}
         <SignupSubmitContainer>
           <SubmitButton type="submit">회원가입</SubmitButton>
         </SignupSubmitContainer>

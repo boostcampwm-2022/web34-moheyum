@@ -8,6 +8,7 @@ export const mainSectionStyle = css`
   display: flex;
   flex-direction: column;
   background-color: ${COLORS.WHITE};
+  overflow-x: hidden;
 `;
 
 export const displayCenter = css`
@@ -133,6 +134,7 @@ export const markdownStyle = css`
     overflow-x: hidden;
     word-wrap: break-word;
     white-space: nowrap;
+    font-family: D2Coding, 'D2 coding', monospace;
     & > div {
       white-space: pre-wrap;
     }
@@ -166,5 +168,15 @@ export const markdownStyle = css`
     &:active {
       color: ${COLORS.PRIMARY};
     }
+  }
+
+  & ul {
+    list-style: circle;
+    list-style-position: inside;
+  }
+
+  & ol {
+    list-style: decimal;
+    list-style-position: inside;
   }
 `;

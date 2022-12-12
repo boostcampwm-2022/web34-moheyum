@@ -21,6 +21,7 @@ const MessageWrapper = styled.div`
   margin: 10px 30px;
   color: ${COLORS.WHITE};
   text-align: center;
+  white-space: pre-wrap;
 
   transition: all 0.3s ease;
   animation: popIn 0.3s;

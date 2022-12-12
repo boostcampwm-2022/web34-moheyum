@@ -27,6 +27,7 @@ export const TopBar = styled.header`
   display: flex;
   flex-direction: row;
   align-items: center;
+  white-space: nowrap;
   h1 {
     flex: 1;
     font-size: 22px;

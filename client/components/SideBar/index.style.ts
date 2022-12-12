@@ -42,6 +42,7 @@ export const Wrapper = styled.aside`
   flex-direction: column;
   justify-content: space-between;
   background-color: ${({ theme }) => theme.sidebar.backgroundColor};
+  z-index: 3;
   @media only screen and (max-width: ${({ theme }) => theme.smallWindow}) {
     width: ${({ theme }) => theme.sidebar.minWidth};
   }
