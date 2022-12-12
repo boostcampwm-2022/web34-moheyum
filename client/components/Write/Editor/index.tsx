@@ -253,6 +253,10 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
 
   const handlePaste = (e: ClipboardEvent<HTMLDivElement>) => {
     e.preventDefault();
+    if (e.clipboardData?.files.length > 0) {
+      handleFiles(e.clipboardData.files);
+      return;
+    }
     const data = e.clipboardData?.getData('Text');
     pasteAction(data);
   };
