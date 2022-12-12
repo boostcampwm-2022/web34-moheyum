@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
-  ProfileAvatar,
+  AvatarBox,
   ProfileBio,
   ProfileContainer,
   ProfileCounters,
@@ -14,8 +15,9 @@ import {
 } from './index.style';
 import ProfileCounter from './ProfileCounter';
 import { authedUser } from '../../../atom';
-import { httpGet } from '../../../utils/http';
+import { httpGet, httpDelete, httpPost } from '../../../utils/http';
 import { UserPostProps } from '../../../types/Post';
+import defaultProfile from '../../../public/default-profile.png';
 
 function UserProfile({ userData }: { userData: UserPostProps }) {
   const authedUserInfo = useRecoilValue(authedUser);
@@ -32,32 +34,24 @@ function UserProfile({ userData }: { userData: UserPostProps }) {
   }, []);
 
   const cancleFollow = () => {
-    fetch(`/api/follow/following/${userData.userid}`, {
-      method: 'DELETE',
-      credentials: 'include',
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        if (result.message === 'success') {
-          setImFollowing(false);
-        }
-      });
+    httpDelete(`/follow/following/${userData.userid}`).then((result) => {
+      if (result.message === 'success') {
+        setImFollowing(false);
+      }
+    });
   };
 
   const submitFollow = () => {
-    fetch(`/api/follow/following/${userData.userid}`, {
-      method: 'POST',
-      credentials: 'include',
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        if (result.message === 'success') setImFollowing(true);
-      });
+    httpPost(`/follow/following/${userData.userid}`, {}).then((result) => {
+      if (result.message === 'success') setImFollowing(true);
+    });
   };
 
   return (
     <ProfileContainer>
-      <ProfileAvatar src={userData.profileimg} />
+      <AvatarBox>
+        <Image src={userData.profileimg !== '' ? userData.profileimg : defaultProfile} alt="profile picture" fill />
+      </AvatarBox>
       <ProfileDetail>
         <ProfileNames>
           <ProfileNickname>

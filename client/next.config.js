@@ -9,7 +9,12 @@ const nextConfig = {
     },
   ],
   images: {
-    domains: ['kr.object.ncloudstorage.com', 'localhost'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
 };
 

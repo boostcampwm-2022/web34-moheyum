@@ -19,6 +19,22 @@ export const Avatar = styled('div')(({ src }: { src: string }) => ({
   aspectRatio: '1/1',
 }));
 
+export const AvatarBox = styled.div`
+  width: 67px;
+  height: 67px;
+  border-radius: 67px;
+  border: 3px solid ${COLORS.PRIMARY};
+  background-color: ${COLORS.WHITE};
+  margin: 5px;
+  aspect-ratio: 1;
+  position: relative;
+
+  & > img {
+    object-fit: cover;
+    border-radius: 100%;
+  }
+`;
+
 export const Information = styled.div`
   flex: 1;
   padding: 10px 5px;

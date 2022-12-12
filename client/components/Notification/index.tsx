@@ -1,32 +1,47 @@
 import { useCallback, useRef, useState, useEffect } from 'react';
 import Router from 'next/router';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
+import Image from 'next/image';
 import { newNotification } from '../../atom';
 import usePaginator, { NEXT } from '../../hooks/usePaginator';
-import { ExceptionPage, NotificationContainer, TopBar, Wrapper, NewNoti } from './index.style';
+import {
+  ExceptionPage,
+  NotificationContainer,
+  TopBar,
+  Wrapper,
+  NewNoti,
+  DropDown,
+  PostButton,
+  Menu,
+} from './index.style';
 import { NotificationCard } from './NotificationCard';
+import { httpDelete } from '../../utils/http';
+import useToast from '../../hooks/useToast';
 
 export default function Notification() {
   const [nextCursor, setNextCursor] = useState('START');
   const { loading, error, pages, next } = usePaginator(`/api/notification/list/`, nextCursor);
-  const setNewNotiState = useSetRecoilState(newNotification);
-  const [newState, setNewState] = useState(false);
-  setNewNotiState(false);
+  const [notiState, setNotiState] = useRecoilState(newNotification);
+  const [dropDownDisplay, setDropDownDisplay] = useState<boolean>(false);
   const observer = useRef<any>();
+  const toast = useToast();
   const updateNotification = () => {
+    setNotiState(false);
     Router.reload();
   };
+  const deleteAllHandler = async () => {
+    const response = await httpDelete('/notification/list');
+    if (response.statusCode !== 200) {
+      toast.addMessage(`알림 목록 삭제에 실패하였습니다. ${response.message}`);
+    } else {
+      toast.addMessage(`알림 목록을 삭제하였습니다.`);
+      setDropDownDisplay(false);
+      Router.reload();
+    }
+  };
   useEffect(() => {
-    const eventSource = new EventSource('/api/event');
-    eventSource.onmessage = (event) => {
-      setNewNotiState(event.data);
-      setNewState(event.data);
-    };
-    eventSource.onerror = (e) => {
-      console.error('SSE error', e);
-    };
-    return () => eventSource.close();
-  });
+    setNotiState(false);
+  }, []);
   const lastNotificationElementRef = useCallback(
     (node: any) => {
       if (loading) return;
@@ -44,8 +59,23 @@ export default function Notification() {
     <Wrapper>
       <TopBar>
         <h1>알림</h1>
+        <Menu>
+          <Image
+            onClick={() => (dropDownDisplay ? setDropDownDisplay(false) : setDropDownDisplay(true))}
+            src="/menu.svg"
+            alt="Menu"
+            width={30}
+            height={30}
+            priority
+          />
+          {dropDownDisplay && (
+            <DropDown>
+              <PostButton onClick={deleteAllHandler}>전체 삭제</PostButton>
+            </DropDown>
+          )}
+        </Menu>
       </TopBar>
-      {newState && (
+      {notiState && (
         <NewNoti onClick={updateNotification}>
           <div>새 소식</div>
         </NewNoti>
@@ -58,11 +88,20 @@ export default function Notification() {
                 url={item.url}
                 message={item.message}
                 createdAt={item.createdAt}
+                notifId={item._id}
                 key={item._id}
                 ref={lastNotificationElementRef}
               />
             );
-          return <NotificationCard url={item.url} message={item.message} createdAt={item.createdAt} key={item._id} />;
+          return (
+            <NotificationCard
+              url={item.url}
+              message={item.message}
+              createdAt={item.createdAt}
+              notifId={item._id}
+              key={item._id}
+            />
+          );
         })}
         {loading && <ExceptionPage>Loading</ExceptionPage>}
         {error && <ExceptionPage>error</ExceptionPage>}

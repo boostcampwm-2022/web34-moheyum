@@ -18,10 +18,12 @@ import {
   SignupRowMessage,
   SignupSubmitContainer,
   SignupVerifyMessage,
+  SubmitButton,
 } from './index.style';
+import useToast from '../../hooks/useToast';
 
 // 페이지 변경되거나 추가되면 여기도 업데이트 필요.
-const urlList = ['signup', 'post', 'notification', 'login', 'myAccount', 'search', 'write'];
+const urlList = ['signup', 'post', 'notification', 'login', 'myAccount', 'search', 'write', 'idinquiry', 'pwinquiry'];
 
 const schema = yup.object().shape({
   id: yup
@@ -75,7 +77,7 @@ export default function SignupModal() {
     verify: '',
   });
 
-  const [startVerify, setStartVerify] = useState<boolean>(false);
+  const toast = useToast();
   const [verified, setVerified] = useState<boolean>(false);
   const [timer, setTimer] = useState<number>(-1);
 
@@ -89,10 +91,24 @@ export default function SignupModal() {
       ...formValues,
       [target.name]: target.value,
     });
+    if (target.name === 'email') {
+      if (timer > 0 || verified) {
+        toast.addMessage('이메일이 변경되어 재인증이 필요합니다.');
+        setTimer(1);
+        setVerified(false);
+      }
+    }
   };
 
   const sendEmailCode = async () => {
-    if (timer > 0 || verified) return;
+    if (timer > 0) {
+      toast.addMessage('이미 인증이 진행중입니다.');
+      return;
+    }
+    if (verified) {
+      toast.addMessage('이미 인증이 완료되었습니다.');
+      return;
+    }
     if (!formValues.email.match(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]+$/i)) {
       setErrorMessages({ ...errorMessages, email: '유효하지 않은 이메일입니다.' });
       return;
@@ -103,7 +119,6 @@ export default function SignupModal() {
       setErrorMessages({ ...errorMessages, email: emailRequestResult.message });
       return;
     }
-    setStartVerify(true);
     setErrorMessages({ ...errorMessages, email: '', verify: '' });
     setTimer(180);
   };
@@ -142,9 +157,9 @@ export default function SignupModal() {
     const emailVerificationResponse = await httpGet(`/auth/email-verification?code=${formValues.verify}`);
     if (emailVerificationResponse.statusCode === 200) {
       setTimer(-1);
-      setStartVerify(false);
       setErrorMessages({
         ...errorMessages,
+        email: '',
         verify: '',
       });
       setVerified(true);
@@ -167,7 +182,10 @@ export default function SignupModal() {
       password: formValues.password,
     });
     if (response.statusCode !== 200) {
-      alert(`오류가 발생했습니다.\nERROR statusCode: ${response.statusCode}\nERROR message: ${response.message}`);
+      toast.addMessage(
+        `오류가 발생했습니다.\nERROR statusCode: ${response.statusCode}\nERROR message: ${response.message}`
+      );
+      setVerified(false);
       return;
     }
     const signinResponse = await httpPost('/auth/signin', {
@@ -175,7 +193,7 @@ export default function SignupModal() {
       password: formValues.password,
     });
     if (signinResponse.statusCode !== 200) {
-      alert(
+      toast.addMessage(
         `회원 가입에 성공했으나 로그인에 실패했습니다.\nERROR statusCode: ${signinResponse.statusCode}\nERROR message: ${signinResponse.message}`
       );
       return;
@@ -270,7 +288,7 @@ export default function SignupModal() {
           </FieldContent>
         </SignupRow>
         {errorMessages.email && <SignupRowMessage>{errorMessages.email}</SignupRowMessage>}
-        <SignupRow hidden={!startVerify}>
+        <SignupRow hidden={timer < 0}>
           <FieldName>&nbsp;</FieldName>
           <FieldContent>
             <MoheyumInputText type="text" name="verify" placeholder="인증코드" onChange={onChangeFields} />
@@ -279,10 +297,10 @@ export default function SignupModal() {
             </MoheyumButton>
           </FieldContent>
         </SignupRow>
-        {timer > -1 && startVerify && <SignupRowMessage>{secToTime(timer)}</SignupRowMessage>}
-        {errorMessages.verify && startVerify && <SignupVerifyMessage>{errorMessages.verify}</SignupVerifyMessage>}
+        {timer > -1 && <SignupRowMessage>{secToTime(timer)}</SignupRowMessage>}
+        {errorMessages.verify && timer > -1 && <SignupVerifyMessage>{errorMessages.verify}</SignupVerifyMessage>}
         <SignupSubmitContainer>
-          <MoheyumButton type="submit">회원가입</MoheyumButton>
+          <SubmitButton type="submit">회원가입</SubmitButton>
         </SignupSubmitContainer>
       </SignupForm>
     </ModalWrapper>

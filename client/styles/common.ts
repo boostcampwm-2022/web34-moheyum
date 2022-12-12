@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import COLORS from './color';
 import { displayColumn } from './mixin';
-import { mainSectionSize } from './theme';
 
 export const MainTopBar = styled.header`
   /* position: fixed; */
@@ -28,6 +27,7 @@ export const TopBar = styled.header`
   display: flex;
   flex-direction: row;
   align-items: center;
+  white-space: nowrap;
   h1 {
     flex: 1;
     font-size: 22px;

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRecoilValue } from 'recoil';
 import { authedUser } from '../../../atom';
 import { httpPost, httpGet, httpPatch } from '../../../utils/http';
-import renderMarkdown from '../../../utils/markdown';
+import { renderMarkdown, smartypants } from '../../../utils/markdown';
 import UserDropDown from './UserDropDown';
 import { getLeftWidth } from '../../../styles/theme';
 import UserProfile from '../../UserProfile';
@@ -23,13 +23,13 @@ import {
   Wrapper,
 } from './index.style';
 import PostProps from '../../../types/Post';
+import useToast from '../../../hooks/useToast';
 
 interface Props {
   parentPostData?: {
     _id?: string;
   };
   modifyPostData?: PostProps;
-  isComment?: number | null;
 }
 
 Editor.defaultProps = {
@@ -37,7 +37,6 @@ Editor.defaultProps = {
     _id: '',
   },
   modifyPostData: null,
-  isComment: null,
 };
 
 interface followUser {
@@ -48,12 +47,17 @@ interface followUser {
 
 let allMentionList: followUser[] = [];
 
-export default function Editor({ parentPostData, modifyPostData, isComment }: Props) {
+export default function Editor({ parentPostData, modifyPostData }: Props) {
   const contentRef = useRef<HTMLDivElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const [tabIndex, setTabIndex] = useState(0); // 0 Editor, 1 Preview
   const [content, setContent] = useState<string>('');
-  const [dropDownDisplay, setDropDownDisplay] = useState<string>('none');
+  const [contentHTML, setContentHTML] = useState<string>('<div><br></div>'); // 탭 전환용
+  const authedUserInfo = useRecoilValue(authedUser);
+  const [imageOver, setImageOver] = useState<boolean>(false);
+
+  // 멘션 기능 관련 상태.
+  const [dropDownDisplay, setDropDownDisplay] = useState<boolean>(false);
   const [dropDownPosition, setDropDownPosition] = useState<{ x: string; y: string }>({
     x: '0px',
     y: '0px',
@@ -62,26 +66,33 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
   const [mentionList, setMentionList] = useState<string[]>([]);
   const [followList, setFollowList] = useState<followUser[]>([]);
   const [inputUserId, setInputUserId] = useState<string>('');
-  const [contentHTML, setContentHTML] = useState<string>('<div><br></div>'); // 탭 전환용
   const [selectUser, setSelectUser] = useState<number>(0);
-  const [imageOver, setImageOver] = useState<boolean>(false);
-  const authedUserInfo = useRecoilValue(authedUser);
+
+  const toast = useToast();
+
+  // 실시간 미리보기를 활성화하려면 이걸 키고 preview element의 렌더링 조건을 tabIndex === 0 으로 바꿔주세요
+  // useEffect(() => {
+  //   if (!previewRef.current) return;
+  //   previewRef.current.innerHTML = renderMarkdown(content);
+  // }, [content]);
 
   const submitHandler = async () => {
     const removeDup = new Set(mentionList);
     const target = contentRef.current;
     if (!target) return;
-    const postContent = target.innerHTML.replace(/<div>([\s\S]*?)<\/div>/g, '$1\n');
+    const postContent = target.innerHTML.replace(/<div>([\s\S]*?)<\/div>/g, '$1\n').replace(/<br>/g, '');
 
     // 수정의 경우
     if (modifyPostData) {
       const result = await httpPatch(`/post/${modifyPostData._id}`, {
         author: 1,
-        description: postContent,
+        description: smartypants(postContent),
         parentPost: modifyPostData.parentPost,
       });
       if (result.statusCode !== 200) {
-        alert(`글 수정에 실패했습니다.\nERROR statusCode: ${result.statusCode}\nERROR message: ${result.message}`);
+        toast.addMessage(
+          `글 수정에 실패했습니다.\nERROR statusCode: ${result.statusCode}\nERROR message: ${result.message}`
+        );
         return;
       }
       Router.push(`/post/${modifyPostData._id}`);
@@ -96,7 +107,9 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
       mentions: Array.from(removeDup),
     });
     if (result.statusCode !== 200) {
-      alert(`글 작성에 실패했습니다.\nERROR statusCode: ${result.statusCode}\nERROR message: ${result.message}`);
+      toast.addMessage(
+        `글 작성에 실패했습니다.\nERROR statusCode: ${result.statusCode}\nERROR message: ${result.message}`
+      );
       return;
     }
     Router.back();
@@ -109,7 +122,8 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
     if (index === 1) {
       // preview
       if (!contentRef.current) return;
-      setContentHTML(contentRef.current.innerHTML);
+      // setContentHTML(contentRef.current.innerHTML);
+      setContent(contentRef.current.innerText);
       setTabIndex(1);
     }
   };
@@ -147,7 +161,7 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
   useEffect(() => {
     if (!checkMentionActive) {
       setInputUserId('');
-      setDropDownDisplay('none');
+      setDropDownDisplay(false);
       setSelectUser(0);
     } else {
       setInputUserId('');
@@ -200,31 +214,41 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
   // 아래부터 에디터 제스쳐 관련 코드
 
   const pasteAction = (data: string) => {
-    // console.log(JSON.stringify(data));
     const cursor = window.getSelection();
-    if (!cursor) return;
-    if (!contentRef.current) return;
+    if (!cursor) return false;
+    if (!contentRef.current) return false;
     const collapseNode = cursor.anchorNode;
     if (cursor.type === 'Caret') {
-      if (!cursor.anchorNode) return;
-      const position = cursor.anchorNode.nodeType === 3 ? cursor.anchorOffset + data.length : 1;
-      cursor.anchorNode.textContent = `${cursor.anchorNode?.textContent?.slice(
-        0,
-        cursor.anchorOffset
-      )}${data}${cursor.anchorNode?.textContent?.slice(cursor.anchorOffset)}`;
-
+      if (!cursor.anchorNode) return false;
+      const position = cursor.anchorNode.nodeName === '#text' ? cursor.anchorOffset + data.length : 1;
+      switch (cursor.anchorNode.nodeName) {
+        case 'DIV':
+          cursor.anchorNode.textContent = `${cursor.anchorNode?.textContent}${data}`;
+          break;
+        case '#text':
+          cursor.anchorNode.textContent = `${cursor.anchorNode?.textContent?.slice(
+            0,
+            cursor.anchorOffset
+          )}${data}${cursor.anchorNode?.textContent?.slice(cursor.anchorOffset)}`;
+          break;
+        default:
+          break;
+      }
       window.getSelection()?.collapse(collapseNode, position);
+      return true;
     }
     if (cursor.type === 'Range') {
-      if (!cursor.anchorNode || !cursor.focusNode) return;
+      if (!cursor.anchorNode || !cursor.focusNode) return false;
       cursor.deleteFromDocument();
-      const position = cursor.anchorNode.nodeType === 3 ? cursor.anchorOffset + data.length : 1;
+      const position = cursor.anchorNode.nodeName === '#text' ? cursor.anchorOffset + data.length : 1;
       cursor.anchorNode.textContent = `${cursor.anchorNode?.textContent?.slice(
         0,
         cursor.anchorOffset
       )}${data}${cursor.anchorNode?.textContent?.slice(cursor.anchorOffset)}`;
       window.getSelection()?.collapse(collapseNode, position);
+      return true;
     }
+    return false;
   };
 
   const handlePaste = (e: ClipboardEvent<HTMLDivElement>) => {
@@ -241,7 +265,7 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
         contentRef.current.innerHTML = '<div><br/></div>';
       }
     }
-    setContent(contentRef.current.innerText.replace(/\n\n/g, '\n'));
+    setContent(contentRef.current.innerText);
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
@@ -283,12 +307,6 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
 
     // 멘션 시작
     if (key === '@') {
-      if (cursor.anchorNode?.nodeName === 'DIV') {
-        setDropDownPosition((prevState) => ({
-          ...prevState,
-          y: isComment ? `${isComment + 216}px` : `${173}px`,
-        }));
-      }
       setCheckMentionActive(true);
       return;
     }
@@ -344,7 +362,7 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
           break;
         default:
           // 멘션 키 active 상태일 때, 단어 입력하는 동안 발생하는 이벤트
-          setDropDownDisplay('block');
+          setDropDownDisplay(true);
           if (checkMentionActive && key.match(/^\w$/i)) {
             setInputUserId((prevState) => prevState + key);
             setSelectUser(0);
@@ -372,7 +390,7 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
     e.preventDefault();
   }, []);
 
-  const handleFiles = (files: FileList) => {
+  const handleFiles = async (files: FileList) => {
     const fetchImage = async () => {
       const response = await fetch(`/api/image`, {
         method: 'POST',
@@ -384,19 +402,19 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
 
     const formData = new FormData();
     formData.append('file', files[0]);
-
+    const SIZE_LIMIT = 1000000 * 10;
+    if (files[0].size > SIZE_LIMIT) {
+      toast.addMessage(`${SIZE_LIMIT / 1000000}MB 이하의 그림 파일만 등록 가능합니다.`);
+      return;
+    }
     if (contentRef.current) {
       const format: string = `${files[0].name.split('.').slice(-1)}`.toUpperCase();
       if (format === 'JPG' || format === 'JPEG' || format === 'PNG') {
-        fetchImage()
-          .then((imageData) => {
-            const data = `![${files[0].name as string}](${imageData.data.imageLink})`;
-            pasteAction(`${data}`);
-            setContent(data); // setContent를 안하면 프리뷰에 반영이 안됩니다..
-          })
-          .catch((e) => alert(`이미지 업로드에 실패하였습니다. Error Message: ${e}`));
+        const response = await fetchImage();
+        const data = `![${files[0].name as string}](${response.data.imageLink})`;
+        pasteAction(`${data}`);
       } else {
-        alert(`이미지 포맷을 확인해주세요.업로드 된 파일 이름 ${files[0].name} / 포맷 ${format}`);
+        toast.addMessage(`이미지 포맷을 확인해주세요.\n업로드 된 파일 이름 ${files[0].name}`);
       }
     }
   };
@@ -458,7 +476,7 @@ export default function Editor({ parentPostData, modifyPostData, isComment }: Pr
             <br />
           </div>
         </EditorTextBox>
-        <PreviewTextBox ref={previewRef} style={{ display: `${tabIndex === 1 ? 'block' : 'none'}` }} />
+        <PreviewTextBox ref={previewRef} style={{ display: `${tabIndex === 1 ? 'block' : 'none'}`, width: '50%' }} />
         <input type="file" id="fileUpload" style={{ display: 'none' }} />
         {followList.length !== 0 && (
           <UserDropDown
