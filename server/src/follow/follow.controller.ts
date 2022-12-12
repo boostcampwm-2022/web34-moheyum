@@ -18,6 +18,7 @@ import { FollowListDto } from './dto/follow-list.dto';
 import { MoheyumInterceptor } from 'src/common/cache/cache.interceptor';
 import { CacheEvict } from 'src/common/cache/cache-evict.decorator';
 import { CacheIndividual } from 'src/common/cache/cahce-individual.decorator';
+import { CachePagination } from 'src/common/cache/cache-next-ttl.decorator';
 
 @Controller('follow')
 @UseInterceptors(MoheyumInterceptor)
@@ -62,6 +63,8 @@ export class FollowController {
     };
   }
 
+  @CachePagination(true)
+  @CacheTTL(300)
   @Get('/list/follower/:targetid')
   async targetFollowerList(
     @Query() followListDTO: FollowListDto,
@@ -74,6 +77,8 @@ export class FollowController {
     return list;
   }
 
+  @CachePagination(true)
+  @CacheTTL(300)
   @Get('/list/following/:targetid')
   async targetFollowingList(
     @Query() followListDTO: FollowListDto,

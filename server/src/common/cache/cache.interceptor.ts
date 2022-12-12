@@ -1,6 +1,7 @@
 import {
   CacheInterceptor,
   CACHE_KEY_METADATA,
+  CACHE_TTL_METADATA,
   CallHandler,
   ExecutionContext,
   Injectable,
@@ -8,10 +9,12 @@ import {
 import { Reflector } from '@nestjs/core';
 import { Store } from 'cache-manager';
 import { Cluster } from 'ioredis';
-import { Observable, tap } from 'rxjs';
+import { isFunction, isNil } from 'lodash';
+import { Observable, of, tap } from 'rxjs';
 import {
   CACHE_EVICT_METADATA,
   CACHE_INDIVIDUAL_METADATA,
+  CACHE_ISPAGINATION_METADATA,
 } from './cache.constatns';
 
 @Injectable()
@@ -36,7 +39,44 @@ export class MoheyumInterceptor extends CacheInterceptor {
         }),
       );
     }
-    return super.intercept(context, next);
+    const key = this.trackBy(context);
+    const ttlValueOrFactory =
+      this.reflector.get(CACHE_TTL_METADATA, context.getHandler()) ?? null;
+    const isPaginationValueOrFactory =
+      this.reflector.get(CACHE_ISPAGINATION_METADATA, context.getHandler()) ??
+      null;
+
+    if (!key) {
+      return next.handle();
+    }
+    try {
+      const value = await this.cacheManager.get(key);
+      if (!isNil(value)) {
+        return of(value);
+      }
+      const isPagination = isFunction(isPaginationValueOrFactory)
+        ? await isPaginationValueOrFactory(context)
+        : isPaginationValueOrFactory;
+      const ttl = isFunction(ttlValueOrFactory)
+        ? await ttlValueOrFactory(context)
+        : ttlValueOrFactory;
+      return next.handle().pipe(
+        tap((response) => {
+          const args = isNil(isPagination)
+            ? isNil(ttl)
+              ? [key, response]
+              : [key, response, { ttl }]
+            : req.query.next === undefined
+            ? [key, response, { ttl: 10 }]
+            : isNil(ttl)
+            ? [key, response]
+            : [key, response, { ttl }];
+          this.cacheManager.set(...args);
+        }),
+      );
+    } catch {
+      return next.handle();
+    }
   }
 
   private setCacheIndividualKey(context: ExecutionContext): string {
@@ -44,6 +84,7 @@ export class MoheyumInterceptor extends CacheInterceptor {
       CACHE_INDIVIDUAL_METADATA,
       context.getHandler(),
     );
+    const req = context.switchToHttp().getRequest();
     switch (cacheIndividual) {
       case 'userid':
       case 'checkFollow':
