@@ -25,6 +25,7 @@ import { FindPwDto } from './dto/find-pw-dto';
 import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
 import { GetUser } from 'src/common/decorator/get-user.decorator';
 import { User } from 'src/common/database/user.schema';
+import { RateLimit } from 'nestjs-rate-limiter';
 import { TokenExpiredError } from 'jsonwebtoken';
 @Controller('auth')
 export class AuthController {
@@ -60,6 +61,13 @@ export class AuthController {
   }
 
   @HttpCode(200)
+  @RateLimit({
+    keyPrefix: 'signin',
+    points: 20,
+    duration: 60,
+    errorMessage:
+      '로그인을 너무 많이 요청하셨습니다. 조금 기다리셨다가 다시 시도해주세요',
+  })
   @Post('/signin')
   async signIn(
     @Body() authCredentialsDto: AuthCredentialsDto,
@@ -142,14 +150,14 @@ export class AuthController {
   @HttpCode(200)
   @UseGuards(JwtAuthGuard)
   @Post('logout')
-  async logout(@GetUser() user: User, @Res() res: Response) {
+  async logout(
+    @GetUser() user: User,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     await this.authService.removeRefeshTokenfromRedis(user.userid);
     res.cookie('a_t', '', this.authService.deleteCookieOption());
     res.cookie('r_t', '', this.authService.deleteCookieOption());
 
-    return res.send({
-      message: 'success',
-      data: {},
-    });
+    return {};
   }
 }

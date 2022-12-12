@@ -13,8 +13,10 @@ import { FollowModule } from './follow/follow.module';
 import { NcloudModule } from './ncloud/ncloud.module';
 import { NotificationModule } from './notification/notification.module';
 import { EventModule } from './event/event.module';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { HttpExceptionFilter } from './common/filter/http-execption.filter';
+import { RateLimiterGuard, RateLimiterModule } from 'nestjs-rate-limiter';
+import { rateLimiterConfig } from './common/config/registerConfig';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -23,6 +25,7 @@ import { HttpExceptionFilter } from './common/filter/http-execption.filter';
     }),
     RedisModule.forRootAsync(redisOptions),
     MongooseModule.forRootAsync(mongooseConfig),
+    RateLimiterModule.register(rateLimiterConfig),
     PostModule,
     AuthModule,
     UserModule,
@@ -35,6 +38,10 @@ import { HttpExceptionFilter } from './common/filter/http-execption.filter';
     {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
+    },
+    {
+      provide: APP_GUARD, //전역 가드 설정
+      useClass: RateLimiterGuard,
     },
     Logger,
   ],
