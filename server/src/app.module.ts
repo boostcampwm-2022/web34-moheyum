@@ -19,7 +19,6 @@ import { FollowModule } from './follow/follow.module';
 import { NcloudModule } from './ncloud/ncloud.module';
 import { NotificationModule } from './notification/notification.module';
 import { EventModule } from './event/event.module';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpExceptionFilter } from './common/filter/http-execption.filter';
 import { RedisModule } from './redis/redis.module';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
