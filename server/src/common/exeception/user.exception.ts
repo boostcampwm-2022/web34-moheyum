@@ -56,4 +56,10 @@ export class UserException {
       message: '사용자 업데이트 권한이 없습니다',
     });
   }
+  static userStateFalse(): HttpException {
+    return new BadRequestException({
+      statusCode: HttpStatus.BAD_REQUEST,
+      message: '탈퇴한 사용자입니다',
+    });
+  }
 }
