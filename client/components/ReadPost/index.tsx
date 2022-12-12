@@ -13,18 +13,14 @@ import ProfileImg from '../UserProfile/ProfileImg';
 import ParentPost from './ParentPost';
 import type { Parent } from '../../types/Post';
 import MainPost from './MainPost';
-import NotFound from '../NotFound';
 import { PostContent, Wrapper, CommentBox, Loader } from './index.style';
 
 interface PostData {
-  postData: PostProps | null;
+  postData: PostProps;
   title: string;
 }
 
 export default function ReadPost({ postData, title }: PostData) {
-  if (postData === null) {
-    return <NotFound>없는 페이지 입니다.</NotFound>;
-  }
   const authedUserInfo = useRecoilValue(authedUser);
   const goBack = () => {
     Router.back();

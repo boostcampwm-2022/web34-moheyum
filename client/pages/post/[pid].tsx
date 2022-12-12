@@ -1,29 +1,26 @@
 import { GetServerSidePropsContext } from 'next';
 import React from 'react';
-import Router from 'next/router';
 import AuthGuard from '../../components/AuthGuard';
 import ReadPost from '../../components/ReadPost';
+import NotFound from '../../components/NotFound';
 import { httpGet } from '../../utils/http';
 import type PostProps from '../../types/Post';
 
 interface Props {
   statusCode: number;
   data: {
-    post: PostProps | null;
+    post: PostProps;
   };
 }
 
 export default function Post({ response }: { response: Props }) {
   const title = '게시글';
-  let postData;
   if (response.statusCode === 404) {
-    postData = null;
-  } else {
-    postData = response.data.post;
+    return <NotFound>없는 게시글 입니다.</NotFound>;
   }
   return (
     <AuthGuard noRedirect>
-      <ReadPost postData={postData} title={title} />
+      <ReadPost postData={response.data.post} title={title} />
     </AuthGuard>
   );
 }
