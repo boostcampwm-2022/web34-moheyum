@@ -36,6 +36,7 @@ export class FollowController {
     };
   }
 
+  @Get('/follow/:targetid')
   @UseGuards(JwtAuthGuard)
   @CacheIndividual('checkFollow')
   @CacheTTL(30 * 60)

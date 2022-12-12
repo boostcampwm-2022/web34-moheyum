@@ -64,3 +64,15 @@ export const TabContainer = styled.div`
     }
   }
 `;
+
+export const ResultContainer = styled.div`
+  width: 100%;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 15px 15px 160px 15px;
+  color: ${COLORS.GRAY3};
+`;

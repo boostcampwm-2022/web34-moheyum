@@ -10,19 +10,21 @@ export const ProfileContainer = styled.div`
   justify-content: space-around;
 `;
 
-export const ProfileAvatar = styled('div')(({ src }: { src: string }) => ({
-  backgroundImage: `url(${src})`,
-  width: '190px',
-  height: '190px',
-  borderRadius: '190px',
-  border: `3px solid ${COLORS.PRIMARY}`,
-  backgroundColor: `${COLORS.GRAY3}`,
-  backgroundPosition: 'center center',
-  backgroundRepeat: 'no-repeat',
-  backgroundSize: 'cover',
-  margin: '50px',
-  aspectRatio: '1/1',
-}));
+export const AvatarBox = styled.div`
+  width: 190px;
+  height: 190px;
+  border-radius: 190px;
+  border: 3px solid ${COLORS.PRIMARY};
+  background-color: ${COLORS.WHITE};
+  margin: 50px;
+  aspect-ratio: 1;
+  position: relative;
+
+  & > img {
+    object-fit: cover;
+    border-radius: 100%;
+  }
+`;
 
 export const ProfileDetail = styled.div`
   width: 500px;

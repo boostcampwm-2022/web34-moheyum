@@ -29,6 +29,7 @@ import { MoheyumInterceptor } from 'src/common/cache/cache.interceptor';
 import { CacheEvict } from 'src/common/cache/cache-evict.decorator';
 import { CacheIndividual } from 'src/common/cache/cahce-individual.decorator';
 import { CachePagination } from 'src/common/cache/cache-next-ttl.decorator';
+import { SearchUserListDto } from './dto/search-user-list.dto';
 
 @Controller('user')
 @UseInterceptors(MoheyumInterceptor)
@@ -51,13 +52,10 @@ export class UserController {
   @CachePagination(true)
   @CacheTTL(20)
   @Get('/search')
-  async searchUser(
-    @Query('keyword') keyword: string,
-    @Query('next') next: string,
-  ) {
-    if (!/^[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣\d_]{1,16}$/.test(keyword))
+  async searchUser(@Query() searchUserListDto: SearchUserListDto) {
+    if (!/^[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣\d_]{1,16}$/.test(searchUserListDto.keyword))
       throw new BadRequestException();
-    return await this.userService.searchUser(keyword, next);
+    return await this.userService.searchUser(searchUserListDto);
   }
 
   @HttpCode(200)

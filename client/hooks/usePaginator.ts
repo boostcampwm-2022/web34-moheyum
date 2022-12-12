@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 // original source code: https://www.youtube.com/watch?v=NZKUirTtxcg
 
 export const NEXT = {
@@ -8,7 +8,12 @@ export const NEXT = {
 
 // export type NEXT = 'START' | 'END'
 
-export default function usePaginator(fetchUrl: string, nextCursor: string) {
+function getFetchUrlWidthNext(fetchUrl: string, next: string) {
+  if (fetchUrl.includes('?')) return `${fetchUrl}&next=${next}`;
+  return `${fetchUrl}?next=${next}`;
+}
+
+function useFetchPage(fetchUrl: string, nextCursor: string, nextStart: string) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [pages, setPages] = useState<any>([]);
@@ -24,9 +29,10 @@ export default function usePaginator(fetchUrl: string, nextCursor: string) {
     setLoading(true);
     setError(false);
     let fetchUrlwithNext = fetchUrl;
-    if (next !== NEXT.START && next !== NEXT.END && nextCursor !== 'START') {
-      if (fetchUrlwithNext.includes('?')) fetchUrlwithNext += `&next=${next}`;
-      else fetchUrlwithNext += `?next=${next}`;
+    if (next === NEXT.START && nextCursor !== '' && nextCursor !== NEXT.START) {
+      fetchUrlwithNext = getFetchUrlWidthNext(fetchUrl, nextCursor);
+    } else if (next !== NEXT.START && next !== NEXT.END && nextCursor !== 'START') {
+      fetchUrlwithNext = getFetchUrlWidthNext(fetchUrl, next);
     }
     fetch(`${fetchUrlwithNext}`, {
       signal: abortController.signal,
@@ -41,7 +47,8 @@ export default function usePaginator(fetchUrl: string, nextCursor: string) {
             post: [],
             next: NEXT.END,
           };
-        setPages((prevPages: any[]) => [...prevPages, ...res.data.post]);
+        if (nextStart === '') setPages((prevPages: any[]) => [...prevPages, ...res.data.post]);
+        else setPages([...res.data.post]);
         setNext(res.data?.next ?? '');
         setLoading(false);
       })
@@ -55,5 +62,26 @@ export default function usePaginator(fetchUrl: string, nextCursor: string) {
     };
   }, [fetchUrl, nextCursor]);
 
-  return { loading, error, pages, next };
+  return { loading, error, pages, next, setPages };
+}
+
+export default function usePaginator(url: string, nextStart: string = '') {
+  const [nextCursor, setNextCursor] = useState(nextStart);
+  const { loading, error, pages, next } = useFetchPage(url, nextCursor, nextStart);
+
+  const observer = useRef<any>();
+  const lastFollowElementRef = useCallback(
+    (node: any) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && next !== NEXT.END) {
+          setNextCursor(next);
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [loading, next !== NEXT.END]
+  );
+  return { loading, error, pages, next, lastFollowElementRef };
 }

@@ -9,9 +9,12 @@ import { Follow, FollowDocument } from './follow.schema';
 import mongoose, { Model, FilterQuery } from 'mongoose';
 import { User } from './user.schema';
 import { FollowListDto } from 'src/follow/dto/follow-list.dto';
+import {
+  FOLLOWER_LIST_LIMIT,
+  FOLLOWING_LIST_LIMIT,
+} from '../constants/pagination.constants';
 @Injectable()
 export class FollowRepository {
-  limitData = 2;
   constructor(
     @InjectModel(Follow.name) private followModel: Model<FollowDocument>, // @InjectModel(Post.name) private PostModel: Model<PostDocument>,
   ) {}
@@ -45,14 +48,12 @@ export class FollowRepository {
     return false;
   }
 
-  async findFollowers({ targetid }, followListDTO: FollowListDto) {
-    const { limit } = followListDTO;
+  async findFollowers({ targetid }) {
     const dataList =
       (await this.followModel.aggregate([
         {
           $match: { targetid: targetid },
         },
-        { $limit: limit },
         {
           $lookup: {
             from: 'users',
@@ -68,6 +69,7 @@ export class FollowRepository {
             as: 'followerlist',
           },
         },
+        { $limit: FOLLOWER_LIST_LIMIT },
         {
           $unwind: '$followerlist',
         },
@@ -82,11 +84,12 @@ export class FollowRepository {
       ])) ?? [];
     const res = {};
     res['post'] = dataList;
-    res['next'] = dataList.length === this.limitData ? dataList.at(-1)._id : '';
+    res['next'] =
+      dataList.length === FOLLOWER_LIST_LIMIT ? dataList.at(-1)._id : '';
     return res;
   }
   async findFollowersWithNext({ targetid }, followListDTO: FollowListDto) {
-    const { next, limit } = followListDTO;
+    const { next } = followListDTO;
     const dataList =
       (await this.followModel.aggregate([
         {
@@ -97,7 +100,6 @@ export class FollowRepository {
             ],
           },
         },
-        { $limit: limit },
         {
           $lookup: {
             from: 'users',
@@ -113,6 +115,7 @@ export class FollowRepository {
             ],
           },
         },
+        { $limit: FOLLOWER_LIST_LIMIT },
         {
           $unwind: '$followerlist',
         },
@@ -127,19 +130,17 @@ export class FollowRepository {
       ])) ?? [];
     const res = {};
     res['post'] = dataList;
-    res['next'] = dataList.length === this.limitData ? dataList.at(-1)._id : '';
+    res['next'] =
+      dataList.length === FOLLOWER_LIST_LIMIT ? dataList.at(-1)._id : '';
     return res;
   }
 
-  async findFollowing({ userid }, followListDTO: FollowListDto) {
-    const { limit } = followListDTO;
-
+  async findFollowing({ userid }) {
     const dataList =
       (await this.followModel.aggregate([
         {
           $match: { userid: userid },
         },
-        { $limit: limit },
         {
           $lookup: {
             from: 'users',
@@ -155,6 +156,7 @@ export class FollowRepository {
             ],
           },
         },
+        { $limit: FOLLOWING_LIST_LIMIT },
         {
           $unwind: '$followinglist',
         },
@@ -169,11 +171,12 @@ export class FollowRepository {
       ])) ?? [];
     const res = {};
     res['post'] = dataList;
-    res['next'] = dataList.length === this.limitData ? dataList.at(-1)._id : '';
+    res['next'] =
+      dataList.length === FOLLOWING_LIST_LIMIT ? dataList.at(-1)._id : '';
     return res;
   }
   async findFollowingWithNext({ userid }, followListDTO: FollowListDto) {
-    const { next, limit } = followListDTO;
+    const { next } = followListDTO;
     const dataList =
       (await this.followModel.aggregate([
         {
@@ -184,7 +187,6 @@ export class FollowRepository {
             ],
           },
         },
-        { $limit: limit },
         {
           $lookup: {
             from: 'users',
@@ -200,6 +202,7 @@ export class FollowRepository {
             as: 'followinglist',
           },
         },
+        { $limit: FOLLOWING_LIST_LIMIT },
         {
           $unwind: '$followinglist',
         },
@@ -214,7 +217,8 @@ export class FollowRepository {
       ])) ?? [];
     const res = {};
     res['post'] = dataList;
-    res['next'] = dataList.length === this.limitData ? dataList.at(-1)._id : '';
+    res['next'] =
+      dataList.length === FOLLOWING_LIST_LIMIT ? dataList.at(-1)._id : '';
     return res;
   }
 

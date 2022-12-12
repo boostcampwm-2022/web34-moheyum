@@ -71,16 +71,24 @@ export const ArticleContent = styled.div`
 export const Content = styled.div`
   overflow-x: hidden;
   overflow-y: hidden;
-  height: 120px;
+  height: 125px;
+  line-height: 25px;
   flex: 1;
-  display: block;
+  display: -webkit-box;
   word-break: break-all;
   padding-right: 10px;
+  word-break: break-word;
+  text-overflow: ellipsis;
+  line-clamp: 5;
+  -webkit-line-clamp: 5;
+  box-orient: vertical;
+  -webkit-box-orient: vertical;
 `;
 
-export const ArticleImage = styled.div`
+export const ArticleImageContainer = styled.div`
   width: 130px;
   height: 130px;
   background-color: ${COLORS.GRAY4};
   border: 1px solid ${COLORS.GRAY3};
+  position: relative;
 `;

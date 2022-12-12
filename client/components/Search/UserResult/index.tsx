@@ -1,27 +1,13 @@
 import styled from '@emotion/styled';
-import React, { useCallback, useRef, useState } from 'react';
+import React from 'react';
+import ReactLoading from 'react-loading';
+import { Loader } from '../../../styles/common';
 import COLORS from '../../../styles/color';
-import usePaginator, { NEXT } from '../../../hooks/usePaginator';
+import usePaginator from '../../../hooks/usePaginator';
 import { FollowMember } from '../../Follow/FollowMember';
 
 export default function UserResult({ keyword }: { keyword: string }) {
-  const [nextCursor, setNextCursor] = useState('START');
-  const { loading, error, pages, next } = usePaginator(`/api/user/search?keyword=${keyword}`, nextCursor);
-
-  const observer = useRef<any>();
-  const lastFollowElementRef = useCallback(
-    (node: any) => {
-      if (loading) return;
-      if (observer.current) observer.current.disconnect();
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && next !== NEXT.END) {
-          setNextCursor(next);
-        }
-      });
-      if (node) observer.current.observe(node);
-    },
-    [loading, next !== NEXT.END]
-  );
+  const { loading, error, pages, lastFollowElementRef } = usePaginator(`/api/user/search?keyword=${keyword}`);
 
   return (
     <ResultContainer>
@@ -48,7 +34,9 @@ export default function UserResult({ keyword }: { keyword: string }) {
         );
       })}
       {!loading && pages.length === 0 && <EmptyMessage>검색 결과 없음</EmptyMessage>}
-      {loading && <ErrorMessage>Loading</ErrorMessage>}
+      <Footer>
+        <Loader>{loading && <ReactLoading type="spin" color={COLORS.PRIMARY} />}</Loader>
+      </Footer>
       {error && <ErrorMessage>error</ErrorMessage>}
     </ResultContainer>
   );
@@ -90,4 +78,12 @@ export const EmptyMessage = styled.div`
   height: 100%;
   padding-bottom: 160px;
   color: ${COLORS.GRAY3};
+`;
+
+export const Footer = styled.footer`
+  width: '100%';
+  height: '50px';
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

@@ -1,14 +1,11 @@
-import {
-  Injectable,
-  ConflictException,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from '../database/user.schema';
 import { Model, FilterQuery } from 'mongoose';
 import { UserCreateDto } from '../../auth/dto/user-create.dto';
 import { UserException } from '../exeception/user.exception';
+import { SearchUserListDto } from 'src/user/dto/search-user-list.dto';
+import { SEARCH_USER_LIMIT } from '../constants/pagination.constants';
 
 @Injectable()
 export class UserRepository {
@@ -56,7 +53,9 @@ export class UserRepository {
   }
 
   async findOne(userFilterQuery: FilterQuery<User>): Promise<User> {
-    return this.userModel.findOne(userFilterQuery);
+    const user = await this.userModel.findOne(userFilterQuery);
+    if (!user) throw UserException.userNotFound();
+    return user;
   }
 
   async findOneProfile(userFilterQuery: FilterQuery<User>): Promise<User> {
@@ -115,37 +114,37 @@ export class UserRepository {
     return result;
   }
 
-  searchUserWithNext(keyword: string, next: string) {
+  searchUserWithNext(searchUserListDto: SearchUserListDto) {
     return this.userModel
       .find(
         {
           state: true,
-          _id: { $gt: next },
+          _id: { $gt: searchUserListDto.next },
           $or: [
-            { userid: { $regex: `^${keyword}` } },
-            { nickname: { $regex: `^${keyword}` } },
+            { userid: { $regex: `^${searchUserListDto.keyword}` } },
+            { nickname: { $regex: `^${searchUserListDto.keyword}` } },
           ],
         },
         { userid: 1, nickname: 1, profileimg: 1 },
       )
       .sort({ _id: 1 })
-      .limit(2);
+      .limit(SEARCH_USER_LIMIT);
   }
 
-  searchUser(keyword: string) {
+  searchUser(searchUserListDto: SearchUserListDto) {
     return this.userModel
       .find(
         {
           state: true,
           $or: [
-            { userid: { $regex: `^${keyword}` } },
-            { nickname: { $regex: `^${keyword}` } },
+            { userid: { $regex: `^${searchUserListDto.keyword}` } },
+            { nickname: { $regex: `^${searchUserListDto.keyword}` } },
           ],
         },
         { userid: 1, nickname: 1, profileimg: 1 },
       )
       .sort({ _id: 1 })
-      .limit(2);
+      .limit(SEARCH_USER_LIMIT);
   }
 
   searchUsersForSuggestion(userList: string[]) {

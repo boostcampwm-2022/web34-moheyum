@@ -1,6 +1,7 @@
 import React from 'react';
-import Image from 'next/legacy/image';
-import { Wrapper, NewNoti } from './index.style';
+import Image from 'next/image';
+import { Wrapper, NewNoti, Item, ImageBox, Text, BorderBottom } from './index.style';
+import defaultProfile from '../../../public/default-profile.png';
 
 export default function Menu({
   imgSrc,
@@ -15,25 +16,30 @@ export default function Menu({
 }) {
   return (
     <Wrapper>
-      <div>
-        {avatar ? (
-          <>
-            <div className="imageBox">
-              <div className="avatarBox" style={{ backgroundImage: `url(${imgSrc})` }} />
-            </div>
-            <div className="text">{text}</div>
-          </>
-        ) : (
-          <>
-            <div className="imageBox">
-              <Image src={imgSrc} alt="item" width={25} height={25} priority />
-            </div>
-            <div className="text">{text}</div>
-          </>
-        )}
-        {noti && text === '알림' && <NewNoti />}
-      </div>
-      <span />
+      {avatar ? (
+        <Item>
+          <ImageBox>
+            <Image
+              className="avatarBox"
+              src={imgSrc !== '' ? imgSrc : defaultProfile}
+              alt="item"
+              width={25}
+              height={25}
+              priority
+            />
+          </ImageBox>
+          <Text>{text}</Text>
+        </Item>
+      ) : (
+        <Item>
+          <ImageBox>
+            <Image src={imgSrc} alt="item" width={25} height={25} priority />
+          </ImageBox>
+          <Text>{text}</Text>
+        </Item>
+      )}
+      {noti && text === '알림' && <NewNoti />}
+      <BorderBottom />
     </Wrapper>
   );
 }

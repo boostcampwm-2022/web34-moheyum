@@ -4,11 +4,12 @@ import { buttonStyle, displayColumn, markdownStyle } from '../../../styles/mixin
 
 export const Wrapper = styled.div`
   height: 100%;
+  min-height: 300px;
+  height: fit-content;
   flex: 1;
   background-color: white;
   display: flex;
   flex-direction: column;
-  overflow-y: scroll;
 `;
 
 export const ToolbarContainer = styled.div`

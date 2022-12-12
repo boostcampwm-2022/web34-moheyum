@@ -22,7 +22,9 @@ import { EventModule } from './event/event.module';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpExceptionFilter } from './common/filter/http-execption.filter';
 import { RedisModule } from './redis/redis.module';
-
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
+import { RateLimiterGuard, RateLimiterModule } from 'nestjs-rate-limiter';
+import { rateLimiterConfig } from './common/config/registerConfig';
 @Module({
   imports: [
     // RedisModule.forRootAsync(redisOptions),
@@ -32,6 +34,7 @@ import { RedisModule } from './redis/redis.module';
     }),
     CacheModule.registerAsync(redisOptions),
     MongooseModule.forRootAsync(mongooseConfig),
+    RateLimiterModule.register(rateLimiterConfig),
     PostModule,
     AuthModule,
     UserModule,
@@ -45,6 +48,10 @@ import { RedisModule } from './redis/redis.module';
     {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
+    },
+    {
+      provide: APP_GUARD, //전역 가드 설정
+      useClass: RateLimiterGuard,
     },
     Logger,
   ],
