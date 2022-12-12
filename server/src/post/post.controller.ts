@@ -24,6 +24,7 @@ import { PostGuard } from 'src/common/guard/post.guard';
 import { MoheyumInterceptor } from 'src/common/cache/cache.interceptor';
 import { CacheEvict } from 'src/common/cache/cache-evict.decorator';
 import { CachePagination } from 'src/common/cache/cache-next-ttl.decorator';
+import { CacheIndividual } from 'src/common/cache/cahce-individual.decorator';
 
 @Controller('post')
 @UseInterceptors(MoheyumInterceptor)
@@ -54,6 +55,7 @@ export class PostController {
 
   @UseGuards(JwtAuthGuard)
   @CachePagination(true)
+  @CacheIndividual('userid')
   @CacheTTL(20)
   @Get('newsfeed')
   async getFollowingPost(
