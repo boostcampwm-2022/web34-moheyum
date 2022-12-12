@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import COLORS from '../../styles/color';
-import { mainSectionStyle, displayCenter } from '../../styles/mixin';
+import { mainSectionStyle } from '../../styles/mixin';
 
 export const Wrapper = styled.div`
   ${mainSectionStyle}

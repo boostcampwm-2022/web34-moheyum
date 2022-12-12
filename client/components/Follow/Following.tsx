@@ -2,7 +2,6 @@ import Router from 'next/router';
 import React from 'react';
 import Link from 'next/link';
 import ReactLoading from 'react-loading';
-import { Loader } from '../../styles/common';
 import COLORS from '../../styles/color';
 import {
   FollowContainer,
@@ -14,7 +13,7 @@ import {
   Footer,
 } from './index.style';
 import { FollowMember } from './FollowMember';
-import { ButtonBack, TopBar } from '../../styles/common';
+import { ButtonBack, TopBar, Loader } from '../../styles/common';
 import usePaginator from '../../hooks/usePaginator';
 
 import type { Props } from '../../pages/[userid]/following';

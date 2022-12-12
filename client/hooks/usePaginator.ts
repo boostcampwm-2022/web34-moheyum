@@ -9,11 +9,11 @@ export const NEXT = {
 // export type NEXT = 'START' | 'END'
 
 function getFetchUrlWidthNext(fetchUrl: string, next: string) {
-  if (fetchUrl.includes('?')) return fetchUrl + `&next=${next}`;
-  else return fetchUrl + `?next=${next}`;
+  if (fetchUrl.includes('?')) return `${fetchUrl}&next=${next}`;
+  return `${fetchUrl}?next=${next}`;
 }
 
-function useFetchPage(fetchUrl: string, nextCursor: string) {
+function useFetchPage(fetchUrl: string, nextCursor: string, nextStart: string) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [pages, setPages] = useState<any>([]);
@@ -47,7 +47,8 @@ function useFetchPage(fetchUrl: string, nextCursor: string) {
             post: [],
             next: NEXT.END,
           };
-        setPages([...res.data.post]);
+        if (nextStart === '') setPages((prevPages: any[]) => [...prevPages, ...res.data.post]);
+        else setPages([...res.data.post]);
         setNext(res.data?.next ?? '');
         setLoading(false);
       })
@@ -61,12 +62,12 @@ function useFetchPage(fetchUrl: string, nextCursor: string) {
     };
   }, [fetchUrl, nextCursor]);
 
-  return { loading, error, pages, next };
+  return { loading, error, pages, next, setPages };
 }
 
-export default function usePaginator(url: string, nextStart: string = 'START') {
+export default function usePaginator(url: string, nextStart: string = '') {
   const [nextCursor, setNextCursor] = useState(nextStart);
-  const { loading, error, pages, next } = useFetchPage(url, nextCursor);
+  const { loading, error, pages, next } = useFetchPage(url, nextCursor, nextStart);
 
   const observer = useRef<any>();
   const lastFollowElementRef = useCallback(
