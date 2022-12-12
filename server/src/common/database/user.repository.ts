@@ -5,6 +5,7 @@ import { Model, FilterQuery } from 'mongoose';
 import { UserCreateDto } from '../../auth/dto/user-create.dto';
 import { UserException } from '../exeception/user.exception';
 import { SearchUserListDto } from 'src/user/dto/search-user-list.dto';
+import { SEARCH_USER_LIMIT } from '../constants/pagination.constants';
 
 @Injectable()
 export class UserRepository {
@@ -52,7 +53,9 @@ export class UserRepository {
   }
 
   async findOne(userFilterQuery: FilterQuery<User>): Promise<User> {
-    return this.userModel.findOne(userFilterQuery);
+    const user = await this.userModel.findOne(userFilterQuery);
+    if (!user) throw UserException.userNotFound();
+    return user;
   }
 
   async findOneProfile(userFilterQuery: FilterQuery<User>): Promise<User> {
@@ -125,7 +128,7 @@ export class UserRepository {
         { userid: 1, nickname: 1, profileimg: 1 },
       )
       .sort({ _id: 1 })
-      .limit(searchUserListDto.limit);
+      .limit(SEARCH_USER_LIMIT);
   }
 
   searchUser(searchUserListDto: SearchUserListDto) {
@@ -141,7 +144,7 @@ export class UserRepository {
         { userid: 1, nickname: 1, profileimg: 1 },
       )
       .sort({ _id: 1 })
-      .limit(searchUserListDto.limit);
+      .limit(SEARCH_USER_LIMIT);
   }
 
   searchUsersForSuggestion(userList: string[]) {

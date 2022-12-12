@@ -7,6 +7,11 @@ import { User } from 'src/common/database/user.schema';
 import { FollowerPostDto } from 'src/post/dto/follower-post.dto';
 import { SearchPostListDto } from 'src/post/dto/search-post-list.dto';
 import { PostException } from '../exeception/post.exception';
+import {
+  COMMENTS_LIMIT,
+  NEWSFEED_LIMIT,
+  SEARCH_POST_LIMIT,
+} from '../constants/pagination.constants';
 
 @Injectable()
 export class PostRepository {
@@ -130,10 +135,7 @@ export class PostRepository {
   }
 
   async findAndDelete(boardFilterQuery: FilterQuery<Post>) {
-    const result = await this.postModel.findOneAndDelete(
-      boardFilterQuery,
-      boardFilterQuery,
-    );
+    const result = await this.postModel.findOneAndDelete(boardFilterQuery);
     if (result && result.parentPost) {
       await this.postModel.updateOne(
         { _id: result.parentPost },
@@ -148,7 +150,7 @@ export class PostRepository {
     authorid: string,
     followerPostDTO: FollowerPostDto,
   ): Promise<{ post: Post[]; next: string }> {
-    const { next, limit } = followerPostDTO;
+    const { next } = followerPostDTO;
     const res = { post: [], next: '' };
     const postList =
       (await this.postModel.aggregate([
@@ -159,7 +161,7 @@ export class PostRepository {
           },
         },
         { $sort: { _id: -1 } },
-        { $limit: limit },
+        { $limit: NEWSFEED_LIMIT },
         {
           $lookup: {
             from: 'users',
@@ -185,14 +187,12 @@ export class PostRepository {
         },
       ])) ?? [];
     res.post = postList;
-    res.next = postList.length === limit ? postList.at(-1)._id : '';
+    res.next = postList.length === NEWSFEED_LIMIT ? postList.at(-1)._id : '';
     return res;
   }
   async getUserPosts(
     authorid: string,
-    followerPostDTO: FollowerPostDto,
   ): Promise<{ post: Post[]; next: string }> {
-    const { limit } = followerPostDTO;
     const res = { post: [], next: '' };
     const postList =
       (await this.postModel.aggregate([
@@ -202,7 +202,7 @@ export class PostRepository {
           },
         },
         { $sort: { _id: -1 } },
-        { $limit: limit },
+        { $limit: NEWSFEED_LIMIT },
         {
           $lookup: {
             from: 'users',
@@ -228,18 +228,18 @@ export class PostRepository {
         },
       ])) ?? [];
     res.post = postList;
-    res.next = postList.length === limit ? postList.at(-1)._id : '';
+    res.next = postList.length === NEWSFEED_LIMIT ? postList.at(-1)._id : '';
     return res;
   }
 
   async getCommentsWithNext(id: string, followerPostDTO: FollowerPostDto) {
-    const { limit, next } = followerPostDTO;
+    const { next } = followerPostDTO;
     const res = { post: [], next: '' };
     const commentIds = [];
     let idx = -1;
 
     (await this.postModel.findById(id)).childPosts.map((v) => {
-      if (idx !== -1 && idx < limit) {
+      if (idx !== -1 && idx < COMMENTS_LIMIT) {
         idx += 1;
         commentIds.push(new mongoose.Types.ObjectId(v));
       }
@@ -276,17 +276,17 @@ export class PostRepository {
     ]);
 
     res.post = comments;
-    res.next = comments.length === limit ? comments.at(-1)._id.toString() : '';
+    res.next =
+      comments.length === COMMENTS_LIMIT ? comments.at(-1)._id.toString() : '';
     return res;
   }
 
-  async getComments(id: string, followerPostDTO: FollowerPostDto) {
-    const { limit } = followerPostDTO;
+  async getComments(id: string) {
     const res = { post: [], next: '' };
     const commentIds = [];
     let idx = 0;
     (await this.postModel.findById(id)).childPosts.map((v) => {
-      if (idx < limit) {
+      if (idx < COMMENTS_LIMIT) {
         idx += 1;
         commentIds.push(new mongoose.Types.ObjectId(v));
       }
@@ -318,7 +318,8 @@ export class PostRepository {
     ]);
 
     res.post = comments;
-    res.next = comments.length === limit ? comments.at(-1)._id.toString() : '';
+    res.next =
+      comments.length === COMMENTS_LIMIT ? comments.at(-1)._id.toString() : '';
     return res;
   }
 
@@ -326,7 +327,7 @@ export class PostRepository {
     return this.postModel.aggregate([
       { $match: { $text: { $search: searchPostListDto.keyword } } },
       { $sort: { _id: -1 } },
-      { $limit: searchPostListDto.limit },
+      { $limit: SEARCH_POST_LIMIT },
       {
         $lookup: {
           from: 'users',
@@ -359,7 +360,7 @@ export class PostRepository {
         },
       },
       { $sort: { _id: -1 } },
-      { $limit: searchPostListDto.limit },
+      { $limit: SEARCH_POST_LIMIT },
       {
         $lookup: {
           from: 'users',
@@ -383,7 +384,7 @@ export class PostRepository {
     ]);
   }
 
-  getPostsWithIDList(useridList: string[], followerPostDTO: FollowerPostDto) {
+  getPostsWithIDList(useridList: string[]) {
     return this.postModel.aggregate([
       {
         $match: {
@@ -391,7 +392,7 @@ export class PostRepository {
         },
       },
       { $sort: { _id: -1 } },
-      { $limit: followerPostDTO.limit },
+      { $limit: NEWSFEED_LIMIT },
       {
         $lookup: {
           from: 'users',
@@ -428,7 +429,7 @@ export class PostRepository {
         },
       },
       { $sort: { _id: -1 } },
-      { $limit: followerPostDTO.limit },
+      { $limit: NEWSFEED_LIMIT },
       {
         $lookup: {
           from: 'users',

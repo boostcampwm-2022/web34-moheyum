@@ -9,6 +9,10 @@ import { Follow, FollowDocument } from './follow.schema';
 import mongoose, { Model, FilterQuery } from 'mongoose';
 import { User } from './user.schema';
 import { FollowListDto } from 'src/follow/dto/follow-list.dto';
+import {
+  FOLLOWER_LIST_LIMIT,
+  FOLLOWING_LIST_LIMIT,
+} from '../constants/pagination.constants';
 @Injectable()
 export class FollowRepository {
   constructor(
@@ -44,8 +48,7 @@ export class FollowRepository {
     return false;
   }
 
-  async findFollowers({ targetid }, followListDTO: FollowListDto) {
-    const { limit } = followListDTO;
+  async findFollowers({ targetid }) {
     const dataList =
       (await this.followModel.aggregate([
         {
@@ -66,7 +69,7 @@ export class FollowRepository {
             as: 'followerlist',
           },
         },
-        { $limit: limit },
+        { $limit: FOLLOWER_LIST_LIMIT },
         {
           $unwind: '$followerlist',
         },
@@ -81,11 +84,12 @@ export class FollowRepository {
       ])) ?? [];
     const res = {};
     res['post'] = dataList;
-    res['next'] = dataList.length === limit ? dataList.at(-1)._id : '';
+    res['next'] =
+      dataList.length === FOLLOWER_LIST_LIMIT ? dataList.at(-1)._id : '';
     return res;
   }
   async findFollowersWithNext({ targetid }, followListDTO: FollowListDto) {
-    const { next, limit } = followListDTO;
+    const { next } = followListDTO;
     const dataList =
       (await this.followModel.aggregate([
         {
@@ -111,7 +115,7 @@ export class FollowRepository {
             ],
           },
         },
-        { $limit: limit },
+        { $limit: FOLLOWER_LIST_LIMIT },
         {
           $unwind: '$followerlist',
         },
@@ -126,13 +130,12 @@ export class FollowRepository {
       ])) ?? [];
     const res = {};
     res['post'] = dataList;
-    res['next'] = dataList.length === limit ? dataList.at(-1)._id : '';
+    res['next'] =
+      dataList.length === FOLLOWER_LIST_LIMIT ? dataList.at(-1)._id : '';
     return res;
   }
 
-  async findFollowing({ userid }, followListDTO: FollowListDto) {
-    const { limit } = followListDTO;
-
+  async findFollowing({ userid }) {
     const dataList =
       (await this.followModel.aggregate([
         {
@@ -153,7 +156,7 @@ export class FollowRepository {
             ],
           },
         },
-        { $limit: limit },
+        { $limit: FOLLOWING_LIST_LIMIT },
         {
           $unwind: '$followinglist',
         },
@@ -168,11 +171,12 @@ export class FollowRepository {
       ])) ?? [];
     const res = {};
     res['post'] = dataList;
-    res['next'] = dataList.length === limit ? dataList.at(-1)._id : '';
+    res['next'] =
+      dataList.length === FOLLOWING_LIST_LIMIT ? dataList.at(-1)._id : '';
     return res;
   }
   async findFollowingWithNext({ userid }, followListDTO: FollowListDto) {
-    const { next, limit } = followListDTO;
+    const { next } = followListDTO;
     const dataList =
       (await this.followModel.aggregate([
         {
@@ -198,7 +202,7 @@ export class FollowRepository {
             as: 'followinglist',
           },
         },
-        { $limit: limit },
+        { $limit: FOLLOWING_LIST_LIMIT },
         {
           $unwind: '$followinglist',
         },
@@ -213,7 +217,8 @@ export class FollowRepository {
       ])) ?? [];
     const res = {};
     res['post'] = dataList;
-    res['next'] = dataList.length === limit ? dataList.at(-1)._id : '';
+    res['next'] =
+      dataList.length === FOLLOWING_LIST_LIMIT ? dataList.at(-1)._id : '';
     return res;
   }
 

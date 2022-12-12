@@ -10,6 +10,10 @@ import { NotificationRepository } from 'src/common/database/notification.reposit
 import { EventService } from 'src/event/event.service';
 import { PostException } from 'src/common/exeception/post.exception';
 import { SearchPostListDto } from './dto/search-post-list.dto';
+import {
+  NEWSFEED_LIMIT,
+  SEARCH_POST_LIMIT,
+} from 'src/common/constants/pagination.constants';
 
 @Injectable()
 export class PostService {
@@ -30,7 +34,7 @@ export class PostService {
     followerPostDTO: FollowerPostDto,
   ): Promise<{ post: Post[]; next: string }> {
     return followerPostDTO.next === ''
-      ? this.postRepository.getUserPosts(userid, followerPostDTO)
+      ? this.postRepository.getUserPosts(userid)
       : this.postRepository.getUserPostsWithNext(userid, followerPostDTO);
   }
 
@@ -89,14 +93,10 @@ export class PostService {
         list,
         followerPostDTO,
       );
-    else
-      result = await this.postRepository.getPostsWithIDList(
-        list,
-        followerPostDTO,
-      );
+    else result = await this.postRepository.getPostsWithIDList(list);
     return {
       post: result,
-      next: result.length < followerPostDTO.limit ? '' : result.at(-1)._id,
+      next: result.length < NEWSFEED_LIMIT ? '' : result.at(-1)._id,
     };
   }
 
@@ -107,12 +107,12 @@ export class PostService {
     else result = await this.postRepository.searchPost(searchPostListDto);
     return {
       post: result,
-      next: result.length < 10 ? '' : result.at(-1)._id,
+      next: result.length < SEARCH_POST_LIMIT ? '' : result.at(-1)._id,
     };
   }
   getCommentsOfPost(id: string, followerPostDTO: FollowerPostDto) {
     return followerPostDTO.next === ''
-      ? this.postRepository.getComments(id, followerPostDTO)
+      ? this.postRepository.getComments(id)
       : this.postRepository.getCommentsWithNext(id, followerPostDTO);
   }
 }

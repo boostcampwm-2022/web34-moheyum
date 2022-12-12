@@ -7,6 +7,7 @@ import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { GetUserUpdatePasswordDto } from './dto/get-update-password.dto';
 import { SearchUserListDto } from './dto/search-user-list.dto';
+import { SEARCH_USER_LIMIT } from 'src/common/constants/pagination.constants';
 
 @Injectable()
 export class UserService {
@@ -59,7 +60,7 @@ export class UserService {
     else result = await this.userRepository.searchUser(searchUserListDto);
     return {
       post: result,
-      next: result.length < 2 ? '' : result.at(-1)._id,
+      next: result.length < SEARCH_USER_LIMIT ? '' : result.at(-1)._id,
     };
   }
   updateUserAvatar(userid: string, url: string) {

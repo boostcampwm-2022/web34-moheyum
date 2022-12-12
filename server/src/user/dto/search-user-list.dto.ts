@@ -7,9 +7,4 @@ export class SearchUserListDto {
   @IsString()
   @IsOptional()
   next = '';
-
-  @Transform(({ value }) => parseInt(value))
-  @IsNumber()
-  @IsOptional()
-  limit = 20;
 }

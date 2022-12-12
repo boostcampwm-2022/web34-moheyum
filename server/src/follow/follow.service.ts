@@ -73,10 +73,7 @@ export class FollowService {
 
   getFollowerList(targetid: string, followListDTO: FollowListDto) {
     return followListDTO.next === ''
-      ? this.followRepository.findFollowers(
-          { targetid: targetid },
-          followListDTO,
-        )
+      ? this.followRepository.findFollowers({ targetid: targetid })
       : this.followRepository.findFollowersWithNext(
           { targetid: targetid },
           followListDTO,
@@ -85,7 +82,7 @@ export class FollowService {
 
   getFollowingList(targetid: string, followListDTO: FollowListDto) {
     return followListDTO.next === ''
-      ? this.followRepository.findFollowing({ userid: targetid }, followListDTO)
+      ? this.followRepository.findFollowing({ userid: targetid })
       : this.followRepository.findFollowingWithNext(
           { userid: targetid },
           followListDTO,
