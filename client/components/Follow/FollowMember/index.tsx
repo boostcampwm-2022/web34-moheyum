@@ -18,7 +18,7 @@ export const FollowMember = React.forwardRef<HTMLInputElement, UserData>(
 
     useEffect(() => {
       if (authedUserInfo.logined)
-        fetch(`/api/follow/check/${userid}`, {
+        fetch(`/api/follow/following/${userid}`, {
           credentials: 'include',
         })
           .then((res) => res.json())

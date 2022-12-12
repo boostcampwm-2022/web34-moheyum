@@ -26,7 +26,7 @@ export class FollowController {
     };
   }
 
-  @Get('/check/:targetid')
+  @Get('/follow/:targetid')
   @UseGuards(JwtAuthGuard)
   async followCheck(
     @Param('targetid') targetid: string,

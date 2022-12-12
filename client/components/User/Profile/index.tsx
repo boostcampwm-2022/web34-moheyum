@@ -23,7 +23,7 @@ function UserProfile({ userData }: { userData: UserPostProps }) {
   const [imfLoading, setImfLoading] = useState(true);
 
   useEffect(() => {
-    httpGet(`/follow/check/${userData.userid}`).then((res) => {
+    httpGet(`/follow/following/${userData.userid}`).then((res) => {
       if (res.message === 'success') {
         setImfLoading(false);
         setImFollowing(res.data.isFollow);
