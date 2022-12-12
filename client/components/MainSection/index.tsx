@@ -18,13 +18,12 @@ export default function MainSection() {
   }, []);
   useEffect(() => {
     if (pages.length !== 0) {
-      setCurrentNewsfeed(pages);
+      setCurrentNewsfeed((prevState) => prevState.concat(pages));
     }
   }, [pages]);
   useEffect(() => {
     scrollRef.current.scrollTo(0, scroll);
   }, []);
-
   return (
     <Wrapper>
       <MainTopBar>

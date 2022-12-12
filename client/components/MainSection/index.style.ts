@@ -42,7 +42,6 @@ export const ArticlesSection = styled.div`
 export const Newsfeed = styled.div`
   overflow-y: scroll;
   flex: 1;
-  scroll-behavior: smooth;
 `;
 
 export const NewFeed = styled.div`

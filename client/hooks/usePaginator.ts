@@ -10,7 +10,7 @@ export const NEXT = {
 
 // export type NEXT = 'START' | 'END'
 
-function fetchData(fetchUrl: string, nextCursor: string, isBack: boolean) {
+function useFetchPage(fetchUrl: string, nextCursor: string, isBack: boolean) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [pages, setPages] = useState<any>([]);
@@ -43,7 +43,7 @@ function fetchData(fetchUrl: string, nextCursor: string, isBack: boolean) {
             post: [],
             next: NEXT.END,
           };
-        setPages((prevPages: any[]) => [...prevPages, ...res.data.post]);
+        setPages([...res.data.post]);
         setNext(res.data?.next ?? '');
         setLoading(false);
       })
@@ -63,7 +63,7 @@ function fetchData(fetchUrl: string, nextCursor: string, isBack: boolean) {
 export default function usePaginator(url: string) {
   const [nextCursor, setNextCursor] = useState(NEXT.START);
   const [historyback, setHistoryBack] = useRecoilState(historyBack);
-  const { loading, error, pages, next } = fetchData(url, nextCursor, historyback);
+  const { loading, error, pages, next } = useFetchPage(url, nextCursor, historyback);
 
   const observer = useRef<any>();
   const lastFollowElementRef = useCallback(
