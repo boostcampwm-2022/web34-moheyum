@@ -23,7 +23,7 @@ export const FollowMember = React.forwardRef<HTMLInputElement, UserData>(
 
     useEffect(() => {
       if (authedUserInfo.logined) {
-        httpGet(`/follow/check/${userid}`).then((data) => {
+        httpGet(`/follow/following/${userid}`).then((data) => {
           setFollowing(data.data.isFollow);
         });
       }
