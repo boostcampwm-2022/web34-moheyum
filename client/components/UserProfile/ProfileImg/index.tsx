@@ -21,6 +21,7 @@ export const Profile = styled.div`
   margin: 8px;
   padding-right: 45px;
   background-color: ${COLORS.WHITE};
+  z-index: 3;
   img {
     object-fit: cover;
     border-radius: 50px;

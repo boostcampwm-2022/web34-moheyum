@@ -16,6 +16,7 @@ export default function CommentPost({ response }: { response: Props }) {
   return (
     <ContentWrapper>
       <MainPostWrapper ref={mainPostRef}>
+        <ParentFilter />
         <MainPost postData={response.data.post} />
       </MainPostWrapper>
       <CommentEditor>
@@ -26,7 +27,7 @@ export default function CommentPost({ response }: { response: Props }) {
 }
 const ContentWrapper = styled.div`
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -35,19 +36,34 @@ const ContentWrapper = styled.div`
 
 const MainPostWrapper = styled.div`
   width: 100%;
+  max-height: 350px;
   padding: 8px 15px;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  position: relative;
 `;
 
 const CommentEditor = styled.div`
-  overflow-y: scroll;
   width: 100%;
   min-height: 300px;
   flex: 1;
+  flex-direction: column;
+  display: flex;
   border-top: 2px solid ${COLORS.GRAY3};
   margin-top: 20px;
   padding-top: 20px;
   -ms-overflow-style: none;
+  z-index: 2;
   &::-webkit-scrollbar {
     display: none;
   }
+`;
+
+const ParentFilter = styled.div`
+  width: 100%;
+  height: 400px;
+  position: absolute;
+  background: linear-gradient(transparent 20%, ${COLORS.WHITE});
+  margin-left: -15px;
+  margin-top: -8px;
 `;
