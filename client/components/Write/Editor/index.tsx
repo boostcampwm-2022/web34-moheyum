@@ -122,7 +122,7 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
     if (index === 1) {
       // preview
       if (!contentRef.current) return;
-      // setContentHTML(contentRef.current.innerHTML);
+      setContentHTML(contentRef.current.innerHTML);
       setContent(contentRef.current.innerText);
       setTabIndex(1);
     }
