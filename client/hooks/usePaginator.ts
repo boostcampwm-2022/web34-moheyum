@@ -8,7 +8,7 @@ export const NEXT = {
 
 // export type NEXT = 'START' | 'END'
 
-export default function usePaginator(fetchUrl: string, nextCursor: string) {
+export default function usePaginator(fetchUrl: string, nextCursor: string, isBack: boolean) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [pages, setPages] = useState<any>([]);
@@ -53,7 +53,7 @@ export default function usePaginator(fetchUrl: string, nextCursor: string) {
     return () => {
       abortController.abort();
     };
-  }, [fetchUrl, nextCursor]);
+  }, [fetchUrl, nextCursor, isBack]);
 
   return { loading, error, pages, next };
 }

@@ -29,3 +29,18 @@ export const toastMessageList = atom<ToastMessage[]>({
   key: 'toast',
   default: [],
 });
+
+export const scrollY = atom({
+  key: 'scrollY',
+  default: 0,
+});
+
+export const newsfeedList = atom({
+  key: 'newsfeedList',
+  default: [],
+});
+
+export const historyBack = atom({
+  key: 'historyBack',
+  default: false,
+});
