@@ -1,10 +1,21 @@
 import { css } from '@emotion/react';
 
 const globalStyle = css`
-  @import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
-  @import url(http://cdn.jsdelivr.net/gh/joungkyun/font-d2coding/d2coding.css);
-  @import url(http://cdn.jsdelivr.net/gh/snz-hayden/toolo/fonts/jua/jua.css);
+  @import url(https://cdn.jsdelivr.net/gh/joungkyun/font-d2coding/d2coding.css);
+  @import url(https://cdn.jsdelivr.net/gh/snz-hayden/toolo/fonts/jua/jua.css);
 
+  @font-face {
+    font-family: 'Noto Sans KR';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(/noto-sans-kr-v27-latin_korean-regular.eot); /* IE9 Compat Modes */
+    src: local(''), url(/noto-sans-kr-v27-latin_korean-regular.eot?#iefix) format('embedded-opentype'),
+      url(/noto-sans-kr-v27-latin_korean-regular.woff2) format('woff2'),
+      url(/noto-sans-kr-v27-latin_korean-regular.woff) format('woff'),
+      url(/noto-sans-kr-v27-latin_korean-regular.ttf) format('truetype'),
+      url(/noto-sans-kr-v27-latin_korean-regular.svg#NotoSansKR) format('svg');
+  }
   html,
   body,
   div,
