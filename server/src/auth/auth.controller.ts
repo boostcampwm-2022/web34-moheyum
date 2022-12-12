@@ -58,7 +58,8 @@ export class AuthController {
     keyPrefix: 'signin',
     points: 20,
     duration: 60,
-    errorMessage: '로그인을 다시 시도해주세요',
+    errorMessage:
+      '로그인을 너무 많이 요청하셨습니다. 조금 기다리셨다가 다시 시도해주세요',
   })
   @Post('/signin')
   async signIn(
