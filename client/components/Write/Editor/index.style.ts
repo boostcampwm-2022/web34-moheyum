@@ -4,6 +4,7 @@ import { buttonStyle, displayColumn, markdownStyle } from '../../../styles/mixin
 
 export const Wrapper = styled.div`
   height: 100%;
+  min-height: 300px;
   flex: 1;
   background-color: white;
   display: flex;

@@ -6,6 +6,8 @@ export const DropDown = styled.div`
   white-space: nowrap;
   border: 2px solid ${COLORS.PRIMARY};
   border-radius: 10px;
+  user-select: none;
+  cursor: pointer;
 `;
 
 export const User = styled.li`

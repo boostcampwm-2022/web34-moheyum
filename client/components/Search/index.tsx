@@ -4,7 +4,7 @@ import React, { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { TopBar } from '../../styles/common';
 import PostResult from './PostResult';
 import UserResult from './UserResult';
-import { Wrapper, TopBarContainer, SearchInputBar, TabContainer } from './index.style';
+import { Wrapper, TopBarContainer, SearchInputBar, TabContainer, ResultContainer } from './index.style';
 
 export default function SearchSection() {
   const router = useRouter();
@@ -43,7 +43,7 @@ export default function SearchSection() {
     <Wrapper>
       <TopBar>
         <TopBarContainer>
-          <Image alt="search button" width={30} height={30} src="/search.svg" />
+          <Image alt="search button" width={30} height={30} src="/ico_search.svg" />
           <SearchInputBar type="text" placeholder="검색어를 입력하세요." onKeyDown={handleEnter} ref={inputRef} />
         </TopBarContainer>
       </TopBar>
@@ -55,8 +55,9 @@ export default function SearchSection() {
           사용자 검색
         </button>
       </TabContainer>
-      {tabIndex === 0 && <PostResult keyword={keyword} />}
-      {tabIndex === 1 && <UserResult keyword={keyword} />}
+      {keyword === '' && <ResultContainer>검색 결과 없음</ResultContainer>}
+      {tabIndex === 0 && keyword !== '' && <PostResult keyword={keyword} />}
+      {tabIndex === 1 && keyword !== '' && <UserResult keyword={keyword} />}
     </Wrapper>
   );
 }

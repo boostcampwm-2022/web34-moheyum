@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import COLORS from './color';
-import { displayColumn } from './mixin';
-import { mainSectionSize } from './theme';
+import { displayColumn, displayCenter } from './mixin';
 
 export const MainTopBar = styled.header`
   /* position: fixed; */
@@ -28,6 +27,7 @@ export const TopBar = styled.header`
   display: flex;
   flex-direction: row;
   align-items: center;
+  white-space: nowrap;
   h1 {
     flex: 1;
     font-size: 22px;
@@ -49,4 +49,11 @@ export const ButtonBack = styled.button`
   background-repeat: no-repeat;
   background-size: contain;
   cursor: pointer;
+`;
+
+export const Loader = styled.div`
+  margin-top: 40px;
+  width: 20px;
+  height: 20px;
+  ${displayCenter}
 `;

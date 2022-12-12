@@ -17,6 +17,7 @@ import {
   SubmitPassword,
   Wrapper,
 } from './index.style';
+import useToast from '../../hooks/useToast';
 
 const goBack = () => {
   Router.back();
@@ -40,6 +41,7 @@ const schema = yup.object().shape({
 });
 
 export default function MyAccount() {
+  const toast = useToast();
   const [formInput, setFormInput] = useState({
     prevPassword: '',
     newPassword: '',
@@ -78,7 +80,7 @@ export default function MyAccount() {
     const confirmed = confirm('회원 탈퇴를 하시겠습니까?\n삭제된 계정은 복구할 수 없습니다.');
     if (confirmed) {
       await httpDelete(`/auth`);
-      alert(`탈퇴가 완료되었습니다.\n이용해주셔서 감사합니다.`);
+      toast.addMessage(`탈퇴가 완료되었습니다.\n이용해주셔서 감사합니다.`);
       Router.push('/');
     }
   };

@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  testt:
+    image: moheyum/fe-dev:latest
+    ports:
+      - "3000:3000"
+    deploy:
+      mode: global
+      update_config:
+        delay: 10s

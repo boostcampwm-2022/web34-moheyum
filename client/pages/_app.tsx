@@ -5,15 +5,17 @@ import { RecoilRoot } from 'recoil';
 import styled from '@emotion/styled';
 import { Global, ThemeProvider } from '@emotion/react';
 import { useRouter } from 'next/router';
+import dynamic from 'next/dynamic';
 import { displayCenter, mainSectionStyle } from '../styles/mixin';
 import COLORS from '../styles/color';
 import AppTheme from '../styles/theme';
 import globalStyle from '../styles/global';
 import Frame from '../styles/frame';
-import SideBar from '../components/SideBar';
 import ToastController from '../components/Toast';
 
-const NoSideBar = ['/login', '/signup'];
+const SideBar = dynamic(() => import('../components/SideBar'));
+
+const NoSideBar = ['/login', '/signup', '/idinquiry', '/pwinquiry'];
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -23,7 +25,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <Global styles={globalStyle} />
         <AppStyle>
           <Head>
-            <title>Moheyum</title>
+            <title>mo:heyum</title>
           </Head>
           <Frame>
             {!NoSideBar.includes(router.pathname) && <SideBar />}

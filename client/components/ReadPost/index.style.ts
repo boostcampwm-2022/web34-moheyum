@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import COLORS from '../../styles/color';
-import { mainSectionStyle, displayCenter } from '../../styles/mixin';
+import { mainSectionStyle } from '../../styles/mixin';
 
 export const Wrapper = styled.div`
   ${mainSectionStyle}
@@ -50,11 +50,4 @@ export const CommentBox = styled.div`
   #list {
     width: 100%;
   }
-`;
-
-export const Loader = styled.div`
-  margin-top: 40px;
-  width: 20px;
-  height: 20px;
-  ${displayCenter}
 `;

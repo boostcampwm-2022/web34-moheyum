@@ -1,6 +1,8 @@
 import Router from 'next/router';
-import React, { useCallback, useRef, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
+import ReactLoading from 'react-loading';
+import COLORS from '../../styles/color';
 import {
   FollowContainer,
   NoFollowersMessage,
@@ -8,10 +10,11 @@ import {
   TopFollowContainer,
   TopFollowDeactivated,
   Wrapper,
+  Footer,
 } from './index.style';
 import { FollowMember } from './FollowMember';
-import { ButtonBack, TopBar } from '../../styles/common';
-import usePaginator, { NEXT } from '../../hooks/usePaginator';
+import { ButtonBack, TopBar, Loader } from '../../styles/common';
+import usePaginator from '../../hooks/usePaginator';
 
 import type { Props } from '../../pages/[userid]/following';
 
@@ -20,24 +23,7 @@ export default function FollowingSection({ userData }: { userData: Props }) {
     Router.push(`/${userData.userid}`);
   };
 
-  const [nextCursor, setNextCursor] = useState('START');
-
-  const { loading, error, pages, next } = usePaginator(`/api/follow/list/following/${userData.userid}`, nextCursor);
-
-  const observer = useRef<any>();
-  const lastFollowElementRef = useCallback(
-    (node: any) => {
-      if (loading) return;
-      if (observer.current) observer.current.disconnect();
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && next !== NEXT.END) {
-          setNextCursor(next);
-        }
-      });
-      if (node) observer.current.observe(node);
-    },
-    [loading, next !== NEXT.END]
-  );
+  const { loading, error, pages, lastFollowElementRef } = usePaginator(`/api/follow/list/following/${userData.userid}`);
 
   return (
     <Wrapper>
@@ -80,7 +66,9 @@ export default function FollowingSection({ userData }: { userData: Props }) {
             />
           );
         })}
-        {loading && <NoFollowersMessage>Loading</NoFollowersMessage>}
+        <Footer>
+          <Loader>{loading && <ReactLoading type="spin" color={COLORS.PRIMARY} />}</Loader>
+        </Footer>
         {error && <NoFollowersMessage>error</NoFollowersMessage>}
       </FollowContainer>
     </Wrapper>

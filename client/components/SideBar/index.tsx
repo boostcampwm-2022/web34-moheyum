@@ -6,23 +6,18 @@ import Title from './Title';
 import { authedUser, newNotification } from '../../atom';
 import { Setting, SideMenuBox, Wrapper } from './index.style';
 import SideBarDropdown from './SideBarDropdown';
+import useToast from '../../hooks/useToast';
 
 const menuList = [
-  { routeSrc: '/', imgSrc: '/home.svg', text: '홈', avatar: false },
-  { routeSrc: '/notification', imgSrc: '/announce.svg', text: '알림', avatar: false },
-  { routeSrc: '/search', imgSrc: '/search.svg', text: '검색', avatar: false },
+  { routeSrc: '/', imgSrc: '/ico_home.svg', text: '홈', avatar: false },
+  { routeSrc: '/notification', imgSrc: '/ico_notification.svg', text: '알림', avatar: false },
+  { routeSrc: '/search', imgSrc: '/ico_search.svg', text: '검색', avatar: false },
 ];
 
-type SideBarProps = {
-  notiState?: boolean;
-};
-
-SideBar.defaultProps = {
-  notiState: false,
-};
-
-export default function SideBar({ notiState }: React.PropsWithChildren<SideBarProps>) {
+export default function SideBar() {
   const [dropdownState, setdropdownState] = useState<boolean>(false);
+  const toast = useToast();
+
   const showSettingdropdown = () => {
     setdropdownState(!dropdownState);
   };
@@ -30,16 +25,15 @@ export default function SideBar({ notiState }: React.PropsWithChildren<SideBarPr
   const [newNotiState, setNewNotiState] = useRecoilState(newNotification);
   useEffect(() => {
     const eventSource = new EventSource('/api/event');
-    if (!notiState) {
-      eventSource.onmessage = (event) => {
-        setNewNotiState(event.data);
-      };
-      eventSource.onerror = (error) => {
-        console.error('SSE error', error);
-      };
-    }
+    eventSource.onmessage = (event) => {
+      setNewNotiState(event.data);
+      toast.addMessage('새 알림이 도착했습니다.');
+    };
+    // eventSource.onerror = (error) => {
+    //   toast.addMessage(`SSE error : ${error}`);
+    // };
     return () => eventSource.close();
-  }, [notiState]);
+  }, []);
 
   return (
     <Wrapper>
@@ -58,7 +52,7 @@ export default function SideBar({ notiState }: React.PropsWithChildren<SideBarPr
       </SideMenuBox>
       {dropdownState && <SideBarDropdown />}
       <Setting onClick={showSettingdropdown}>
-        <Menu imgSrc="/setting.svg" text="설정" avatar={false} noti={false} />
+        <Menu imgSrc="/ico_setting.svg" text="설정" avatar={false} noti={false} />
       </Setting>
     </Wrapper>
   );

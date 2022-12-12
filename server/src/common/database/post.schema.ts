@@ -31,9 +31,6 @@ export class Post {
   childPosts: string[];
 }
 const PostSchema = SchemaFactory.createForClass(Post);
-PostSchema.index({
-  createdAt: -1,
-});
 
 //Full Text Search를 위한 text index
 PostSchema.index({ description: 'text' });
