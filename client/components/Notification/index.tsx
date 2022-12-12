@@ -1,9 +1,9 @@
-import { useCallback, useRef, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Router from 'next/router';
 import { useRecoilState } from 'recoil';
 import Image from 'next/image';
 import { newNotification } from '../../atom';
-import usePaginator, { NEXT } from '../../hooks/usePaginator';
+import usePaginator from '../../hooks/usePaginator';
 import {
   ExceptionPage,
   NotificationContainer,
@@ -19,11 +19,9 @@ import { httpDelete } from '../../utils/http';
 import useToast from '../../hooks/useToast';
 
 export default function Notification() {
-  const [nextCursor, setNextCursor] = useState('START');
-  const { loading, error, pages, next } = usePaginator(`/api/notification/list/`, nextCursor);
+  const { loading, error, pages, lastFollowElementRef } = usePaginator(`/api/notification/list/`);
   const [notiState, setNotiState] = useRecoilState(newNotification);
   const [dropDownDisplay, setDropDownDisplay] = useState<boolean>(false);
-  const observer = useRef<any>();
   const toast = useToast();
   const updateNotification = () => {
     setNotiState(false);
@@ -42,19 +40,6 @@ export default function Notification() {
   useEffect(() => {
     setNotiState(false);
   }, []);
-  const lastNotificationElementRef = useCallback(
-    (node: any) => {
-      if (loading) return;
-      if (observer.current) observer.current.disconnect();
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && next !== NEXT.END) {
-          setNextCursor(next);
-        }
-      });
-      if (node) observer.current.observe(node);
-    },
-    [loading, next !== NEXT.END]
-  );
   return (
     <Wrapper>
       <TopBar>
@@ -90,7 +75,7 @@ export default function Notification() {
                 createdAt={item.createdAt}
                 notifId={item._id}
                 key={item._id}
-                ref={lastNotificationElementRef}
+                ref={lastFollowElementRef}
               />
             );
           return (

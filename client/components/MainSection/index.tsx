@@ -1,37 +1,47 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef, useEffect, RefObject } from 'react';
 import Link from 'next/link';
+import { useRecoilState } from 'recoil';
 import { ArticleCard } from './Articlecard';
 import { ArticlesSection, FakeButton, NewArticleSection, Placeholder, Wrapper, Newsfeed } from './index.style';
 import { MainTopBar } from '../../styles/common';
-
-import usePaginator, { NEXT } from '../../hooks/usePaginator';
+import { scrollHandle, newsfeedList } from '../../atom';
+import usePaginator from '../../hooks/usePaginator';
 import { renderMarkdownWithoutStyle } from '../../utils/markdown';
 
 export default function MainSection() {
-  const [nextCursor, setNextCursor] = useState(NEXT.START);
-  const { loading, pages, next } = usePaginator(`/api/post/newsfeed`, nextCursor);
-
-  const observer = useRef<any>();
-  const lastFollowElementRef = useCallback(
-    (node: any) => {
-      if (loading) return;
-      if (observer.current) observer.current.disconnect();
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && next !== NEXT.END) {
-          setNextCursor(next);
-        }
-      });
-      if (node) observer.current.observe(node);
-    },
-    [loading, next !== NEXT.END]
+  const scrollRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
+  const [scrollhandler, setScrollHandler] = useRecoilState(scrollHandle);
+  const [currentNewsfeed, setCurrentNewsfeed] = useRecoilState(newsfeedList);
+  const { pages, next, lastFollowElementRef } = usePaginator(
+    `/api/post/newsfeed`,
+    scrollhandler.historyBack ? scrollhandler.nextPageId : 'START'
   );
-
+  const onScroll = useCallback(() => {
+    setScrollHandler((prevState) => ({ ...prevState, scrollY: scrollRef.current ? scrollRef.current.scrollTop : 0 }));
+  }, []);
+  useEffect(() => {
+    if (pages.length !== 0 && scrollhandler.nextPageId !== '') {
+      setCurrentNewsfeed((prevState) => prevState.concat(pages));
+      setScrollHandler((prevState) => ({ ...prevState, nextPageId: next }));
+    }
+  }, [pages]);
+  useEffect(() => {
+    if (!scrollhandler.historyBack) {
+      setScrollHandler((prevState) => ({ ...prevState, historyBack: false, scrollY: 0, nextPageId: 'START' }));
+      setCurrentNewsfeed([]);
+    } else {
+      if (scrollRef.current) {
+        scrollRef.current.scrollTo(0, scrollhandler.scrollY);
+      }
+      setScrollHandler((prevState) => ({ ...prevState, historyBack: false }));
+    }
+  }, []);
   return (
     <Wrapper>
       <MainTopBar>
         <div>홈</div>
       </MainTopBar>
-      <Newsfeed>
+      <Newsfeed onScroll={onScroll} ref={scrollRef}>
         <Link href="/write">
           <NewArticleSection>
             <Placeholder>무슨 생각 하세요?</Placeholder>
@@ -40,9 +50,9 @@ export default function MainSection() {
           </NewArticleSection>
         </Link>
         <ArticlesSection>
-          {pages.map((item: any, index: number) => {
+          {currentNewsfeed.map((item: any, index: number) => {
             const parsed = renderMarkdownWithoutStyle(item.description);
-            if (pages.length === index + 1)
+            if (currentNewsfeed.length === index + 1)
               return (
                 <ArticleCard
                   author={item.authorDetail.userid}
