@@ -1,28 +1,12 @@
 import styled from '@emotion/styled';
-import React, { useCallback, useRef, useState } from 'react';
+import React from 'react';
 import COLORS from '../../../styles/color';
-import usePaginator, { NEXT } from '../../../hooks/usePaginator';
+import usePaginator from '../../../hooks/usePaginator';
 import { ArticleCard } from '../../MainSection/Articlecard';
 import { renderMarkdownWithoutStyle } from '../../../utils/markdown';
 
 export default function PostResult({ keyword }: { keyword: string }) {
-  const [nextCursor, setNextCursor] = useState('START');
-  const { loading, error, pages, next } = usePaginator(`/api/post/search?keyword=${keyword}`, nextCursor);
-
-  const observer = useRef<any>();
-  const lastFollowElementRef = useCallback(
-    (node: any) => {
-      if (loading) return;
-      if (observer.current) observer.current.disconnect();
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && next !== NEXT.END) {
-          setNextCursor(next);
-        }
-      });
-      if (node) observer.current.observe(node);
-    },
-    [loading, next !== NEXT.END]
-  );
+  const { loading, error, pages, lastFollowElementRef } = usePaginator(`/api/post/search?keyword=${keyword}`);
 
   return (
     <ResultContainer>

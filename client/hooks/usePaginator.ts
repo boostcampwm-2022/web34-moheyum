@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
+import { useRecoilState } from 'recoil';
+import { historyBack } from '../atom';
 // original source code: https://www.youtube.com/watch?v=NZKUirTtxcg
 
 export const NEXT = {
@@ -8,7 +10,7 @@ export const NEXT = {
 
 // export type NEXT = 'START' | 'END'
 
-export default function usePaginator(fetchUrl: string, nextCursor: string, isBack: boolean) {
+function fetchData(fetchUrl: string, nextCursor: string, isBack: boolean) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [pages, setPages] = useState<any>([]);
@@ -56,4 +58,27 @@ export default function usePaginator(fetchUrl: string, nextCursor: string, isBac
   }, [fetchUrl, nextCursor, isBack]);
 
   return { loading, error, pages, next };
+}
+
+export default function usePaginator(url: string) {
+  const [nextCursor, setNextCursor] = useState(NEXT.START);
+  const [historyback, setHistoryBack] = useRecoilState(historyBack);
+  const { loading, error, pages, next } = fetchData(url, nextCursor, historyback);
+
+  const observer = useRef<any>();
+  const lastFollowElementRef = useCallback(
+    (node: any) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && next !== NEXT.END) {
+          setNextCursor(next);
+          setHistoryBack(false);
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [loading, next !== NEXT.END]
+  );
+  return { loading, error, pages, lastFollowElementRef };
 }

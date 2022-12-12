@@ -6,7 +6,7 @@ import ReactLoading from 'react-loading';
 import { authedUser } from '../../atom';
 import COLORS from '../../styles/color';
 import { ButtonBack, TopBar } from '../../styles/common';
-import usePaginator, { NEXT } from '../../hooks/usePaginator';
+import usePaginator from '../../hooks/usePaginator';
 import type PostProps from '../../types/Post';
 import Comment, { commentItem } from './Comment';
 import ProfileImg from '../UserProfile/ProfileImg';
@@ -29,29 +29,8 @@ export default function ReadPost({ postData, title }: PostData) {
   if (postData.childPosts) {
     commentCount = postData.childPosts.length;
   }
-  const [nextCursor, setNextCursor] = useState(NEXT.START);
-  const { loading, error, pages, next } = usePaginator(`/api/post/comments/${postData._id}`, nextCursor);
+  const { loading, pages, lastFollowElementRef } = usePaginator(`/api/post/comments/${postData._id}`);
 
-  const observer = useRef<any>();
-  const lastFollowElementRef = useCallback(
-    (node: any) => {
-      if (loading) return;
-      if (error) return;
-      if (observer.current) observer.current.disconnect();
-      observer.current = new IntersectionObserver(
-        (entries) => {
-          if (entries[0].isIntersecting && next !== NEXT.END) {
-            setNextCursor(next);
-          }
-        },
-        {
-          threshold: 0.4,
-        }
-      );
-      if (node) observer.current.observe(node);
-    },
-    [loading, next !== NEXT.END]
-  );
   return (
     <Wrapper>
       <TopBar>

@@ -1,30 +1,12 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React from 'react';
 import { ArticleCard } from '../../MainSection/Articlecard';
 import { PostLabel, SectionDivider } from './index.style';
-import usePaginator, { NEXT } from '../../../hooks/usePaginator';
+import usePaginator from '../../../hooks/usePaginator';
 import { UserPostProps } from '../../../types/Post';
 import { renderMarkdownWithoutStyle } from '../../../utils/markdown';
 
 export default function PostList({ userData }: { userData: UserPostProps }) {
-  const [nextCursor, setNextCursor] = useState('START');
-
-  const { loading, pages, next } = usePaginator(`/api/post/author/${userData.userid}`, nextCursor);
-
-  const observer = useRef<any>();
-  const lastFollowElementRef = useCallback(
-    (node: any) => {
-      if (loading) return;
-      if (observer.current) observer.current.disconnect();
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && next !== NEXT.END) {
-          setNextCursor(next);
-        }
-      });
-      if (node) observer.current.observe(node);
-    },
-    [loading, next !== NEXT.END]
-  );
-
+  const { pages, lastFollowElementRef } = usePaginator(`/api/post/author/${userData.userid}`);
   return (
     <>
       <PostLabel>게시글</PostLabel>

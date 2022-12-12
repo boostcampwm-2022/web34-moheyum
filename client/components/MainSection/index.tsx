@@ -1,20 +1,18 @@
 import React, { useCallback, useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { ArticleCard } from './Articlecard';
 import { ArticlesSection, FakeButton, NewArticleSection, Placeholder, Wrapper, Newsfeed } from './index.style';
 import { MainTopBar } from '../../styles/common';
-import { scrollY, newsfeedList, historyBack } from '../../atom';
-import usePaginator, { NEXT } from '../../hooks/usePaginator';
+import { scrollY, newsfeedList } from '../../atom';
+import usePaginator from '../../hooks/usePaginator';
 import { renderMarkdownWithoutStyle } from '../../utils/markdown';
 
 export default function MainSection() {
-  const [nextCursor, setNextCursor] = useState(NEXT.START);
   const scrollRef = useRef<any>();
   const [scroll, setScroll] = useRecoilState(scrollY);
-  const [historyback, setHistoryBack] = useRecoilState(historyBack);
   const [currentNewsfeed, setCurrentNewsfeed] = useRecoilState(newsfeedList);
-  const { loading, pages, next } = usePaginator(`/api/post/newsfeed`, nextCursor, historyback);
+  const { pages, lastFollowElementRef } = usePaginator(`/api/post/newsfeed`);
   const onScroll = useCallback(() => {
     setScroll(scrollRef.current.scrollTop);
   }, []);
@@ -26,22 +24,6 @@ export default function MainSection() {
   useEffect(() => {
     scrollRef.current.scrollTo(0, scroll);
   }, []);
-
-  const observer = useRef<any>();
-  const lastFollowElementRef = useCallback(
-    (node: any) => {
-      if (loading) return;
-      if (observer.current) observer.current.disconnect();
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && next !== NEXT.END) {
-          setNextCursor(next);
-          setHistoryBack(false);
-        }
-      });
-      if (node) observer.current.observe(node);
-    },
-    [loading, next !== NEXT.END]
-  );
 
   return (
     <Wrapper>
