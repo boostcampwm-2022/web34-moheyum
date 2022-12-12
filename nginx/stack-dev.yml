@@ -5,7 +5,11 @@ services:
     image: moheyum/nginx-dev:latest
     ports:
       - "80:80"
+      - "443:443"
     deploy:
       mode: global
       update_config:
         delay: 10s
+    volumes:
+      - /home/monginx/webroot:/home/monginx/webroot
+      - /etc/letsencrypt:/etc/letsencrypt
