@@ -12,7 +12,10 @@ export default function MainSection() {
   const scrollRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
   const [scrollhandler, setScrollHandler] = useRecoilState(scrollHandle);
   const [currentNewsfeed, setCurrentNewsfeed] = useRecoilState(newsfeedList);
-  const { pages, next, lastFollowElementRef } = usePaginator(`/api/post/newsfeed`, scrollhandler.nextPageId);
+  const { pages, next, lastFollowElementRef } = usePaginator(
+    `/api/post/newsfeed`,
+    scrollhandler.historyBack ? scrollhandler.nextPageId : 'START'
+  );
   const onScroll = useCallback(() => {
     setScrollHandler((prevState) => ({ ...prevState, scrollY: scrollRef.current ? scrollRef.current.scrollTop : 0 }));
   }, []);
@@ -25,6 +28,7 @@ export default function MainSection() {
   useEffect(() => {
     if (!scrollhandler.historyBack) {
       setScrollHandler((prevState) => ({ ...prevState, historyBack: false, scrollY: 0, nextPageId: 'START' }));
+      setCurrentNewsfeed([]);
     } else {
       if (scrollRef.current) {
         scrollRef.current.scrollTo(0, scrollhandler.scrollY);
