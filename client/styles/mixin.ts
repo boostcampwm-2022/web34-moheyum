@@ -32,7 +32,7 @@ export const inputStyle = css`
   &:focus {
     outline-color: ${COLORS.PRIMARY};
   }
-  &:placeholder-shown {
+  &::placeholder {
     user-select: none;
   }
   &:disabled {
@@ -133,8 +133,9 @@ export const markdownStyle = css`
     padding: 16px;
     overflow-x: hidden;
     word-wrap: break-word;
-    white-space: nowrap;
+    white-space: pre;
     font-family: D2Coding, 'D2 coding', monospace;
+    overflow-x: auto;
     & > div {
       white-space: pre-wrap;
     }

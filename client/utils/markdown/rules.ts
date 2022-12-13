@@ -43,10 +43,7 @@ function code(str: string): string {
 function codeBlock(str: string): [string, string[]] {
   const result = str.replace(/^```(?:[^\n`]*)\n([\S\s]+?)\n```$/gm, '\u235e');
   let match = str.match(/^```(?:[^\n`]*)\n([\S\s]+?)\n```$/gm);
-  if (match)
-    match = match.map((e) =>
-      e.replace(/^```(?:[^\n`]*)\n([\S\s]+?)\n```$/gm, '<pre>$1</pre>').replace(/\n/gm, '\n<br/>')
-    );
+  if (match) match = match.map((e) => e.replace(/^```(?:[^\n`]*)\n([\S\s]+?)\n```$/gm, '<pre>$1</pre>'));
   return [result, match ?? []];
 }
 

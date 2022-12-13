@@ -31,10 +31,15 @@ export const SearchInputBar = styled.input`
 
   &:focus {
     outline: none;
+
+    &::placeholder {
+      color: ${COLORS.WHITE};
+    }
   }
 
-  &:placeholder-shown {
-    color: ${COLORS.GRAY4};
+  &::placeholder {
+    color: ${COLORS.GRAY2};
+    user-select: none;
   }
 `;
 

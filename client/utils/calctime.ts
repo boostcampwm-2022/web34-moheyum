@@ -7,6 +7,7 @@ export const calcTime = (date: string, type: boolean = false): string => {
   if (counter > 0) return createdAt.toLocaleDateString();
   counter = Math.floor(diff / (1000 * 60 * 60));
   if (counter > 0) return `${counter}시간 전`;
-
-  return `${Math.floor(diff / (1000 * 60))}분 전`;
+  counter = Math.floor(diff / (1000 * 60));
+  if (counter <= 0) return '몇 초전';
+  return `${counter}분 전`;
 };
