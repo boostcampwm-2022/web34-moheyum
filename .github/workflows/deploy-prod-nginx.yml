@@ -1,0 +1,43 @@
+name: nginx prod 배포
+
+on:
+  push:
+    branches:
+      - "prod"
+    paths:
+      - "nginx/**"
+  workflow_dispatch:
+
+jobs:
+  nginx-prod-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: build image
+        run: |
+          COMMITHASH="$(git rev-parse HEAD)"
+          docker build -t moheyum/nginx-prod:$COMMITHASH -t moheyum/nginx-prod:latest --target prod ./nginx
+          docker login --username ${{ secrets.DH_USERNAME }} --password ${{ secrets.DH_PASSWORD }}
+          docker push moheyum/nginx-prod:$COMMITHASH
+          docker push moheyum/nginx-prod:latest
+      - name: copy stack.yml to nginx prod leader
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.NGINX_PROD_SSH_HOST }}
+          port: ${{ secrets.NGINX_PROD_SSH_PORT }}
+          username: ${{ secrets.NGINX_PROD_SSH_USERNAME }}
+          password: ${{ secrets.NGINX_PROD_SSH_PASSWORD }}
+          source: "nginx/stack-prod.yml"
+          target: "nginx"
+          strip_components: 1
+          rm: true
+      - name: rolling update remotely
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.NGINX_PROD_SSH_HOST }}
+          port: ${{ secrets.NGINX_PROD_SSH_PORT }}
+          username: ${{ secrets.NGINX_PROD_SSH_USERNAME }}
+          password: ${{ secrets.NGINX_PROD_SSH_PASSWORD }}
+          script: |
+            cd nginx
+            echo ${{ secrets.NGINX_PROD_SSH_PASSWORD }} | sudo -S docker stack deploy --compose-file stack-prod.yml nginx-prod
