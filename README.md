@@ -2,19 +2,18 @@
 > 마크다운을 지원하는 SNS  
 모헤윰으로 당신의 일상을 공유해보세요.
 
-<br>
+<br> 
 
-## 🔍 프로젝트 주요 기능
-
-<!--
-데모 영상
-- 각 기능을 타임스탬프로 지정)
-- 깃헙에는 마크다운 이미지로 썸네일 걸고, 노션에는 유튜브 영상 임베드 
--->
+## 🎥 영상
 
 **현재 임시 영상이며 영상 추후 추가 예정입니다.**
+|**소개 영상**|**데모 영상**|
+:--:|:--:
+|https://youtu.be/1vs4SEbdDDM|(추후 추가 예정)|
 
-https://youtu.be/1vs4SEbdDDM
+<br> 
+
+## 🔍 프로젝트 주요 기능
 
 <!--
 - 회원가입 + 이메일 인증
@@ -26,29 +25,16 @@ https://youtu.be/1vs4SEbdDDM
 - 팔로우 (다른 사람 프로필에서 팔로우 클릭 + 팔로우/팔로잉 리스트)
 -->
 
-<!--
-작업 이력
-v1
-원래는 2열 마크다운 테이블에 gif + 기능을 배치했으나
-깃헙 마크다운 테이블은 안에 영상 업로드 불가하여
-테이블, 기능 별 영상 빼버리고 데모 영상으로 통합.
-기능 리스트는 그냥 불렛 리스트로만 관리함
-
-v2
-기능 수를 간추리고 테이블+gif로 관리하는 것도 다시 고려
--->
-
 |||
-:--:|:--:
-![마크다운 에디터](https://user-images.githubusercontent.com/81913106/206893134-2932ed3e-e949-447f-a11a-a589a6b2849a.gif)|![프로필 페이지](https://user-images.githubusercontent.com/81913106/206894456-89831a9e-003b-44cd-ba5e-34d061850b44.gif)
-마크다운 형식의 게시글 작성|유저 프로필 페이지 및 팔로우
+:--:|:--
+<img src="https://user-images.githubusercontent.com/81913106/207251022-3d4a525a-676a-429d-b72d-16d900162a0e.gif" width="500"/>|**마크다운 형식의 게시글 작정** <br> <br> <li> 기본 마크다운 문법을 제공합니다. <li> 미리보기 기능을 지원합니다. <li> 사용자가 입력한 글자를 바탕으로 멘션 대상을 추천해줍니다. <li> Drag and drop으로 이미지를 업로드 할 수 있습니다.
+<img src="https://user-images.githubusercontent.com/81913106/206907719-2a76492d-7599-41ec-b63a-4c7cd2be215b.gif" width="500"/>|**답글 작성 기능** <br> <br> <li> 게시글에 답글을 달 수 있습니다. <li> 모든 답글은 하나의 게시글로 작성하는 것과 같습니다. <li> 답글을 작성하게 되면 해당 답글도 뉴스피드에 올라갑니다. <li> 답글 게시글에서 해당 답글을 작성한 상위 게시글도 함께 볼 수 있습니다.
+<img src="https://user-images.githubusercontent.com/81913106/206894456-89831a9e-003b-44cd-ba5e-34d061850b44.gif" width="500"/>|**유저 프로필 페이지 및 팔로우** <br> <br> <li> 유저 프로필 페이지에서 유저 정보와, 해당 유저가 쓴 게시글 목록을 볼 수 있습니다. <li> 본인 프로필 페이지일 경우 프로필 편집이 가능합니다.
+<img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/d3061b60-1e3d-4db5-9993-295edad7fc3d/email.gif?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221211%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221211T080343Z&X-Amz-Expires=86400&X-Amz-Signature=c0f78b5f86c23dd071b4419db22e8147fe80ece2577173b6b1ed244974b1f4f6&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22email.gif%22&x-id=GetObject" width="500"/>|**이메일 인증을 통한 회원가입, 비밀번호 찾기** <br> <br> <li> 이메일 인증을 통해 회원가입을 할 수 있습니다. <li> 가입 시 인증한 이메일로 임시 비밀번호를 발급 받을 수 있습니다.
+<img src="https://user-images.githubusercontent.com/81913106/206894637-0d43e595-0038-4b58-847e-9ca8c6dde650.gif" width="500"/>|**무한 스크롤을 통한 뉴스피드 탐색** <br> <br> <li> 무한 스크롤로 뉴스피드 목록을 볼 수 있습니다.
+<img src="https://user-images.githubusercontent.com/81913106/206906737-da04e4e7-3780-47f7-a1a0-fec049849677.gif" width="500"/>|**반응형 UI**<br> <br> <li> 반응형 UI를 통해 좁은 폭의 화면에서도 불편함 없이 서비스를 이용할 수 있습니다.
 
-|||
-:--:|:--:
-<img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/d3061b60-1e3d-4db5-9993-295edad7fc3d/email.gif?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221211%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221211T080343Z&X-Amz-Expires=86400&X-Amz-Signature=c0f78b5f86c23dd071b4419db22e8147fe80ece2577173b6b1ed244974b1f4f6&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22email.gif%22&x-id=GetObject" width="480"/>|![무한 스크롤](https://user-images.githubusercontent.com/81913106/206894637-0d43e595-0038-4b58-847e-9ca8c6dde650.gif)
-이메일 인증을 통한 회원가입, 비밀번호 찾기|무한 스크롤을 통한 뉴스피드 탐색
-
-<br>
+<br> 
 
 ## 🛠️ 프로젝트 구조
 
