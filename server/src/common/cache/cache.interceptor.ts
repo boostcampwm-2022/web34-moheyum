@@ -170,7 +170,7 @@ export class MoheyumInterceptor extends CacheInterceptor {
                 context.switchToHttp().getRequest().user.userid
               }`
             : key === 'checkFollow'
-            ? `/api/follow/check/${req.params.targetid}_${
+            ? `/api/follow/following/${req.params.targetid}_${
                 context.switchToHttp().getRequest().user.userid
               }`
             : `${key}_${context.switchToHttp().getRequest().user.userid}`;

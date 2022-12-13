@@ -40,7 +40,7 @@ export class FollowController {
   @UseGuards(JwtAuthGuard)
   @CacheIndividual('checkFollow')
   @CacheTTL(30 * 60)
-  @Get('/check/:targetid')
+  @Get('/following/:targetid')
   async followCheck(
     @Param('targetid') targetid: string,
     @GetUser() user: User,
