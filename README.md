@@ -102,6 +102,7 @@ TOOL|![Figma](https://img.shields.io/badge/Figma-F24E1E?logo=figma&logoColor=whi
 ## 📚 문서
 
 - [Notion](https://polarlsm.notion.site/Moheyum-4c54f7ce6bc348bd84121578d4079b50)
-- [Figma](https://www.figma.com/file/bUlrkKtjfXPfHvdIvLuXvc/Moheyum?node-id=158%3A1655&t=U1UrufRdVG1ntwB2-0)
 - [학습 정리 및 문제 해결 과정](https://polarlsm.notion.site/TIL-07a41dada35841aeb396e9a73c14ff4e)
 - [백로그](https://github.com/orgs/boostcampwm-2022/projects/68/views/6)
+- [디자인](https://www.figma.com/file/bUlrkKtjfXPfHvdIvLuXvc/Moheyum?node-id=158%3A1655&t=U1UrufRdVG1ntwB2-0)
+- [API 스펙](https://polarlsm.notion.site/API-d512e3c3daa14216801e56a5402eb77b)
