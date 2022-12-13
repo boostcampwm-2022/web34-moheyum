@@ -87,8 +87,8 @@ function italic(str: string): string {
 }
 
 function underline(str: string): string {
-  let result = str.replace(/__([^_\n]+?)__/g, '<u>$1</u>');
-  result = result.replace(/_([^_\n]+?)_/g, '<u>$1</u>');
+  const result = str.replace(/__([^_\n]+?)__/g, '<u>$1</u>');
+  // result = result.replace(/_([^_\n]+?)_/g, '<u>$1</u>');
   return result;
 }
 
