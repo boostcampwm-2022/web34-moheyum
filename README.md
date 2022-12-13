@@ -89,52 +89,6 @@ TOOL|![Figma](https://img.shields.io/badge/Figma-F24E1E?logo=figma&logoColor=whi
 
 <br>
 
-## 💪 도전
-
-<!-- 
-
-라이브러리 없이 마크다운 에디터 구현
-
---> 
-
-### 1. 별도의 라이브러리 없이 마크다운 에디터 구현
-
-- 사용자가 기본적인 서식을 적용할 수 있는 에디터를 구현하는 것이 목표.
-- 직접 에디터를 구현하고, 사용자가 입력한 내용을 Markdown Parser가 렌더링.
-- 멘션 추천 기능과 이미지 업로드 기능 구현.
-
-### 2. Next.js를 이용한 SSR 도입
-
-- 내용이 자주 변하지 않는 일부 페이지에 SSR 기능을 도입
-
-### 3. MongoDB 쿼리 최적화
-
-- B+ tree index 의 특성을 고려한 ESR Rules 인덱싱
-    - 3190ms -> 2ms
-    - [링크](https://polarlsm.notion.site/MongoDB-FollowingPost-3190ms-2ms-5990f08927604b3dad81c45a2a05054d)
-- 병렬 쿼리 및 Set을 이용한 중복 제거
-    - 1300ms -> 340ms
-    - [링크](https://polarlsm.notion.site/MongoDB-MentionList-1300ms-340ms-456567ddf9ae41d79de39be4ea1bae55)
-
-### 4. Redis를 이용한 캐싱
-
-- (예정)
-
-### 5. API 서버 성능 수치화
-
-- (예정)
-- Grafana K6를 통해 벤치마크를 하고 현재 서버로 수용 가능한 유저 수를 가늠.
-- 2022년 12월 6일 아래의 조건에서 p(90) 응답 대기 시간이 300ms 미만임을 확인.
-    - API 서버 1대 (1vCPU, 2GB RAM)
-    - 가상 유저 300명
-    - 1초당 1 리퀘스트
-
-### 6. Auto-Scaling
-
-- (예정)
-
-<br>
-
 ## 👨‍👨‍👧‍👦 멤버
 
 | J024_김남효 | J097_백성익 | J142_이선민 | J149_이우재 |
