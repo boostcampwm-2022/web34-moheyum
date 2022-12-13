@@ -23,9 +23,9 @@ export default function ParentPost({ post }: { post: Parent }) {
   }, [post.description]);
   return (
     <Wrapper>
-      <HeaderBox>
-        <Link href={`/post/${post._id}`}>
-          <ParentFilter />
+      <Link href={`/post/${post._id}`}>
+        <ParentFilter />
+        <HeaderBox>
           <Author>
             <ProfileImg imgUrl={post.authorDetail.profileimg} />
             <AuthorDetail>
@@ -34,16 +34,16 @@ export default function ParentPost({ post }: { post: Parent }) {
               <div className="time">· {calcTime(post.createdAt)}</div>
             </AuthorDetail>
           </Author>
-        </Link>
-      </HeaderBox>
-      <ContentBox>
-        <ParentTreeContainer>
-          <ParentTree />
-        </ParentTreeContainer>
-        <div className="content" ref={contentRef}>
-          {post.description}
-        </div>
-      </ContentBox>
+        </HeaderBox>
+        <ContentBox>
+          <ParentTreeContainer>
+            <ParentTree />
+          </ParentTreeContainer>
+          <div className="content" ref={contentRef}>
+            {post.description}
+          </div>
+        </ContentBox>
+      </Link>
     </Wrapper>
   );
 }

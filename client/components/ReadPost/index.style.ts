@@ -18,6 +18,10 @@ export const PostContent = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
+
+  & > a {
+    width: 100%;
+  }
 `;
 
 export const CommentBox = styled.div`
