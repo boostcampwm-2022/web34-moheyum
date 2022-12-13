@@ -24,13 +24,13 @@ function headers(str: string): string {
 }
 
 function unorderedList(str: string): string {
-  const result = str.replace(/^ *[-*+] (.*)$/gm, '<ul><li>$1</li></ul>').replace(/<\/ul>\n<ul>/gm, '');
+  const result = str.replace(/^ *[-*+] (.+)$/gm, '<ul><li>$1</li></ul>').replace(/<\/ul>\n<ul>/gm, '');
   return result;
 }
 
 function orderedList(str: string): string {
   const result = str
-    .replace(/^(\d+)[).] (.*)$/gm, '<ol start="$1"><li>$2</li></ol>')
+    .replace(/^(\d+)[).] (.+)$/gm, '<ol start="$1"><li>$2</li></ol>')
     .replace(/<\/ol>\n<ol start="\d+">/gm, '');
   return result;
 }
@@ -66,13 +66,12 @@ function blockQuote(str: string): string {
       // console.log(newBlock.match(/(?<=^|\n|<blockquote>)> {0,3}/g));
       newBlock = newBlock.replace(
         /(?<=^|\n|<blockquote>)\uff1e {0,3}([\s\S]*?)(?=\n\n|$)/g,
-        '<blockquote>$1</blockquote>'
+        '<blockquote>\n$1</blockquote>'
       );
       newBlock = newBlock.replace(/(?<=^|\n)\uff1e? {0,3}/g, '');
     }
     result = result.replace(item, newBlock);
   });
-
   return result;
 }
 
@@ -87,8 +86,8 @@ function italic(str: string): string {
 }
 
 function underline(str: string): string {
-  let result = str.replace(/__([^_\n]+?)__/g, '<u>$1</u>');
-  result = result.replace(/_([^_\n]+?)_/g, '<u>$1</u>');
+  const result = str.replace(/__([^_\n]+?)__/g, '<u>$1</u>');
+  // result = result.replace(/_([^_\n]+?)_/g, '<u>$1</u>');
   return result;
 }
 
@@ -100,66 +99,63 @@ function strike(str: string): string {
 
 // TODO : href와 src도 codeBlock처럼 따로 빼두기
 function link(str: string): [string, string[], string[]] {
-  let result = str.replace(
-    /!\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm,
-    '\u235f'
-  );
-  result = result.replace(
-    /\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm,
-    '\u2360'
-  );
+  const IMG_REGEX =
+    /!\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm;
+  const LINK_REGEX =
+    /\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm;
 
-  let matchImg = str.match(
-    /!\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm
-  );
+  let result = str;
+  let matchImg = result.match(IMG_REGEX);
+
   if (matchImg) {
-    matchImg = matchImg.map((e) =>
-      e.replace(
-        /!\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm,
-        '<img src="$2" alt="$1"/>'
-      )
-    );
+    matchImg = matchImg.map((e) => e.replace(IMG_REGEX, '<img src="$2" alt="$1"/>'));
   }
-  let matchLink = str.match(
-    /\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm
-  );
+
+  result = result.replace(IMG_REGEX, '\u235f');
+
+  let matchLink = result.match(LINK_REGEX);
+
   if (matchLink) {
-    matchLink = matchLink.map((e) =>
-      e.replace(
-        /\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm,
-        '<a href="$2">$1</a>'
-      )
-    );
+    matchLink = matchLink.map((e) => e.replace(LINK_REGEX, '<a href="$2">$1</a>'));
   }
+
+  result = result.replace(LINK_REGEX, '\u2360');
 
   return [result, matchImg ?? [], matchLink ?? []];
 }
 
 function hr(str: string): string {
-  let result = str.replace(/^<div>[* ]+<\/div>$/gm, '<hr/>');
-  result = result.replace(/^<div>[- ]+<\/div>$/gm, '<hr/>');
-  result = result.replace(/^<div>[_ ]+<\/div>$/gm, '<hr/>');
+  let result = str.replace(/^<div>(\* *)+<\/div>$/gm, '<hr/>');
+  result = result.replace(/^<div>(- *)+<\/div>$/gm, '<hr/>');
+  result = result.replace(/^<div>(_ *)+<\/div>$/gm, '<hr/>');
   return result;
+}
+
+function cleanupLines(str: string): string {
+  return str.replace(/(<div>( |&nbsp;)*<\/div>\n?)+$/g, '');
 }
 
 const CONATINER_BLOCKS = [blockQuote, unorderedList, orderedList];
 const LEAF_BLOCKS = [emptyLines, headers, code, divideLines, hr];
-const INLINES = [hr, bold, italic, underline, strike];
+const INLINES = [bold, italic, underline, strike];
 
 export function doParse(str: string): string {
   let result = str;
+
   let codes: string[] = [];
   let links: string[] = [];
   let imgs: string[] = [];
 
   [result, codes] = codeBlock(result);
-  [result, links, imgs] = link(result);
+  [result, imgs, links] = link(result);
 
   result = pipe(...CONATINER_BLOCKS, ...LEAF_BLOCKS, ...INLINES)(result);
 
   result = recoverPlaceholders(result, codes, '\u235e');
-  result = recoverPlaceholders(result, links, '\u235f');
-  result = recoverPlaceholders(result, imgs, '\u2360');
+  result = recoverPlaceholders(result, links, '\u2360');
+  result = recoverPlaceholders(result, imgs, '\u235f');
+
+  result = cleanupLines(result);
 
   return result;
 }

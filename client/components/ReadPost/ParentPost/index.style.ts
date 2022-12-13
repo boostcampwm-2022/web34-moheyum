@@ -7,10 +7,21 @@ export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  & > a {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
 `;
 
 export const Author = styled.div`
   ${displayCenter}
+`;
+
+export const BlurredAuthor = styled.div`
+  ${displayCenter}
+  filter: blur(8px);
 `;
 
 export const AuthorDetail = styled.div`
@@ -50,18 +61,20 @@ export const ContentBox = styled.div`
   }
 `;
 
+export const NoContent = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  color: ${COLORS.GRAY1};
+  padding: 25px 10px;
+`;
+
 export const HeaderBox = styled.div`
   width: 100%;
   height: 50px;
   display: flex;
   justify-content: space-between;
   flex-direction: row;
-  & > a {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    position: relative;
-  }
 `;
 
 export const ParentTreeContainer = styled.div`
@@ -81,7 +94,7 @@ export const ParentTree = styled.div`
 
 export const ParentFilter = styled.div`
   width: 100%;
-  height: 400px;
+  height: 100%;
   position: absolute;
   background: linear-gradient(transparent 20%, ${COLORS.WHITE});
 `;
