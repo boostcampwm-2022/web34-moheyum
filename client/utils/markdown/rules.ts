@@ -100,37 +100,27 @@ function strike(str: string): string {
 
 // TODO : href와 src도 codeBlock처럼 따로 빼두기
 function link(str: string): [string, string[], string[]] {
-  let result = str.replace(
-    /!\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm,
-    '\u235f'
-  );
-  result = result.replace(
-    /\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm,
-    '\u2360'
-  );
+  const IMG_REGEX =
+    /!\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm;
+  const LINK_REGEX =
+    /\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm;
 
-  let matchImg = str.match(
-    /!\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm
-  );
+  let result = str;
+  let matchImg = result.match(IMG_REGEX);
+
   if (matchImg) {
-    matchImg = matchImg.map((e) =>
-      e.replace(
-        /!\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm,
-        '<img src="$2" alt="$1"/>'
-      )
-    );
+    matchImg = matchImg.map((e) => e.replace(IMG_REGEX, '<img src="$2" alt="$1"/>'));
   }
-  let matchLink = str.match(
-    /\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm
-  );
+
+  result = result.replace(IMG_REGEX, '\u235f');
+
+  let matchLink = result.match(LINK_REGEX);
+
   if (matchLink) {
-    matchLink = matchLink.map((e) =>
-      e.replace(
-        /\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm,
-        '<a href="$2">$1</a>'
-      )
-    );
+    matchLink = matchLink.map((e) => e.replace(LINK_REGEX, '<a href="$2">$1</a>'));
   }
+
+  result = result.replace(LINK_REGEX, '\u2360');
 
   return [result, matchImg ?? [], matchLink ?? []];
 }
@@ -158,13 +148,13 @@ export function doParse(str: string): string {
   let imgs: string[] = [];
 
   [result, codes] = codeBlock(result);
-  [result, links, imgs] = link(result);
+  [result, imgs, links] = link(result);
 
   result = pipe(...CONATINER_BLOCKS, ...LEAF_BLOCKS, ...INLINES)(result);
 
   result = recoverPlaceholders(result, codes, '\u235e');
-  result = recoverPlaceholders(result, links, '\u235f');
-  result = recoverPlaceholders(result, imgs, '\u2360');
+  result = recoverPlaceholders(result, links, '\u2360');
+  result = recoverPlaceholders(result, imgs, '\u235f');
 
   result = cleanupLines(result);
 
