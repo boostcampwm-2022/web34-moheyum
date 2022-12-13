@@ -9,6 +9,8 @@ import {
   UseGuards,
   HttpCode,
   Query,
+  CacheTTL,
+  UseInterceptors,
 } from '@nestjs/common';
 import { GetUser } from 'src/common/decorator/get-user.decorator';
 import { User } from 'src/common/database/user.schema';
@@ -19,12 +21,19 @@ import { PostIdValidationPipe } from './pipes/post-id-validation.pipe';
 import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
 import { FollowerPostDto } from './dto/follower-post.dto';
 import { PostGuard } from 'src/common/guard/post.guard';
+import { MoheyumInterceptor } from 'src/common/cache/cache.interceptor';
+import { CacheEvict } from 'src/common/cache/cache-evict.decorator';
+import { CachePagination } from 'src/common/cache/cache-next-ttl.decorator';
+import { CacheIndividual } from 'src/common/cache/cahce-individual.decorator';
 import { SearchPostListDto } from './dto/search-post-list.dto';
 
 @Controller('post')
+@UseInterceptors(MoheyumInterceptor)
 export class PostController {
   constructor(private postService: PostService) {}
 
+  @CachePagination(true)
+  @CacheTTL(300)
   @Get('/author/:userid')
   async getUserPosts(
     @Param('userid') userid: string,
@@ -34,8 +43,8 @@ export class PostController {
   }
 
   @HttpCode(200)
-  @Post()
   @UseGuards(JwtAuthGuard)
+  @Post()
   async CreatePost(
     @Body() createPostDto: CreatePostDto,
     @GetUser() user: User,
@@ -45,8 +54,11 @@ export class PostController {
     };
   }
 
-  @Get('newsfeed')
   @UseGuards(JwtAuthGuard)
+  @CachePagination(true)
+  @CacheIndividual('userid')
+  @CacheTTL(20)
+  @Get('newsfeed')
   async getFollowingPost(
     @GetUser() user: User,
     @Query() followerPostDTO: FollowerPostDto,
@@ -55,11 +67,14 @@ export class PostController {
   }
 
   @HttpCode(200)
+  @CachePagination(true)
+  @CacheTTL(20)
   @Get('/search')
   async searchPost(@Query() searchPostListDto: SearchPostListDto) {
     return await this.postService.searchPost(searchPostListDto);
   }
 
+  @CacheTTL(24 * 60 * 60)
   @Get('/:id')
   async getPostById(@Param('id', PostIdValidationPipe) id: string): Promise<{
     post: Post_;
@@ -72,6 +87,7 @@ export class PostController {
 
   @HttpCode(200)
   @UseGuards(JwtAuthGuard, PostGuard)
+  @CacheEvict()
   @Delete('/:id')
   @UseGuards(JwtAuthGuard)
   deletePost(
@@ -87,6 +103,7 @@ export class PostController {
 
   @HttpCode(200)
   @UseGuards(JwtAuthGuard, PostGuard)
+  @CacheEvict()
   @Patch('/:id')
   updatePost(
     @Param('id', PostIdValidationPipe) id: string,

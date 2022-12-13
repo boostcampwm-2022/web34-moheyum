@@ -1,29 +1,37 @@
-import { Module, MiddlewareConsumer, Logger } from '@nestjs/common';
+import {
+  Module,
+  MiddlewareConsumer,
+  Logger,
+  CacheModule,
+  CacheInterceptor,
+} from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PostModule } from './post/post.module';
 import { AuthModule } from './auth/auth.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { join } from 'path';
 import { mongooseConfig } from './common/config/mongooseConfig';
 import { redisOptions } from './common/config/redisConfig';
-import { RedisModule } from '@liaoliaots/nestjs-redis/dist/redis/redis.module';
+// import { RedisModule } from '@liaoliaots/nestjs-redis/dist/redis/redis.module';
 import { LoggerMiddleware } from './common/middleware/logger';
 import { UserModule } from './user/user.module';
 import { FollowModule } from './follow/follow.module';
 import { NcloudModule } from './ncloud/ncloud.module';
 import { NotificationModule } from './notification/notification.module';
 import { EventModule } from './event/event.module';
-import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { HttpExceptionFilter } from './common/filter/http-execption.filter';
+import { RedisModule } from './redis/redis.module';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { RateLimiterGuard, RateLimiterModule } from 'nestjs-rate-limiter';
 import { rateLimiterConfig } from './common/config/registerConfig';
 @Module({
   imports: [
+    // RedisModule.forRootAsync(redisOptions),
     ConfigModule.forRoot({
       envFilePath: [join(__dirname, '..', `.env.${process.env.NODE_ENV}`)],
       isGlobal: true, //전역 사용
     }),
-    RedisModule.forRootAsync(redisOptions),
+    CacheModule.registerAsync(redisOptions),
     MongooseModule.forRootAsync(mongooseConfig),
     RateLimiterModule.registerAsync(rateLimiterConfig),
     PostModule,
@@ -33,6 +41,7 @@ import { rateLimiterConfig } from './common/config/registerConfig';
     NcloudModule,
     NotificationModule,
     EventModule,
+    RedisModule,
   ],
   providers: [
     {

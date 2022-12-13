@@ -12,6 +12,7 @@ import { ResponseInterceptor } from './common/interceptor/response.interceptor';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: winstonLogger,
+    forceCloseConnections: true,
   });
   const configService = app.get<ConfigService>(ConfigService);
   app.use(cookieParser());
@@ -25,7 +26,7 @@ async function bootstrap() {
       errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
     }),
   );
-
+  app.enableShutdownHooks();
   await app.listen(configService.get('APP_PORT'));
 }
 bootstrap();

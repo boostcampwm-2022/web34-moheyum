@@ -10,7 +10,7 @@ import { User, UserSchema } from '../common/database/user.schema';
 import { jwtOptions } from 'src/common/config/jwtConfig';
 import { DatabaseModule } from 'src/common/database/database.module';
 import { RefreshTokenStrategy } from './strategies/refreshToken.strategy';
-import { CacheModule } from 'src/redis/redis.module';
+import { RedisModule } from 'src/redis/redis.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
@@ -21,7 +21,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
     JwtModule.registerAsync(jwtOptions),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     DatabaseModule,
-    CacheModule,
+    RedisModule,
     MailerModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
