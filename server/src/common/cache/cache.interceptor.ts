@@ -204,11 +204,17 @@ export class MoheyumInterceptor extends CacheInterceptor {
       case 'notificationCount':
         appendKey = `${key}_${context.switchToHttp().getRequest().user.userid}`;
         break;
-
+      case 'post':
+        appendKey =
+          key === ''
+            ? req.originalUrl
+            : `/api/user/${context.switchToHttp().getRequest().user.userid}`;
+        break;
       default:
         appendKey = key === '' ? req.originalUrl : `${key}`;
         break;
     }
+    console.log(appendKey);
     return appendKey;
   }
 }
