@@ -1,21 +1,3 @@
-<!--
-
-1. html 을 좀 떼고 마크다운 표준으로?
-2. 주요 기능 안내가 없음 (동영상 링크로 퉁 친 느낌)
-    1. 동영상은 가능하면 임베디드 해야됨
-    2. 데모 영상과 별개로 기능별 영상으로 나눠야 함
-3. 팀, 개인의 도전 과제 없음
-    1. 팀원 소개를 더 세분화하고 여기에 개인별 어떤 도전 과제를 겪었는지 추가
-4. 특징으로 내세우기 뭐한 것들이 있음
-    1. MongoDB 내용 좀 이상함
-    2. SFTP 빼도 될듯
-5. 기술 스택
-    1. SFTP는 기술 스택이라고 말하면 안됨 (사용한 프로토콜임)
-    2. 분류를 좀 해야될 수도
-    3. 채택 이유도 적어야 하나?
-
-
--->
 # <img src="https://user-images.githubusercontent.com/81913106/206893672-4ebced07-b6a2-4563-9951-d6add4a481fd.png" width="200" height="32"/>
 > 마크다운을 지원하는 SNS  
 모헤윰으로 당신의 일상을 공유해보세요.
@@ -68,16 +50,11 @@ v2
 
 <br>
 
-## 🛠️ 프로젝트 구조 및 사용 기술
+## 🛠️ 프로젝트 구조
 
-<!--
-작업 이력
-- 버전 제외 (버전이 없는 서비스들과의 통일성)
-- SFTP 제외 (기술이 아니라 프로토콜임, 편법이라 노출해서 좋을거 없음)
-- 카테고리별로 분류
--->
 <img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/cb826a8f-361f-48b8-ba0a-23e4420f7822/system2x_%287%29.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221211%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221211T081518Z&X-Amz-Expires=86400&X-Amz-Signature=e0dfca363f11b70be5c7aa4ac1adeaef341cf7c15400a7e50f61afa9824bd262&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22system%25402x%2520%287%29.png%22&x-id=GetObject" width="800"/>
 
+## 🔥 기술 스택
 
 |Category|Tech Stack|
 --|--
