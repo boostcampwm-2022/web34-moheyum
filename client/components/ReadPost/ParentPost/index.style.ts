@@ -19,6 +19,11 @@ export const Author = styled.div`
   ${displayCenter}
 `;
 
+export const BlurredAuthor = styled.div`
+  ${displayCenter}
+  filter: blur(8px);
+`;
+
 export const AuthorDetail = styled.div`
   display: flex;
   margin-bottom: 20px;
@@ -54,6 +59,14 @@ export const ContentBox = styled.div`
     max-height: 350px;
     overflow-y: hidden;
   }
+`;
+
+export const NoContent = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  color: ${COLORS.GRAY1};
+  padding: 25px 10px;
 `;
 
 export const HeaderBox = styled.div`
