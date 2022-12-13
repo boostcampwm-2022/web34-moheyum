@@ -24,13 +24,13 @@ function headers(str: string): string {
 }
 
 function unorderedList(str: string): string {
-  const result = str.replace(/^ *[-*+] (.*)$/gm, '<ul><li>$1</li></ul>').replace(/<\/ul>\n<ul>/gm, '');
+  const result = str.replace(/^ *[-*+] (.+)$/gm, '<ul><li>$1</li></ul>').replace(/<\/ul>\n<ul>/gm, '');
   return result;
 }
 
 function orderedList(str: string): string {
   const result = str
-    .replace(/^(\d+)[).] (.*)$/gm, '<ol start="$1"><li>$2</li></ol>')
+    .replace(/^(\d+)[).] (.+)$/gm, '<ol start="$1"><li>$2</li></ol>')
     .replace(/<\/ol>\n<ol start="\d+">/gm, '');
   return result;
 }
@@ -136,18 +136,23 @@ function link(str: string): [string, string[], string[]] {
 }
 
 function hr(str: string): string {
-  let result = str.replace(/^<div>[* ]+<\/div>$/gm, '<hr/>');
-  result = result.replace(/^<div>[- ]+<\/div>$/gm, '<hr/>');
-  result = result.replace(/^<div>[_ ]+<\/div>$/gm, '<hr/>');
+  let result = str.replace(/^<div>(\* *)+<\/div>$/gm, '<hr/>');
+  result = result.replace(/^<div>(- *)+<\/div>$/gm, '<hr/>');
+  result = result.replace(/^<div>(_ *)+<\/div>$/gm, '<hr/>');
   return result;
+}
+
+function cleanupLines(str: string): string {
+  return str.replace(/(<div>( |&nbsp;)*<\/div>\n?)+$/g, '');
 }
 
 const CONATINER_BLOCKS = [blockQuote, unorderedList, orderedList];
 const LEAF_BLOCKS = [emptyLines, headers, code, divideLines, hr];
-const INLINES = [hr, bold, italic, underline, strike];
+const INLINES = [bold, italic, underline, strike];
 
 export function doParse(str: string): string {
   let result = str;
+
   let codes: string[] = [];
   let links: string[] = [];
   let imgs: string[] = [];
@@ -160,6 +165,8 @@ export function doParse(str: string): string {
   result = recoverPlaceholders(result, codes, '\u235e');
   result = recoverPlaceholders(result, links, '\u235f');
   result = recoverPlaceholders(result, imgs, '\u2360');
+
+  result = cleanupLines(result);
 
   return result;
 }
