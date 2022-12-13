@@ -37,11 +37,15 @@ export const FakeButton = styled.button`
 export const ArticlesSection = styled.div`
   background-color: ${COLORS.WHITE};
   flex: 1;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const Newsfeed = styled.div`
-  overflow-y: scroll;
+  overflow-y: auto;
   flex: 1;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const NewFeed = styled.div`
@@ -54,4 +58,21 @@ export const Footer = styled.footer`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+export const NoFeeds = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  & > div {
+    color: ${COLORS.GRAY1};
+    margin: 10px;
+    & > a {
+      color: ${COLORS.BLUE};
+      text-decoration: underline;
+    }
+  }
 `;
