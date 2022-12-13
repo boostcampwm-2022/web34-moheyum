@@ -66,13 +66,12 @@ function blockQuote(str: string): string {
       // console.log(newBlock.match(/(?<=^|\n|<blockquote>)> {0,3}/g));
       newBlock = newBlock.replace(
         /(?<=^|\n|<blockquote>)\uff1e {0,3}([\s\S]*?)(?=\n\n|$)/g,
-        '<blockquote>$1</blockquote>'
+        '<blockquote>\n$1</blockquote>'
       );
       newBlock = newBlock.replace(/(?<=^|\n)\uff1e? {0,3}/g, '');
     }
     result = result.replace(item, newBlock);
   });
-
   return result;
 }
 
