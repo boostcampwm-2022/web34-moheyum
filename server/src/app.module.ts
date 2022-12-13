@@ -24,6 +24,8 @@ import { RedisModule } from './redis/redis.module';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { RateLimiterGuard, RateLimiterModule } from 'nestjs-rate-limiter';
 import { rateLimiterConfig } from './common/config/registerConfig';
+import { MailModule } from './mail/mail.module';
+import { mailAsyncOptions } from './common/config/mailConfig';
 @Module({
   imports: [
     // RedisModule.forRootAsync(redisOptions),
@@ -34,6 +36,7 @@ import { rateLimiterConfig } from './common/config/registerConfig';
     CacheModule.registerAsync(redisOptions),
     MongooseModule.forRootAsync(mongooseConfig),
     RateLimiterModule.registerAsync(rateLimiterConfig),
+    MailModule.forRootAsync(mailAsyncOptions),
     PostModule,
     AuthModule,
     UserModule,
