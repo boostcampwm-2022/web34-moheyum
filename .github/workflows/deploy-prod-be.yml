@@ -1,48 +1,48 @@
-name: 백엔드 dev 배포
+name: 백엔드 prod 배포
 
 on:
   push:
     branches:
-      - "dev"
+      - "main"
     paths:
       - "server/**"
   workflow_dispatch:
 
 jobs:
-  be-deploy:
+  be-prod-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: build image
         run: |
           COMMITHASH="$(git rev-parse HEAD)"
-          docker build -t moheyum/be-dev:$COMMITHASH -t moheyum/be-dev:latest --target dev ./server
+          docker build -t moheyum/be-prod:$COMMITHASH -t moheyum/be-prod:latest --target prod ./server
           docker login --username ${{ secrets.DH_USERNAME }} --password ${{ secrets.DH_PASSWORD }}
-          docker push moheyum/be-dev:$COMMITHASH
-          docker push moheyum/be-dev:latest
+          docker push moheyum/be-prod:$COMMITHASH
+          docker push moheyum/be-prod:latest
       - name: setup env
         run: |
           mkdir -p ~/.ssh/
           ssh-keyscan -p ${{ secrets.SCP_PORT }} ${{ secrets.SCP_HOST }} >> ~/.ssh/known_hosts
           sshpass -p "${{ secrets.SCP_PASSWORD }}" scp -P ${{ secrets.SCP_PORT }} -r ${{ secrets.SCP_USERNAME }}@${{ secrets.SCP_HOST }}:~/ftp/server/ ./
-      - name: copy stack.yml and env to be dev leader
+      - name: copy stack.yml and env to be prod leader
         uses: appleboy/scp-action@master
         with:
-          host: ${{ secrets.BE_DEV_SSH_HOST }}
-          port: ${{ secrets.BE_DEV_SSH_PORT }}
-          username: ${{ secrets.BE_DEV_SSH_USERNAME }}
-          password: ${{ secrets.BE_DEV_SSH_PASSWORD }}
-          source: "server/.env.development,server/stack-dev.yml"
+          host: ${{ secrets.BE_PROD_SSH_HOST }}
+          port: ${{ secrets.BE_PROD_SSH_PORT }}
+          username: ${{ secrets.BE_PROD_SSH_USERNAME }}
+          password: ${{ secrets.BE_PROD_SSH_PASSWORD }}
+          source: "server/.env.production,server/stack-prod.yml"
           target: "server"
           strip_components: 1
           rm: true
       - name: rolling update remotely
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.BE_DEV_SSH_HOST }}
-          port: ${{ secrets.BE_DEV_SSH_PORT }}
-          username: ${{ secrets.BE_DEV_SSH_USERNAME }}
-          password: ${{ secrets.BE_DEV_SSH_PASSWORD }}
+          host: ${{ secrets.BE_PROD_SSH_HOST }}
+          port: ${{ secrets.BE_PROD_SSH_PORT }}
+          username: ${{ secrets.BE_PROD_SSH_USERNAME }}
+          password: ${{ secrets.BE_PROD_SSH_PASSWORD }}
           script: |
             cd server
-            echo ${{ secrets.BE_DEV_SSH_PASSWORD }} | sudo -S docker stack deploy --compose-file stack-dev.yml be-dev
+            echo ${{ secrets.BE_PROD_SSH_PASSWORD }} | sudo -S docker stack deploy --compose-file stack-prod.yml be-prod

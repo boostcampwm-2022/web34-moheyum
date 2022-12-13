@@ -1,0 +1,48 @@
+name: 프론트엔드 prod 배포
+
+on:
+  push:
+    branches:
+      - "prod"
+    paths:
+      - "client/**"
+  workflow_dispatch:
+
+jobs:
+  fe-prod-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: setup env
+        run: |
+          mkdir -p ~/.ssh/
+          ssh-keyscan -p ${{ secrets.SCP_PORT }} ${{ secrets.SCP_HOST }} >> ~/.ssh/known_hosts
+          sshpass -p "${{ secrets.SCP_PASSWORD }}" scp -P ${{ secrets.SCP_PORT }} -r ${{ secrets.SCP_USERNAME }}@${{ secrets.SCP_HOST }}:~/ftp/client/ ./
+      - name: build image
+        run: |
+          COMMITHASH="$(git rev-parse HEAD)"
+          docker build -t moheyum/fe-prod:$COMMITHASH -t moheyum/fe-prod:latest --target prod ./client
+          docker login --username ${{ secrets.DH_USERNAME }} --password ${{ secrets.DH_PASSWORD }}
+          docker push moheyum/fe-prod:$COMMITHASH
+          docker push moheyum/fe-prod:latest
+      - name: copy stack.yml to fe prod leader
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.FE_PROD_SSH_HOST }}
+          port: ${{ secrets.FE_PROD_SSH_PORT }}
+          username: ${{ secrets.FE_PROD_SSH_USERNAME }}
+          password: ${{ secrets.FE_PROD_SSH_PASSWORD }}
+          source: "client/stack-prod.yml"
+          target: "client"
+          strip_components: 1
+          rm: true
+      - name: rolling update remotely
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.FE_PROD_SSH_HOST }}
+          port: ${{ secrets.FE_PROD_SSH_PORT }}
+          username: ${{ secrets.FE_PROD_SSH_USERNAME }}
+          password: ${{ secrets.FE_PROD_SSH_PASSWORD }}
+          script: |
+            cd client
+            echo ${{ secrets.FE_PROD_SSH_PASSWORD }} | sudo -S docker stack deploy --compose-file stack-prod.yml fe-prod
