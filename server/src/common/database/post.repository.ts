@@ -339,6 +339,7 @@ export class PostRepository {
       { $unwind: { path: '$user' } },
       {
         $set: {
+          childPosts: { $size: '$childPosts' },
           authorDetail: {
             nickname: '$user.nickname',
             profileimg: '$user.profileimg',
@@ -372,6 +373,7 @@ export class PostRepository {
       { $unwind: { path: '$user' } },
       {
         $set: {
+          childPosts: { $size: '$childPosts' },
           authorDetail: {
             nickname: '$user.nickname',
             profileimg: '$user.profileimg',
