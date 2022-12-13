@@ -27,7 +27,7 @@ export class FollowController {
 
   @HttpCode(200)
   @UseGuards(JwtAuthGuard)
-  @CacheEvict('', 'checkFollow')
+  @CacheEvict('', 'checkFollow', 'deleteMyID', 'deleteFollowID')
   @CacheIndividual('userid')
   @Post('/following/:targetid')
   async followUser(@Param('targetid') targetid: string, @GetUser() user: User) {
@@ -52,7 +52,7 @@ export class FollowController {
 
   @HttpCode(200)
   @UseGuards(JwtAuthGuard)
-  @CacheEvict('', 'checkFollow')
+  @CacheEvict('', 'checkFollow', 'deleteFollowID', 'deleteMyID')
   @CacheIndividual('userid')
   @Delete('/following/:targetid')
   async followCancel(

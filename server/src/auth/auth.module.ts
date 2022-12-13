@@ -1,4 +1,4 @@
-import { Logger, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
@@ -46,13 +46,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
     }),
   ],
   controllers: [AuthController],
-  providers: [
-    AuthService,
-    UserRepository,
-    JwtStartegy,
-    RefreshTokenStrategy,
-    Logger,
-  ],
+  providers: [AuthService, UserRepository, JwtStartegy, RefreshTokenStrategy],
   exports: [JwtStartegy, PassportModule],
 })
 export class AuthModule {}

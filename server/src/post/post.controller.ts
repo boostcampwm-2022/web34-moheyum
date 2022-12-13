@@ -44,6 +44,8 @@ export class PostController {
 
   @HttpCode(200)
   @UseGuards(JwtAuthGuard)
+  @CacheIndividual('avatar')
+  @CacheEvict('')
   @Post()
   async CreatePost(
     @Body() createPostDto: CreatePostDto,
