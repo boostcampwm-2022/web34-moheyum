@@ -11,9 +11,6 @@ import { jwtOptions } from 'src/common/config/jwtConfig';
 import { DatabaseModule } from 'src/common/database/database.module';
 import { RefreshTokenStrategy } from './strategies/refreshToken.strategy';
 import { RedisModule } from 'src/redis/redis.module';
-import { MailerModule } from '@nestjs-modules/mailer';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 
 @Module({
   imports: [
@@ -22,28 +19,6 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     DatabaseModule,
     RedisModule,
-    MailerModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        transport: {
-          service: 'naver',
-          host: 'smtp.naver.com',
-          port: 587,
-          auth: {
-            user: configService.get('NAVER_EMAIL_ID'),
-            pass: configService.get('NAVER_EMAIL_PW'),
-          },
-        },
-        template: {
-          dir: process.cwd + '/template/',
-          adapter: new HandlebarsAdapter(),
-          options: {
-            strict: true,
-          },
-        },
-      }),
-      inject: [ConfigService],
-    }),
   ],
   controllers: [AuthController],
   providers: [AuthService, UserRepository, JwtStartegy, RefreshTokenStrategy],
