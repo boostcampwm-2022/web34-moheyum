@@ -11,9 +11,6 @@ import { jwtOptions } from 'src/common/config/jwtConfig';
 import { DatabaseModule } from 'src/common/database/database.module';
 import { RefreshTokenStrategy } from './strategies/refreshToken.strategy';
 import { RedisModule } from 'src/redis/redis.module';
-import { MailerModule } from '@nestjs-modules/mailer';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 
 @Module({
   imports: [

@@ -25,7 +25,6 @@
   },
   "dependencies": {
     "@liaoliaots/nestjs-redis": "^9.0.4",
-    "@nestjs-modules/mailer": "^1.8.1",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.0.0",
@@ -45,7 +44,6 @@
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",
     "generate-password": "^1.7.0",
-    "handlebars": "^4.7.7",
     "helmet": "^6.0.1",
     "ioredis": "^5.2.4",
     "jsonwebtoken": "^8.5.1",
