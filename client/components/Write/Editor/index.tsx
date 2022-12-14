@@ -268,6 +268,10 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
         contentRef.current.innerHTML = '<div><br/></div>';
       }
     }
+    if (key === '@' || (checkMentionActive && key === 'Shift')) {
+      moveDropDown(false);
+      setDropDownDisplay(true);
+    }
     setContent(contentRef.current.innerText);
   };
 
@@ -412,7 +416,7 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
     }
     if (contentRef.current) {
       const format: string = `${files[0].name.split('.').slice(-1)}`.toUpperCase();
-      if (format === 'JPG' || format === 'JPEG' || format === 'PNG') {
+      if (format === 'JPG' || format === 'JPEG' || format === 'PNG' || format === 'GIF') {
         const response = await fetchImage();
         const data = `![${files[0].name as string}](${response.data.imageLink})`;
         pasteAction(`${data}`);
