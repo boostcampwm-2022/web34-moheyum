@@ -69,7 +69,7 @@ export class MoheyumInterceptor extends CacheInterceptor {
                   ? [key, response]
                   : [key, response, { ttl }]
                 : req.query.next === undefined
-                ? [key, response, { ttl: 5 }]
+                ? [key, response, { ttl: 1 }]
                 : isNil(ttl)
                 ? [key, response]
                 : [key, response, { ttl }];
