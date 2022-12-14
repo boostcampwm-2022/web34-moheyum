@@ -188,7 +188,7 @@ export class AuthService {
       await this.mailService.sendEmail({
         title: subject,
         body: html,
-        senderName: 'boostcamp_Web34',
+        senderName: this.configService.get('NAVER_EMAIL_ID'),
         recipients: [{ address: email, type: 'R' }],
       });
       return true;
