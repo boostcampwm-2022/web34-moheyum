@@ -162,7 +162,7 @@ const globalStyle = css`
     }
     &::-webkit-scrollbar-track {
       border-radius: 10px;
-      background: rgba(0, 0, 0, 0.1);
+      background: transparent;
     }
     &::-webkit-scrollbar-thumb {
       border-radius: 10px;

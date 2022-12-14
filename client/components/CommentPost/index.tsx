@@ -54,9 +54,6 @@ const CommentEditor = styled.div`
   padding-top: 20px;
   -ms-overflow-style: none;
   z-index: 2;
-  &::-webkit-scrollbar {
-    display: none;
-  }
 `;
 
 const ParentFilter = styled.div`
