@@ -59,15 +59,11 @@ export class FollowRepository {
             from: 'users',
             localField: 'userid',
             foreignField: 'userid',
-            pipeline: [
-              {
-                $match: {
-                  state: true,
-                },
-              },
-            ],
             as: 'followerlist',
           },
+        },
+        {
+          $match: { 'followerlist.state': { $eq: true } },
         },
         { $limit: FOLLOWER_LIST_LIMIT },
         {
@@ -106,14 +102,10 @@ export class FollowRepository {
             localField: 'userid',
             foreignField: 'userid',
             as: 'followerlist',
-            pipeline: [
-              {
-                $match: {
-                  state: true,
-                },
-              },
-            ],
           },
+        },
+        {
+          $match: { 'followerlist.state': { $eq: true } },
         },
         { $limit: FOLLOWER_LIST_LIMIT },
         {
@@ -147,14 +139,10 @@ export class FollowRepository {
             localField: 'targetid',
             foreignField: 'userid',
             as: 'followinglist',
-            pipeline: [
-              {
-                $match: {
-                  state: true,
-                },
-              },
-            ],
           },
+        },
+        {
+          $match: { 'followinglist.state': { $eq: true } },
         },
         { $limit: FOLLOWING_LIST_LIMIT },
         {
@@ -192,15 +180,11 @@ export class FollowRepository {
             from: 'users',
             localField: 'targetid',
             foreignField: 'userid',
-            pipeline: [
-              {
-                $match: {
-                  state: true,
-                },
-              },
-            ],
             as: 'followinglist',
           },
+        },
+        {
+          $match: { 'followinglist.state': { $eq: true } },
         },
         { $limit: FOLLOWING_LIST_LIMIT },
         {

@@ -15,9 +15,6 @@ export const PostContent = styled.div`
   align-items: center;
   -ms-overflow-style: none;
   padding: 8px 15px;
-  &::-webkit-scrollbar {
-    display: none;
-  }
 
   & > a {
     width: 100%;

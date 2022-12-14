@@ -44,6 +44,8 @@ export class PostController {
 
   @HttpCode(200)
   @UseGuards(JwtAuthGuard)
+  @CacheIndividual('avatar')
+  @CacheEvict('')
   @Post()
   async CreatePost(
     @Body() createPostDto: CreatePostDto,
@@ -87,7 +89,8 @@ export class PostController {
 
   @HttpCode(200)
   @UseGuards(JwtAuthGuard, PostGuard)
-  @CacheEvict()
+  @CacheEvict('', 'myInfo')
+  @CacheIndividual('post')
   @Delete('/:id')
   @UseGuards(JwtAuthGuard)
   deletePost(
@@ -103,7 +106,8 @@ export class PostController {
 
   @HttpCode(200)
   @UseGuards(JwtAuthGuard, PostGuard)
-  @CacheEvict()
+  @CacheEvict('')
+  @CacheIndividual('post')
   @Patch('/:id')
   updatePost(
     @Param('id', PostIdValidationPipe) id: string,

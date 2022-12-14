@@ -62,16 +62,19 @@ export class MoheyumInterceptor extends CacheInterceptor {
         : ttlValueOrFactory;
       return next.handle().pipe(
         tap((response) => {
-          const args = isNil(isPagination)
-            ? isNil(ttl)
-              ? [key, response]
-              : [key, response, { ttl }]
-            : req.query.next === undefined
-            ? [key, response, { ttl: 5 }]
-            : isNil(ttl)
-            ? [key, response]
-            : [key, response, { ttl }];
-          this.cacheManager.set(...args);
+          if (!isNil(response))
+            try {
+              const args = isNil(isPagination)
+                ? isNil(ttl)
+                  ? [key, response]
+                  : [key, response, { ttl }]
+                : req.query.next === undefined
+                ? [key, response, { ttl: 1 }]
+                : isNil(ttl)
+                ? [key, response]
+                : [key, response, { ttl }];
+              this.cacheManager.set(...args);
+            } catch (e) {}
         }),
       );
     } catch {
@@ -164,16 +167,31 @@ export class MoheyumInterceptor extends CacheInterceptor {
     let appendKey = '';
     switch (cacheIndividual) {
       case 'userid':
-        appendKey =
-          key === ''
-            ? `/api/user/mentionlist_${
-                context.switchToHttp().getRequest().user.userid
-              }`
-            : key === 'checkFollow'
-            ? `/api/follow/following/${req.params.targetid}_${
-                context.switchToHttp().getRequest().user.userid
-              }`
-            : `${key}_${context.switchToHttp().getRequest().user.userid}`;
+        switch (key) {
+          case '':
+            appendKey = `/api/user/mentionlist_${
+              context.switchToHttp().getRequest().user.userid
+            }`;
+            break;
+          case 'checkFollow':
+            appendKey = `/api/follow/following/${req.params.targetid}_${
+              context.switchToHttp().getRequest().user.userid
+            }`;
+            break;
+          case 'deleteFollowID':
+            appendKey = `/api/user/${req.params.targetid}`;
+            break;
+          case 'deleteMyID':
+            appendKey = `/api/user/${
+              context.switchToHttp().getRequest().user.userid
+            }`;
+            break;
+          default:
+            appendKey = `${key}_${
+              context.switchToHttp().getRequest().user.userid
+            }`;
+            break;
+        }
         break;
       case 'avatar':
         appendKey =
@@ -188,6 +206,12 @@ export class MoheyumInterceptor extends CacheInterceptor {
         break;
       case 'notificationCount':
         appendKey = `${key}_${context.switchToHttp().getRequest().user.userid}`;
+        break;
+      case 'post':
+        appendKey =
+          key === ''
+            ? req.originalUrl
+            : `/api/user/${context.switchToHttp().getRequest().user.userid}`;
         break;
       default:
         appendKey = key === '' ? req.originalUrl : `${key}`;

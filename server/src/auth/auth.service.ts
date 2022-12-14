@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger, LoggerService } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { AuthCredentialsDto } from './dto/auth-credential.dto';
 import { UserCreateDto } from './dto/user-create.dto';
 import { UserRepository } from '../common/database/user.repository';
@@ -18,7 +18,6 @@ import { CommonException } from 'src/common/exeception/common.exception';
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject(Logger) private readonly logger: LoggerService,
     private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
