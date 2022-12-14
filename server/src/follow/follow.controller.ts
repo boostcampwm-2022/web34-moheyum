@@ -65,7 +65,7 @@ export class FollowController {
   }
 
   @CachePagination(true)
-  @CacheTTL(300)
+  @CacheTTL(10)
   @Get('/list/follower/:targetid')
   async targetFollowerList(
     @Query() followListDTO: FollowListDto,
@@ -79,7 +79,7 @@ export class FollowController {
   }
 
   @CachePagination(true)
-  @CacheTTL(300)
+  @CacheTTL(10)
   @Get('/list/following/:targetid')
   async targetFollowingList(
     @Query() followListDTO: FollowListDto,
