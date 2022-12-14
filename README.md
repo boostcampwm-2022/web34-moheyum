@@ -8,7 +8,7 @@
 
 |**시연 영상**|**발표 영상**|
 :--:|:--:
-|[![intro](https://img.youtube.com/vi/9mVinynuUTw/0.jpg)](https://www.youtube.com/watch?v=9mVinynuUTw)|(추후 추가 예정)|
+|[![intro](https://img.youtube.com/vi/9mVinynuUTw/0.jpg)](https://www.youtube.com/watch?v=9mVinynuUTw)|[![demo](https://img.youtube.com/vi/hJuTYCoQJV8/0.jpg)](https://www.youtube.com/watch?v=hJuTYCoQJV8)|
 
 <br> 
 
