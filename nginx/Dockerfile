@@ -7,3 +7,8 @@ FROM nginx:1.23.2-alpine AS dev
 COPY conf.d/moheyum-dev.conf /etc/nginx/conf.d/moheyum-dev.conf
 COPY nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80
+
+FROM nginx:1.23.2-alpine AS prod
+COPY conf.d/moheyum-prod.conf /etc/nginx/conf.d/moheyum-prod.conf
+COPY nginx.conf /etc/nginx/nginx.conf
+EXPOSE 80

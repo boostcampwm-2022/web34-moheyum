@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  testt:
+    image: moheyum/be-prod:latest
+    ports:
+      - "4000:4000"
+    env_file: .env.production
+    deploy:
+      mode: global
+      update_config:
+        delay: 10s
+        order: start-first

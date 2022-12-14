@@ -214,7 +214,6 @@ export class MoheyumInterceptor extends CacheInterceptor {
         appendKey = key === '' ? req.originalUrl : `${key}`;
         break;
     }
-    console.log(appendKey);
     return appendKey;
   }
 }

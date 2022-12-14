@@ -14,6 +14,7 @@ services:
   mongodb:
     build:
       context: ./mongodb
+      target: local
     ports:
       - "27017:27017"
     environment:
