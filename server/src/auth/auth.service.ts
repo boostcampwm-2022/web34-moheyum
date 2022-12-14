@@ -8,13 +8,13 @@ import { ConfigService } from '@nestjs/config';
 import { CookieOptions } from 'express';
 import { User } from 'src/common/database/user.schema';
 import { RedisService } from 'src/redis/redis.service';
-import { MailerService } from '@nestjs-modules/mailer';
 import { EmailDto } from './dto/email.dto';
 import { EmailCheckDto } from './dto/email-check.dto';
 import { FindPwDto } from './dto/find-pw-dto';
 import * as generator from 'generate-password';
 import { UserException } from 'src/common/exeception/user.exception';
 import { CommonException } from 'src/common/exeception/common.exception';
+import { MailService } from 'src/mail/mail.service';
 @Injectable()
 export class AuthService {
   constructor(
@@ -22,7 +22,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly redisService: RedisService,
-    private readonly mailService: MailerService,
+    private readonly mailService: MailService,
   ) {}
 
   /**
@@ -170,9 +170,6 @@ export class AuthService {
       const payload = { userid };
       const accessToken = this.createAccessToken(payload);
       const refreshToken = await this.createRefreshToken(payload);
-      // const accessToken = '1';
-      // const refreshToken = '1';
-
       return { accessToken, refreshToken };
     } else throw UserException.userUnAuthorized();
   }
@@ -188,11 +185,11 @@ export class AuthService {
     html: string,
   ): Promise<boolean> {
     try {
-      await this.mailService.sendMail({
-        to: email,
-        from: this.configService.get('NAVER_EMAIL_ID'),
-        subject: subject,
-        html: html,
+      await this.mailService.sendEmail({
+        title: subject,
+        body: html,
+        senderName: this.configService.get('NAVER_EMAIL_ID'),
+        recipients: [{ address: email, type: 'R' }],
       });
       return true;
     } catch (e) {
