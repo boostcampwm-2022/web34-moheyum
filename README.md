@@ -45,7 +45,7 @@
 FE|![Next.js](https://img.shields.io/badge/Next.js-000000?logo=next.js&logoColor=white) ![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black) ![Recoil](https://img.shields.io/badge/Recoil-blue?logo=recoil&logoColor=white) ![Emotion](https://img.shields.io/badge/Emotion-yellow)
 BE&DB|![Nest](https://img.shields.io/badge/NestJS-E0234E?logo=nestjs) ![Mongoose](https://img.shields.io/badge/Mongoose-000000) ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?logo=mongodb&logoColor=white) ![Redis](https://img.shields.io/badge/Redis-DC382D?logo=redis&logoColor=white) 
 COMMON|![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white) ![YarnBerry](https://img.shields.io/badge/Yarn--Berry-2C8EBB?logo=yarn&logoColor=white)
-INFRA|![NCloud](https://img.shields.io/badge/NCloud-green?logo=naver) ![Github Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF?logo=github%20actions&logoColor=white) ![PM2](https://img.shields.io/badge/PM2-2B037A?logo=pm2) ![NGINX](https://img.shields.io/badge/NGINX-009639?logo=nginx)
+INFRA|![NCloud](https://img.shields.io/badge/NCloud-green?logo=naver) ![Github Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF?logo=github%20actions&logoColor=white) ![Docker](https://img.shields.io/badge/Docker-2496ED?logo=Docker&logoColor=white) ![NGINX](https://img.shields.io/badge/NGINX-009639?logo=nginx)
 TOOL|![Figma](https://img.shields.io/badge/Figma-F24E1E?logo=figma&logoColor=white)
 
 <br>
