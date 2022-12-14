@@ -8,46 +8,41 @@ on:
       - "server/**"
   workflow_dispatch:
 
-env:
-  NODE_ENV: development
-
 jobs:
   be-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "16"
-          cache: 'npm'
-          cache-dependency-path: server/package-lock.json
-      - name: build backend
+      - name: build image
         run: |
-          cd server
-          npm ci
-          npm run build
-      - name: copy file to ncloud instance
+          COMMITHASH="$(git rev-parse HEAD)"
+          docker build -t moheyum/be-dev:$COMMITHASH -t moheyum/be-dev:latest --target dev ./server
+          docker login --username ${{ secrets.DH_USERNAME }} --password ${{ secrets.DH_PASSWORD }}
+          docker push moheyum/be-dev:$COMMITHASH
+          docker push moheyum/be-dev:latest
+      - name: setup env
+        run: |
+          mkdir -p ~/.ssh/
+          ssh-keyscan -p ${{ secrets.SCP_PORT }} ${{ secrets.SCP_HOST }} >> ~/.ssh/known_hosts
+          sshpass -p "${{ secrets.SCP_PASSWORD }}" scp -P ${{ secrets.SCP_PORT }} -r ${{ secrets.SCP_USERNAME }}@${{ secrets.SCP_HOST }}:~/ftp/server/ ./
+      - name: copy stack.yml and env to be dev leader
         uses: appleboy/scp-action@master
         with:
-          host: ${{ secrets.INSTANCE_HOST_DEV }}
-          port: ${{ secrets.INSTANCE_PORT_DEV }}
-          username: ${{ secrets.INSTANCE_USERNAME_DEV }}
-          password: ${{ secrets.INSTANCE_PASSWORD_DEV }}
-          source: "server"
-          target: "moheyum/server"
+          host: ${{ secrets.BE_DEV_SSH_HOST }}
+          port: ${{ secrets.BE_DEV_SSH_PORT }}
+          username: ${{ secrets.BE_DEV_SSH_USERNAME }}
+          password: ${{ secrets.BE_DEV_SSH_PASSWORD }}
+          source: "server/.env.development,server/stack-dev.yml"
+          target: "server"
           strip_components: 1
           rm: true
-      - name: run node.js remotely
+      - name: rolling update remotely
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.INSTANCE_HOST_DEV }}
-          port: ${{ secrets.INSTANCE_PORT_DEV }}
-          username: ${{ secrets.INSTANCE_USERNAME_DEV }}
-          password: ${{ secrets.INSTANCE_PASSWORD_DEV }}
+          host: ${{ secrets.BE_DEV_SSH_HOST }}
+          port: ${{ secrets.BE_DEV_SSH_PORT }}
+          username: ${{ secrets.BE_DEV_SSH_USERNAME }}
+          password: ${{ secrets.BE_DEV_SSH_PASSWORD }}
           script: |
-            sshpass -p "${{ secrets.SCP_PASSWORD }}" scp -P ${{ secrets.SCP_PORT }} -r ${{ secrets.SCP_USERNAME }}@${{ secrets.SCP_HOST }}:~/ftp/server/ ~/moheyum
-            if [ "$(pm2 list | grep -c backend )" -eq 0 ]; then
-              cd ~/moheyum/server && pm2 start npm --name backend -i 1 -- start # not working
-            else
-              pm2 reload backend
-            fi
+            cd server
+            echo ${{ secrets.BE_DEV_SSH_PASSWORD }} | sudo -S docker stack deploy --compose-file stack-dev.yml be-dev

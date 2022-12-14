@@ -9,6 +9,7 @@
     "import/prefer-default-export": "off",
     "import/no-unresolved": "off",
     "import/export": "off",
-    "import/extensions": "off"
+    "import/extensions": "off",
+    "no-underscore-dangle": "off"
   }
 }

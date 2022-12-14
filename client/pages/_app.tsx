@@ -1,26 +1,56 @@
 import type { AppProps } from 'next/app';
 import React from 'react';
 import Head from 'next/head';
+import { RecoilRoot } from 'recoil';
 import styled from '@emotion/styled';
-import { ThemeProvider } from '@emotion/react';
-import { displayCenter } from '../styles/mixin';
+import { Global, ThemeProvider } from '@emotion/react';
+import { useRouter } from 'next/router';
+import dynamic from 'next/dynamic';
+import { displayCenter, mainSectionStyle } from '../styles/mixin';
 import COLORS from '../styles/color';
-import theme from '../styles/theme';
+import AppTheme from '../styles/theme';
+import globalStyle from '../styles/global';
+import Frame from '../styles/frame';
+import ToastController from '../components/Toast';
+
+const SideBar = dynamic(() => import('../components/SideBar'));
+
+const NoSideBar = ['/login', '/signup', '/idinquiry', '/pwinquiry'];
 
 export default function App({ Component, pageProps }: AppProps) {
+  const router = useRouter();
   return (
-    <ThemeProvider theme={theme}>
-      <AppStyle>
-        <Head>
-          <title>Moheyum</title>
-        </Head>
-        <Component {...pageProps} />
-      </AppStyle>
+    <ThemeProvider theme={AppTheme}>
+      <RecoilRoot>
+        <Global styles={globalStyle} />
+        <AppStyle>
+          <Head>
+            <title>mo:heyum</title>
+          </Head>
+          <Frame>
+            {!NoSideBar.includes(router.pathname) && <SideBar />}
+            <ComponentWrapper>
+              <Component {...pageProps} />
+            </ComponentWrapper>
+          </Frame>
+          <ToastController />
+        </AppStyle>
+      </RecoilRoot>
     </ThemeProvider>
   );
 }
 const AppStyle = styled.div`
-  background-color: ${COLORS.GRAY3};
+  background-color: ${COLORS.BACKGROUND};
   height: 100%;
   ${displayCenter}
+`;
+
+const ComponentWrapper = styled.div`
+  ${mainSectionStyle}
+  @media only screen and (max-width: ${({ theme }) => theme.wideWindow}) {
+    width: calc(100% - ${({ theme }) => theme.sidebar.maxWidth});
+  }
+  @media only screen and (max-width: ${({ theme }) => theme.smallWindow}) {
+    width: calc(100% - ${({ theme }) => theme.sidebar.minWidth});
+  }
 `;

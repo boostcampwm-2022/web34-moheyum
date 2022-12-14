@@ -34,7 +34,8 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # local env files
-.env*.local
+.env*
+!.env.template
 
 # vercel
 .vercel
@@ -43,6 +44,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-.env*
-
 .secrets
+sftp.json

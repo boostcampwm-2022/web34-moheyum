@@ -1,0 +1,53 @@
+# 로컬 테스트용으로만 사용하세요.
+
+version: "3.9"
+services:
+  nginx:
+    build:
+      context: ./nginx
+      target: local
+    ports:
+      - "80:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: always
+  mongodb:
+    build:
+      context: ./mongodb
+      target: local
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=moheyum
+      - MONGO_INITDB_ROOT_PASSWORD=localpassword
+    volumes:
+      - "./mongodb/data:/data/db"
+    restart: always
+  redis:
+    image: redis:7.0.5-alpine
+    ports:
+      - "6379:6379"
+  be:
+    build:
+      context: ./server
+    ports:
+      - "4000:4000"
+    env_file:
+      - "./server/.env.local"
+    restart: always
+    depends_on:
+      - mongodb
+      - redis
+  fe:
+    build:
+      context: ./client
+      target: local
+    ports:
+      - "3000:3000"
+    env_file:
+      - "./client/.env.local"
+    extra_hosts:
+      - "localhost:host-gateway"
+    restart: always
+    depends_on:
+      - be

@@ -1,13 +1,11 @@
 import React from 'react';
-import Frame from '../styles/frame';
-import MainSection from '../components/main/MainSection';
-import SideBar from '../components/main/SideBar';
+import AuthGuard from '../components/AuthGuard';
+import MyAccount from '../components/MyAccount';
 
 export default function myAccount() {
   return (
-    <Frame>
-      <SideBar />
-      <MainSection />
-    </Frame>
+    <AuthGuard>
+      <MyAccount />
+    </AuthGuard>
   );
 }

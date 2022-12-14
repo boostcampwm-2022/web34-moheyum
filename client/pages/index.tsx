@@ -1,14 +1,11 @@
-import React, { useEffect } from 'react';
-import Router from 'next/router';
+import React from 'react';
+import MainSection from '../components/MainSection';
+import AuthGuard from '../components/AuthGuard';
 
 export default function Home() {
-  useEffect(() => {
-    const isLogin = false;
-    if (isLogin) {
-      Router.push({ pathname: '/main' });
-    } else {
-      Router.push({ pathname: '/login' });
-    }
-  }, []);
-  return <div />;
+  return (
+    <AuthGuard>
+      <MainSection />
+    </AuthGuard>
+  );
 }

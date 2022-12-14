@@ -1,13 +1,11 @@
 import React from 'react';
-import Frame from '../styles/frame';
-import MainSection from '../components/main/MainSection';
-import SideBar from '../components/main/SideBar';
+import AuthGuard from '../components/AuthGuard';
+import SearchSection from '../components/Search';
 
 export default function search() {
   return (
-    <Frame>
-      <SideBar />
-      <MainSection />
-    </Frame>
+    <AuthGuard noRedirect>
+      <SearchSection />
+    </AuthGuard>
   );
 }

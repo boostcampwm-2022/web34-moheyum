@@ -1,6 +1,16 @@
 import { css } from '@emotion/react';
 import COLORS from './color';
 
+export const mainSectionStyle = css`
+  width: 100%;
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: ${COLORS.WHITE};
+  overflow-x: hidden;
+`;
+
 export const displayCenter = css`
   display: flex;
   justify-content: center;
@@ -22,7 +32,7 @@ export const inputStyle = css`
   &:focus {
     outline-color: ${COLORS.PRIMARY};
   }
-  &:placeholder-shown {
+  &::placeholder {
     user-select: none;
   }
   &:disabled {
@@ -67,5 +77,107 @@ export const boxStyle = css`
   color: ${COLORS.BLACK};
   button {
     ${buttonStyle}
+  }
+`;
+
+export const markdownStyle = css`
+  padding: 10px;
+  font-size: 16px;
+  white-space: normal;
+  line-height: 1.5em;
+  min-height: 12px;
+  overflow-x: hidden;
+
+  & * {
+    margin-bottom: 16px;
+  }
+
+  & h1,
+  h2 {
+    border-bottom: 1px solid ${COLORS.GRAY4};
+  }
+
+  & h1 {
+    margin-top: 24px;
+    padding-bottom: 8px;
+    line-height: 1.25;
+    font-size: 30px;
+    font-weight: 700;
+  }
+
+  & h2 {
+    margin-top: 20px;
+    padding-bottom: 6px;
+    line-height: 1.25;
+    font-size: 22px;
+    font-weight: 600;
+  }
+
+  & h3 {
+    line-height: 1.25;
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  & code {
+    padding: 2px 4px;
+    background-color: ${COLORS.GRAY3};
+    border-radius: 6px;
+    font-size: 85%;
+    font-family: D2Coding, 'D2 coding', monospace;
+  }
+
+  & pre {
+    background-color: ${COLORS.GRAY5};
+    border-radius: 6px;
+    padding: 16px;
+    overflow-x: hidden;
+    word-wrap: break-word;
+    white-space: pre;
+    font-family: D2Coding, 'D2 coding', monospace;
+    overflow-x: auto;
+    & > div {
+      white-space: pre-wrap;
+    }
+  }
+  & blockquote {
+    border-left: 4px solid ${COLORS.GRAY3};
+    padding: 6px 10px;
+  }
+
+  & b {
+    font-weight: 700;
+  }
+
+  & i {
+    font-style: italic;
+  }
+
+  & img {
+    max-width: 100%;
+    margin: 0 auto;
+    align-self: center;
+    display: block;
+  }
+
+  & a {
+    text-decoration: underline;
+    color: ${COLORS.BLUE};
+    &:hover {
+      color: ${COLORS.PRIMARY_DARK};
+    }
+    &:active {
+      color: ${COLORS.PRIMARY};
+    }
+  }
+
+  & ul {
+    list-style: circle;
+    list-style-position: inside;
+  }
+
+  & ol {
+    list-style: decimal;
+    list-style-position: inside;
   }
 `;

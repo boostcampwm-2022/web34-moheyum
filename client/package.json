@@ -5,21 +5,27 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:dev": "mv .env.production .env.production.temp && mv .env.development .env.production && next build && mv .env.production .env.development && mv .env.production.temp .env.production",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@hookform/resolvers": "0.1.0",
     "next": "13.0.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hook-form": "^7.39.7",
+    "react-loading": "^2.0.3",
     "recoil": "^0.7.6",
-    "typescript": "4.8.4"
+    "typescript": "4.8.4",
+    "yup": "^0.32.11"
   },
   "packageManager": "yarn@3.2.4",
   "devDependencies": {
     "@types/node": "18.11.9",
+    "@types/prop-types": "^15.7.5",
     "@types/react": "18.0.25",
     "@types/react-dom": "18.0.8",
     "eslint": "8.27.0",

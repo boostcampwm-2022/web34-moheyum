@@ -1,12 +1,17 @@
 .env
 .env.*
 
+/log
 # compiled output
+.env.*
 /dist
 /node_modules
 
 .pnp.*
 .yarn/*
+.vscode/*
+
+
 !.yarn/patches
 !.yarn/plugins
 !.yarn/releases

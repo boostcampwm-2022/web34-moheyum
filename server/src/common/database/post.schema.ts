@@ -1,21 +1,40 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-
 export type PostDocument = HydratedDocument<Post>;
 
-@Schema({ versionKey: false })
+@Schema({ versionKey: false, timestamps: true })
 export class Post {
-  @Prop()
-  title: string;
-
-  @Prop()
+  @Prop({
+    required: true,
+  })
   description: string;
 
   // @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User'})
-  @Prop()
+  @Prop({
+    required: true,
+  })
   author: string;
+  // @Prop({
+  //   type: Date,
+  //   default: dateKorea,
+  // })
+  // Created: Date;
 
-  // TODO : Date 추가
+  @Prop({
+    default: '',
+  })
+  parentPost: string;
+
+  @Prop({
+    default: [],
+  })
+  childPosts: string[];
 }
+const PostSchema = SchemaFactory.createForClass(Post);
 
-export const PostSchema = SchemaFactory.createForClass(Post);
+//Full Text Search를 위한 text index
+PostSchema.index({ description: 'text' });
+
+//작성자 기준 검색을 위한 compound index
+PostSchema.index({ author: 1, _id: 1 });
+export { PostSchema };

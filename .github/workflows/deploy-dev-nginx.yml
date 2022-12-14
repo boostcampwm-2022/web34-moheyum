@@ -1,0 +1,43 @@
+name: nginx dev 배포
+
+on:
+  push:
+    branches:
+      - "dev"
+    paths:
+      - "nginx/**"
+  workflow_dispatch:
+
+jobs:
+  nginx-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: build image
+        run: |
+          COMMITHASH="$(git rev-parse HEAD)"
+          docker build -t moheyum/nginx-dev:$COMMITHASH -t moheyum/nginx-dev:latest --target dev ./nginx
+          docker login --username ${{ secrets.DH_USERNAME }} --password ${{ secrets.DH_PASSWORD }}
+          docker push moheyum/nginx-dev:$COMMITHASH
+          docker push moheyum/nginx-dev:latest
+      - name: copy stack.yml to nginx dev leader
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.NGINX_DEV_SSH_HOST }}
+          port: ${{ secrets.NGINX_DEV_SSH_PORT }}
+          username: ${{ secrets.NGINX_DEV_SSH_USERNAME }}
+          password: ${{ secrets.NGINX_DEV_SSH_PASSWORD }}
+          source: "nginx/stack-dev.yml"
+          target: "nginx"
+          strip_components: 1
+          rm: true
+      - name: rolling update remotely
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.NGINX_DEV_SSH_HOST }}
+          port: ${{ secrets.NGINX_DEV_SSH_PORT }}
+          username: ${{ secrets.NGINX_DEV_SSH_USERNAME }}
+          password: ${{ secrets.NGINX_DEV_SSH_PASSWORD }}
+          script: |
+            cd nginx
+            echo ${{ secrets.NGINX_DEV_SSH_PASSWORD }} | sudo -S docker stack deploy --compose-file stack-dev.yml nginx-dev

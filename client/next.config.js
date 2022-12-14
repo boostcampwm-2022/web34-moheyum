@@ -5,9 +5,17 @@ const nextConfig = {
   rewrites: () => [
     {
       source: '/api/:path*',
-      destination: `${process.env.TEST_BE_SERVER}/:path*`,
+      destination: `${process.env.BE_URL}/api/:path*`,
     },
   ],
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
+  },
 };
 
 module.exports = nextConfig;

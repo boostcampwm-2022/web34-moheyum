@@ -2,3 +2,6 @@
 .secrets
 client/.env*
 server/.env*
+mongodb/data
+mongodb/data.zip
+.DS_Store
