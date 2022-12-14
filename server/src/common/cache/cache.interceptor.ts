@@ -62,16 +62,19 @@ export class MoheyumInterceptor extends CacheInterceptor {
         : ttlValueOrFactory;
       return next.handle().pipe(
         tap((response) => {
-          const args = isNil(isPagination)
-            ? isNil(ttl)
-              ? [key, response]
-              : [key, response, { ttl }]
-            : req.query.next === undefined
-            ? [key, response, { ttl: 5 }]
-            : isNil(ttl)
-            ? [key, response]
-            : [key, response, { ttl }];
-          this.cacheManager.set(...args);
+          if (!isNil(response))
+            try {
+              const args = isNil(isPagination)
+                ? isNil(ttl)
+                  ? [key, response]
+                  : [key, response, { ttl }]
+                : req.query.next === undefined
+                ? [key, response, { ttl: 5 }]
+                : isNil(ttl)
+                ? [key, response]
+                : [key, response, { ttl }];
+              this.cacheManager.set(...args);
+            } catch (e) {}
         }),
       );
     } catch {
