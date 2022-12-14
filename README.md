@@ -36,8 +36,7 @@
 <br> 
 
 ## 🛠️ 프로젝트 구조
-
-<img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/cb826a8f-361f-48b8-ba0a-23e4420f7822/system2x_%287%29.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221211%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221211T081518Z&X-Amz-Expires=86400&X-Amz-Signature=e0dfca363f11b70be5c7aa4ac1adeaef341cf7c15400a7e50f61afa9824bd262&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22system%25402x%2520%287%29.png%22&x-id=GetObject" width="800"/>
+![image](https://user-images.githubusercontent.com/34156840/207527934-ca364cce-4328-469d-b58b-566e58aa96fe.png)
 
 ## 🔥 기술 스택
 
