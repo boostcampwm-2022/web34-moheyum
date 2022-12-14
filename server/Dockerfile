@@ -11,6 +11,7 @@ CMD [ "yarn", "start:prod" ]
 FROM node:16-alpine as dev
 WORKDIR /usr/src/app
 COPY . /usr/src/app
+ENV NODE_ENV="development"
 RUN apk --no-cache add --virtual make gcc g++ python3 && \
   yarn install && \
   yarn rebuild bcrypt && \
@@ -21,8 +22,9 @@ CMD [ "yarn", "start:prod" ]
 FROM node:16-alpine as prod
 WORKDIR /usr/src/app
 COPY . /usr/src/app
+ENV NODE_ENV="production"
 RUN apk --no-cache add --virtual make gcc g++ python3 && \
-  yarn install --production && \
+  yarn install && \
   yarn rebuild bcrypt && \
   yarn build
 EXPOSE 4000

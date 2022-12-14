@@ -39,7 +39,4 @@ const ContentWrapper = styled.div`
   height: 100%;
   overflow-y: scroll;
   overflow-x: hidden;
-  &::-webkit-scrollbar {
-    display: none;
-  }
 `;

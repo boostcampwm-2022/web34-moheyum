@@ -19,7 +19,7 @@ FROM node:16-alpine AS prod
 WORKDIR /usr/src/app
 COPY . /usr/src/app
 RUN rm .env.local && \
-  yarn install --production && \
+  yarn install && \
   yarn build
 EXPOSE 3000
 CMD [ "yarn", "start"]
