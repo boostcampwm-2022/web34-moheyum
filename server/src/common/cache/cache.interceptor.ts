@@ -208,10 +208,25 @@ export class MoheyumInterceptor extends CacheInterceptor {
         appendKey = `${key}_${context.switchToHttp().getRequest().user.userid}`;
         break;
       case 'post':
-        appendKey =
-          key === ''
-            ? req.originalUrl
-            : `/api/user/${context.switchToHttp().getRequest().user.userid}`;
+        switch (key) {
+          case '':
+            appendKey = req.originalUrl;
+            break;
+          case 'myinfo':
+            appendKey = `/api/user/${
+              context.switchToHttp().getRequest().user.userid
+            }`;
+            break;
+          case 'parent':
+            const parent = req.body.parentPost || '';
+            appendKey = `/api/post/${parent}`;
+            break;
+          default:
+            appendKey = `/api/user/${
+              context.switchToHttp().getRequest().user.userid
+            }`;
+            break;
+        }
         break;
       default:
         appendKey = key === '' ? req.originalUrl : `${key}`;
