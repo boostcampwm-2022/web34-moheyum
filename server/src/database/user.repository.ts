@@ -3,7 +3,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './user.schema';
 import { Model, FilterQuery } from 'mongoose';
 import { UserCreateDto } from '../domain/auth/dto/user-create.dto';
-import { UserException } from '../exeception/user.exception';
+import {
+  UserDuplicateEmailException,
+  UserDuplicateIdException,
+  UserDuplicateNicknameException,
+  UserNotFoundException,
+} from '../exeception/user.exception';
 import { SearchUserListDto } from 'src/domain/user/dto/search-user-list.dto';
 import { SEARCH_USER_LIMIT } from '../constants/pagination.constants';
 
@@ -26,11 +31,11 @@ export class UserRepository {
       return await newUser.save();
     } catch (error) {
       if (error.code === 11000) {
-        if (!!error.keyValue.userid) throw UserException.userDuplicateId();
+        if (!!error.keyValue.userid) throw new UserDuplicateIdException(userid);
         else if (!!error.keyValue.nickname)
-          throw UserException.userDuplicateNickname();
+          throw new UserDuplicateNicknameException();
         else if (!!error.keyValue.email)
-          throw UserException.userDuplicateEmail();
+          throw new UserDuplicateEmailException();
       } else {
         throw new InternalServerErrorException();
       }
@@ -48,13 +53,13 @@ export class UserRepository {
       },
       { new: true },
     );
-    if (!result) throw UserException.userNotFound();
+    if (!result) throw new UserNotFoundException();
     return result;
   }
 
   async findOne(userFilterQuery: FilterQuery<User>): Promise<User> {
     const user = await this.userModel.findOne(userFilterQuery);
-    if (!user) throw UserException.userNotFound();
+    if (!user) throw new UserNotFoundException();
     return user;
   }
 
@@ -67,7 +72,7 @@ export class UserRepository {
     user: Partial<User>,
   ): Promise<User> {
     const result = await this.userModel.findOneAndUpdate(userFilterQuery, user);
-    if (!result) throw UserException.userNotFound();
+    if (!result) throw new UserNotFoundException();
     return result;
   }
 
@@ -80,7 +85,7 @@ export class UserRepository {
       },
       { new: true },
     );
-    if (!result) throw UserException.userNotFound();
+    if (!result) throw new UserNotFoundException();
     return result;
   }
 
@@ -95,7 +100,7 @@ export class UserRepository {
       },
       { new: true },
     );
-    if (!result) throw UserException.userNotFound();
+    if (!result) throw new UserNotFoundException();
     return result;
   }
 
@@ -110,7 +115,7 @@ export class UserRepository {
       },
       { new: true },
     );
-    if (!result) throw UserException.userNotFound();
+    if (!result) throw new UserNotFoundException();
     return result;
   }
 

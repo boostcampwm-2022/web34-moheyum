@@ -12,9 +12,13 @@ import { EmailDto } from './dto/email.dto';
 import { EmailCheckDto } from './dto/email-check.dto';
 import { FindPwDto } from './dto/find-pw-dto';
 import * as generator from 'generate-password';
-import { UserException } from 'src/exeception/user.exception';
 import { CommonException } from 'src/exeception/common.exception';
 import { MailService } from 'src/domain/mail/mail.service';
+import {
+  UserNotFoundException,
+  UserStateFalseException,
+  UserUnAuthorizedException,
+} from 'src/exeception/user.exception';
 @Injectable()
 export class AuthService {
   constructor(
@@ -165,13 +169,13 @@ export class AuthService {
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const { userid, password } = authCredentialsDto;
     const user = await this.userRepository.findOne({ userid });
-    if (!user.state) throw UserException.userStateFalse();
+    if (!user.state) throw new UserStateFalseException();
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload = { userid };
       const accessToken = this.createAccessToken(payload);
       const refreshToken = await this.createRefreshToken(payload);
       return { accessToken, refreshToken };
-    } else throw UserException.userUnAuthorized();
+    } else throw new UserUnAuthorizedException();
   }
 
   /**
@@ -254,7 +258,7 @@ export class AuthService {
       const userid = `${user.userid.slice(0, -3)}***`;
       return userid;
     }
-    throw UserException.userNotFound();
+    throw new UserNotFoundException();
   }
 
   async findPw(findPwDTO: FindPwDto) {
@@ -287,7 +291,7 @@ export class AuthService {
       );
       return true;
     }
-    throw UserException.userNotFound();
+    throw new UserNotFoundException();
   }
 
   async checkUserAuthData(userid: string) {

@@ -7,7 +7,7 @@ import { UserService } from 'src/domain/user/user.service';
 import { NotificationRepository } from 'src/database/notification.repository';
 import { EventService } from 'src/domain/event/event.service';
 import { FollowException } from 'src/exeception/follow.exception';
-import { UserException } from 'src/exeception/user.exception';
+import { UserNotFoundException } from 'src/exeception/user.exception';
 
 @Injectable()
 export class FollowService {
@@ -22,7 +22,7 @@ export class FollowService {
   async followUser(targetid: string, user: User) {
     const data = await this.userService.getUserData(targetid);
     if (targetid === user.userid) throw FollowException.followMyId();
-    if (!data) throw UserException.userNotFound();
+    if (!data) throw new UserNotFoundException();
 
     const follow = this.followRepository
       .create(targetid, user)
@@ -46,7 +46,7 @@ export class FollowService {
   async followCancel(targetid: string, user: User) {
     const data = await this.userService.getUserData(targetid);
     if (targetid === user.userid) throw FollowException.followCancelMyId();
-    if (!data) throw UserException.userNotFound();
+    if (!data) throw new UserNotFoundException();
     const cancel = this.followRepository
       .delete({
         userid: user.userid,

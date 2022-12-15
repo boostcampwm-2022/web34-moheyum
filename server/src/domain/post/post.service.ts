@@ -8,12 +8,12 @@ import { FollowerPostDto } from './dto/follower-post.dto';
 import { UserRepository } from 'src/database/user.repository';
 import { NotificationRepository } from 'src/database/notification.repository';
 import { EventService } from 'src/domain/event/event.service';
-import { PostException } from 'src/exeception/post.exception';
 import { SearchPostListDto } from './dto/search-post-list.dto';
 import {
   NEWSFEED_LIMIT,
   SEARCH_POST_LIMIT,
 } from 'src/constants/pagination.constants';
+import { PostNotFoundException } from 'src/exeception/post.exception';
 
 @Injectable()
 export class PostService {
@@ -69,7 +69,7 @@ export class PostService {
 
   async getPostById(id: string) {
     const found = await this.postRepository.findOne({ _id: id });
-    if (!found) throw PostException.postNotFound();
+    if (!found) throw new PostNotFoundException();
     return found;
   }
 
