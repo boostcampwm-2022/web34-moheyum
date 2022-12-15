@@ -3,6 +3,7 @@ import { ErrorMessage, Wrapper } from './index.style';
 import UserProfile from './Profile';
 import PostList from './PostList';
 import { UserPostProps } from '../../types/Post';
+
 export default function UserSection({ userData }: { userData: UserPostProps | null }) {
   return (
     <Wrapper>
