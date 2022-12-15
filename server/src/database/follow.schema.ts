@@ -5,7 +5,7 @@ export type FollowDocument = HydratedDocument<Follow>;
 
 @Schema({ versionKey: false, timestamps: true })
 export class Follow {
-  _id: mongoose.Schema.Types.ObjectId;
+  _id: mongoose.Types.ObjectId;
   @Prop({
     required: true,
   })

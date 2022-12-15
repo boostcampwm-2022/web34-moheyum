@@ -8,7 +8,7 @@ export type NotificationDocument = HydratedDocument<Notification>;
   timestamps: { createdAt: true, updatedAt: false },
 })
 export class Notification {
-  _id: mongoose.Schema.Types.ObjectId;
+  _id: mongoose.Types.ObjectId;
   @Prop({
     required: true,
     index: true,

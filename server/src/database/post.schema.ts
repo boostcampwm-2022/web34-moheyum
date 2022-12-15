@@ -4,7 +4,7 @@ export type PostDocument = HydratedDocument<Post>;
 
 @Schema({ versionKey: false, timestamps: true })
 export class Post {
-  _id: mongoose.Schema.Types.ObjectId;
+  _id: mongoose.Types.ObjectId;
 
   @Prop({
     required: true,
