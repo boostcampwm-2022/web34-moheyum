@@ -79,7 +79,11 @@ export default function Editor({ parentPostData, modifyPostData }: Props) {
     const removeDup = new Set(mentionList);
     const target = contentRef.current;
     if (!target) return;
-    const postContent = target.innerHTML.replace(/<div>([\s\S]*?)<\/div>/g, '$1\n').replace(/<br>/g, '');
+    const postContent = target.innerHTML
+      .replace(/<div>([\s\S]*?)<\/div>/g, '$1\n')
+      .replace(/<br>/g, '')
+      .replace(/&gt;/g, '>')
+      .replace(/&lt;/g, '<');
 
     // 수정의 경우
     if (modifyPostData) {
