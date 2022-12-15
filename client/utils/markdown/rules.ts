@@ -53,7 +53,7 @@ function recoverPlaceholders(str: string, codes: string[], placeholder: string):
 }
 
 function blockQuote(str: string): string {
-  const reg = /(?<=^|\n)\uff1e {0,3}([\s\S]*?)(?=\n\n|$)/g;
+  const reg = /(?<=^|\n)\uff1e {0,3}([\s\S]*?)(\n\n|$)/g;
   let result = str;
   const blocks = str.match(reg);
 
@@ -62,7 +62,7 @@ function blockQuote(str: string): string {
     while (newBlock.match(/(?<=^|\n|<blockquote>)\uff1e {0,3}/g)) {
       // console.log(newBlock.match(/(?<=^|\n|<blockquote>)> {0,3}/g));
       newBlock = newBlock.replace(
-        /(?<=^|\n|<blockquote>)\uff1e {0,3}([\s\S]*?)(?=\n\n|$)/g,
+        /(?<=^|\n|<blockquote>)\uff1e {0,3}([\s\S]*?)(\n\n|$)/g,
         '<blockquote>\n$1</blockquote>'
       );
       newBlock = newBlock.replace(/(?<=^|\n)\uff1e? {0,3}/g, '');
