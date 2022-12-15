@@ -61,7 +61,7 @@ export default function MainSection() {
           </NewArticleSection>
         </Link>
         <ArticlesSection>
-          {currentNewsfeed.length === 0 && (
+          {currentNewsfeed.length === 0 && !loading && (
             <NoFeeds>
               <div>아직 뉴스피드에 게시글이 없어요!</div>
               <div>
