@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { PostService } from 'src/domain/post/post.service';
-import { PostException } from '../exeception/post.exception';
+import { PostUnAuthorizedException } from 'src/exeception/post.exception';
 
 @Injectable()
 export class PostGuard implements CanActivate {
@@ -11,6 +11,6 @@ export class PostGuard implements CanActivate {
     const post = await this.postService.getPostById(postid);
     if (req.user.userid === post.author) return true;
 
-    throw PostException.postUnAuthorized();
+    throw new PostUnAuthorizedException();
   }
 }

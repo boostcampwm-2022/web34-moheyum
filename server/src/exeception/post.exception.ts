@@ -1,22 +1,14 @@
-import {
-  HttpException,
-  HttpStatus,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
-export class PostException {
-  static postUnAuthorized(): HttpException {
-    return new UnauthorizedException({
-      statusCode: HttpStatus.UNAUTHORIZED,
-      message: '게시글에 대한 권한이 없습니다',
-    });
+export class PostUnAuthorizedException extends HttpException {
+  constructor(message?) {
+    super(message ?? `게시글에 대한 권한이 없습니다`, HttpStatus.UNAUTHORIZED);
+    this.name = 'postUnAuthorizedException';
   }
-
-  static postNotFound(): HttpException {
-    return new NotFoundException({
-      statusCode: HttpStatus.NOT_FOUND,
-      message: '해당 게시글이 없습니다',
-    });
+}
+export class PostNotFoundException extends HttpException {
+  constructor(message?) {
+    super(message ?? `해당 게시글이 없습니다`, HttpStatus.NOT_FOUND);
+    this.name = 'PostNotFoundException';
   }
 }

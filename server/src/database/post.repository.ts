@@ -6,12 +6,12 @@ import { CreatePostDto } from '../domain/post/dto/create-post.dto';
 import { User } from 'src/database/user.schema';
 import { FollowerPostDto } from 'src/domain/post/dto/follower-post.dto';
 import { SearchPostListDto } from 'src/domain/post/dto/search-post-list.dto';
-import { PostException } from '../exeception/post.exception';
 import {
   COMMENTS_LIMIT,
   NEWSFEED_LIMIT,
   SEARCH_POST_LIMIT,
 } from '../constants/pagination.constants';
+import { PostNotFoundException } from 'src/exeception/post.exception';
 
 @Injectable()
 export class PostRepository {
@@ -50,7 +50,7 @@ export class PostRepository {
         $unset: 'user',
       },
     ]);
-    if (postOne.length === 0) throw PostException.postNotFound();
+    if (postOne.length === 0) throw new PostNotFoundException();
 
     const data = postOne.at(0);
     if (data.parentPost !== '') {

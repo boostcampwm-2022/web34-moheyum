@@ -1,11 +1,11 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UserRepository } from '../../../database/user.repository';
 import { User } from '../../../database/user.schema';
 import { Request } from 'express';
-import { UserException } from 'src/exeception/user.exception';
+import { UserUnAuthorizedTokenException } from 'src/exeception/user.exception';
 
 @Injectable()
 export class JwtStartegy extends PassportStrategy(Strategy, 'jwt-strategy') {
@@ -27,9 +27,8 @@ export class JwtStartegy extends PassportStrategy(Strategy, 'jwt-strategy') {
     const { userid } = payload;
     const user: User = await this.userRepository.findOne({ userid });
     if (!user) {
-      throw UserException.userUnAuthorizedToken();
+      throw new UserUnAuthorizedTokenException();
     }
-
     return user;
   }
 }

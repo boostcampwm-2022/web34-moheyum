@@ -4,7 +4,7 @@ import { Strategy, ExtractJwt } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
 import { AuthService } from '../auth.service';
-import { UserException } from 'src/exeception/user.exception';
+import { UserUnAuthorizedTokenException } from 'src/exeception/user.exception';
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(
   Strategy,
@@ -33,7 +33,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
     );
     // const user: User = await this.userRepository.findOne({ userid });
     if (!isValidate) {
-      throw UserException.userUnAuthorizedToken();
+      throw new UserUnAuthorizedTokenException();
     }
 
     return userid;

@@ -3,7 +3,7 @@ import { ExecutionContext, Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { TokenExpiredError } from 'jsonwebtoken';
 import { CommonExpiredToken } from '../exeception/common.exception';
-import { UserException } from '../exeception/user.exception';
+import { UserUnAuthorizedTokenException } from '../exeception/user.exception';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt-strategy') {
@@ -17,7 +17,7 @@ export class JwtAuthGuard extends AuthGuard('jwt-strategy') {
       throw new CommonExpiredToken();
     }
     if (err || !user) {
-      throw err || UserException.userUnAuthorizedToken();
+      throw err || new UserUnAuthorizedTokenException();
     }
     return user;
   }
