@@ -1,46 +1,58 @@
 import { BadRequestException, HttpException, HttpStatus } from '@nestjs/common';
 
-export class FollowException {
-  static followMyId(): HttpException {
-    return new BadRequestException({
-      statusCode: HttpStatus.BAD_REQUEST,
-      message: '자기 자신은 팔로우 할 수 없습니다',
-    });
+export class FollowMyself extends HttpException {
+  constructor(message?) {
+    super(
+      message ?? '자기 자신은 팔로우 할 수 없습니다',
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'FollowMyselfException';
   }
-  static followCancelMyId(): HttpException {
-    return new BadRequestException({
-      statusCode: HttpStatus.BAD_REQUEST,
-      message: '자기 자신은 팔로우 취소 할 수 없습니다',
-    });
+}
+
+export class FollowCancelMySelf extends HttpException {
+  constructor(message?) {
+    super(
+      message ?? '자기 자신은 팔로우 할 수 없습니다',
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'FollowCancelMySelfException';
   }
-  static followAlready(): HttpException {
-    return new BadRequestException({
-      statusCode: HttpStatus.BAD_REQUEST,
-      message: '이미 팔로우 된 사람입니다',
-    });
+}
+export class FollowAlready extends HttpException {
+  constructor(message?) {
+    super(message ?? '이미 팔로우 된 사람입니다', HttpStatus.BAD_REQUEST);
+    this.name = 'FollowAlreadyException';
   }
-  static followCancelAlready(): HttpException {
-    return new BadRequestException({
-      statusCode: HttpStatus.BAD_REQUEST,
-      message: '이미 팔로우 취소 된 사람입니다',
-    });
+}
+
+export class FollowCancelAlready extends HttpException {
+  constructor(message?) {
+    super(message ?? '이미 팔로우 취소 된 사람입니다', HttpStatus.BAD_REQUEST);
+    this.name = 'FollowCancelAlreadyException';
   }
-  static followError(): HttpException {
-    return new BadRequestException({
-      statusCode: HttpStatus.BAD_REQUEST,
-      message: '팔로우 에러 다시 시도해보세요',
-    });
+}
+
+export class FollowError extends HttpException {
+  constructor(message?) {
+    super(message ?? '팔로우 에러 다시 시도해보세요', HttpStatus.BAD_REQUEST);
+    this.name = 'FollowErrorException';
   }
-  static followCancelError(): HttpException {
-    return new BadRequestException({
-      statusCode: HttpStatus.BAD_REQUEST,
-      message: '팔로우 취소 에러 다시 시도해보세요',
-    });
+}
+
+export class FollowCancelError extends HttpException {
+  constructor(message?) {
+    super(
+      message ?? '팔로우 취소 에러 다시 시도해보세요',
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'FollowCancelErrorException';
   }
-  static followConflict(): HttpException {
-    return new BadRequestException({
-      statusCode: HttpStatus.BAD_REQUEST,
-      message: '',
-    });
+}
+
+export class FollowConflict extends HttpException {
+  constructor(message?) {
+    super(message ?? 'Conflict', HttpStatus.BAD_REQUEST);
+    this.name = 'FollowConflictException';
   }
 }

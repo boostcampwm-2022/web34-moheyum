@@ -6,7 +6,14 @@ import { FollowListDto } from './dto/follow-list.dto';
 import { UserService } from 'src/domain/user/user.service';
 import { NotificationRepository } from 'src/database/notification.repository';
 import { EventService } from 'src/domain/event/event.service';
-import { FollowException } from 'src/exeception/follow.exception';
+import {
+  FollowAlready,
+  FollowCancelAlready,
+  FollowCancelError,
+  FollowCancelMySelf,
+  FollowError,
+  FollowMyself,
+} from 'src/exeception/follow.exception';
 import { UserNotFoundException } from 'src/exeception/user.exception';
 
 @Injectable()
@@ -21,7 +28,7 @@ export class FollowService {
 
   async followUser(targetid: string, user: User) {
     const data = await this.userService.getUserData(targetid);
-    if (targetid === user.userid) throw FollowException.followMyId();
+    if (targetid === user.userid) throw new FollowMyself();
     if (!data) throw new UserNotFoundException();
 
     const follow = this.followRepository
@@ -38,14 +45,14 @@ export class FollowService {
         return res;
       })
       .catch((err) => {
-        if (err.status === 409) throw FollowException.followAlready();
-        throw FollowException.followError();
+        if (err.status === 409) throw new FollowAlready();
+        throw new FollowError();
       });
     return follow;
   }
   async followCancel(targetid: string, user: User) {
     const data = await this.userService.getUserData(targetid);
-    if (targetid === user.userid) throw FollowException.followCancelMyId();
+    if (targetid === user.userid) throw new FollowCancelMySelf();
     if (!data) throw new UserNotFoundException();
     const cancel = this.followRepository
       .delete({
@@ -58,8 +65,8 @@ export class FollowService {
         return res;
       })
       .catch((err) => {
-        if (err.status === 404) throw FollowException.followCancelAlready();
-        throw FollowException.followCancelError();
+        if (err.status === 404) throw new FollowCancelAlready();
+        throw new FollowCancelError();
       });
     return cancel;
   }
