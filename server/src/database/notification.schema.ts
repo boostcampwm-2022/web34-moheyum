@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 
 export type NotificationDocument = HydratedDocument<Notification>;
 
@@ -8,6 +8,7 @@ export type NotificationDocument = HydratedDocument<Notification>;
   timestamps: { createdAt: true, updatedAt: false },
 })
 export class Notification {
+  _id: mongoose.Schema.Types.ObjectId;
   @Prop({
     required: true,
     index: true,
