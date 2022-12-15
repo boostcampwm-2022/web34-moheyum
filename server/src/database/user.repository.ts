@@ -31,7 +31,7 @@ export class UserRepository {
       return await newUser.save();
     } catch (error) {
       if (error.code === 11000) {
-        if (!!error.keyValue.userid) throw new UserDuplicateIdException(userid);
+        if (!!error.keyValue.userid) throw new UserDuplicateIdException();
         else if (!!error.keyValue.nickname)
           throw new UserDuplicateNicknameException();
         else if (!!error.keyValue.email)
