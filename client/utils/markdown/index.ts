@@ -2,7 +2,7 @@ import { doParse, doParseForArticleCard } from './rules';
 
 export function renderMarkdown(source: string) {
   let processed = smartypants(source);
-  processed = processed.replace(/\r/g, '').replace(/\n\n/g, '\n');
+  processed = processed.replace(/\r/g, '');
   processed += '\n\n&nbsp;';
   return doParse(processed);
 }
