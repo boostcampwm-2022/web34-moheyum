@@ -13,7 +13,11 @@ import { EmailCheckDto } from './dto/email-check.dto';
 import { FindPwDto } from './dto/find-pw-dto';
 import * as generator from 'generate-password';
 import { UserException } from 'src/exeception/user.exception';
-import { CommonException } from 'src/exeception/common.exception';
+import {
+  CommonCheckCodeMismatch,
+  CommonCreateCodeFail,
+  CommonMailerFail,
+} from 'src/exeception/common.exception';
 import { MailService } from 'src/domain/mail/mail.service';
 @Injectable()
 export class AuthService {
@@ -193,7 +197,7 @@ export class AuthService {
       });
       return true;
     } catch (e) {
-      throw CommonException.commonMailerFail();
+      throw new CommonMailerFail();
     }
   }
 
@@ -214,7 +218,7 @@ export class AuthService {
       );
       return authNum;
     } catch (e) {
-      throw CommonException.commonCreateCodeError();
+      throw new CommonCreateCodeFail();
     }
   }
 
@@ -233,10 +237,10 @@ export class AuthService {
       if (rightNum) {
         return true;
       } else {
-        throw CommonException.commonCheckCodeFail();
+        throw new CommonCheckCodeMismatch();
       }
     } catch (e) {
-      throw CommonException.commonReCheck();
+      throw new CommonCheckCodeMismatch();
     }
   }
   /**

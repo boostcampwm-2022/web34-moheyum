@@ -3,7 +3,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { Observable } from 'rxjs';
 import { TokenExpiredError } from 'jsonwebtoken';
 import { UserException } from '../exeception/user.exception';
-import { CommonException } from '../exeception/common.exception';
+import { CommonExpiredToken } from '../exeception/common.exception';
 
 @Injectable()
 export class JwtRefreshGuard extends AuthGuard('jwt-refresh') {
@@ -14,7 +14,7 @@ export class JwtRefreshGuard extends AuthGuard('jwt-refresh') {
   }
   handleRequest<TUser = any>(err: any, user: any, info: any): TUser {
     if (info instanceof TokenExpiredError) {
-      throw CommonException.commonExpiredToekn();
+      throw new CommonExpiredToken();
     }
     if (err || !user) {
       throw err || UserException.userUnAuthorizedToken();

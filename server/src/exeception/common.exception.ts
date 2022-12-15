@@ -1,34 +1,29 @@
 import { BadRequestException, HttpException, HttpStatus } from '@nestjs/common';
 
-export class CommonException {
-  static commonMailerFail(): HttpException {
-    return new BadRequestException({
-      statusCode: HttpStatus.BAD_REQUEST,
-      message: '메시지 전송 실패',
-    });
+export class CommonMailerFail extends HttpException {
+  constructor(message?) {
+    super(message ?? '메시지 전송 실패', HttpStatus.BAD_REQUEST);
+    this.name = 'CommonMailerFailException';
   }
-  static commonCreateCodeError(): HttpException {
-    return new BadRequestException({
-      statusCode: HttpStatus.BAD_REQUEST,
-      message: '인증 코드 생성 실패',
-    });
+}
+
+export class CommonCreateCodeFail extends HttpException {
+  constructor(message?) {
+    super(message ?? '인증 코드 생성 실패', HttpStatus.BAD_REQUEST);
+    this.name = 'CommonCreateCodeFailException';
   }
-  static commonCheckCodeFail(): HttpException {
-    return new BadRequestException({
-      statusCode: HttpStatus.BAD_REQUEST,
-      message: '인증 코드 일치하지 않습니다',
-    });
+}
+
+export class CommonCheckCodeMismatch extends HttpException {
+  constructor(message?) {
+    super(message ?? '인증 코드가 일치하지 않습니다', HttpStatus.BAD_REQUEST);
+    this.name = 'CommonCheckCodeMismatchException';
   }
-  static commonReCheck(): HttpException {
-    return new BadRequestException({
-      statusCode: HttpStatus.BAD_REQUEST,
-      message: '다시 전송해주세요',
-    });
-  }
-  static commonExpiredToekn(): HttpException {
-    return new BadRequestException({
-      statusCode: HttpStatus.BAD_REQUEST,
-      message: '토큰이 만료되었습니다',
-    });
+}
+
+export class CommonExpiredToken extends HttpException {
+  constructor(message?) {
+    super(message ?? '토큰이 만료되었습니다', HttpStatus.BAD_REQUEST);
+    this.name = 'CommonExpiredTokenException';
   }
 }
