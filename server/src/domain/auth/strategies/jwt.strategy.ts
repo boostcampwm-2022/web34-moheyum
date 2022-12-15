@@ -5,7 +5,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UserRepository } from '../../../database/user.repository';
 import { User } from '../../../database/user.schema';
 import { Request } from 'express';
-import { UserUnAuthorizedTokenException } from 'src/exeception/user.exception';
+import { UserUnAuthorizedTokenException } from 'src/exception/user.exception';
 
 @Injectable()
 export class JwtStartegy extends PassportStrategy(Strategy, 'jwt-strategy') {

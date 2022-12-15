@@ -13,8 +13,8 @@ import {
   FollowCancelMySelf,
   FollowError,
   FollowMyself,
-} from 'src/exeception/follow.exception';
-import { UserNotFoundException } from 'src/exeception/user.exception';
+} from 'src/exception/follow.exception';
+import { UserNotFoundException } from 'src/exception/user.exception';
 
 @Injectable()
 export class FollowService {

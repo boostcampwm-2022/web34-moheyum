@@ -16,13 +16,13 @@ import {
   CommonCheckCodeMismatch,
   CommonCreateCodeFail,
   CommonMailerFail,
-} from 'src/exeception/common.exception';
+} from 'src/exception/common.exception';
 import { MailService } from 'src/domain/mail/mail.service';
 import {
   UserNotFoundException,
   UserStateFalseException,
   UserUnAuthorizedException,
-} from 'src/exeception/user.exception';
+} from 'src/exception/user.exception';
 @Injectable()
 export class AuthService {
   constructor(

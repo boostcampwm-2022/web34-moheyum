@@ -8,7 +8,7 @@ import {
   UserDuplicateIdException,
   UserDuplicateNicknameException,
   UserNotFoundException,
-} from '../exeception/user.exception';
+} from '../exception/user.exception';
 import { SearchUserListDto } from 'src/domain/user/dto/search-user-list.dto';
 import { SEARCH_USER_LIMIT } from '../constants/pagination.constants';
 

@@ -11,7 +11,7 @@ import {
   NEWSFEED_LIMIT,
   SEARCH_POST_LIMIT,
 } from '../constants/pagination.constants';
-import { PostNotFoundException } from 'src/exeception/post.exception';
+import { PostNotFoundException } from 'src/exception/post.exception';
 
 @Injectable()
 export class PostRepository {

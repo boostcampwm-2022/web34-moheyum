@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { PostService } from 'src/domain/post/post.service';
-import { PostUnAuthorizedException } from 'src/exeception/post.exception';
+import { PostUnAuthorizedException } from 'src/exception/post.exception';
 
 @Injectable()
 export class PostGuard implements CanActivate {

@@ -1,5 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { UserUnAuthorizedUpdateException } from '../exeception/user.exception';
+import { UserUnAuthorizedUpdateException } from '../exception/user.exception';
 
 @Injectable()
 export class UpdateAuthGuard implements CanActivate {

@@ -2,8 +2,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { ExecutionContext, Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { TokenExpiredError } from 'jsonwebtoken';
-import { CommonExpiredToken } from '../exeception/common.exception';
-import { UserUnAuthorizedTokenException } from '../exeception/user.exception';
+import { CommonExpiredToken } from '../exception/common.exception';
+import { UserUnAuthorizedTokenException } from '../exception/user.exception';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt-strategy') {

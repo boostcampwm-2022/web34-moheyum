@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 import { createHmac } from 'crypto';
 import { CONFIG_OPTIONS } from 'src/constants/mail.constants';
-import { CommonMailerFail } from 'src/exeception/common.exception';
+import { CommonMailerFail } from 'src/exception/common.exception';
 import { SendEmailRequestDto } from './dto/send-email.dto';
 import { MailModuleOptions } from './mail.interface';
 
