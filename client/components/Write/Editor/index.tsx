@@ -6,7 +6,7 @@ import { authedUser } from '../../../atom';
 import { httpPost, httpGet, httpPatch } from '../../../utils/http';
 import { renderMarkdown, smartypants } from '../../../utils/markdown';
 import UserDropDown from './UserDropDown';
-import { getLeftWidth } from '../../../styles/theme';
+import { getLeftWidth } from '../../../utils/getLeftWidth';
 import UserProfile from '../../UserProfile';
 import COLORS from '../../../styles/color';
 import {

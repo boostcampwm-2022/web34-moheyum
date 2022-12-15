@@ -18,7 +18,7 @@ export default function SideBar() {
   const [dropdownState, setdropdownState] = useState<boolean>(false);
   const toast = useToast();
 
-  const showSettingdropdown = () => {
+  const toggleDropdown = () => {
     setdropdownState(!dropdownState);
   };
   const authedUserInfo = useRecoilValue(authedUser);
@@ -29,9 +29,6 @@ export default function SideBar() {
       setNewNotiState(event.data);
       toast.addMessage('새 알림이 도착했습니다.');
     };
-    // eventSource.onerror = (error) => {
-    //   toast.addMessage(`SSE error : ${error}`);
-    // };
     return () => eventSource.close();
   }, []);
 
@@ -51,7 +48,7 @@ export default function SideBar() {
         )}
       </SideMenuBox>
       {dropdownState && <SideBarDropdown />}
-      <Setting onClick={showSettingdropdown}>
+      <Setting onClick={toggleDropdown}>
         <Menu imgSrc="/ico_setting.svg" text="설정" avatar={false} noti={false} />
       </Setting>
     </Wrapper>
