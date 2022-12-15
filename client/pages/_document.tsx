@@ -14,7 +14,25 @@ class MyDocument extends Document {
             name="og:description"
             content="마크다운을 지원하는 SNS인 모헤윰으로 당신의 생각을 보기 좋게 전달하세요."
           />
-          <meta name="og:image" content="https://moheyum.ga/moheyum.svg" />
+          <meta property="og:url" content="https://moheyum.ga/" />
+          <meta property="og:type" content="website" />
+          <meta property="og:title" content="mo:heyum" />
+          <meta
+            property="og:description"
+            content="마크다운을 지원하는 SNS인 모헤윰으로 당신의 생각을 보기 좋게 전달하세요."
+          />
+          <meta property="og:image" content="https://moheyum.ga/og_image.png" />
+
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta property="twitter:domain" content="moheyum.ga" />
+          <meta property="twitter:url" content="https://moheyum.ga/" />
+          <meta name="twitter:title" content="mo:heyum" />
+          <meta
+            name="twitter:description"
+            content="마크다운을 지원하는 SNS인 모헤윰으로 당신의 생각을 보기 좋게 전달하세요."
+          />
+          <meta name="twitter:image" content="https://moheyum.ga/og_image.png" />
+
           <meta charSet="UTF-8" />
           <link rel="icon" href="/favicon.svg" />
         </Head>
