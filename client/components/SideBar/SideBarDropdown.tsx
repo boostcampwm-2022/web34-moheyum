@@ -25,11 +25,9 @@ export default function SideBarDropdown() {
           </button>
         </>
       ) : (
-        <>
-          <button type="button" onClick={() => router.push('/login')}>
-            로그인
-          </button>
-        </>
+        <button type="button" onClick={() => router.push('/login')}>
+          로그인
+        </button>
       )}
     </Dropdown>
   );
