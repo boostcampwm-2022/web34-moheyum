@@ -24,7 +24,7 @@ export const CommentContentBox = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    #text-box {
+    .text-box {
       width: 84%;
     }
   }

@@ -45,7 +45,7 @@ const Comment = React.forwardRef<HTMLLIElement, CommentData>(({ postData }: Comm
       </Link>
       <CommentContentBox>
         <Link href={`/post/${postData._id}`}>
-          <div id="text-box" ref={contentRef}>
+          <div className="text-box" ref={contentRef}>
             {postData.description}
           </div>
         </Link>
