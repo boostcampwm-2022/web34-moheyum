@@ -18,18 +18,20 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from 'src/database/user.schema';
-import { UserUpdateDto } from './dto/user-update.dto';
 import { UpdateAuthGuard } from 'src/guard/update-user.guard';
 import { JwtAuthGuard } from 'src/guard/jwt-auth.guard';
 import { GetUser } from 'src/decorator/get-user.decorator';
 import { NcloudService } from 'src/domain/ncloud/ncloud.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { GetUserUpdatePasswordDto } from './dto/get-update-password.dto';
 import { MoheyumInterceptor } from 'src/cache/cache.interceptor';
 import { CacheEvict } from 'src/cache/cache-evict.decorator';
 import { CacheIndividual } from 'src/cache/cahce-individual.decorator';
 import { CachePagination } from 'src/cache/cache-next-ttl.decorator';
-import { SearchUserListDto } from './dto/search-user-list.dto';
+import {
+  GetUserUpdatePasswordDto,
+  SearchUserListDto,
+  UserUpdateDto,
+} from './dto/request.dto';
 
 @Controller('user')
 @UseInterceptors(MoheyumInterceptor)

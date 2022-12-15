@@ -9,8 +9,8 @@ import {
   UserDuplicateNicknameException,
   UserNotFoundException,
 } from '../exception/user.exception';
-import { SearchUserListDto } from 'src/domain/user/dto/search-user-list.dto';
 import { SEARCH_USER_LIMIT } from '../constants/pagination.constants';
+import { SearchUserListDto } from 'src/domain/user/dto/request.dto';
 
 @Injectable()
 export class UserRepository {

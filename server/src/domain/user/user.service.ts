@@ -1,13 +1,15 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { UserProfileDto } from './dto/user-profile.dto';
-import { UserUpdateDto } from './dto/user-update.dto';
 import { UserRepository } from 'src/database/user.repository';
 import { FollowRepository } from 'src/database/follow.repository';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
-import { GetUserUpdatePasswordDto } from './dto/get-update-password.dto';
-import { SearchUserListDto } from './dto/search-user-list.dto';
 import { SEARCH_USER_LIMIT } from 'src/constants/pagination.constants';
+import {
+  GetUserUpdatePasswordDto,
+  SearchUserListDto,
+  UserProfileDto,
+  UserUpdateDto,
+} from './dto/request.dto';
 
 @Injectable()
 export class UserService {
