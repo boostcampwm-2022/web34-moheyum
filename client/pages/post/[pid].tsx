@@ -15,12 +15,13 @@ interface Props {
 
 export default function Post({ response }: { response: Props }) {
   const title = '게시글';
-  if (response.statusCode === 404) {
-    return <NotFound>없는 게시글 입니다.</NotFound>;
-  }
   return (
     <AuthGuard noRedirect>
-      <ReadPost postData={response.data.post} title={title} />
+      {response.statusCode !== 200 ? (
+        <NotFound>없는 게시글 입니다.</NotFound>
+      ) : (
+        <ReadPost postData={response.data.post} title={title} />
+      )}
     </AuthGuard>
   );
 }
