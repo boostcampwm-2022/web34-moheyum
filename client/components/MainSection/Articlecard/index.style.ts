@@ -52,7 +52,7 @@ export const Comments = styled.div`
   }
 
   & img {
-    padding-top: 2px !important;
+    margin-top: 2px !important;
   }
 `;
 

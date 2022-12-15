@@ -66,6 +66,8 @@ export const PostButton = styled.div`
   line-height: 39px;
   text-align: center;
   font-size: 15px;
+  cursor: pointer;
+  user-select: none;
   &:first-of-type {
     border-bottom: 2px solid ${COLORS.GRAY3};
     border-radius: 10px 10px 0px 0px;

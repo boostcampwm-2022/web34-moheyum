@@ -53,7 +53,7 @@ function recoverPlaceholders(str: string, codes: string[], placeholder: string):
 }
 
 function blockQuote(str: string): string {
-  const reg = /(?<=^|\n)\uff1e {0,3}([\s\S]*?)(?=\n\n|$)/g;
+  const reg = /(?<=^|\n)\uff1e {0,3}([\s\S]*?)(\n\n|$)/g;
   let result = str;
   const blocks = str.match(reg);
 
@@ -62,7 +62,7 @@ function blockQuote(str: string): string {
     while (newBlock.match(/(?<=^|\n|<blockquote>)\uff1e {0,3}/g)) {
       // console.log(newBlock.match(/(?<=^|\n|<blockquote>)> {0,3}/g));
       newBlock = newBlock.replace(
-        /(?<=^|\n|<blockquote>)\uff1e {0,3}([\s\S]*?)(?=\n\n|$)/g,
+        /(?<=^|\n|<blockquote>)\uff1e {0,3}([\s\S]*?)(\n\n|$)/g,
         '<blockquote>\n$1</blockquote>'
       );
       newBlock = newBlock.replace(/(?<=^|\n)\uff1e? {0,3}/g, '');
@@ -97,9 +97,9 @@ function strike(str: string): string {
 // TODO : href와 src도 codeBlock처럼 따로 빼두기
 function link(str: string): [string, string[], string[]] {
   const IMG_REGEX =
-    /!\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm;
+    /!\[(.*?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm;
   const LINK_REGEX =
-    /\[(.+?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm;
+    /\[(.*?)\]\(((?:https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}(\.[a-zA-Z0-9()]{1,6})?\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)))\)/gm;
 
   let result = str;
   let matchImg = result.match(IMG_REGEX);

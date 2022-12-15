@@ -24,11 +24,13 @@ export default function MainPost({ postData }: { postData: PostProps }) {
   const contentRef = useRef<HTMLDivElement>(null);
   const [dropDownDisplay, setDropDownDisplay] = useState<boolean>(false);
   const toast = useToast();
-
   useEffect(() => {
     if (!contentRef.current) return;
     contentRef.current.innerHTML = renderMarkdown(postData.description);
   }, [contentRef.current?.textContent]);
+  useEffect(() => {
+    setDropDownDisplay(false);
+  }, [postData]);
   const deleteHandler = async () => {
     setDropDownDisplay(false);
     const response = await httpDelete(`/post/${postData._id}`);

@@ -27,10 +27,6 @@ export default function ReadPost({ postData, title }: PostData) {
     setHistoryBack((prevState) => ({ ...prevState, historyBack: true }));
     Router.back();
   };
-  let commentCount = 0;
-  if (postData.childPosts) {
-    commentCount = postData.childPosts.length;
-  }
   const { loading, pages, lastFollowElementRef } = usePaginator(`/api/post/comments/${postData._id}`);
 
   return (
@@ -45,14 +41,14 @@ export default function ReadPost({ postData, title }: PostData) {
         {postData.parentPost ? <ParentPost post={postData.parent.at(0) as Parent} /> : <div />}
         <MainPost postData={postData} />
         <CommentBox>
-          <div id="title">답글: {commentCount}개</div>
-          <div id="comment">
+          <div className="title">답글: {postData.childPosts.length}개</div>
+          <div className="comment">
             <Link href={`/post/${postData._id}/comment`}>
               <ProfileImg imgUrl={authedUserInfo.profileimg} />
-              <div id="text">답글 쓰기</div>
+              <div className="text">답글 쓰기</div>
             </Link>
           </div>
-          <div id="list">
+          <div className="list">
             {pages.map((item: commentItem, index: number) => {
               if (pages.length === index + 1)
                 return <Comment key={item._id} postData={item} ref={lastFollowElementRef} />;

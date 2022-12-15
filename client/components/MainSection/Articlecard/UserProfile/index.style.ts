@@ -38,13 +38,14 @@ export const AuthorDetail = styled.div`
   margin-left: 5px;
   .name {
     white-space: nowrap;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 18px;
   }
   .user-id {
     white-space: nowrap;
-    margin: 3px 1px;
+    margin: 6px 1px;
     color: ${COLORS.GRAY1};
     font-size: 14px;
+    font-weight: 400;
   }
 `;
