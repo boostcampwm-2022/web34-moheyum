@@ -6,26 +6,26 @@ import {
   CacheInterceptor,
 } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { PostModule } from './post/post.module';
-import { AuthModule } from './auth/auth.module';
+import { PostModule } from './domain/post/post.module';
+import { AuthModule } from './domain/auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { join } from 'path';
-import { mongooseConfig } from './common/config/mongooseConfig';
-import { redisOptions } from './common/config/redisConfig';
+import { mongooseConfig } from './config/mongooseConfig';
+import { redisOptions } from './config/redisConfig';
 // import { RedisModule } from '@liaoliaots/nestjs-redis/dist/redis/redis.module';
-import { LoggerMiddleware } from './common/middleware/logger';
-import { UserModule } from './user/user.module';
-import { FollowModule } from './follow/follow.module';
-import { NcloudModule } from './ncloud/ncloud.module';
-import { NotificationModule } from './notification/notification.module';
-import { EventModule } from './event/event.module';
-import { HttpExceptionFilter } from './common/filter/http-execption.filter';
-import { RedisModule } from './redis/redis.module';
+import { LoggerMiddleware } from './middleware/logger';
+import { UserModule } from './domain/user/user.module';
+import { FollowModule } from './domain/follow/follow.module';
+import { NcloudModule } from './domain/ncloud/ncloud.module';
+import { NotificationModule } from './domain/notification/notification.module';
+import { EventModule } from './domain/event/event.module';
+import { HttpExceptionFilter } from './filter/http-execption.filter';
+import { RedisModule } from './domain/redis/redis.module';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { RateLimiterGuard, RateLimiterModule } from 'nestjs-rate-limiter';
-import { rateLimiterConfig } from './common/config/registerConfig';
-import { MailModule } from './mail/mail.module';
-import { mailAsyncOptions } from './common/config/mailConfig';
+import { rateLimiterConfig } from './config/registerConfig';
+import { MailModule } from './domain/mail/mail.module';
+import { mailAsyncOptions } from './config/mailConfig';
 @Module({
   imports: [
     // RedisModule.forRootAsync(redisOptions),

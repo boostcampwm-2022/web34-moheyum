@@ -6,8 +6,8 @@ import helmet from 'helmet';
 // import * as path from 'path';
 import { HttpStatus, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { winstonLogger } from './common/utils/winston.util';
-import { ResponseInterceptor } from './common/interceptor/response.interceptor';
+import { winstonLogger } from './utils/winston.util';
+import { ResponseInterceptor } from './interceptor/response.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
