@@ -57,8 +57,8 @@ export class AuthService {
    * @param refreshToken
    * @param userid
    */
-  private setRefreshTokenInRedis(refreshToken: string, userid: string) {
-    this.redisService.set(
+  private async setRefreshTokenInRedis(refreshToken: string, userid: string) {
+    await this.redisService.set(
       userid,
       refreshToken,
       +this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME') + 60,

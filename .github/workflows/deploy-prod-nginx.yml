@@ -3,7 +3,7 @@ name: nginx prod 배포
 on:
   push:
     branches:
-      - "prod"
+      - "main"
     paths:
       - "nginx/**"
   workflow_dispatch:

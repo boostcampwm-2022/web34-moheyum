@@ -43,7 +43,7 @@ export const ArticleCard = React.forwardRef<HTMLInputElement, Props>(
           <Content>{description || '글 내용이 없어용!'}</Content>
           {thumbnail && (
             <ArticleImageContainer>
-              <Image src={thumbnail} fill sizes="100%, 100%" alt="post thumbnail" />
+              <Image src={thumbnail} width={130} height={130} alt="post thumbnail" />
             </ArticleImageContainer>
           )}
         </ArticleContent>

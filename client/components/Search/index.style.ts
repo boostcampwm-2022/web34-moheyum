@@ -61,11 +61,15 @@ export const TabContainer = styled.div`
     color: ${COLORS.WHITE};
     font-size: 18px;
     border: none;
-
+    /* box-shadow: 5px 5px 20px grey inset; */
     &.selected {
       background-color: ${COLORS.WHITE};
       color: ${COLORS.BLACK};
       font-weight: 700;
+    }
+    &:not(.selected) {
+      box-shadow: 0px -5px 5px 1px rgba(0, 0, 0, 0.2) inset;
+      font-size: 16px;
     }
   }
 `;
@@ -75,9 +79,50 @@ export const ResultContainer = styled.div`
   flex: 1;
   overflow-y: auto;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 15px;
+  & > span {
+    text-align: center;
+    align-self: center;
+    color: ${COLORS.GRAY3};
+    padding-bottom: 160px;
+  }
+`;
+export const ResultHeader = styled.h1`
+  width: 100%;
+  font-size: 24px;
+  padding: 15px;
+  border-bottom: 2px solid ${COLORS.GRAY4};
+  margin-bottom: 30px;
+  & > span {
+    font-weight: 700;
+    font-size: 28px;
+  }
+`;
+
+export const ErrorMessage = styled.div`
+  display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-  padding: 15px 15px 160px 15px;
+  height: 100%;
+  padding-bottom: 160px;
+`;
+
+export const EmptyMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+  padding-bottom: 160px;
   color: ${COLORS.GRAY3};
+`;
+
+export const Footer = styled.footer`
+  width: '100%';
+  height: '50px';
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

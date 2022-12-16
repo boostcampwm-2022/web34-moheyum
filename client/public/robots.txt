@@ -1,0 +1,6 @@
+# Every bot that might possibly read and respect this file
+# ========================================================
+User-agent: *
+Disallow: /myAccount
+Disallow: /notification
+Disallow: /write

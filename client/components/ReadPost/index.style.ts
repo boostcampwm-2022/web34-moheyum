@@ -28,7 +28,7 @@ export const CommentBox = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  #title {
+  .title {
     width: 100%;
     height: 60px;
     padding: 20px;
@@ -36,7 +36,7 @@ export const CommentBox = styled.div`
     font-weight: 500;
     border-bottom: 1px solid ${COLORS.GRAY4};
   }
-  #comment {
+  .comment {
     width: 100%;
     a {
       width: 100%;
@@ -44,11 +44,11 @@ export const CommentBox = styled.div`
       flex-direction: row;
       align-items: center;
     }
-    #text {
+    .text {
       color: ${COLORS.GRAY2};
     }
   }
-  #list {
+  .list {
     width: 100%;
   }
 `;

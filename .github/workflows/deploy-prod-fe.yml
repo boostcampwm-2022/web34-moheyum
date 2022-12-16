@@ -3,7 +3,7 @@ name: 프론트엔드 prod 배포
 on:
   push:
     branches:
-      - "prod"
+      - "main"
     paths:
       - "client/**"
   workflow_dispatch:

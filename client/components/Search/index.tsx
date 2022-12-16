@@ -55,7 +55,11 @@ export default function SearchSection() {
           사용자 검색
         </button>
       </TabContainer>
-      {keyword === '' && <ResultContainer>검색 결과 없음</ResultContainer>}
+      {keyword === '' && (
+        <ResultContainer>
+          <span>검색 결과 없음</span>
+        </ResultContainer>
+      )}
       {tabIndex === 0 && keyword !== '' && <PostResult keyword={keyword} />}
       {tabIndex === 1 && keyword !== '' && <UserResult keyword={keyword} />}
     </Wrapper>
