@@ -24,7 +24,7 @@ _여러 명이 한 계정에 동시에 로그인하면 로그아웃되니 유의
 
 |**시연 영상**|**발표 영상**|
 :--:|:--:
-|[![intro](https://img.youtube.com/vi/9mVinynuUTw/0.jpg)](https://www.youtube.com/watch?v=9mVinynuUTw)|[![demo](https://img.youtube.com/vi/hJuTYCoQJV8/0.jpg)](https://www.youtube.com/watch?v=hJuTYCoQJV8)|
+|[![intro](https://img.youtube.com/vi/9mVinynuUTw/0.jpg)](https://www.youtube.com/watch?v=9mVinynuUTw)|[![demo](https://img.youtube.com/vi/hJuTYCoQJV8/0.jpg)](https://www.youtube.com/watch?v=rdkzuGKl4Eg)|
 
 <br>
 
